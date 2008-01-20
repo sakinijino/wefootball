@@ -5,8 +5,7 @@
 	width="100%" height="100%" label="Create Account" >
 
 <mx:Metadata>
-	[Event(name="accountCreate",
-	type="com.wefootball.events.AccountCreateEvent")]
+	[Event(name="accountCreate", type="com.wefootball.events.AccountCreateEvent")]
 </mx:Metadata>
 
 <mx:Script>

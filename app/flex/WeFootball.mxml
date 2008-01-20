@@ -13,13 +13,6 @@
 	import com.wefootball.events.AccountCreateEvent;
 	import com.wefootball.events.LoginEvent;
 	
-	[Bindable]
-	private var _reviews:String ='We football!!';
-		
-	private function handleAccountCreate(e:AccountCreateEvent):
-	void {
-		showMain();
-	}
 	private function handleLogin(e:LoginEvent):void {
 		showMain();
 	}
@@ -29,7 +22,7 @@
 ]]>
 </mx:Script>
 	<mx:ViewStack id="mainStack" width="100%" height="100%">
-		<mx:VBox id="splashBox" horizontalAlign="center"
+		<!--<mx:VBox id="splashBox" horizontalAlign="center"
 			verticalAlign="middle" width="100%" height="100%">
 			<mx:Label text="We football!!"/>
 			<mx:Spacer height="10"/>
@@ -41,7 +34,8 @@
 					accountCreate="handleAccountCreate(event)"/>
 			</mx:Accordion>
 			<mx:Label text="We football!!"/>
-		</mx:VBox>
-		<pom:MainBox id="mainBox"/>
+		</mx:VBox>-->
+		<pom:AccountBox login="showMain()" hideEffect="Fade" />
+		<pom:MainBox id="mainBox" showEffect="Fade" />
 	</mx:ViewStack>
 </mx:Application>
