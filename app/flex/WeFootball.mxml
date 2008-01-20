@@ -1,4 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute">
+<mx:Application
+	xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:pom="com.wefootball.components.*"
+	layout="vertical"
+	backgroundGradientColors="[#ffffff, #c0c0c0]"
+	horizontalAlign="center"
+	verticalAlign="top"
+	width="100%"
+	height="100%">
+<mx:Script>
+<![CDATA[
+	import com.wefootball.events.AccountCreateEvent;
+	import com.wefootball.events.LoginEvent;
 	
+	[Bindable]
+	private var _reviews:String ='We football!!';
+		
+	private function handleAccountCreate(e:AccountCreateEvent):
+	void {
+		showMain();
+	}
+	private function handleLogin(e:LoginEvent):void {
+		showMain();
+	}
+	private function showMain():void {
+		mainStack.selectedChild = mainBox;
+	}
+]]>
+</mx:Script>
+	<mx:ViewStack id="mainStack" width="100%" height="100%">
+		<mx:VBox id="splashBox" horizontalAlign="center"
+			verticalAlign="middle" width="100%" height="100%">
+			<mx:Label text="We football!!"/>
+			<mx:Spacer height="10"/>
+			<mx:Text width="500" text="{_reviews}"/>
+			<mx:Spacer height="10"/>
+			<mx:Accordion width="400" height="300">
+				<pom:AccountCreateBox
+					accountCreate="handleAccountCreate(event)"/>
+				<pom:LoginBox login="handleLogin(event)"/>
+			</mx:Accordion>
+			<mx:Label text="We football!!"/>
+		</mx:VBox>
+		<pom:MainBox id="mainBox"/>
+	</mx:ViewStack>
 </mx:Application>
