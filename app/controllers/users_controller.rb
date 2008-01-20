@@ -17,7 +17,7 @@ class UsersController < ApplicationController
     end
   rescue ActiveRecord::RecordInvalid
     respond_to do |format|
-      format.xml { render :xml=>@user.errors.to_xml_full, :status=>400}
+      format.xml { render :xml=>@user.errors.to_xml_full}
     end
   end
   
@@ -44,7 +44,7 @@ class UsersController < ApplicationController
         if self.current_user.update_attributes(params[:user])
           render :template=>"shared/user"
         else
-          render :xml => @user.errors.to_xml_full, :status => 400
+          render :xml => @user.errors.to_xml_full
         end
       }
     end

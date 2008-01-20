@@ -22,24 +22,24 @@
 	}
 	
 	private function handleFault(event:FaultEvent):void {
-		Alert.show("The username or password is wrong.", "LoginError")
+		Alert.show("The E-mail or Password is wrong.", "Login Error")
 	}
 ]]>
 </mx:Script>
 
 	<mx:HTTPService
 		id="svcAccountLogin"
-		url="/session"
+		url="/session.xml"
 		resultFormat="e4x"
 		method="POST"
 		result="handleAccountLoginResult(event)"
 		fault="handleFault(event)"/>	
 	
 	<mx:Form labelWidth="150">
-		<mx:FormItem required="true" label="Email Address">
+		<mx:FormItem label="Email Address">
 			<mx:TextInput id="loginTI"/>
 		</mx:FormItem>
-		<mx:FormItem required="true" label="Password">
+		<mx:FormItem label="Password">
 			<mx:TextInput id="passwordTI"
 			displayAsPassword="true"/>
 		</mx:FormItem>

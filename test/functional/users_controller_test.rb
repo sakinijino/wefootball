@@ -30,7 +30,7 @@ class UsersControllerTest < Test::Unit::TestCase
     assert_no_difference 'User.count' do
       create_user(:login => nil)
       assert assigns(:user).errors.on(:login)
-      assert_response 400
+      assert_response 200
       tag = find_tag :tag=>"error", :attributes=>{:field=>"login"}
       assert_not_nil tag
     end
@@ -40,7 +40,7 @@ class UsersControllerTest < Test::Unit::TestCase
     assert_no_difference 'User.count' do
       create_user(:login => 'saki')
       assert assigns(:user).errors.on(:login)
-      assert_response 400
+      assert_response 200
       tag = find_tag :tag=>"error", :attributes=>{:field=>"login"}
       assert_not_nil tag
     end
@@ -50,7 +50,7 @@ class UsersControllerTest < Test::Unit::TestCase
     assert_no_difference 'User.count' do
       create_user(:password => nil)
       assert assigns(:user).errors.on(:password)
-      assert_response 400
+      assert_response 200
       tag = find_tag :tag=>"error", :attributes=>{:field=>"password"}
       assert_not_nil tag
     end
@@ -60,7 +60,7 @@ class UsersControllerTest < Test::Unit::TestCase
     assert_no_difference 'User.count' do
       create_user(:password_confirmation => nil)
       assert assigns(:user).errors.on(:password_confirmation)
-      assert_response 400
+      assert_response 200
       tag = find_tag :tag=>"error", :attributes=>{:field=>"password_confirmation"}
       assert_not_nil tag
     end
@@ -83,7 +83,7 @@ class UsersControllerTest < Test::Unit::TestCase
   def test_update_error
     login_as :quentin
     put :update, :id=>1, :user=>{:password=>'111111', :password_confirmation => '123'}
-    assert_response 400
+    assert_response 200
     tag = find_tag :tag=>"error", :attributes=>{:field=>"password"}
     assert_not_nil tag
   end

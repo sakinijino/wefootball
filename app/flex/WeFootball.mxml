@@ -36,9 +36,9 @@
 			<mx:Text width="500" text="{_reviews}"/>
 			<mx:Spacer height="10"/>
 			<mx:Accordion width="400" height="300">
+				<pom:LoginBox login="handleLogin(event)"/>
 				<pom:AccountCreateBox
 					accountCreate="handleAccountCreate(event)"/>
-				<pom:LoginBox login="handleLogin(event)"/>
 			</mx:Accordion>
 			<mx:Label text="We football!!"/>
 		</mx:VBox>

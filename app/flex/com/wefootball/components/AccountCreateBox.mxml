@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml" width="100%"
-	height="100%" label="Create Account">
+<mx:VBox 
+	xmlns:mx="http://www.adobe.com/2006/mxml" 
+	xmlns:wfv="com.wefootball.validators.*" 
+	width="100%" height="100%" label="Create Account" >
 
 <mx:Metadata>
 	[Event(name="accountCreate",
@@ -12,7 +14,25 @@
 	import mx.controls.Alert;
 	import mx.rpc.events.ResultEvent;
 	import mx.rpc.events.FaultEvent;
+	import mx.validators.Validator;
+	import mx.events.ValidationResultEvent;
+	import com.wefootball.validators.ServerErrors;
 	import com.wefootball.events.AccountCreateEvent;
+	
+	[Bindable]
+	private var _serverErrors:ServerErrors;
+	
+	private function validate(lg:String, pw:String, pwc:String):Boolean {
+		var results:Array = Validator.validateAll([
+			loginValidator,
+			passwordValidator,
+			passwordConfirmationValidator]);
+		if (results.length > 0) {
+			return false;
+		}
+		return true;
+	}
+	
 	private function createAccount():void {
 		svcAccountCreate.request['user[login]'] = loginTI.text
 		svcAccountCreate.request['user[password]'] = passwordTI.text
@@ -21,19 +41,28 @@
 	}
 	
 	private function handleAccountCreateResult(event:ResultEvent):void {
-		var result:Object = event.result;
-		dispatchEvent(new AccountCreateEvent(XML(result)));
+		var result:XML = XML(event.result);
+		if (result.name().localName == "errors") {
+			Alert.show("Please correct the validation errors highlighted on the form.", "Account Not Created");
+			_serverErrors = new ServerErrors(result);
+		} else {
+			dispatchEvent(new AccountCreateEvent(result));
+		}
 	}
 	
 	private function handleFault(event:FaultEvent):void {
-		Alert.show("Your account was not created.","Error");
+		Alert.show('Unknown Error', "Account Not Created");
+	}
+	
+	private function clearServerErrors():void {
+		_serverErrors = null;
 	}
 ]]>
 </mx:Script>
 
 <mx:HTTPService
 	id="svcAccountCreate"
-	url="/users"
+	url="/users.xml"
 	resultFormat="e4x"
 	method="POST"
 	result="handleAccountCreateResult(event)"
@@ -41,20 +70,40 @@
 
 	<mx:Form labelWidth="150">
 		<mx:FormItem required="true" label="Email Address">
-			<mx:TextInput id="loginTI"/>
+			<mx:TextInput id="loginTI" change="clearServerErrors()"/>
 		</mx:FormItem>
 		<mx:FormItem required="true" label="Password">
-			<mx:TextInput id="passwordTI"
-		displayAsPassword="true"/>
+			<mx:TextInput id="passwordTI" displayAsPassword="true" change="clearServerErrors()"/>
 		</mx:FormItem>
 		<mx:FormItem required="true" label="Confirm Password">
-			<mx:TextInput id="confirmPasswordTI"
-		displayAsPassword="true"/>
+			<mx:TextInput id="confirmPasswordTI" displayAsPassword="true" change="clearServerErrors()"/>
 		</mx:FormItem>
 		<mx:FormItem>
 			<mx:Button id="createAccountButton"
-			label="Create Account"
-			click="createAccount()"/>
+				enabled = "{validate(loginTI.text, passwordTI.text, confirmPasswordTI.text)}"
+				label="Create Account"
+				click="createAccount()"/>
 		</mx:FormItem>
 	</mx:Form>
+	<mx:EmailValidator
+		id = "loginValidator" 
+		source="{loginTI}" 
+		property="text" 
+		required="true" />
+	<mx:StringValidator 
+		id = "passwordValidator"
+		minLength="6" 
+		source="{passwordTI}" 
+		property="text" 
+		required="true" />
+	<wfv:PasswordConfirmationValidator
+		id = "passwordConfirmationValidator"
+		password="{passwordTI.text}" 
+		source="{confirmPasswordTI}" 
+		property="text" 
+		required="true"
+	/>
+	<wfv:ServerErrorValidator field="login" listener="{loginTI}" serverErrors="{_serverErrors}" />
+	<wfv:ServerErrorValidator field="password" listener="{passwordTI}" serverErrors="{_serverErrors}" />
+	<wfv:ServerErrorValidator field="password_confirmation" listener="{confirmPasswordTI}" serverErrors="{_serverErrors}" />
 </mx:VBox>
