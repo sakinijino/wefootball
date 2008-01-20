@@ -2,22 +2,6 @@ class UsersController < ApplicationController
   # Be sure to include AuthenticationSystem in Application Controller instead
   include AuthenticatedSystem
   
-  
-  # render new.rhtml
-  def new
-  end
-  
-  # Once we explain REST in the book this will obviously be
-  # refactored.
-  def create_xml
-    @user = User.new(params[:user])
-    @user.save!
-    self.current_user = @user
-    render :xml => @user.to_xml
-  rescue ActiveRecord::RecordInvalid
-    render :text => "error"
-  end
-  
   def create
     cookies.delete :auth_token
     # protects against session fixation attacks, wreaks havoc with 
@@ -27,10 +11,12 @@ class UsersController < ApplicationController
     @user = User.new(params[:user])
     @user.save!
     self.current_user = @user
-    redirect_back_or_default('/')
-    flash[:notice] = "Thanks for signing up!"
+    respond_to do |format|
+      format.xml {render :template=>"shared/user"}
+    end
   rescue ActiveRecord::RecordInvalid
-    render :action => 'new'
+    respond_to do |format|
+      format.xml { render :xml=>@user.errors.to_xml_full, :status=>:unprocessable_entity}
+    end
   end
-  
 end

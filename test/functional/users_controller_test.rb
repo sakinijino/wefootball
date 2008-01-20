@@ -14,13 +14,15 @@ class UsersControllerTest < Test::Unit::TestCase
   def setup
     @controller = UsersController.new
     @request    = ActionController::TestRequest.new
+    @request.env["HTTP_ACCEPT"] = "application/xml"
     @response   = ActionController::TestResponse.new
   end
 
   def test_should_allow_signup
     assert_difference 'User.count' do
       create_user
-      assert_response :redirect
+      assert_select 'login', 'sakinijino@gmail.com'
+      assert_nil find_tag(:tag=>'password')
     end
   end
 
@@ -28,7 +30,19 @@ class UsersControllerTest < Test::Unit::TestCase
     assert_no_difference 'User.count' do
       create_user(:login => nil)
       assert assigns(:user).errors.on(:login)
-      assert_response :success
+      assert_response :unprocessable_entity
+      tag = find_tag :tag=>"error", :attributes=>{:field=>"login"}
+      assert_not_nil tag
+    end
+  end
+  
+  def test_login_should_be_an_email_on_signup
+    assert_no_difference 'User.count' do
+      create_user(:login => 'saki')
+      assert assigns(:user).errors.on(:login)
+      assert_response :unprocessable_entity
+      tag = find_tag :tag=>"error", :attributes=>{:field=>"login"}
+      assert_not_nil tag
     end
   end
 
@@ -36,7 +50,9 @@ class UsersControllerTest < Test::Unit::TestCase
     assert_no_difference 'User.count' do
       create_user(:password => nil)
       assert assigns(:user).errors.on(:password)
-      assert_response :success
+      assert_response :unprocessable_entity
+      tag = find_tag :tag=>"error", :attributes=>{:field=>"password"}
+      assert_not_nil tag
     end
   end
 
@@ -44,22 +60,15 @@ class UsersControllerTest < Test::Unit::TestCase
     assert_no_difference 'User.count' do
       create_user(:password_confirmation => nil)
       assert assigns(:user).errors.on(:password_confirmation)
-      assert_response :success
+      assert_response :unprocessable_entity
+      tag = find_tag :tag=>"error", :attributes=>{:field=>"password_confirmation"}
+      assert_not_nil tag
     end
-  end
-
-  def test_should_require_email_on_signup
-    assert_no_difference 'User.count' do
-      create_user(:email => nil)
-      assert assigns(:user).errors.on(:email)
-      assert_response :success
-    end
-  end
-  
+  end  
 
   protected
     def create_user(options = {})
-      post :create, :user => { :login => 'quire', :email => 'quire@example.com',
+      post :create, :user => { :login => 'sakinijino@gmail.com',
         :password => 'quire', :password_confirmation => 'quire' }.merge(options)
     end
 end

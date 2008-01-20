@@ -1,0 +1,1 @@
+xml.login(@user.login)

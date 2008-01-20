@@ -19,16 +19,48 @@
 			}
 		]]>
 	</mx:Script>
-	<mx:Label text="昵称" />
-	<mx:Label id="uname" text="{user.nickname}" />
-	<mx:Label text="年龄" />
-	<mx:Label id="uage" text="{getAge(user.birthday)}" />
-	<mx:Label text="身高" />
-	<mx:Label id="uheight" text="{user.height}cm" />
-	<mx:Label text="体重" />
-	<mx:Label id="uweight" text="{user.weight}kg" />
-	<mx:Label text="惯用脚" />
-	<mx:Label id="ufoot" text="{getFootText(user.foot)}" />
+	<mx:Grid>
+		<mx:GridRow width="100%" height="100%">
+			<mx:GridItem width="100%" height="100%">
+				<mx:Label text="昵称" />
+			</mx:GridItem>
+			<mx:GridItem width="100%" height="100%">
+				<mx:Label id="uname" text="{user.nickname}"/>
+			</mx:GridItem>
+		</mx:GridRow>
+		<mx:GridRow width="100%" height="100%">
+			<mx:GridItem width="100%" height="100%">
+				<mx:Label text="年龄" />
+			</mx:GridItem>
+			<mx:GridItem width="100%" height="100%">
+				<mx:Label id="uage" text="{getAge(user.birthday)}"/>
+			</mx:GridItem>
+		</mx:GridRow>
+		<mx:GridRow width="100%" height="100%">
+			<mx:GridItem width="100%" height="100%">
+				<mx:Label text="身高" />
+			</mx:GridItem>
+			<mx:GridItem width="100%" height="100%">
+				<mx:Label id="uheight" text="{user.height}cm"/>
+			</mx:GridItem>
+		</mx:GridRow>
+		<mx:GridRow width="100%" height="100%">
+			<mx:GridItem width="100%" height="100%">
+				<mx:Label text="体重"/>
+			</mx:GridItem>
+			<mx:GridItem width="100%" height="100%">
+				<mx:Label id="uweight" text="{user.weight}kg"/>
+			</mx:GridItem>
+		</mx:GridRow>
+		<mx:GridRow width="100%" height="100%">
+			<mx:GridItem width="100%" height="100%">
+				<mx:Label text="惯用脚"/>
+			</mx:GridItem>
+			<mx:GridItem width="100%" height="100%">
+				<mx:Label id="ufoot" text="{getFootText(user.foot)}"/>
+			</mx:GridItem>
+		</mx:GridRow>
+	</mx:Grid>
 	<mx:Text id="usummary" text="{user.summary}" />
 </mx:VBox>
 
