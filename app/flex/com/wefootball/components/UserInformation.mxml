@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml">
+	<mx:Script>
+		<![CDATA[
+			[Bindable]
+			public var user:XML;
+			
+			private var today:Date = new Date
+			private function getAge(birthday:String):Number{
+				var year:String = /(19|20)\d{2}/.exec(birthday)[0]
+				return today.fullYear - Number(year)
+			}
+			
+			private var footmapper:Object = {
+				l:'左脚', r:'右脚', b:'左右开弓'
+			}
+			private function getFootText(foot:String):String {
+				return footmapper[foot.toLowerCase()]
+			}
+		]]>
+	</mx:Script>
+	<mx:Label text="昵称" />
+	<mx:Label id="uname" text="{user.nickname}" />
+	<mx:Label text="年龄" />
+	<mx:Label id="uage" text="{getAge(user.birthday)}" />
+	<mx:Label text="身高" />
+	<mx:Label id="uheight" text="{user.height}cm" />
+	<mx:Label text="体重" />
+	<mx:Label id="uweight" text="{user.weight}kg" />
+	<mx:Label text="惯用脚" />
+	<mx:Label id="ufoot" text="{getFootText(user.foot)}" />
+	<mx:Text id="usummary" text="{user.summary}" />
+</mx:VBox>
+
