@@ -16,8 +16,7 @@ class SessionsController < ApplicationController
       end  
     else
       respond_to do |format|
-        format.xml { render :text => "error" }
-        
+        format.xml { head 401 }
       end
     end
   end

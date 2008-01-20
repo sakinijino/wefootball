@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml" width="100%"
+	height="100%" label="Create Account">
+
+<mx:Metadata>
+	[Event(name="accountCreate",
+	type="com.wefootball.events.AccountCreateEvent")]
+</mx:Metadata>
+
+<mx:Script>
+<![CDATA[
+	import mx.controls.Alert;
+	import mx.rpc.events.ResultEvent;
+	import mx.rpc.events.FaultEvent;
+	import com.wefootball.events.AccountCreateEvent;
+	private function createAccount():void {
+		svcAccountCreate.request['user[login]'] = loginTI.text
+		svcAccountCreate.request['user[password]'] = passwordTI.text
+		svcAccountCreate.request['user[password_confirmation]'] = confirmPasswordTI.text
+		svcAccountCreate.send();
+	}
+	
+	private function handleAccountCreateResult(event:ResultEvent):void {
+		var result:Object = event.result;
+		dispatchEvent(new AccountCreateEvent(XML(result)));
+	}
+	
+	private function handleFault(event:FaultEvent):void {
+		Alert.show("Your account was not created.","Error");
+	}
+]]>
+</mx:Script>
+
+<mx:HTTPService
+	id="svcAccountCreate"
+	url="/users"
+	resultFormat="e4x"
+	method="POST"
+	result="handleAccountCreateResult(event)"
+	fault="handleFault(event)" />
+
+	<mx:Form labelWidth="150">
+		<mx:FormItem required="true" label="Email Address">
+			<mx:TextInput id="loginTI"/>
+		</mx:FormItem>
+		<mx:FormItem required="true" label="Password">
+			<mx:TextInput id="passwordTI"
+		displayAsPassword="true"/>
+		</mx:FormItem>
+		<mx:FormItem required="true" label="Confirm Password">
+			<mx:TextInput id="confirmPasswordTI"
+		displayAsPassword="true"/>
+		</mx:FormItem>
+		<mx:FormItem>
+			<mx:Button id="createAccountButton"
+			label="Create Account"
+			click="createAccount()"/>
+		</mx:FormItem>
+	</mx:Form>
+</mx:VBox>

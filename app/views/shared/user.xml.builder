@@ -1,2 +1,4 @@
-xml.id(@user.id)
-xml.login(@user.login)
+xml.user do
+  xml.id(@user.id)
+  xml.login(@user.login)
+end
