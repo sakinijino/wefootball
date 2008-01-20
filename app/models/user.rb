@@ -6,7 +6,7 @@ class User < ActiveRecord::Base
   validates_presence_of     :login
   validates_format_of       :login, 
     :with=> /^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$/,
-    :message => 'should be a email address'
+    :message => 'should be an E-mail address'
   validates_presence_of     :password,                   :if => :password_required?
   validates_presence_of     :password_confirmation,      :if => :password_required?
   validates_length_of       :password, :within => 4..40, :if => :password_required?
