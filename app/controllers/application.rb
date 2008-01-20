@@ -35,6 +35,12 @@ class ApplicationController < ActionController::Base
   # Uncomment the :secret if you're not using the cookie session store
   # TODO - this will be uncommented once we explain sessions
   # in iteration 5.
-  # protect_from_forgery
+  protect_from_forgery
   # :secret => 'dd92c128b5358a710545b5e755694d57'
+  
+  def access_denied
+    respond_to do |format|
+      format.xml {head 401}
+    end
+  end
 end
