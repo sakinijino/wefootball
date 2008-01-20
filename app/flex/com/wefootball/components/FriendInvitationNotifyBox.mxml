@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--关闭浮动窗口还没有做-->
+<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:wf="com.wefootball.components.*">
+	<mx:Script>		
+		<![CDATA[
+			import mx.controls.Alert;
+			import mx.controls.LinkButton;
+			import mx.rpc.events.ResultEvent;
+			import com.wefootball.components.FriendInvitationListBox;
+	        import mx.managers.PopUpManager;
+
+			private function showFriendInvList(e:MouseEvent):void
+			{
+				if(friendInvListPopupWindow.visible == false)			
+            	{
+            		PopUpManager.addPopUp(friendInvListPopupWindow, this, false);
+            		friendInvListPopupWindow.visible = true;
+            	}
+            	else
+            		PopUpManager.bringToFront(friendInvListPopupWindow);
+			}
+          	private function removeFriendInvList():void {
+            	PopUpManager.removePopUp(friendInvListPopupWindow);
+            	friendInvListPopupWindow.visible = false;
+          	}
+          	
+          	public function getFriendInvSummary():void {
+          		svcPreFriendRelationCount.send();
+          	}
+          	private function handlePreFriendRelationCount(event:ResultEvent):void
+          	{
+				var t_invNumber:int = event.result["pre-friend-relation"].length();
+				if(t_invNumber > 0)
+				{
+					var friendInvSummary:LinkButton = new LinkButton();
+          			friendInvSummary.label = t_invNumber.toString() + "个好友添加邀请";
+          			friendInvSummary.addEventListener(MouseEvent.CLICK,
+          											showFriendInvList);
+          			this.addChildAt(friendInvSummary,0);
+    			}
+          	}
+		]]>
+	</mx:Script>
+	
+	<mx:HTTPService
+	    id="svcPreFriendRelationCount"
+	    url="/pre_friend_relations.xml"
+	    resultFormat="e4x"
+	    method="GET"
+	    result="handlePreFriendRelationCount(event)"
+	/>
+	
+	<mx:TitleWindow id="friendInvListPopupWindow" visible="false"
+	    showCloseButton="true" 
+		close="removeFriendInvList();">
+		<wf:FriendInvitationListBox />
+	</mx:TitleWindow>
+</mx:VBox>

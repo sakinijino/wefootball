@@ -1,0 +1,26 @@
+<h1>Listing pre_friend_relations</h1>
+
+<table>
+  <tr>
+    <th>Appler</th>
+    <th>Host</th>
+    <th>Message</th>
+    <th>Apply date</th>
+  </tr>
+
+<% for pre_friend_relation in @pre_friend_relations %>
+  <tr>
+    <td><%=h pre_friend_relation.appler_id %></td>
+    <td><%=h pre_friend_relation.host_id %></td>
+    <td><%=h pre_friend_relation.message %></td>
+    <td><%=h pre_friend_relation.apply_date %></td>
+    <td><%= link_to 'Show', pre_friend_relation %></td>
+    <td><%= link_to 'Edit', edit_pre_friend_relation_path(pre_friend_relation) %></td>
+    <td><%= link_to 'Destroy', pre_friend_relation, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New pre_friend_relation', new_pre_friend_relation_path %>

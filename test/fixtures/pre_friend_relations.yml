@@ -1,0 +1,13 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  appler_id: 1
+  host_id: 1
+  message: MyText
+  apply_date: 2008-01-20
+
+two:
+  appler_id: 1
+  host_id: 1
+  message: MyText
+  apply_date: 2008-01-20

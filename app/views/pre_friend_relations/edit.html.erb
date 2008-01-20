@@ -1,0 +1,32 @@
+<h1>Editing pre_friend_relation</h1>
+
+<%= error_messages_for :pre_friend_relation %>
+
+<% form_for(@pre_friend_relation) do |f| %>
+  <p>
+    <b>Appler</b><br />
+    <%= f.text_field :appler_id %>
+  </p>
+
+  <p>
+    <b>Host</b><br />
+    <%= f.text_field :host_id %>
+  </p>
+
+  <p>
+    <b>Message</b><br />
+    <%= f.text_area :message %>
+  </p>
+
+  <p>
+    <b>Apply date</b><br />
+    <%= f.date_select :apply_date %>
+  </p>
+
+  <p>
+    <%= f.submit "Update" %>
+  </p>
+<% end %>
+
+<%= link_to 'Show', @pre_friend_relation %> |
+<%= link_to 'Back', pre_friend_relations_path %>
