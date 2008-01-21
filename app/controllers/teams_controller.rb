@@ -11,8 +11,6 @@ class TeamsController < ApplicationController
 #    end
 #  end
 
-  # GET /teams/1
-  # GET /teams/1.xml
   def show
     @team = Team.find(params[:id])
     respond_to do |format|
@@ -24,8 +22,6 @@ class TeamsController < ApplicationController
     end
   end
 
-  # POST /teams
-  # POST /teams.xml
   def create
     @team = Team.new(params[:team])
     respond_to do |format|
@@ -42,8 +38,6 @@ class TeamsController < ApplicationController
     end
   end
 
-  # PUT /teams/1
-  # PUT /teams/1.xml
   def update
     @team = Team.find(params[:id])
     if (!@team.users.admin.include?(self.current_user))
