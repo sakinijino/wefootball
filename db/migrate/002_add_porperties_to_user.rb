@@ -1,11 +1,11 @@
 class AddPorpertiesToUser < ActiveRecord::Migration
   def self.up
-    add_column :users, :nickname, :string, :limit=>70
+    add_column :users, :nickname, :string, :limit=>70, :default=>''
     add_column :users, :height, :float
     add_column :users, :weight, :float
     add_column :users, :fitfoot, :string, :limit=>1
     add_column :users, :birthday, :date
-    add_column :users, :summary, :text, :limit=>500
+    add_column :users, :summary, :string, :limit=>500, :default=>''
   end
 
   def self.down

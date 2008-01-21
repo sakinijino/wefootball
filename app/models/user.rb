@@ -11,6 +11,9 @@ class User < ActiveRecord::Base
       find :all, :conditions => ['is_admin = ?', true]
     end
   end
+  
+  has_many :team_join_requests,
+            :dependent => :destroy
 
   validates_presence_of     :login
   validates_format_of       :login, 
@@ -28,8 +31,8 @@ class User < ActiveRecord::Base
   validates_inclusion_of    :height, :in => 0..250, :allow_nil =>true,
     :message => '... Are you kidding me?'
   validates_inclusion_of    :fitfoot, :in => %w{L B R}, :allow_nil =>true
-  validates_length_of       :nickname, :within => 0..70, :allow_nil=>true
-  validates_length_of       :summary, :within => 0..500, :allow_nil=>true
+  validates_length_of       :nickname, :maximum => 70
+  validates_length_of       :summary, :maximum => 500
   
   before_save :encrypt_password
   
@@ -91,7 +94,23 @@ class User < ActiveRecord::Base
                    
     friends_id_list = (friends_id_list.map{|x|[x.user1_id,x.user2_id]}).flatten.reject {|id| id == self.id}
     User.find(friends_id_list)
-  end  
+  end
+  
+  def request_join_teams
+    Team.find(:all,
+      :select => "t.*",
+      :joins => " as t inner join team_join_requests as tjr on t.id = tjr.team_id and tjr.is_invitation = false",
+      :conditions => ["tjr.user_id = :uid", {:uid=>self.id}]
+    )
+  end
+  
+  def invited_join_teams
+    Team.find(:all,
+      :select => "t.*",
+      :joins => " as t inner join team_join_requests as tjr on t.id = tjr.team_id and tjr.is_invitation = true",
+      :conditions => ["tjr.user_id = :uid", {:uid=>self.id}]
+    )
+  end
 
   protected
     # before filter 

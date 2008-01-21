@@ -1,5 +1,8 @@
 ActionController::Routing::Routes.draw do |map|
   map.resources :teams
+  map.resources :team_join_requests
+  map.resources :team_join_invitations
+  map.resources :team_joins
 
   # The priority is based upon order of creation: first created -> highest priority.
   

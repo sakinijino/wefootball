@@ -26,4 +26,17 @@ saki:
   fitfoot: R
   birthday: <%= Date.new(1984,3,10) %>
   summary: weFootball!
-  
+
+mike1:
+  id: 4
+  login: mike1@163.com
+  salt: 7e3041ebc2fc05a40c60028e2c4901a81035d3cd
+  crypted_password: 00742970dc9e6319f8019fd54864d3ea740f04b1 # test
+  created_at: <%= 1.days.ago.to_s :db %>
+
+mike2:
+  id: 5
+  login: mike2@163.com
+  salt: 7e3041ebc2fc05a40c60028e2c4901a81035d3cd
+  crypted_password: 00742970dc9e6319f8019fd54864d3ea740f04b1 # test
+  created_at: <%= 1.days.ago.to_s :db %>

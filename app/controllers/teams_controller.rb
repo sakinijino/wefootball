@@ -1,15 +1,5 @@
 class TeamsController < ApplicationController
   before_filter :login_required, :only=>[:create, :update]
-  # GET /teams
-  # GET /teams.xml
-#  def index
-#    @teams = Team.find(:all)
-#
-#    respond_to do |format|
-#      format.html # index.html.erb
-#      format.xml  { render :xml => @teams }
-#    end
-#  end
 
   def show
     @team = Team.find(params[:id])
@@ -33,7 +23,7 @@ class TeamsController < ApplicationController
         @tu.save
         format.xml  { render :xml => @team.to_xml(:dasherize=>false), :status => 200, :location => @team }
       else
-        format.xml  { render :xml => @team.errors.to_xml_full, :status => 400 }
+        format.xml  { render :xml => @team.errors.to_xml_full, :status => 200 }
       end
     end
   end
@@ -58,16 +48,4 @@ class TeamsController < ApplicationController
       format.xml {head 404}
     end
   end
-#
-#  # DELETE /teams/1
-#  # DELETE /teams/1.xml
-#  def destroy
-#    @team = Team.find(params[:id])
-#    @team.destroy
-#
-#    respond_to do |format|
-#      format.html { redirect_to(teams_url) }
-#      format.xml  { head :ok }
-#    end
-#  end
 end

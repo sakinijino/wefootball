@@ -33,7 +33,7 @@ class TeamsControllerTest < ActionController::TestCase
         login_as :saki
         post :create, :team => { :name=>'Inter Milan'*100, :shortname=>'inter'}
         assert_not_nil find_tag(:tag=>"error", :attributes=>{:field=>"name"})
-        assert_response 400
+        assert_response 200
       end      
     end
   end
