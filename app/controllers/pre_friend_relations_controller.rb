@@ -47,7 +47,8 @@ class PreFriendRelationsController < ApplicationController
       if @pre_friend_relation.save
         flash[:notice] = 'PreFriendRelation was successfully created.'
         format.html { redirect_to(@pre_friend_relation) }
-        format.xml  { render :xml => @pre_friend_relation, :status => :created, :location => @pre_friend_relation }
+        format.xml  { render :xml => @pre_friend_relation, 
+                              :status => :ok, :location => @pre_friend_relation}
       else
         format.html { render :action => "new" }
         format.xml  { render :xml => @pre_friend_relation.errors, :status => :unprocessable_entity }

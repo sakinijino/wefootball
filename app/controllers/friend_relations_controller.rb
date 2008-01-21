@@ -46,7 +46,7 @@ class FriendRelationsController < ApplicationController
       if @friend_relation.save
         flash[:notice] = 'FriendRelation was successfully created.'
         format.html { redirect_to(@friend_relation) }
-        format.xml  { render :xml => @friend_relation, :status => :created, :location => @friend_relation }
+        format.xml  { render :xml => @friend_relation, :status => :ok, :location => @friend_relation }
       else
         format.html { render :action => "new" }
         format.xml  { render :xml => @friend_relation.errors, :status => :unprocessable_entity }
