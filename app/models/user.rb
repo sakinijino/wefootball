@@ -2,6 +2,8 @@ require 'digest/sha1'
 class User < ActiveRecord::Base
   # Virtual attribute for the unencrypted password
   attr_accessor :password
+  has_many :positions,
+            :dependent => :destroy
 
   validates_presence_of     :login
   validates_format_of       :login, 
@@ -11,18 +13,23 @@ class User < ActiveRecord::Base
   validates_presence_of     :password_confirmation,      :if => :password_required?
   validates_length_of       :password, :within => 4..40, :if => :password_required?
   validates_confirmation_of :password,                   :if => :password_required?
-  validates_length_of       :login,    :within => 3..40
+  validates_length_of        :login,    :within => 3..40
   validates_uniqueness_of   :login, :case_sensitive => false
-  validates_inclusion_of :weight, :in => 0..400, :allow_nil =>  true,
+  
+  validates_inclusion_of    :weight, :in => 0..400, :allow_nil =>true,
     :message => '... Are you kidding me?'
-  validates_inclusion_of :height, :in => 0..250, :allow_nil =>  true,
+  validates_inclusion_of    :height, :in => 0..250, :allow_nil =>true,
     :message => '... Are you kidding me?'
-  #vaidates_inclusion_of :fitfoot
+  validates_inclusion_of    :fitfoot, :in => %w{L B R}, :allow_nil =>true
+  validates_length_of       :nickname, :within => 0..70, :allow_nil=>true
+  validates_length_of       :summary, :within => 0..500, :allow_nil=>true
+  
   before_save :encrypt_password
   
   # prevents a user from submitting a crafted form that bypasses activation
   # anything else you want your user to change should be added here.
   attr_accessible :login, :password, :password_confirmation
+  attr_accessible :weight, :height, :fitfoot, :nickname, :summary, :birthday
 
   # Authenticates a user by their login name and unencrypted password.  Returns the user or nil.
   def self.authenticate(login, password)
@@ -80,6 +87,5 @@ class User < ActiveRecord::Base
     def password_required?
       crypted_password.blank? || !password.blank?
     end
-    
     
 end

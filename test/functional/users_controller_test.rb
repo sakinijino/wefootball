@@ -22,6 +22,7 @@ class UsersControllerTest < Test::Unit::TestCase
     assert_difference 'User.count' do
       create_user
       assert_select 'login', 'sakinijino@gmail.com'
+      assert_nil find_tag(:tag=>'nickname')
       assert_nil find_tag(:tag=>'password')
     end
   end
@@ -75,9 +76,12 @@ class UsersControllerTest < Test::Unit::TestCase
   
   def test_update_success
     login_as :quentin
-    put :update, :id=>1, :user=>{:password=>'111111', :password_confirmation => '111111'}
+    put :update, :id=>1, :user=>{:summary=>'Yada!!'}, :positions=>['SW', 'LB']
     assert_response 200
     assert_select 'login', 'quire@example.com'
+    assert_select 'summary', 'Yada!!'
+    assert_select 'position', 'SW'
+    assert_select 'position', :count=>2
   end
   
   def test_update_error

@@ -1,8 +1,4 @@
 ActionController::Routing::Routes.draw do |map|
-  map.resources :messages
-
-  map.resources :messages
-
   # The priority is based upon order of creation: first created -> highest priority.
   
   # Sample of regular route:
@@ -36,7 +32,8 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :users
   map.resource :session
   map.resources :friend_relations
-  map.resources :pre_friend_relations  
+  map.resources :pre_friend_relations
+  map.resources :messages
   map.connect ':controller/:action/:id'
   map.connect ':controller/:action/:id.:format'
 end

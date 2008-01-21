@@ -40,13 +40,6 @@ class UserTest < Test::Unit::TestCase
       assert u.errors.on(:password_confirmation)
     end
   end
-#
-#  def test_should_require_email
-#    assert_no_difference 'User.count' do
-#      u = create_user(:email => nil)
-#      assert u.errors.on(:email)
-#    end
-#  end
 
   def test_should_reset_password
     users(:quentin).update_attributes(:password => 'new password', :password_confirmation => 'new password')
@@ -100,11 +93,48 @@ class UserTest < Test::Unit::TestCase
     assert_not_nil users(:quentin).remember_token_expires_at
     assert users(:quentin).remember_token_expires_at.between?(before, after)
   end
+  
+  def test_validation
+    assert_no_difference 'User.count' do
+      u = create_user({:login=>'saki@usertest.com',
+          :fitfoot=>'X'
+        })
+      assert u.errors.on(:fitfoot)
+    end
+    
+    assert_no_difference 'User.count' do
+      u = create_user({:login=>'saki@usertest.com',
+          :weight=>1000
+        })
+      assert u.errors.on(:weight)
+    end
+    
+    assert_no_difference 'User.count' do
+      u = create_user({:login=>'saki@usertest.com',
+          :height=>400
+        })
+
+      assert u.errors.on(:height)
+    end
+    
+    assert_no_difference 'User.count' do
+      u = create_user({:login=>'saki@usertest.com',
+          :nickname=>'s'*100
+        })
+      assert u.errors.on(:nickname)
+    end
+    
+    assert_no_difference 'User.count' do
+      u = create_user({:login=>'saki@usertest.com',
+          :summary=>'s'*1000
+        })
+      assert u.errors.on(:summary)
+    end
+  end
 
 protected
   def create_user(options = {})
     User.create({ :login => 'sakinijino@gmail.com', 
-        #:email => 'quire@example.com', 
         :password => 'quire', :password_confirmation => 'quire' }.merge(options))
   end
 end

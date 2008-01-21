@@ -13,6 +13,7 @@ class UsersController < ApplicationController
     @user.save!
     self.current_user = @user
     respond_to do |format|
+      @short_format = true
       format.xml {render :template=>"shared/user"}
     end
   rescue ActiveRecord::RecordInvalid
@@ -39,9 +40,16 @@ class UsersController < ApplicationController
           head 401
           return
         end
-        params[:user].delete :login
+        params[:user].delete :login # login can not be modified
         @user=self.current_user
         if self.current_user.update_attributes(params[:user])
+          @user.positions.clear
+          params[:positions]=[] if (!params[:positions]) 
+          params[:positions].uniq!
+          for label in params[:positions]
+            @user.positions<<Position.new({:label=>label})
+          end
+          @user.save
           render :template=>"shared/user"
         else
           render :xml => @user.errors.to_xml_full

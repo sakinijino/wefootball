@@ -20,9 +20,17 @@ class SessionsControllerTest < Test::Unit::TestCase
   end
 
   def test_should_login
-    post :create, :login => 'quire@example.com', :password => 'test'
+    post :create, :login => 'sakinijino0725@163.com', :password => 'test'
     assert session[:user_id]
-    assert_select 'login', 'quire@example.com'
+    assert_select 'login', 'sakinijino0725@163.com'
+    assert_select 'weight', '62.0'
+    assert_select 'height', '172.0'
+    assert_select 'nickname', 'saki'
+    assert_select 'fitfoot', 'R'
+    assert_select 'birthday', '1984-03-10'
+    assert_select 'summary', 'weFootball!'
+    assert_select 'position', 'CB'
+    assert_select 'position', :count=>3
     assert_nil find_tag(:tag=>'password')
   end
 
