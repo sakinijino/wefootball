@@ -32,7 +32,7 @@ ActionController::Routing::Routes.draw do |map|
   
   # Install the default routes as the lowest priority.
   map.resources :users
-  map.resource :session
+  map.resources :sessions
   map.resources :friend_relations
   map.resources :pre_friend_relations
   map.resources :messages

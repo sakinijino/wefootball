@@ -29,7 +29,7 @@
 
 	<mx:HTTPService
 		id="svcAccountLogin"
-		url="/session.xml"
+		url="/sessions.xml"
 		resultFormat="e4x"
 		method="POST"
 		result="handleAccountLoginResult(event)"
