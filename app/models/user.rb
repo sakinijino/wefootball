@@ -83,6 +83,16 @@ class User < ActiveRecord::Base
     save(false)
   end
 
+  def friends
+    friends_id_list = FriendRelation.find(:all,
+                                          :select => 'user1_id, user2_id',
+                                          :conditions => ["user1_id=:uid or user2_id=:uid",{:uid=>self.id}]
+                                         )
+                   
+    friends_id_list = (friends_id_list.map{|x|[x.user1_id,x.user2_id]}).flatten.reject {|id| id == self.id}
+    User.find(friends_id_list)
+  end  
+
   protected
     # before filter 
     def encrypt_password

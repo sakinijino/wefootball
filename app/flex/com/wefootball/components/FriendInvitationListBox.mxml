@@ -7,23 +7,53 @@
     	<![CDATA[
     		import mx.controls.Alert;
     		import mx.rpc.events.ResultEvent;
-    		internal function acceptFriendInv(selectedRow:Object):void{
-    			mx.controls.Alert.show("已接受"+mx.controls.Alert.show(selectedRow.name)
-    									+ "的邀请");
+    		
+    		private function updateFriendInvList():void{
+    			svcPreFriendRelationList.send();
     		}
-    		internal function rejectFriendInv(selectedRow:Object):void{
-    			mx.controls.Alert.show("已拒绝"+mx.controls.Alert.show(selectedRow.name)
-    									+ "的邀请");
+    		
+    		internal function acceptFriendInv(invitation:Object):void{      													 
+      			svcFriendRelationCreate.request['friend_relation[user1_id]'] = invitation['applier_id'];
+    			svcFriendRelationCreate.request['friend_relation[user2_id]'] = invitation['host_id'];
+     			svcFriendRelationCreate.request['pre_id'] = invitation['id'];
+     			svcFriendRelationCreate.send();
     		}
+
+     		private function handleFriendRelationCreate(event:ResultEvent):void{ 		
+    			updateFriendInvList();
+    		}
+    		
+    		internal function rejectFriendInv(id:int):void{      													 
+      			svcPreFriendRelationDestroy.url = "/pre_friend_relations/" + id + ".xml";
+     			svcPreFriendRelationDestroy.send({_method:"DELETE"});
+    		}
+     		private function handlePreFriendRelationDestroy(event:ResultEvent):void{
+     			updateFriendInvList();
+     		} 	  		 				
+    		 	
      		private function listPreFriendRelations():void{
      			svcPreFriendRelationList.send();
      		}
      		private function handlePreFriendRelationList(event:ResultEvent):void{
-     		} 		  		
-    	]]>
-    	
+     		}      					  		
+    	]]>	
     </mx:Script>
-
+    
+	<mx:HTTPService
+	    id="svcFriendRelationCreate"
+	    url="/friend_relations.xml"
+	    resultFormat="e4x"
+	    method="POST"
+	    result="handleFriendRelationCreate(event)"
+	/>
+	
+	<mx:HTTPService
+	    id="svcPreFriendRelationDestroy"
+	    resultFormat="e4x"
+	    method="POST"
+	    result="handlePreFriendRelationDestroy(event)"
+	/>
+	
 	<mx:HTTPService
 	    id="svcPreFriendRelationList"
 	    url="/pre_friend_relations.xml"
@@ -36,9 +66,9 @@
 
 	<mx:DataGrid initialize="listPreFriendRelations()" dataProvider="{preFriendRelationsXLC}">      	
     	<mx:columns>
-    	    <mx:DataGridColumn dataField="apply-date" />
-        	<mx:DataGridColumn dataField="applier-id" />
-        	<mx:DataGridColumn dataField="host-id" />
+    	    <mx:DataGridColumn dataField="apply_date" />
+        	<mx:DataGridColumn dataField="applier_id" />
+        	<mx:DataGridColumn dataField="host_id" />
         	<mx:DataGridColumn dataField="message" />        	
         	<mx:DataGridColumn headerText="">
         		<mx:itemRenderer>
@@ -50,7 +80,7 @@
         	<mx:DataGridColumn headerText="">
         		<mx:itemRenderer>
         			<mx:Component>
-        				<mx:Button label="拒绝" click="outerDocument.rejectFriendInv(data)" />
+        				<mx:Button label="拒绝" click="outerDocument.rejectFriendInv(data['id'])" />
         			</mx:Component>
         		</mx:itemRenderer>
         	</mx:DataGridColumn>        	

@@ -6,7 +6,7 @@ class FriendRelationsController < ApplicationController
 
     respond_to do |format|
       format.html # index.html.erb
-      format.xml  { render :xml => @friend_relations }
+      format.xml  { render :xml => @friend_relations.to_xml(:dasherize=>false) }
     end
   end
 
@@ -17,7 +17,7 @@ class FriendRelationsController < ApplicationController
 
     respond_to do |format|
       format.html # show.html.erb
-      format.xml  { render :xml => @friend_relation }
+      format.xml  { render :xml => @friend_relation.to_xml(:dasherize=>false) }
     end
   end
 
@@ -28,7 +28,7 @@ class FriendRelationsController < ApplicationController
 
     respond_to do |format|
       format.html # new.html.erb
-      format.xml  { render :xml => @friend_relation }
+      format.xml  { render :xml => @friend_relation.to_xml(:dasherize=>false) }
     end
   end
 
@@ -41,12 +41,13 @@ class FriendRelationsController < ApplicationController
   # POST /friend_relations.xml
   def create
     @friend_relation = FriendRelation.new(params[:friend_relation])
+    PreFriendRelation.delete(params[:pre_id])
 
     respond_to do |format|
       if @friend_relation.save
         flash[:notice] = 'FriendRelation was successfully created.'
         format.html { redirect_to(@friend_relation) }
-        format.xml  { render :xml => @friend_relation, :status => :ok, :location => @friend_relation }
+        format.xml  { render :xml => @friend_relation.to_xml(:dasherize=>false), :status => :ok, :location => @friend_relation }
       else
         format.html { render :action => "new" }
         format.xml  { render :xml => @friend_relation.errors, :status => :unprocessable_entity }

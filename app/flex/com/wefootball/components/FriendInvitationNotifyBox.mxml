@@ -30,7 +30,7 @@
           	}
           	private function handlePreFriendRelationCount(event:ResultEvent):void
           	{
-				var t_invNumber:int = event.result["pre-friend-relation"].length();
+				var t_invNumber:int = event.result["pre_friend_relation"].length();
 				if(t_invNumber > 0)
 				{
 					var friendInvSummary:LinkButton = new LinkButton();
