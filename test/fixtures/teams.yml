@@ -1,0 +1,17 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+inter:
+  id: 1
+  name: Inter Milan
+  shortname: Inter
+  summary: Italy Inter Milan
+  found_time: 2008-01-21
+  style: Attack
+
+milan:
+  id: 2
+  name: AC Milan
+  shortname: AC
+  summary: Italy AC Milan
+  found_time: 2008-01-21
+  style: Defence

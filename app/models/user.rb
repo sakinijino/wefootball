@@ -4,6 +4,13 @@ class User < ActiveRecord::Base
   attr_accessor :password
   has_many :positions,
             :dependent => :destroy
+  
+  has_many :user_teams
+  has_many :teams, :through=>:user_teams do
+    def admin
+      find :all, :conditions => ['is_admin = ?', true]
+    end
+  end
 
   validates_presence_of     :login
   validates_format_of       :login, 
