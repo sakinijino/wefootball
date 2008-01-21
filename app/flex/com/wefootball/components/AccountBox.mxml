@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:VBox xmlns="*" xmlns:mx="http://www.adobe.com/2006/mxml"
-	xmlns:components="com.wefootball.components.*"
+	xmlns:acc="com.wefootball.components.account.*"
 	horizontalAlign="center"
 	verticalAlign="middle" width="100%" height="100%">
 <mx:Metadata>
@@ -26,8 +26,8 @@
 	<mx:Text width="500" text="{_reviews}"/>
 	<mx:Spacer height="10"/>
 	<mx:Accordion id="accord" width="400" height="300">
-		<components:LoginBox id="loginbox" />
-		<components:AccountCreateBox accountCreate="handleAccountCreate(event)"/>
+		<acc:LoginBox id="loginbox" />
+		<acc:RegisterBox accountCreate="handleAccountCreate(event)"/>
 	</mx:Accordion>
 	<mx:Label text="We football!!"/>
 </mx:VBox>

@@ -2,11 +2,11 @@
 <mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" xmlns:flexui="flexunit.flexui.*" creationComplete="initializeHandler(event)">
     <mx:Script><![CDATA[
 	import flexunit.framework.TestSuite;
-	import com.wefootball.tests.*
+	import com.wefootball.tests.account.InformationBoxTest
 	
 	private function initializeHandler(event:Event):void {
 		var suite:TestSuite = new TestSuite();
-		suite.addTest(UserInformationTest.suite(this));
+		suite.addTest(InformationBoxTest.suite(this));
 		
 		testRunner.test = suite;
 		testRunner.startTest();

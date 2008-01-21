@@ -1,6 +1,6 @@
-package com.wefootball.tests
+package com.wefootball.tests.account
 {
-	import com.wefootball.components.UserInformation;
+	import com.wefootball.components.account.InformationBox;
 	
 	import flexunit.framework.Assert;
 	import flexunit.framework.TestCase;
@@ -8,7 +8,7 @@ package com.wefootball.tests
 	
 	import mx.core.UIComponent;
 
-	public class UserInformationTest extends TestCase
+	public class InformationBoxTest extends TestCase
 	{
 		public static var user:XML = 
 			<User>
@@ -22,27 +22,27 @@ package com.wefootball.tests
 				<foot>B</foot>
 			</User>
 		
-		public static var ui:UserInformation = new UserInformation()
+		public static var ui:InformationBox = new InformationBox()
 		
 		public static function suite(app:UIComponent):TestSuite {
 			ui.visible = false
 			app.addChild(ui);
 			var suite:TestSuite = new TestSuite;
-			suite.addTest(new UserInformationTest('testBind'));
+			suite.addTest(new InformationBoxTest('testBind'));
 			return suite;
 		}
 		
-		public function UserInformationTest(method:String) {
+		public function InformationBoxTest(method:String) {
 			super(method);
 		}
 		
 		public function testBind() :void {
-			ui.user = UserInformationTest.user
-			Assert.assertEquals(UserInformationTest.user.nickname, ui.uname.text);
+			ui.user = InformationBoxTest.user
+			Assert.assertEquals(InformationBoxTest.user.nickname, ui.uname.text);
 			Assert.assertEquals((new Date().fullYear - 1984).toString(), ui.uage.text);
-			Assert.assertEquals(UserInformationTest.user.height+'cm', ui.uheight.text);
-			Assert.assertEquals(UserInformationTest.user.weight+'kg', ui.uweight.text);
-			Assert.assertEquals(UserInformationTest.user.summary, ui.usummary.text);
+			Assert.assertEquals(InformationBoxTest.user.height+'cm', ui.uheight.text);
+			Assert.assertEquals(InformationBoxTest.user.weight+'kg', ui.uweight.text);
+			Assert.assertEquals(InformationBoxTest.user.summary, ui.usummary.text);
 			Assert.assertEquals('左右开弓', ui.ufoot.text);
 		}
 
