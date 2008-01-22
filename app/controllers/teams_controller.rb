@@ -1,6 +1,7 @@
 class TeamsController < ApplicationController
   before_filter :login_required, :only=>[:create, :update]
   
+  # GET /users/:user_id/teams.xml
   def index #列出用户参加的所有球队
     @user = User.find(params[:user_id])
     respond_to do |format|

@@ -13,4 +13,12 @@ class TrainingTest < ActiveSupport::TestCase
     assert_not_nil t.location
     assert_not_nil t.summary
   end
+  
+  def test_can_join
+    assert trainings(:training1).already_join?(users(:saki))
+    assert !trainings(:training1).already_join?(users(:quentin))
+    assert trainings(:training1).can_join?(users(:quentin))
+    assert !trainings(:training1).can_join?(users(:saki))
+    assert !trainings(:training1).can_join?(users(:mike1))
+  end
 end

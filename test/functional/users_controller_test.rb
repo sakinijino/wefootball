@@ -114,6 +114,13 @@ class UsersControllerTest < Test::Unit::TestCase
     assert_response 200
     assert_select "user", :count=>2
   end
+  
+  def test_should_get_training_users_index
+    get :index, :training_id => trainings(:training1).id
+    assert_response 200
+    assert_select "user", 1
+    assert_select "users>user>nickname", 'saki'
+  end
 
   protected
     def create_user(options = {})

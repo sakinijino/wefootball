@@ -1,6 +1,8 @@
 class TeamJoinRequestsController < ApplicationController
   before_filter :login_required
   
+  # GET /teams/:team_id/team_join_requests.xml
+  # GET /users/:user_id/team_join_requests.xml
   def index
     if (params[:user_id]) #显示用户申请参加的所有队伍
       @user = User.find(params[:user_id])
@@ -22,7 +24,7 @@ class TeamJoinRequestsController < ApplicationController
   end
   
   def create
-    if params[:team_join_request][:user_id]!=self.current_user.id
+    if params[:team_join_request][:user_id].to_s!=self.current_user.id.to_s
       respond_to do |format|
         format.xml {head 401}
       end

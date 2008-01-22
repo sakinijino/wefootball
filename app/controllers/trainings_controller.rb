@@ -6,11 +6,11 @@ class TrainingsController < ApplicationController
   # GET /teams/:team_id/trainings.xml
   def index
     if (params[:user_id]) #显示用户参与的训练
-#      @user = User.find(params[:user_id])
-#      respond_to do |format|
-#        @trainings = @user.trainings
-#        format.xml  { render :xml => @trainings.to_xml(:dasherize=>false), :status => 200  }
-#      end
+      @user = User.find(params[:user_id])
+      respond_to do |format|
+        @trainings = @user.trainings
+        format.xml  { render :xml => @trainings.to_xml(:dasherize=>false), :status => 200  }
+      end
     else #显示队伍的所有训练
       @team = Team.find(params[:team_id])
       respond_to do |format|

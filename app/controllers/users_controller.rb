@@ -2,11 +2,21 @@ class UsersController < ApplicationController
   # Be sure to include AuthenticationSystem in Application Controller instead
   before_filter :login_required, :only=>[:update]
   
+  # GET /teams/:team_id/users.xml
+  # GET /trainings/:training_id/users.xml
   def index # 列出某个队伍的所有队员
-    @team = Team.find(params[:team_id])
-    respond_to do |format|
-      @users = @team.users
-      format.xml  { render :status => 200 }
+    if (params[:team_id])
+      @team = Team.find(params[:team_id])
+      respond_to do |format|
+        @users = @team.users
+        format.xml  { render :status => 200 }
+      end
+    else #训练中的所有队员
+      @tr = Training.find(params[:training_id])
+      respond_to do |format|
+        @users = @tr.users
+        format.xml  { render :status => 200 }
+      end
     end
   rescue ActiveRecord::RecordNotFound => e
     respond_to do |format|
@@ -47,7 +57,7 @@ class UsersController < ApplicationController
   def update
     respond_to do |format|
       format.xml {
-        if (self.current_user.id.to_s != params[:id])
+        if (self.current_user.id.to_s != params[:id].to_s)
           head 401
           return
         end

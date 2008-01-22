@@ -1,6 +1,8 @@
 class TeamJoinInvitationsController < ApplicationController
   before_filter :login_required
   
+  # GET /teams/:team_id/team_join_invitations.xml
+  # GET /users/:user_id/team_join_invitations.xml
   def index
     if (params[:user_id]) # 显示所有邀请用户的队伍
       @user = User.find(params[:user_id])

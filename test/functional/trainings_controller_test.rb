@@ -8,6 +8,14 @@ class TrainingsControllerTest < ActionController::TestCase
     assert_select 'training', :count => 2
     assert_select 'start_time', :count => 2
   end
+  
+  def test_should_get_user_index
+    login_as :saki
+    get :index, :user_id => users(:saki)
+    assert_response :success
+    assert_select 'training', :count => 2
+    assert_select 'start_time', :count => 2
+  end
 
   def test_should_create_training
     login_as :saki

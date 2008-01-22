@@ -35,17 +35,21 @@ ActionController::Routing::Routes.draw do |map|
     end
     users.resources :team_join_requests
     users.resources :team_join_invitations
+    users.resources :trainings
+    users.resources :training_joins
   end
   map.resources :teams do |teams|
-    teams.resources :users do |users|
-      users.resources :team_joins
-    end
+    teams.resources :users
     teams.resources :team_join_requests
     teams.resources :team_join_invitations
     teams.resources :trainings
+    teams.resources :training_joins
   end
   
-  map.resources :trainings
+  map.resources :trainings do |trainings|
+    trainings.resources :users
+  end
+  map.resources :training_joins
   
   map.resources :team_join_requests
   map.resources :team_join_invitations

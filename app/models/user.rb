@@ -5,7 +5,8 @@ class User < ActiveRecord::Base
   has_many :positions,
             :dependent => :destroy
   
-  has_many :user_teams
+  has_many :user_teams,
+            :dependent => :destroy
   has_many :teams, :through=>:user_teams do
     def admin
       find :all, :conditions => ['is_admin = ?', true]
@@ -14,6 +15,10 @@ class User < ActiveRecord::Base
   
   has_many :team_join_requests,
             :dependent => :destroy
+  
+  has_many :training_joins,
+            :dependent => :destroy
+  has_many :trainings, :through=>:training_joins
 
   validates_presence_of     :login
   validates_format_of       :login, 

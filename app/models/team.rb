@@ -1,7 +1,9 @@
 class Team < ActiveRecord::Base
-  has_many :trainings
+  has_many :trainings,
+            :dependent => :destroy
   
-  has_many :user_teams
+  has_many :user_teams,
+            :dependent => :destroy
   has_many :users, :through=>:user_teams do
     def admin
       find :all, :conditions => ['is_admin = ?', true]

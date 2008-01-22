@@ -31,6 +31,7 @@ class TeamJoinsController < ApplicationController
     end
   end
   
+  # PUT /users/:user_id/teams/:team_id/team_joins/0.xml
   def update
     @tj = UserTeam.find_by_user_id_and_team_id(params[:user_id], params[:team_id])
     @user =@tj.user
@@ -56,6 +57,7 @@ class TeamJoinsController < ApplicationController
     end
   end
   
+  # DELETE /users/:user_id/teams/:team_id/team_joins/0.xml
   def destroy
     @tj = UserTeam.find_by_user_id_and_team_id(params[:user_id], params[:team_id])
     if (!@tj.can_destroy_by?(self.current_user))
