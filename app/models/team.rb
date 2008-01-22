@@ -17,7 +17,7 @@ class Team < ActiveRecord::Base
   
   def request_join_users
     User.find(:all,
-      :select => "u.*",
+      :select => "tjr.id as r_id, tjr.message, tjr.apply_date, u.*",
       :joins => " as u inner join team_join_requests as tjr on u.id = tjr.user_id and tjr.is_invitation = false",
       :conditions => ["tjr.team_id = :tid", {:tid=>self.id}]
     )
@@ -25,7 +25,7 @@ class Team < ActiveRecord::Base
   
   def invited_join_users
     User.find(:all,
-      :select => "u.*",
+      :select => "tjr.id as r_id, tjr.message, tjr.apply_date, u.*",
       :joins => " as u inner join team_join_requests as tjr on u.id = tjr.user_id and tjr.is_invitation = true",
       :conditions => ["tjr.team_id = :tid", {:tid=>self.id}]
     )

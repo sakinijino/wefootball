@@ -108,6 +108,12 @@ class UsersControllerTest < Test::Unit::TestCase
     put :update, :id=>1, :user=>{:login=>'saki@gmail.com'}
     assert_select 'login', 'quire@example.com'
   end
+  
+  def test_should_get_team_users_index
+    get :index, :team_id => teams(:inter).id
+    assert_response 200
+    assert_select "user", :count=>2
+  end
 
   protected
     def create_user(options = {})

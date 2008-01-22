@@ -12,6 +12,24 @@ class TeamJoinInvitationsControllerTest < ActionController::TestCase
     @response   = ActionController::TestResponse.new
   end
   
+  def test_index_user_invitations
+    login_as :mike1
+    get :index, :user_id=>users(:saki).id
+    assert_response 200
+    assert_select 'message', 'Hello'
+    assert_not_nil(find_tag(:tag=>'apply_date'))
+    assert_select 'team>id', teams(:inter).id.to_s
+  end
+  
+  def test_index_team_invitations
+    login_as :mike1
+    get :index, :team_id=>teams(:inter).id
+    assert_response 200
+    assert_select 'message', 'Hello'
+    assert_not_nil(find_tag(:tag=>'apply_date'))
+    assert_select 'user>id', users(:saki).id.to_s
+  end
+  
   def test_create_invitation
     assert_difference('TeamJoinRequest.count') do
       assert_difference('users(:mike1).invited_join_teams.length') do
@@ -64,10 +82,10 @@ class TeamJoinInvitationsControllerTest < ActionController::TestCase
     end
   end
   
-  def test_destroy_should_be_yourself
-    login_as :saki
+  def test_destroy_should_unauth
+    login_as :mike2
     assert_no_difference('TeamJoinRequest.count') do
-      post :destroy, :id => 5
+      delete :destroy, :id => 5
       assert_response 401
     end
   end
@@ -76,7 +94,7 @@ class TeamJoinInvitationsControllerTest < ActionController::TestCase
     login_as :mike1
     c1 = TeamJoinRequest.count
     c2 = users(:mike1).invited_join_teams.length
-    post :destroy, :id => 5
+    delete :destroy, :id => 5
     assert_response 200
     assert_equal c1-1, TeamJoinRequest.count
     assert_equal c2-1, users(:mike1).invited_join_teams.length

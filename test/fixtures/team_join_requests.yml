@@ -3,6 +3,7 @@ saki_inter:
   id: 1
   user_id: 3
   team_id: 1
+  message: Hello
   is_invitation: true
 
 saki_milan:

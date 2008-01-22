@@ -11,6 +11,22 @@ class TeamJoinRequestsControllerTest < ActionController::TestCase
     @request.env["HTTP_ACCEPT"] = "application/xml"
     @response   = ActionController::TestResponse.new
   end
+
+  def test_index_team_requests
+    login_as :mike1
+    get :index, :team_id=>teams(:inter).id
+    assert_response 200
+    assert_not_nil(find_tag(:tag=>'apply_date'))
+    assert_select 'user>id', users(:mike2).id.to_s
+  end
+  
+  def test_index_user_requests
+    login_as :mike1
+    get :index, :user_id=>users(:mike2)
+    assert_response 200
+    assert_not_nil(find_tag(:tag=>'apply_date'))
+    assert_select 'team>id', teams(:inter).id.to_s
+  end
   
   def test_create_request
     assert_difference('TeamJoinRequest.count') do
@@ -63,10 +79,10 @@ class TeamJoinRequestsControllerTest < ActionController::TestCase
     end
   end
   
-  def test_destroy_should_be_admin
-    login_as :mike2
+  def test_destroy_unauth
+    login_as :mike1
     assert_no_difference('TeamJoinRequest.count') do
-      post :destroy, :id => 6
+      delete :destroy, :id => 6
       assert_response 401
     end
   end
@@ -75,7 +91,7 @@ class TeamJoinRequestsControllerTest < ActionController::TestCase
     login_as :saki
     c1 = TeamJoinRequest.count
     c2 = users(:mike2).request_join_teams.length
-    post :destroy, :id => 6
+    delete :destroy, :id => 6
     assert_response 200
     assert_equal c1-1, TeamJoinRequest.count
     assert_equal c2-1, users(:mike2).request_join_teams.length

@@ -2,6 +2,18 @@ class UsersController < ApplicationController
   # Be sure to include AuthenticationSystem in Application Controller instead
   before_filter :login_required, :only=>[:update]
   
+  def index
+    @team = Team.find(params[:team_id])
+    respond_to do |format|
+      @users = @team.users
+      format.xml  { render :status => 200 }
+    end
+  rescue ActiveRecord::RecordNotFound => e
+    respond_to do |format|
+      format.xml {head 404}
+    end
+  end
+  
   def create
     cookies.delete :auth_token
     # protects against session fixation attacks, wreaks havoc with 

@@ -42,7 +42,7 @@ class SessionsControllerTest < Test::Unit::TestCase
 
   def test_should_logout
     login_as :quentin
-    get :destroy
+    delete :destroy
     assert_nil session[:user_id]
     assert_response 200
   end

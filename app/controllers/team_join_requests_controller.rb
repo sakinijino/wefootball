@@ -1,6 +1,26 @@
 class TeamJoinRequestsController < ApplicationController
   before_filter :login_required
   
+  def index
+    if (params[:user_id])
+      @user = User.find(params[:user_id])
+      respond_to do |format|
+        @requests = @user.request_join_teams
+        format.xml  { render :status => 200, :template=>"shared/requests_with_teams" }
+      end
+    else
+      @team = Team.find(params[:team_id])
+      respond_to do |format|
+        @requests = @team.request_join_users
+        format.xml  { render :status => 200, :template=>"shared/requests_with_users" }
+      end
+    end
+  rescue ActiveRecord::RecordNotFound => e
+    respond_to do |format|
+      format.xml {head 404}
+    end
+  end
+  
   def create
     if params[:team_join_request][:user_id]!=self.current_user.id
       respond_to do |format|
@@ -32,7 +52,7 @@ class TeamJoinRequestsController < ApplicationController
   
   def destroy
     @tjs = TeamJoinRequest.find(params[:id])
-    if (!@tjs.team.users.admin.include?(self.current_user))
+    if !@tjs.can_destroy_by?(self.current_user)
       respond_to do |format|
         format.xml  { head 401 }
       end

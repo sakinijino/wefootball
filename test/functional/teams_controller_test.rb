@@ -70,16 +70,17 @@ class TeamsControllerTest < ActionController::TestCase
     assert_response 404
   end
   
-   def test_should_be_admin_update_team
+  def test_should_be_admin_update_team
     login_as :aaron
     put :update, :id => teams(:inter).id, :team => {:name => "Inter"}
     assert_response 401
   end
-#  def test_should_get_index
-#    get :index
-#    assert_response :success
-#    assert_not_nil assigns(:teams)
-#  end
+  
+  def test_should_get_user_teams_index
+    get :index, :user_id => users(:saki).id
+    assert_response 200
+    assert_select "team", :count=>2
+  end
 #
 #  def test_should_destroy_team
 #    assert_difference('Team.count', -1) do

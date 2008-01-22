@@ -98,7 +98,7 @@ class User < ActiveRecord::Base
   
   def request_join_teams
     Team.find(:all,
-      :select => "t.*",
+      :select => "tjr.id as r_id, tjr.message, tjr.apply_date, t.*",
       :joins => " as t inner join team_join_requests as tjr on t.id = tjr.team_id and tjr.is_invitation = false",
       :conditions => ["tjr.user_id = :uid", {:uid=>self.id}]
     )
@@ -106,7 +106,7 @@ class User < ActiveRecord::Base
   
   def invited_join_teams
     Team.find(:all,
-      :select => "t.*",
+      :select => "tjr.id as r_id, tjr.message, tjr.apply_date, t.*",
       :joins => " as t inner join team_join_requests as tjr on t.id = tjr.team_id and tjr.is_invitation = true",
       :conditions => ["tjr.user_id = :uid", {:uid=>self.id}]
     )

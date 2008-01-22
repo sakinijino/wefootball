@@ -1,9 +1,4 @@
 ActionController::Routing::Routes.draw do |map|
-  map.resources :teams
-  map.resources :team_join_requests
-  map.resources :team_join_invitations
-  map.resources :team_joins
-
   # The priority is based upon order of creation: first created -> highest priority.
   
   # Sample of regular route:
@@ -34,7 +29,21 @@ ActionController::Routing::Routes.draw do |map|
   # See how all your routes lay out with "rake routes"
   
   # Install the default routes as the lowest priority.
-  map.resources :users
+  map.resources :users do |users|
+    users.resources :teams
+    users.resources :team_join_requests
+    users.resources :team_join_invitations
+  end
+  map.resources :teams do |teams|
+    teams.resources :users
+    teams.resources :team_join_requests
+    teams.resources :team_join_invitations
+  end
+  
+  map.resources :team_join_requests
+  map.resources :team_join_invitations
+  map.resources :team_joins
+  
   map.resources :sessions
   map.resources :friend_relations
   map.resources :pre_friend_relations

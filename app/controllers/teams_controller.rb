@@ -1,5 +1,17 @@
 class TeamsController < ApplicationController
   before_filter :login_required, :only=>[:create, :update]
+  
+  def index
+    @user = User.find(params[:user_id])
+    respond_to do |format|
+      @teams = @user.teams
+      format.xml  { render :status => 200 }
+    end
+  rescue ActiveRecord::RecordNotFound => e
+    respond_to do |format|
+      format.xml {head 404}
+    end
+  end
 
   def show
     @team = Team.find(params[:id])

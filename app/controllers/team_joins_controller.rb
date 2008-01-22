@@ -5,8 +5,7 @@ class TeamJoinsController < ApplicationController
     @tjs = TeamJoinRequest.find(params[:id])
     @user =@tjs.user
     @team = @tjs.team
-    if ((@tjs.is_invitation && self.current_user!=@user) || 
-        (!@tjs.is_invitation && !@team.users.admin.include?(self.current_user)))
+    if !@tjs.can_accept_by?(self.current_user)
       respond_to do |format|
         format.xml  { head 401 }
       end
