@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Box xmlns:mx="http://www.adobe.com/2006/mxml">
+
+    <mx:Script>
+    	<![CDATA[
+    		import mx.controls.Alert;
+    		import mx.rpc.events.ResultEvent; 		 				
+    		 	
+     		private function listFriend():void{
+     			svcPreFriendRelationList.send();
+     		}
+     		private function handlePreFriendRelationList(event:ResultEvent):void{
+     		}      					  		
+    	]]>	
+    </mx:Script>
+   
+	<mx:HTTPService
+	    id="svcFriendList"
+	    url="/friend_relations.xml"
+	    resultFormat="e4x"
+	    method="GET"
+	    result="handleFriendList(event)"
+	/>
+	<mx:XMLListCollection id="FriendXLC"
+    source="{XMLList(svcFriendList.lastResult.children())}"/>
+
+	<mx:TileList dataProvider="{FriendXLC}"
+      itemRenderer="mx.controls.Button"/>
+</mx:Box>

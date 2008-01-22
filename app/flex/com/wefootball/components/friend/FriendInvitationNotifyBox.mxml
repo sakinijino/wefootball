@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--关闭浮动窗口还没有做-->
 <mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml"
-	xmlns:wf="com.wefootball.components.*">
+	xmlns:wfFriend="com.wefootball.components.friend.*">
 	<mx:Script>		
 		<![CDATA[
 			import mx.controls.Alert;
 			import mx.controls.LinkButton;
 			import mx.rpc.events.ResultEvent;
-			import com.wefootball.components.FriendInvitationListBox;
+			import com.wefootball.components.friend.FriendInvitationListBox;
 	        import mx.managers.PopUpManager;
 
 			private function showFriendInvList(e:MouseEvent):void
@@ -54,6 +53,6 @@
 	<mx:TitleWindow id="friendInvListPopupWindow" visible="false"
 	    showCloseButton="true" 
 		close="removeFriendInvList();">
-		<wf:FriendInvitationListBox />
+		<wfFriend:FriendInvitationListBox />
 	</mx:TitleWindow>
 </mx:VBox>
