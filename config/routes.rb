@@ -42,7 +42,10 @@ ActionController::Routing::Routes.draw do |map|
     end
     teams.resources :team_join_requests
     teams.resources :team_join_invitations
+    teams.resources :trainings
   end
+  
+  map.resources :trainings
   
   map.resources :team_join_requests
   map.resources :team_join_invitations

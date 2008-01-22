@@ -1,0 +1,15 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+training1:
+  start_time: 2008-01-20 15:00:00
+  end_time: 2008-01-20 18:00:00
+  location: Beijing, PKU
+  summary: Test Training 1
+  team_id: 1
+
+training2:
+  start_time: 2008-01-22 14:30:00
+  end_time: 2008-01-22 17:00:00
+  location: Shanghai
+  summary: Test Training 2
+  team_id: 1
