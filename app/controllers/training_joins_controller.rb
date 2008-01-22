@@ -2,6 +2,7 @@ class TrainingJoinsController < ApplicationController
   before_filter :login_required
   # POST /training_joins
   # POST /training_joins.xml
+  # POST /users/:user_id/trainings/:training_id/training_joins.xml
   def create
     @training = Training.find(params[:training_join][:training_id])
     if (params[:training_join][:user_id].to_s != self.current_user.id.to_s || !@training.team.users.include?(self.current_user))

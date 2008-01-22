@@ -1,7 +1,6 @@
 class TrainingsController < ApplicationController
   before_filter :login_required
-  # GET /trainings
-  # GET /trainings.xml
+
   # GET /users/:user_id/trainings.xml
   # GET /teams/:team_id/trainings.xml
   def index
