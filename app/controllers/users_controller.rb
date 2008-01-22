@@ -2,7 +2,7 @@ class UsersController < ApplicationController
   # Be sure to include AuthenticationSystem in Application Controller instead
   before_filter :login_required, :only=>[:update]
   
-  def index
+  def index # 列出某个队伍的所有队员
     @team = Team.find(params[:team_id])
     respond_to do |format|
       @users = @team.users

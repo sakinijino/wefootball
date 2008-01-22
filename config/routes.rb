@@ -30,12 +30,16 @@ ActionController::Routing::Routes.draw do |map|
   
   # Install the default routes as the lowest priority.
   map.resources :users do |users|
-    users.resources :teams
+    users.resources :teams do |teams|
+      teams.resources :team_joins
+    end
     users.resources :team_join_requests
     users.resources :team_join_invitations
   end
   map.resources :teams do |teams|
-    teams.resources :users
+    teams.resources :users do |users|
+      users.resources :team_joins
+    end
     teams.resources :team_join_requests
     teams.resources :team_join_invitations
   end

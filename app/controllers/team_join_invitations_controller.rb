@@ -2,13 +2,13 @@ class TeamJoinInvitationsController < ApplicationController
   before_filter :login_required
   
   def index
-    if (params[:user_id])
+    if (params[:user_id]) # 显示所有邀请用户的队伍
       @user = User.find(params[:user_id])
       respond_to do |format|
         @requests = @user.invited_join_teams
         format.xml  { render :status => 200, :template=>"shared/requests_with_teams" }
       end
-    else
+    else # 显示队伍所有邀请的用户
       @team = Team.find(params[:team_id])
       respond_to do |format|
         @requests = @team.invited_join_users
@@ -24,13 +24,13 @@ class TeamJoinInvitationsController < ApplicationController
   def create
     @team = Team.find(params[:team_join_request][:team_id])
     @user = User.find(params[:team_join_request][:user_id])
-    if (!@team.users.admin.include?(self.current_user))
+    if (!@team.users.admin.include?(self.current_user)) # 管理员才可以邀请
       respond_to do |format|
         format.xml {head 401}
       end
       return
     end
-    if (@team.users.include?(@user))
+    if (@team.users.include?(@user)) # 如果已经在球队中，不能邀请
       respond_to do |format|
         format.xml {head 400}
       end
