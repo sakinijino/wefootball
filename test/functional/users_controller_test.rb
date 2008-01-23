@@ -68,8 +68,9 @@ class UsersControllerTest < Test::Unit::TestCase
   end  
   
   def test_show_user
-    get :show, :id=>1
-    assert_select 'login', 'quire@example.com'
+    get :show, :id=>users(:saki).id
+    assert_select 'login', 'sakinijino0725@163.com'
+    assert_select 'birthday', '03/10/1984'
     get :show, :id=>-1
     assert_response 404
   end

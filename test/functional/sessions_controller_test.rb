@@ -27,7 +27,7 @@ class SessionsControllerTest < Test::Unit::TestCase
     assert_select 'height', '172.0'
     assert_select 'nickname', 'saki'
     assert_select 'fitfoot', 'R'
-    assert_select 'birthday', '1984-03-10'
+    assert_select 'birthday', '03/10/1984'
     assert_select 'summary', 'weFootball!'
     assert_select 'position', 'CB'
     assert_select 'position', :count=>3

@@ -27,6 +27,9 @@ module ActiveRecord #:nodoc:
   end
 end
 
+ActiveSupport::CoreExtensions::Date::Conversions::DATE_FORMATS.merge!({:flex=>"%m/%d/%Y"})
+ActiveSupport::CoreExtensions::Time::Conversions::DATE_FORMATS.merge!({:flex=>"%a, %d %b %Y %H:%M:%S %z"})
+
 class ApplicationController < ActionController::Base
   helper :all # include all helpers, all the time
   include AuthenticatedSystem
