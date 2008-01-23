@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:VBox xmlns="*" xmlns:mx="http://www.adobe.com/2006/mxml" width="100%"
-	height="100%" label="Messege List" xmlns:msg="com.wefootball.components.message.*"  creationComplete=" Alert.show('Welcome ' + User.currentUser.login);">
+	height="100%" label="Messege List" xmlns:msg="com.wefootball.components.message.*"  
+	creationComplete=" Alert.show('Welcome ' + User.currentUser.login);">
 
 <mx:Metadata>
 	[Event(name="messageDetail", type="com.wefootball.events.MessageDetailEvent")]

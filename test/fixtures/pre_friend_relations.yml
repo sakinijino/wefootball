@@ -1,13 +1,19 @@
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
 #
-#one:
-#  appler_id: 1
-#  host_id: 1
-#  message: MyText
-#  apply_date: 2008-01-20
-#
-#two:
-#  appler_id: 1
-#  host_id: 1
-#  message: MyText
-#  apply_date: 2008-01-20
+quentin_to_aaron:
+  applier_id: 1
+  host_id: 2
+  message: Hi
+  apply_date: 2008-01-11
+  
+quentin_to_mike1:
+  applier_id: 1
+  host_id: 4
+  message: Hi
+  apply_date: 2004-01-20
+  
+mike2_to_aaron:
+  applier_id: 5
+  host_id: 2
+  message: Hi
+  apply_date: 2008-02-20

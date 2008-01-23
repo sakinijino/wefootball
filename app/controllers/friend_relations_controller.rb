@@ -1,12 +1,13 @@
 class FriendRelationsController < ApplicationController
   # GET /friend_relations
   # GET /friend_relations.xml
-  def index
-    @friend_relations = FriendRelation.find(:all)
+  def index 
+    friendsList = User.find_by_id(params[:user_id]).friends
 
     respond_to do |format|
       format.html # index.html.erb
-      format.xml  { render :xml => @friend_relations.to_xml(:dasherize=>false) }
+      format.xml  { render :xml => friendsList.to_xml(
+                           :only=>[:id,:nickname],:dasherize=>false)}   
     end
   end
 

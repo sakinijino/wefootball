@@ -15,7 +15,7 @@
 	import com.wefootball.model.User;
 	
 	private function login():void {
- 		User.login(loginTI.text, passwordTI.text, handleAccountLoginResult, handleFault );
+ 		User.logon(loginTI.text, passwordTI.text, handleAccountLoginResult, handleFault );
 	}
 	private function handleAccountLoginResult(event:ResultEvent):void {
 		var result:Object = event.result;

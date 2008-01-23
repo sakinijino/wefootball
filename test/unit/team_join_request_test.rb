@@ -1,7 +1,7 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
 class TeamJoinRequestTest < ActiveSupport::TestCase
-  # Replace this with your real tests.
+
   def test_thourgh
     assert_equal 1, users(:aaron).request_join_teams.length
     assert_equal team_join_requests(:aaron_milan).apply_date.to_s(:flex), 

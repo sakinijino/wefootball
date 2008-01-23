@@ -1,4 +1,4 @@
-class TeamJoinRequestsController < ApplicationController
+﻿class TeamJoinRequestsController < ApplicationController
   before_filter :login_required
   
   # GET /teams/:team_id/team_join_requests.xml
