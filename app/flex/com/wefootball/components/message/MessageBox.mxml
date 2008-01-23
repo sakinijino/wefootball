@@ -13,16 +13,19 @@
 	import mx.rpc.events.ResultEvent;
 	import mx.rpc.events.FaultEvent;
 	import com.wefootball.events.MessageEvent;
+	import com.wefootball.model.Message;
 	
 	[Bindable]
     public var messageInfoBack:XML;
     
 	private function sendMessage():void {
-		svcMessage.request['message[sender_id]'] = fromTI.text
+  		Message.create(fromTI.text,toTI.text,subjectTI.text,contentTA.text,
+					handleSendMessageResult,handleMessageFault);  
+/*   		svcMessage.request['message[sender_id]'] = fromTI.text
 		svcMessage.request['message[receiver_id]'] = toTI.text
 		svcMessage.request['message[subject]'] = subjectTI.text
 		svcMessage.request['message[content]'] = contentTA.text
-		svcMessage.send();
+		svcMessage.send();   */
 	}
 	
 	private function handleSendMessageResult(event:ResultEvent):void {
@@ -36,13 +39,13 @@
 ]]>
 </mx:Script>
 
-	<mx:HTTPService
+<!--	<mx:HTTPService
 		id="svcMessage"
 		url="/messages.xml"
 		resultFormat="e4x"
 		method="POST"
 		result="handleSendMessageResult(event)"
-		fault="handleMessageFault(event)"/>	
+		fault="handleMessageFault(event)"/>	-->
 	
 	<mx:Form labelWidth="100" width="600">
 		<mx:FormItem label="From">
