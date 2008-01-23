@@ -10,13 +10,14 @@
 
 <mx:Script>
 <![CDATA[
-	import mx.controls.Alert;
 	import mx.rpc.events.ResultEvent;
 	import mx.rpc.events.FaultEvent;
 	import mx.validators.Validator;
 	import mx.events.ValidationResultEvent;
 	import com.wefootball.validators.ServerErrors;
 	import com.wefootball.events.AccountCreateEvent;
+	import mx.controls.Alert;	
+	import com.wefootball.model.User;
 	
 	[Bindable]
 	private var _serverErrors:ServerErrors;
@@ -33,10 +34,8 @@
 	}
 	
 	private function createAccount():void {
-		svcAccountCreate.request['user[login]'] = loginTI.text
-		svcAccountCreate.request['user[password]'] = passwordTI.text
-		svcAccountCreate.request['user[password_confirmation]'] = confirmPasswordTI.text
-		svcAccountCreate.send();
+		User.create(loginTI.text,passwordTI.text,confirmPasswordTI.text,
+		handleAccountCreateResult,handleFault);
 	}
 	
 	private function handleAccountCreateResult(event:ResultEvent):void {
@@ -58,14 +57,6 @@
 	}
 ]]>
 </mx:Script>
-
-<mx:HTTPService
-	id="svcAccountCreate"
-	url="/users.xml"
-	resultFormat="e4x"
-	method="POST"
-	result="handleAccountCreateResult(event)"
-	fault="handleFault(event)" />
 
 	<mx:Form labelWidth="150">
 		<mx:FormItem required="true" label="Email Address">

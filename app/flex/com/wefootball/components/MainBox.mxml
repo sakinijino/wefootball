@@ -21,6 +21,7 @@
 	import mx.controls.Alert;
 	import com.wefootball.components.message.MessageDetailBox;
 	import com.wefootball.components.message.MessageListBox;
+	import com.wefootball.model.User;
 	
 	[Bindable]
 	private var _reviews:String ='We football!!';

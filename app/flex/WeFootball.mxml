@@ -22,19 +22,6 @@
 ]]>
 </mx:Script>
 	<mx:ViewStack id="mainStack" width="100%" height="100%">
-		<!--<mx:VBox id="splashBox" horizontalAlign="center"
-			verticalAlign="middle" width="100%" height="100%">
-			<mx:Label text="We football!!"/>
-			<mx:Spacer height="10"/>
-			<mx:Text width="500" text="{_reviews}"/>
-			<mx:Spacer height="10"/>
-			<mx:Accordion width="400" height="300">
-				<pom:LoginBox login="handleLogin(event)"/>
-				<pom:AccountCreateBox
-					accountCreate="handleAccountCreate(event)"/>
-			</mx:Accordion>
-			<mx:Label text="We football!!"/>
-		</mx:VBox>-->
 		<pom:AccountBox login="showMain()" hideEffect="Fade" />
 		<pom:MainBox id="mainBox" showEffect="Fade" />
 	</mx:ViewStack>

@@ -1,24 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml"
 	label="Personal Information">
+	
 	<mx:Script>
 		<![CDATA[
+			import mx.containers.Box;
+			import mx.controls.CheckBox;
 			import mx.controls.Alert;
+			import com.wefootball.model.User;
+    		import mx.rpc.events.ResultEvent;
+    		import mx.rpc.events.FaultEvent;					
 		
 			[Bindable]
 			public var user:XML;
 			
-			[Bindable]
-			public var userInfo:Object={nickname:"霏昀" ,height:180 ,weight:70, fitfoot:"l", birthday:"1984-03-01", 
-			                             summary:"这个家伙很懒，什么都没有留下"};
+
+ 			//public var userInfo:Object={nickname:"霏昀" ,height:180 ,weight:70, fitfoot:"l", birthday:"1984-03-01", 
+			//                             summary:"这个家伙很懒，什么都没有留下"};
+ 			[Bindable]
+			public var userInfo:Object = User.currentUser; 
 			
-			private function initUserInfo():void{
-				Alert.show("init");
-				userInfo.nickname = "霏昀";
-				userInfo.height = 180;
-				userInfo.weight = 70;
-				
+			private function setInformation():void {
+  				User.update(nicknameTI.text,
+							heightTI.text,
+							weightTI.text,
+							//birthdayTI.text,
+							footmapper[fitfootCB.text],
+							getPositions(),
+							summaryTA.text,					
+							handleSetInformationResult,
+							handleFault);
 			}
+			
+ 			private function getPositions():Array{
+				var ar:Array = new Array;
+				for (var o:Object in positionTile.getChildren())
+				{
+					var child:CheckBox = CheckBox(positionTile.getChildAt(int(o)));
+ 					if(child.selected == true){
+						ar.push(child.label.toString());
+					} 
+				}
+				return ar;
+			} 
+			private function handleSetInformationResult(event:ResultEvent):void {
+/*  				var result:XML = XML(event.result);
+				if (result.name().localName == "errors") {
+					Alert.show("Please correct the validation errors highlighted on the form.", "Account Not Created");
+					_serverErrors = new ServerErrors(result);
+				} else {
+					dispatchEvent(new AccountCreateEvent(result));
+				}  */
+			}
+			
+			private function handleFault(event:FaultEvent):void {
+				Alert.show('Unknown Error', "Personal information haven't been updated");
+			}						                             
 			
 			private var today:Date = new Date
 			private function getAge(birthday:String):Number{
@@ -27,8 +64,9 @@
 			}
 			
 			private var footmapper:Object = {
-				l:'左脚', r:'右脚', b:'左右开弓'
+				'左脚':'l', '右脚':'r', '左右开弓':'b'
 			}
+			
 			private function getFootText(foot:String):String {
 				return footmapper[foot.toLowerCase()]
 			}
@@ -39,21 +77,24 @@
 		      }
 		]]>
 	</mx:Script>
+	
 		<mx:Form labelWidth="100" width="600">
 		<mx:FormItem label="昵称">
 			<mx:TextInput id="nicknameTI" width="100%" editable="true" text="{userInfo.nickname}"/>
 		</mx:FormItem>
 		<mx:FormItem label="身高">
+			<mx:NumericStepper/>
 			<mx:TextInput id="heightTI" width="100%" editable="true" text="{userInfo.height}"/>
 		</mx:FormItem>
 		<mx:FormItem label="体重">
+			<mx:NumericStepper/>
 			<mx:TextInput id="weightTI" width="100%" editable="true" text="{userInfo.weight}"/>
 		</mx:FormItem>
 	    <mx:FormItem label="生日" >
 	        <mx:TextInput id="birthdayTI" width="100%" editable="true" text="{userInfo.birthday}"/>
 	    </mx:FormItem>
 		<mx:FormItem label="惯用脚" >
-			<mx:ComboBox enabled="true" editable="false" fontFamily="Arial" id="fitFootCB" width="164" fillAlphas="[1.0, 0.32, 1.0, 1.0]" fillColors="[#0EB9F9, #07E4D2]">
+			<mx:ComboBox id="fitfootCB" enabled="true" editable="false" fontFamily="Arial" width="164">
 			    <mx:dataProvider>
 			        <mx:ArrayCollection>
 			            <mx:String>左脚</mx:String>
@@ -65,7 +106,7 @@
 	    </mx:FormItem>
 	    <mx:FormItem label="喜欢的位置"  width="385">
 	    	<mx:HBox width="100%">
-	    		<mx:Tile width="271" height="100%">
+	    		<mx:Tile id="positionTile" width="271" height="100%" >
 	    			<mx:CheckBox label="GK"/>
 	    			<mx:CheckBox label="SW"/>
 	    			<mx:CheckBox label="CB"/>
@@ -80,13 +121,14 @@
 	    			<mx:CheckBox label="SS"/>
 	    		</mx:Tile>
 	    	</mx:HBox>
-
 	    </mx:FormItem>
 	    <mx:FormItem label="个人简介" >
+	   	   	<mx:TextArea id="summaryTA" text="{userInfo.summary}" width="385">
+	   	   	</mx:TextArea>	    
 	    </mx:FormItem>
-   	   	<mx:TextArea text="{userInfo.summary}" width="385">
-   	   	</mx:TextArea>
-
+	    <mx:FormItem>
+	    	<mx:Button label="修改" click="setInformation()" />
+	    </mx:FormItem>	    	
 	</mx:Form>
 </mx:VBox>
 

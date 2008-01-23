@@ -12,9 +12,10 @@
 	import mx.rpc.events.ResultEvent;
 	import mx.rpc.events.FaultEvent;
 	import com.wefootball.events.LoginEvent;
+	import com.wefootball.model.User;
 	
 	private function login():void {
- 		svcAccountLogin.send({login: loginTI.text, password: passwordTI.text});
+ 		User.login(loginTI.text, passwordTI.text, handleAccountLoginResult, handleFault );
 	}
 	private function handleAccountLoginResult(event:ResultEvent):void {
 		var result:Object = event.result;
@@ -26,14 +27,6 @@
 	}
 ]]>
 </mx:Script>
-
-	<mx:HTTPService
-		id="svcAccountLogin"
-		url="/sessions.xml"
-		resultFormat="e4x"
-		method="POST"
-		result="handleAccountLoginResult(event)"
-		fault="handleFault(event)"/>	
 	
 	<mx:Form labelWidth="150">
 		<mx:FormItem label="Email Address">
