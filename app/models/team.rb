@@ -20,18 +20,20 @@ class Team < ActiveRecord::Base
   validates_length_of        :style,    :maximum => 20
   
   def request_join_users
-    User.find(:all,
+    users = User.find(:all,
       :select => "tjr.id as r_id, tjr.message, tjr.apply_date, u.*",
       :joins => " as u inner join team_join_requests as tjr on u.id = tjr.user_id and tjr.is_invitation = false",
       :conditions => ["tjr.team_id = :tid", {:tid=>self.id}]
     )
+    users.each {|t| t.apply_date = Date.parse(t.apply_date)}
   end
   
   def invited_join_users
-    User.find(:all,
+    users = User.find(:all,
       :select => "tjr.id as r_id, tjr.message, tjr.apply_date, u.*",
       :joins => " as u inner join team_join_requests as tjr on u.id = tjr.user_id and tjr.is_invitation = true",
       :conditions => ["tjr.team_id = :tid", {:tid=>self.id}]
     )
+    users.each {|t| t.apply_date = Date.parse(t.apply_date)}
   end
 end

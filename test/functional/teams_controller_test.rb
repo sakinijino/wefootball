@@ -40,7 +40,7 @@ class TeamsControllerTest < ActionController::TestCase
   
   def test_should_show_team
     get :show, :id => teams(:inter).id
-    assert_select "found_time", "2008-01-21"
+    assert_select "found_time", "01/21/2008"
     assert_select "name", "Inter Milan"
     assert_response :success
   end

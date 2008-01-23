@@ -17,7 +17,7 @@ class TeamJoinInvitationsControllerTest < ActionController::TestCase
     get :index, :user_id=>users(:saki).id
     assert_response 200
     assert_select 'message', 'Hello'
-    assert_not_nil(find_tag(:tag=>'apply_date'))
+    assert_select 'apply_date', team_join_requests(:saki_inter).apply_date.to_s(:flex)
     assert_select 'team>id', teams(:inter).id.to_s
   end
   
@@ -26,7 +26,7 @@ class TeamJoinInvitationsControllerTest < ActionController::TestCase
     get :index, :team_id=>teams(:inter).id
     assert_response 200
     assert_select 'message', 'Hello'
-    assert_not_nil(find_tag(:tag=>'apply_date'))
+    assert_select 'apply_date', team_join_requests(:mike1_inter).apply_date.to_s(:flex)
     assert_select 'user>id', users(:saki).id.to_s
   end
   

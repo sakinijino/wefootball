@@ -11,7 +11,7 @@ class SessionsController < ApplicationController
       end
       respond_to do |format|
         @user = self.current_user
-        format.xml {render :template=>"shared/user"}
+        format.xml {render :xml=>@user.to_xml(default_user_to_xml_options) }
       end  
     else
       respond_to do |format|

@@ -6,7 +6,7 @@ class TeamsController < ApplicationController
     @user = User.find(params[:user_id])
     respond_to do |format|
       @teams = @user.teams
-      format.xml  { render :status => 200 }
+      format.xml  { render :xml => @teams.to_xml(:dasherize=>false, :except=>[:summary]), :status => 200 }
     end
   rescue ActiveRecord::RecordNotFound => e
     respond_to do |format|

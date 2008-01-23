@@ -4,11 +4,23 @@ class TeamJoinRequestTest < ActiveSupport::TestCase
   # Replace this with your real tests.
   def test_thourgh
     assert_equal 1, users(:aaron).request_join_teams.length
+    assert_equal team_join_requests(:aaron_milan).apply_date.to_s(:flex), 
+      users(:aaron).request_join_teams[0].apply_date.to_s(:flex)
+    
     assert_equal 1,  users(:saki).invited_join_teams.length
+    assert_equal team_join_requests(:saki_inter).apply_date.to_s(:flex), 
+      users(:saki).request_join_teams[0].apply_date.to_s(:flex)
     
     assert_equal 3,  teams(:inter).invited_join_users.length
+    assert_equal team_join_requests(:saki_inter).apply_date.to_s(:flex), 
+      teams(:inter).invited_join_users[0].apply_date.to_s(:flex)
     assert_equal 1,  teams(:inter).request_join_users.length
+    assert_equal team_join_requests(:mike2_inter).apply_date.to_s(:flex), 
+      teams(:inter).request_join_users[0].apply_date.to_s(:flex)
+    
     assert_equal 2,  teams(:milan).request_join_users.length
+    
+    assert_equal 0,  users(:mike3).request_join_teams.length
   end
   
   def test_create

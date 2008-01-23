@@ -5,17 +5,19 @@ class UsersController < ApplicationController
   # GET /teams/:team_id/users.xml
   # GET /trainings/:training_id/users.xml
   def index # 列出某个队伍的所有队员
+    options = default_user_to_xml_options
+    options[:except]<<:summary
     if (params[:team_id])
       @team = Team.find(params[:team_id])
       respond_to do |format|
         @users = @team.users
-        format.xml  { render :status => 200 }
+        format.xml  { render :xml=>@users.to_xml(options), :status => 200 }
       end
     else #训练中的所有队员
       @tr = Training.find(params[:training_id])
       respond_to do |format|
         @users = @tr.users
-        format.xml  { render :status => 200 }
+        format.xml  { render :xml=>@users.to_xml(options), :status => 200 }
       end
     end
   rescue ActiveRecord::RecordNotFound => e
@@ -34,8 +36,8 @@ class UsersController < ApplicationController
     @user.save!
     self.current_user = @user
     respond_to do |format|
-      @short_format = true
-      format.xml {render :template=>"shared/user"}
+      #~ @short_format = true
+      format.xml {render :xml=>@user.to_xml({:dasherize=>false, :only=>['id', 'login']}) }
     end
   rescue ActiveRecord::RecordInvalid
     respond_to do |format|
@@ -46,7 +48,7 @@ class UsersController < ApplicationController
   def show
     @user = User.find(params[:id])
     respond_to do |format|
-      format.xml {render :template=>"shared/user"}
+      format.xml {render :xml=>@user.to_xml(default_user_to_xml_options)}
     end
   rescue ActiveRecord::RecordNotFound => e
     respond_to do |format|
@@ -71,7 +73,7 @@ class UsersController < ApplicationController
             @user.positions<<Position.new({:label=>label})
           end
           @user.save
-          render :template=>"shared/user"
+          render :xml=>@user.to_xml(default_user_to_xml_options)
         else
           render :xml => @user.errors.to_xml_full
         end

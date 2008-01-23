@@ -29,6 +29,10 @@ end
 
 ActiveSupport::CoreExtensions::Date::Conversions::DATE_FORMATS.merge!({:flex=>"%m/%d/%Y"})
 ActiveSupport::CoreExtensions::Time::Conversions::DATE_FORMATS.merge!({:flex=>"%a, %d %b %Y %H:%M:%S %z"})
+ActiveSupport::CoreExtensions::Hash::Conversions::XML_FORMATTING.merge!({
+  "date"     => Proc.new { |date| date.to_s(:flex) },
+  "datetime" => Proc.new { |time| time.to_s(:flex) }
+})
 
 class ApplicationController < ActionController::Base
   helper :all # include all helpers, all the time
@@ -45,4 +49,12 @@ class ApplicationController < ActionController::Base
       format.xml {head 401}
     end
   end
+  
+    def default_user_to_xml_options
+      {
+        :dasherize=>false,
+        :except=>[:crypted_password, :salt, :created_at, :updated_at, :remember_token, :remember_token_expires_at],
+        :include => [:positions]
+      }
+    end
 end

@@ -45,7 +45,7 @@ class TrainingsControllerTest < ActionController::TestCase
     t = DateTime.now
     put :update, :id => trainings(:training1).id, :training => { :start_time=> t}
     assert_response :success
-    assert_select "start_time", t.to_s
+    assert_select "start_time", t.to_s(:flex)
   end
   
   def test_should_be_admin_before_update_training
