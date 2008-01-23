@@ -1,9 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml">
+<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml"
+	label="Personal Information">
 	<mx:Script>
 		<![CDATA[
+			import mx.controls.Alert;
+		
 			[Bindable]
 			public var user:XML;
+			
+			[Bindable]
+			public var userInfo:Object={nickname:"霏昀" ,height:180 ,weight:70, fitfoot:"l", birthday:"1984-03-01", 
+			                             summary:"这个家伙很懒，什么都没有留下"};
+			
+			private function initUserInfo():void{
+				Alert.show("init");
+				userInfo.nickname = "霏昀";
+				userInfo.height = 180;
+				userInfo.weight = 70;
+				
+			}
 			
 			private var today:Date = new Date
 			private function getAge(birthday:String):Number{
@@ -17,60 +32,61 @@
 			private function getFootText(foot:String):String {
 				return footmapper[foot.toLowerCase()]
 			}
+			
+			 private function changeHeight():void
+		      {
+					//todo
+		      }
 		]]>
 	</mx:Script>
-<!--	<mx:Grid>
-		<mx:GridRow width="100%" height="100%">
-			<mx:GridItem width="100%" height="100%">
-				<mx:Label text="昵称" />
-			</mx:GridItem>
-			<mx:GridItem width="100%" height="100%">
-				<mx:Label id="uname" text="{user.nickname}"/>
-			</mx:GridItem>
-		</mx:GridRow>
-		<mx:GridRow width="100%" height="100%">
-			<mx:GridItem width="100%" height="100%">
-				<mx:Label text="年龄" />
-			</mx:GridItem>
-			<mx:GridItem width="100%" height="100%">
-				<mx:Label id="uage" text="{getAge(user.birthday)}"/>
-			</mx:GridItem>
-		</mx:GridRow>
-		<mx:GridRow width="100%" height="100%">
-			<mx:GridItem width="100%" height="100%">
-				<mx:Label text="身高" />
-			</mx:GridItem>
-			<mx:GridItem width="100%" height="100%">
-				<mx:Label id="uheight" text="{user.height}cm"/>
-			</mx:GridItem>
-		</mx:GridRow>
-		<mx:GridRow width="100%" height="100%">
-			<mx:GridItem width="100%" height="100%">
-				<mx:Label text="体重"/>
-			</mx:GridItem>
-			<mx:GridItem width="100%" height="100%">
-				<mx:Label id="uweight" text="{user.weight}kg"/>
-			</mx:GridItem>
-		</mx:GridRow>
-		<mx:GridRow width="100%" height="100%">
-			<mx:GridItem width="100%" height="100%">
-				<mx:Label text="惯用脚"/>
-			</mx:GridItem>
-			<mx:GridItem width="100%" height="100%">
-				<mx:Label id="ufoot" text="{getFootText(user.foot)}"/>
-			</mx:GridItem>
-		</mx:GridRow>
-	</mx:Grid>
-	<mx:Text id="usummary" text="{user.summary}" />-->
-	<mx:DataGrid rowCount="1">
-		<mx:ArrayCollection >
-			<mx:Object age="23" nickname="霏昀" fitfoot="左"/>
-		</mx:ArrayCollection>
-		<mx:columns>
-			<mx:DataGridColumn dataField="nickname"/>
-			<mx:DataGridColumn dataField="age"/>
-			<mx:DataGridColumn dataField="fitfoot"/>
-		</mx:columns>
-	</mx:DataGrid>
+		<mx:Form labelWidth="100" width="600">
+		<mx:FormItem label="昵称">
+			<mx:TextInput id="nicknameTI" width="100%" editable="true" text="{userInfo.nickname}"/>
+		</mx:FormItem>
+		<mx:FormItem label="身高">
+			<mx:TextInput id="heightTI" width="100%" editable="true" text="{userInfo.height}"/>
+		</mx:FormItem>
+		<mx:FormItem label="体重">
+			<mx:TextInput id="weightTI" width="100%" editable="true" text="{userInfo.weight}"/>
+		</mx:FormItem>
+	    <mx:FormItem label="生日" >
+	        <mx:TextInput id="birthdayTI" width="100%" editable="true" text="{userInfo.birthday}"/>
+	    </mx:FormItem>
+		<mx:FormItem label="惯用脚" >
+			<mx:ComboBox enabled="true" editable="false" fontFamily="Arial" id="fitFootCB" width="164" fillAlphas="[1.0, 0.32, 1.0, 1.0]" fillColors="[#0EB9F9, #07E4D2]">
+			    <mx:dataProvider>
+			        <mx:ArrayCollection>
+			            <mx:String>左脚</mx:String>
+			            <mx:String>右脚</mx:String>
+			            <mx:String>左右开弓</mx:String>
+			        </mx:ArrayCollection>
+	 		    </mx:dataProvider>
+			</mx:ComboBox>
+	    </mx:FormItem>
+	    <mx:FormItem label="喜欢的位置"  width="385">
+	    	<mx:HBox width="100%">
+	    		<mx:Tile width="271" height="100%">
+	    			<mx:CheckBox label="GK"/>
+	    			<mx:CheckBox label="SW"/>
+	    			<mx:CheckBox label="CB"/>
+	    			<mx:CheckBox label="LB"/>
+	    			<mx:CheckBox label="RB"/>
+	    			<mx:CheckBox label="DM"/>
+	    			<mx:CheckBox label="CM"/>
+	    			<mx:CheckBox label="LM"/>
+	    			<mx:CheckBox label="RM"/>
+	    			<mx:CheckBox label="AM"/>
+	    			<mx:CheckBox label="CF"/>
+	    			<mx:CheckBox label="SS"/>
+	    		</mx:Tile>
+	    	</mx:HBox>
+
+	    </mx:FormItem>
+	    <mx:FormItem label="个人简介" >
+	    </mx:FormItem>
+   	   	<mx:TextArea text="{userInfo.summary}" width="385">
+   	   	</mx:TextArea>
+
+	</mx:Form>
 </mx:VBox>
 

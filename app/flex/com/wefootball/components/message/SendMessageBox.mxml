@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml" width="100%"
+	height="100%" label="Messege List">
+
+<mx:Metadata>
+	[Event(name="messageDetail", type="com.wefootball.events.MessageDetailEvent")]
+</mx:Metadata>
+
+	   <mx:Script>
+    	<![CDATA[
+    		import com.wefootball.events.MessageDetailEvent;
+    		import mx.controls.Alert;
+    		import mx.rpc.events.ResultEvent;
+    		import com.wefootball.events.MessageEvent;
+    		
+    		[Bindable]
+    		public var messageInfo:XML;
+    		
+    		internal function readMessageInv(selectedRow:Object):void{
+    		}
+    		
+    		internal function deleteMessage(data:Object):void{
+    			svcMessageDestory.url = "/messages/" + data.id + ".xml";
+    			svcMessageDestory.send({_method:"DELETE"});
+    		}
+     		public function listMessages():void{
+     			svcMessageList.send();
+     		}
+     		private function handleMessageList(event:ResultEvent):void{
+     		} 	
+     		
+     		private function handleMessageDestoryResult(event:ResultEvent):void{
+     			if (event.result == "error") {
+					Alert.show("The task was not successfully deleted.","Error");
+				} else {
+					Alert.show("Delete successful");
+					listMessages();
+				}
+			}
+     	
+     		
+     		internal function messageDetail(data:Object):void{
+     			this.messageInfo = XML(data);
+     			dispatchEvent(new MessageDetailEvent());
+     		}	  		
+     		
+     		
+    	]]>
+    </mx:Script>
+
+	<mx:HTTPService
+	    id="svcMessageDestory"
+	    resultFormat="e4x"
+	    method="POST"
+	    result="handleMessageDestoryResult(event)"
+	/>
+	
+	<mx:HTTPService
+	    id="svcMessageList"
+	    url="/messages.xml"
+	    resultFormat="e4x"
+	    method="GET"
+	    result="handleMessageList(event)"
+	/>
+	<mx:XMLListCollection id="messagesXLC"
+  	  source="{XMLList(svcMessageList.lastResult.children())}"/>
+	
+	<mx:Form labelWidth="100">
+		<mx:DataGrid initialize="listMessages()" dataProvider="{messagesXLC}" width="670" rowCount="10">
+			<mx:columns>
+				<mx:DataGridColumn headerText="From" dataField="sender_id"/>
+				<mx:DataGridColumn headerText="To" dataField="receiver_id"/>
+				<mx:DataGridColumn headerText="Subject" dataField="subject" width="300"/>
+				<mx:DataGridColumn headerText="">
+	        		<mx:itemRenderer>
+	        			<mx:Component>
+	        				<mx:Button label="查看"  click="outerDocument.messageDetail(data)"/>
+	        			</mx:Component>
+	        		</mx:itemRenderer>
+        		</mx:DataGridColumn>
+	        	<mx:DataGridColumn headerText="">
+	        		<mx:itemRenderer>
+	        			<mx:Component>
+	        				<mx:Button label="删除" click="outerDocument.deleteMessage(data)"/>
+	        			</mx:Component>
+	        		</mx:itemRenderer>
+        		</mx:DataGridColumn>        	
+			</mx:columns>		
+		</mx:DataGrid>
+		<mx:Button id="sendButton" 
+				label="Clean Messege Box" 
+				/>
+	</mx:Form>
+</mx:VBox>

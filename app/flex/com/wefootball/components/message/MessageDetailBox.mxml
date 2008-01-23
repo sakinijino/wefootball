@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml" width="100%"
+	height="100%" label="MessegeDetail">
+
+<mx:Script>
+<![CDATA[
+	import mx.controls.Alert;
+	import mx.rpc.events.ResultEvent;
+	import mx.rpc.events.FaultEvent;
+	import com.wefootball.events.MessageReplyEvent;
+	import com.wefootball.events.MessageDetailEvent;
+	
+	[Bindable]
+    public var messageInfo:XML;
+	[Bindable]
+	
+    public var messageInfoBack:XML=<message>
+    	<sender_id/>
+    	<receiver_id />
+    </message>;
+    		
+	private function messageReply():void {
+		messageInfoBack.sender_id=new int(messageInfo.receiver_id);
+		messageInfoBack.receiver_id=new int(messageInfo.sender_id); 
+		dispatchEvent(new MessageReplyEvent());
+	}
+	
+	private function handleMessageFault(event:FaultEvent):void {
+		Alert.show("Message send error", "Messege Send Error")
+	}
+	
+]]>
+
+</mx:Script>
+			
+	<mx:TextInput id="test" width="100%" editable="true"/>
+	<mx:Form labelWidth="100" width="600">
+		
+		<mx:FormItem label="From">
+			<mx:TextInput id="fromTI" width="100%" editable="false" text="{messageInfo.sender_id}"/>
+		</mx:FormItem>
+		<mx:FormItem label="To">
+			<mx:TextInput id="toTI" width="100%"
+			displayAsPassword="false" text="{messageInfo.receiver_id}" editable="false"/>
+		</mx:FormItem>
+		<mx:FormItem label="Subject">
+			<mx:TextInput id="subjectTI" width="100%"
+			displayAsPassword="false" text="{messageInfo.subject}" editable="false"/>
+		</mx:FormItem>
+		<mx:FormItem label="Content" width="100%">
+			<mx:Text id="contentTA" height="100" text="{messageInfo.content}" />
+	    </mx:FormItem>
+		<mx:FormItem>
+			<mx:Button id="sendButton" 
+				label="Reply Message" 
+				 click="messageReply();"/>
+		</mx:FormItem>
+	</mx:Form>
+</mx:VBox>

@@ -37,10 +37,10 @@
 	
 	<mx:Form labelWidth="150">
 		<mx:FormItem label="Email Address">
-			<mx:TextInput id="loginTI"/>
+			<mx:TextInput id="loginTI" text="csdt@csdt.com"/>
 		</mx:FormItem>
 		<mx:FormItem label="Password">
-			<mx:TextInput id="passwordTI"
+			<mx:TextInput id="passwordTI" text="csdtcsdt"
 			displayAsPassword="true"/>
 		</mx:FormItem>
 		<mx:FormItem>
