@@ -4,7 +4,7 @@
 	xmlns:wfom="com.wefootball.components.*"
 	xmlns:accom="com.wefootball.components.account.*"
 	layout="vertical"
-	backgroundGradientColors="[#ffffff, #c0c0c0]"
+	backgroundGradientColors="[#A1DAED, #ffffff]"
 	horizontalAlign="center"
 	verticalAlign="top"
 	width="100%"

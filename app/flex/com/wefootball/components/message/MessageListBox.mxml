@@ -106,13 +106,11 @@
 	
     <mx:TabNavigator id="tn"  width="100%" height="100%">
     <!-- Define each panel using a VBox container. -->
-    <mx:VBox id= "recieveBox" label="收件箱">
-        <mx:Form labelWidth="100">
-		<mx:DataGrid id="receiveDataGrid" initialize="listMessages()" dataProvider="{messagesReceiveXLC}" width="670" rowCount="10">
+    <mx:Canvas id= "recieveBox" label="收件箱" >
+		<mx:DataGrid id="receiveDataGrid" initialize="listMessages()" dataProvider="{messagesReceiveXLC}" width="100%" rowCount="10">
 			<mx:columns >
-<!--				<mx:DataGridColumn headerText="Have read" dataField="is_receiver_read" width="300"/>-->
 				<mx:DataGridColumn headerText="From" dataField="sender_nick"/>			
-				<mx:DataGridColumn headerText="Subject" dataField="subject" width="300">
+				<mx:DataGridColumn headerText="Subject" dataField="subject">
 					<mx:itemRenderer >
 						<mx:Component>
 						<mx:Text text="{data.subject}" click="outerDocument.messageDetail(data)"
@@ -120,14 +118,14 @@
 						</mx:Component>
 					</mx:itemRenderer>
 				</mx:DataGridColumn>
-				<mx:DataGridColumn headerText="Date and Time" dataField="created_at" width="300" >
+				<mx:DataGridColumn headerText="Date and Time" dataField="created_at" width="150">
 					<mx:itemRenderer>
 						<mx:Component>
 							<mx:Label text="{outerDocument.parseDate(data.created_at.toString())}"/>
 						</mx:Component>
 					</mx:itemRenderer>
 				</mx:DataGridColumn>
-	        	<mx:DataGridColumn headerText="">
+	        	<mx:DataGridColumn headerText="" width="50">
 	        		<mx:itemRenderer>
 	        			<mx:Component>
 	        				<mx:Button label="删除" click="outerDocument.DeleteMessage(data)"/>
@@ -136,16 +134,12 @@
         		</mx:DataGridColumn>        	
 			</mx:columns>		
 		</mx:DataGrid>
-		<mx:Button id="cleanReceiveButton" 
-				label="Clean This Box"/>
-		</mx:Form>
-    </mx:VBox>
-    <mx:VBox id= "sendBox" label="发件箱">
-       <mx:Form labelWidth="100">
-		<mx:DataGrid id="sendDataGrid" initialize="listMessages()" dataProvider="{messagesSendXLC}" width="670" rowCount="10">
+    </mx:Canvas>
+    <mx:Canvas id= "sendBox" label="发件箱">
+		<mx:DataGrid id="sendDataGrid" initialize="listMessages()" dataProvider="{messagesSendXLC}" width="100%" rowCount="10">
 			<mx:columns  >
 				<mx:DataGridColumn headerText="To" dataField="receiver_nick"/>
-				<mx:DataGridColumn headerText="Subject" dataField="subject" width="300">
+				<mx:DataGridColumn headerText="Subject" dataField="subject">
 					<mx:itemRenderer>
 						<mx:Component>
 							<mx:Text text="{data.subject}" click="outerDocument.messageSendDetail(data)" 
@@ -153,26 +147,23 @@
 						</mx:Component>
 					</mx:itemRenderer>
 				</mx:DataGridColumn>
-        		<mx:DataGridColumn headerText="Date and Time" width="300" >
+        		<mx:DataGridColumn headerText="Date and Time"  width="150">
         			<mx:itemRenderer>
 						<mx:Component>
 							<mx:Label text="{outerDocument.parseDate(data.created_at.toString())}"/>
 						</mx:Component>
 					</mx:itemRenderer>
         		</mx:DataGridColumn>
-	        	<mx:DataGridColumn headerText="">
+	        	<mx:DataGridColumn headerText="" width="50">
 	        		<mx:itemRenderer>
 	        			<mx:Component>
-	        				<mx:Button label="删除" click="outerDocument.DeleteMessage(data)"/>
+	        				<mx:Button label="删除" click="outerDocument.DeleteMessage(data)" />
 	        			</mx:Component>
 	        		</mx:itemRenderer>
         		</mx:DataGridColumn>     
 			</mx:columns>		
 		</mx:DataGrid>
-		<mx:Button id="ClearSendButton" 
-				label="Clean This Box" />
-		</mx:Form>
-    </mx:VBox>
+    </mx:Canvas>
     </mx:TabNavigator>
     <mx:DateFormatter id="df" formatString="YYYY-MM-DD JJ:NN:SS" />
 </mx:VBox>

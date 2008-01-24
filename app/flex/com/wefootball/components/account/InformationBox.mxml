@@ -80,7 +80,7 @@
 	    </mx:FormItem>
 	    <mx:FormItem label="个人简介" >
 	   	   	<mx:Text text="{user.summary}" width="285" height="100"/>   
-	    </mx:FormItem>	    	
+	    </mx:FormItem>	   
 	</mx:Form>
 	<mx:DateFormatter id="df" formatString="YYYY-MM-DD" />
 </mx:VBox>

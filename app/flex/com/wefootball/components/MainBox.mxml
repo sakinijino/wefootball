@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:VBox xmlns="*" xmlns:mx="http://www.adobe.com/2006/mxml"
+<mx:Canvas xmlns="*" xmlns:mx="http://www.adobe.com/2006/mxml"
 	xmlns:msg="com.wefootball.components.message.*" xmlns:acc="com.wefootball.components.account.*"
-	horizontalAlign="center"
-	verticalAlign="middle" width="100%" height="100%">
+	width="100%" height="100%" creationComplete="init()">
 
-<mx:Metadata>
+<!--<mx:Metadata>
 	[Event(name="messageDetail", type="com.wefootball.events.MessageDetailEvent")]
 </mx:Metadata>
 <mx:Metadata>
@@ -12,23 +11,34 @@
 </mx:Metadata>
 <mx:Metadata>
 	[Event(name="messageReply", type="com.wefootball.events.MessageReplyEvent")]
-</mx:Metadata>
+</mx:Metadata>-->
 
 <mx:Script>
 <![CDATA[
+	import mx.containers.TitleWindow;
 	import com.wefootball.events.MessageDetailEvent;
 	import com.wefootball.events.MessageEvent;
 	import mx.controls.Alert;
 	import com.wefootball.components.message.MessageDetailBox;
 	import com.wefootball.components.message.MessageListBox;
 	import com.wefootball.model.User;
-	
-	[Bindable]
-	private var _reviews:String ='We football!!';
+	import mx.managers.PopUpManager;
+	import com.wefootball.components.account.UpdateBox;
 	
  	private function init():void
 	{
+		this.removeChild(settingWindow);
+		this.removeChild(messageDetailWindow);
+		PopUpManager.addPopUp(settingWindow,this,false);
+		PopUpManager.addPopUp(messageDetailWindow,this,false);
+		
 		messageListBox.addEventListener("messageDetail", function():void{
+			messageDetailWindow.visible=true;
+			messageListBox.messageInfo = messageListBox.messageInfo;
+			PopUpManager.centerPopUp(messageDetailWindow);
+		});
+		
+/* 		messageListBox.addEventListener("messageDetail", function():void{
 			messageAccordion.selectedChild=messageDetailBox;
 			messageDetailBox.messageInfo = messageListBox.messageInfo;
 		});
@@ -47,22 +57,46 @@
 		messageDetailBox.addEventListener("messageReply", function():void{
 			messageAccordion.selectedChild = messageBox;
 			messageBox.messageInfoBack = messageDetailBox.messageInfoBack;
-		});
+		}); */
 	} 
+	
+	private function pouUpMySetting():void
+	{
+		settingWindow.visible = true;
+		PopUpManager.centerPopUp(settingWindow);
+	}
 ]]>
 </mx:Script>
+	<mx:TitleWindow id="settingWindow" title="{User.currentUser.nickname}的设置" visible="false"
+		 showCloseButton="true" close="event.target.visible=false" borderColor="#A1DAED"  borderAlpha="1">
+		<acc:UpdateBox  id="UpdateBox" userInfo="{User.currentUser}"/>
+	</mx:TitleWindow>
+	<mx:TitleWindow id="messageDetailWindow" title="" visible="false"
+		 showCloseButton="true" close="event.target.visible=false" borderColor="#A1DAED"  borderAlpha="1">
+		<msg:MessageDetailBox id="messageDetailBox"/>
+	</mx:TitleWindow>
+	<mx:VBox width="100%" height="100%">
+		<mx:HBox height="100" width="100%" verticalAlign="bottom" horizontalAlign="right">
+			<mx:LinkButton label="{User.currentUser.nickname}的设置" click="pouUpMySetting()"/>
+		</mx:HBox>
 	
-	
-	<mx:Label text="We football!!"/>
+		<mx:HBox width="100%" height="550">
+			<mx:VBox width="100" height="100%">
+				<mx:Button label="信箱" width="100" height="100"/>
+			</mx:VBox>
+			<mx:VBox width="100%" height="100%">
+				<msg:MessageListBox id="messageListBox"  backgroundColor="#FFFFFF"/>
+			</mx:VBox>
+		</mx:HBox>
+	</mx:VBox>
+<!--<acc:InformationBox  user="{User.currentUser}"/>-->
+<!--		<mx:Spacer height="10"/>
 		<mx:Spacer height="10"/>
-			<mx:Text width="100"/>
-		<mx:Spacer height="10"/>
-		<mx:Accordion id="messageAccordion" width="800" height="600" creationComplete="init()">
+		<mx:Accordion id="messageAccordion" width="100%" height="600" creationComplete="init()">
 			<msg:MessageListBox id="messageListBox"  backgroundColor="#FFFFFF"/>
 			<msg:MessageDetailBox id="messageDetailBox"/>
 			<msg:MessageBox  id="messageBox" />
 			<acc:InformationBox  id="informationBox" />
-			<acc:UpdateBox  id="UpdateBox" />
-		</mx:Accordion>
-	<mx:Label text="We football!!"/>
-</mx:VBox>
+			
+		</mx:Accordion>-->
+</mx:Canvas>
