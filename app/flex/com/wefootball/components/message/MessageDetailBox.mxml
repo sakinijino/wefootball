@@ -1,63 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml" width="100%"
-	height="100%" label="MessegeDetail">
-
+	height="100%">
+<mx:Metadata>
+	[Event(name="messageReply", type="com.wefootball.events.MessageDetailEvent")]
+</mx:Metadata>
 <mx:Script>
 <![CDATA[
 	import mx.controls.Alert;
 	import mx.rpc.events.ResultEvent;
 	import mx.rpc.events.FaultEvent;
-	import com.wefootball.events.MessageReplyEvent;
 	import com.wefootball.events.MessageDetailEvent;
+	import com.wefootball.events.MessageDisplayEvent;
+	import com.wefootball.model.Message;
 	import com.wefootball.model.User;
 	
 	[Bindable]
-    public var messageInfo:XML;
-	[Bindable]
-	
-    public var messageInfoBack:XML=<message>
-    	<sender_id/>
-    	<receiver_id />
-    </message>;
-    		
+    public var message:Message;
+	public function set messageId(i:String):void {
+		message = null
+		displayMessageDetail(i);
+	}	
 	private function messageReply():void {
-		messageInfoBack.sender_id=new int(messageInfo.receiver_id);
-		messageInfoBack.receiver_id=new int(messageInfo.sender_id);
- 		messageInfoBack.receiver_nick = messageInfo.receiver_nick;
-		messageInfoBack.receiver_nick = messageInfo.sender_nick; 
-		messageInfoBack.subject = "re: "+messageInfo.subject;
-		messageInfoBack.content = "";
-		dispatchEvent(new MessageReplyEvent());
+		dispatchEvent(new MessageDetailEvent(
+			"messageReply",
+			message.receiver_id,
+			message.receiver_nick,
+			message.sender_id,
+			message.sender_nick,
+			"re: "+message.subject
+		));
 	}
 	
-	private function handleMessageFault(event:FaultEvent):void {
-		Alert.show("Message send error", "Messege Send Error")
-	}
-	
+	internal function displayMessageDetail(mid:String):void{
+    	Message.show(mid,
+     		handleMessageDetailResult,
+     		handleMessageFaultDetailResult);
+    }
+  	private function handleMessageDetailResult(m:Message, event:ResultEvent):void{
+   		this.message = m
+ 	}
+ 	private function handleMessageFaultDetailResult(event:FaultEvent):void{
+ 		Alert.show("Get detail failed"); 			
+ 	}	
 ]]>
 
 </mx:Script>
 			
-	<mx:Form labelWidth="100" width="600">
-		
+	<mx:Form>
 		<mx:FormItem label="From">
-			<mx:Text id="fromTI" width="100%" text="{messageInfo.sender_nick}"/>
+			<mx:Text width="100%" text="{message.sender_nick}"/>
 		</mx:FormItem>
 		<mx:FormItem label="To">
-			<mx:Text id="toTI" width="100%" text="{messageInfo.receiver_nick}" />
+			<mx:Text width="100%" text="{message.receiver_nick}" />
 		</mx:FormItem>
 		<mx:FormItem label="Subject">
-			<mx:Text id="subjectTI" width="100%" text="{messageInfo.subject}"/>
+			<mx:Text width="100%" text="{message.subject}"/>
 		</mx:FormItem>
-		<mx:FormItem label="Content" width="100%">
-			<mx:Text id="contentTA" height="100" text="{messageInfo.content}" />
+		<mx:FormItem label="Content" >
+			<mx:Text text="{message.content}" width="285" height="100"/>
 	    </mx:FormItem>
 		<mx:FormItem>
-			<mx:Button id="sendButton" 
-				label="Reply Message" 
-				 click="messageReply();"
-				 visible="{User.currentUser.id != messageInfo.sender_id}"
-				 />
+			<mx:Button label="Reply Message" 
+				 click="messageReply()"
+				 visible="{User.currentUser.id != message.sender_id}"
+				 creationComplete="event.target.visible = false"
+			/>
 		</mx:FormItem>
 	</mx:Form>
 </mx:VBox>

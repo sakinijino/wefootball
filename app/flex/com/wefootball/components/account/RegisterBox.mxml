@@ -5,7 +5,7 @@
 	width="100%" height="100%" label="Create Account" >
 
 <mx:Metadata>
-	[Event(name="accountCreate", type="com.wefootball.events.AccountCreateEvent")]
+	[Event(name="register", type="com.wefootball.events.RegisterEvent")]
 </mx:Metadata>
 
 <mx:Script>
@@ -15,7 +15,7 @@
 	import mx.validators.Validator;
 	import mx.events.ValidationResultEvent;
 	import com.wefootball.validators.ServerErrors;
-	import com.wefootball.events.AccountCreateEvent;
+	import com.wefootball.events.RegisterEvent;
 	import mx.controls.Alert;	
 	import com.wefootball.model.User;
 	
@@ -46,7 +46,7 @@
 	}
 	
 	private function handleSuccess(event:ResultEvent):void {
-		dispatchEvent(new AccountCreateEvent(XML(event.result).login));
+		dispatchEvent(new RegisterEvent(XML(event.result).login));
 	}		
 	private function handleCreateErrors(errors:ServerErrors, event:ResultEvent):void {
 		_serverErrors = errors;

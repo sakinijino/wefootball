@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml" width="100%"
+	height="100%">
+
+<mx:Metadata>
+	[Event(name="messageSendCompleted", type="com.wefootball.events.MessageDetailEvent")]
+</mx:Metadata>
+
+<mx:Script>
+
+<![CDATA[
+	import mx.controls.Alert;
+	import mx.rpc.events.ResultEvent;
+	import mx.rpc.events.FaultEvent;
+	import com.wefootball.events.MessageDetailEvent;
+	import com.wefootball.model.Message;
+	
+	[Bindable]
+    public var message:Message;
+    
+	private function sendMessage():void {
+  		Message.create(message.receiver_id, subjectTI.text, contentTA.text,
+					handleSendMessageResult,handleMessageFault);  
+	}
+	
+	private function handleSendMessageResult(m:Message, event:ResultEvent):void {
+		var e:MessageDetailEvent = new MessageDetailEvent("messageSendCompleted")
+		e.message = m
+		dispatchEvent(e);
+	}
+	private function handleMessageFault(event:FaultEvent):void {
+		Alert.show("Message send error", "Messege Send Error")
+	}
+]]>
+</mx:Script>
+	<mx:Form>
+		<mx:FormItem label="From">
+			<mx:Text id="fromTI" width="100%" text="{message.sender_nick}"/>
+		</mx:FormItem>
+		<mx:FormItem label="To">
+			<mx:Text id="toTI" width="100%" text="{message.receiver_nick}"/>
+		</mx:FormItem>
+		<mx:FormItem label="Subject">
+			<mx:TextInput id="subjectTI" width="100%" text="{message.subject}"
+			displayAsPassword="false"/>
+		</mx:FormItem>
+		<mx:FormItem label="Content">
+			<mx:TextArea id="contentTA" text="{message.content}" width="285" height="100"/>
+	    </mx:FormItem>
+		<mx:FormItem>
+			<mx:Button id="sendButton" 
+				label="Send Messege" 
+				click="sendMessage();"/>
+		</mx:FormItem>
+	</mx:Form>
+</mx:VBox>

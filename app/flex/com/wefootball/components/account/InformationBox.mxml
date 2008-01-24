@@ -2,28 +2,27 @@
 <mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml"
 	xmlns:wfv="com.wefootball.validators.*" 
 	label="Personal Information" >
-	
+	<mx:Metadata>
+		[Event(name="messageSend", type="com.wefootball.events.MessageDetailEvent")]
+	</mx:Metadata>
 	<mx:Script>
 		<![CDATA[
 			import com.wefootball.model.User;
     		import mx.rpc.events.ResultEvent;
     		import mx.rpc.events.FaultEvent;
     		import mx.collections.ArrayCollection;
+    		import com.wefootball.events.MessageDetailEvent;
 
  			[Bindable]
 			public var user:User = null;
 			public function set userId(i:String):void {
-				getUser(i);
-			}
-			public function refreshBinding():void {
-				var tmp:User = user;
-				user = null;
-				user = tmp;
+				user = null
+				getUserInfoRemote(i);
 			}
 			public function refresh():void {
-				if (user != null && user.id != "") getUser(user.id);
+				if (user != null && user.id != "") getUserInfoRemote(user.id);
 			}
-			private function getUser(id:String):void {
+			private function getUserInfoRemote(id:String):void {
   				User.show(id,
 						  handleSuccess,
 						  handleFault);
@@ -32,6 +31,14 @@
    				user = u;
 			}
 			private function handleFault(event:FaultEvent):void {
+			}
+			
+			public function sendMessage():void {
+				if (user != null && user.id != "") 
+					dispatchEvent(new MessageDetailEvent(
+						"messageSend",
+						User.currentUser.id, 
+						User.currentUser.nickname, user.id, user.nickname))
 			}
 			
 			private var _foottotext:Object = {
@@ -80,7 +87,10 @@
 	    </mx:FormItem>
 	    <mx:FormItem label="个人简介" >
 	   	   	<mx:Text text="{user.summary}" width="285" height="100"/>   
-	    </mx:FormItem>	   
+	    </mx:FormItem>
+	    <mx:FormItem direction="horizontal">
+	    	<mx:Button label="发信" click="sendMessage()" visible="{user.id != User.currentUser.id}"/>
+	    </mx:FormItem>
 	</mx:Form>
 	<mx:DateFormatter id="df" formatString="YYYY-MM-DD" />
 </mx:VBox>

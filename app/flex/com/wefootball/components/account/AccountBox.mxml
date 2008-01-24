@@ -9,13 +9,13 @@
 
 <mx:Script>
 <![CDATA[
-	import com.wefootball.events.AccountCreateEvent;
+	import com.wefootball.events.RegisterEvent;
 	import com.wefootball.events.LoginEvent;
 	
 	[Bindable]
 	private var _reviews:String ='We football!!';
 		
-	private function handleAccountCreate(e:AccountCreateEvent):void {
+	private function handleAccountCreate(e:RegisterEvent):void {
 		accord.selectedIndex = 0;
 		loginbox.loginTI.text = e.login;
 	}
@@ -27,7 +27,7 @@
 	<mx:Spacer height="10"/>
 	<mx:Accordion id="accord" width="400" height="300">
 		<acc:LoginBox id="loginbox" />
-		<acc:RegisterBox accountCreate="handleAccountCreate(event)"/>
+		<acc:RegisterBox register="handleAccountCreate(event)"/>
 	</mx:Accordion>
 	<mx:Label text="We football!!"/>
 </mx:VBox>

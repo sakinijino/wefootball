@@ -2,28 +2,12 @@
 <mx:Canvas xmlns="*" xmlns:mx="http://www.adobe.com/2006/mxml"
 	xmlns:msg="com.wefootball.components.message.*" xmlns:acc="com.wefootball.components.account.*"
 	width="100%" height="100%" creationComplete="init()">
-
-<!--<mx:Metadata>
-	[Event(name="messageDetail", type="com.wefootball.events.MessageDetailEvent")]
-</mx:Metadata>
-<mx:Metadata>
-	[Event(name="sendMessageComplete", type="com.wefootball.events.MessageEvent")]
-</mx:Metadata>
-<mx:Metadata>
-	[Event(name="messageReply", type="com.wefootball.events.MessageReplyEvent")]
-</mx:Metadata>-->
-
 <mx:Script>
 <![CDATA[
-	import mx.containers.TitleWindow;
-	import com.wefootball.events.MessageDetailEvent;
-	import com.wefootball.events.MessageEvent;
+	import com.wefootball.events.*;
 	import mx.controls.Alert;
-	import com.wefootball.components.message.MessageDetailBox;
-	import com.wefootball.components.message.MessageListBox;
 	import com.wefootball.model.User;
 	import mx.managers.PopUpManager;
-	import com.wefootball.components.account.UpdateBox;
 	
  	private function init():void
 	{
@@ -33,51 +17,49 @@
 		PopUpManager.addPopUp(settingWindow,this,false);
 		PopUpManager.addPopUp(messageDetailWindow,this,false);
 		PopUpManager.addPopUp(messageSendWindow,this,false);
-		
-		messageListBox.addEventListener("messageDetail", function():void{
-			messageDetailWindow.visible=true;
-			messageDetailBox.messageInfo = messageListBox.messageInfo;
-			PopUpManager.centerPopUp(messageDetailWindow);
-		});
-		
-		messageListBox.addEventListener("messageSendDetail", function():void{
-			messageDetailWindow.visible=true;
-			messageDetailBox.messageInfo = messageListBox.messageInfo;
-		});
-		
- 		messageBox.addEventListener("sendMessageComplete", function():void{
- 			messageSendWindow.visible=false;
-			messageListBox.listMessages();
-			messageListBox.tn.selectedIndex=1;
-		}); 
-		
-		messageDetailBox.addEventListener("messageReply", function():void{
-			messageDetailWindow.visible=false;
-			messageSendWindow.visible=true;
-			messageBox.messageInfoBack = messageDetailBox.messageInfoBack;
-		}); 
-	} 
+		PopUpManager.centerPopUp(settingWindow);
+		PopUpManager.centerPopUp(messageDetailWindow);
+		PopUpManager.centerPopUp(messageSendWindow);
+	}
+	
+	private function sendMessage(m:MessageDetailEvent):void {
+		messageSendWindow.visible=true;
+		messageSendBox.message = m.message;
+	}
+	
+	private function displayMessage(m:MessageDisplayEvent):void {
+		messageDetailWindow.visible=true;
+		messageDetailBox.messageId = m.message_id;
+	}
+	private function refreshMessageList():void {
+		messageListBox.refresh()
+	}
+	private function displayUser(u:UserDisplayEvent):void {
+		informationBox.visible=true;
+		informationBox.userId = u.user_id;
+	}
 	
 	private function pouUpMySetting():void
 	{
 		settingWindow.visible = true;
-		PopUpManager.centerPopUp(settingWindow);
 	}
 ]]>
 </mx:Script>
 	<mx:TitleWindow id="settingWindow" title="{User.currentUser.nickname}的设置" visible="false"
 		 showCloseButton="true" close="event.target.visible=false" borderColor="#A1DAED"  borderAlpha="1">
-		<acc:UpdateBox  id="UpdateBox" userInfo="{User.currentUser}"/>
+		<acc:UpdateBox id="UpdateBox" user="{User.currentUser}"/>
 	</mx:TitleWindow>
 	
 	<mx:TitleWindow id="messageDetailWindow" title="" visible="false"
 		 showCloseButton="true" close="event.target.visible=false" borderColor="#A1DAED"  borderAlpha="1">
-		<msg:MessageDetailBox id="messageDetailBox"/>
+		<msg:MessageDetailBox id="messageDetailBox" 
+			messageReply="messageDetailWindow.visible=false;sendMessage(event)"/>
 	</mx:TitleWindow>
 	
 	<mx:TitleWindow id="messageSendWindow" title="" visible="false"
 		 showCloseButton="true" close="event.target.visible=false" borderColor="#A1DAED"  borderAlpha="1">
-		<msg:MessageBox id="messageBox"/>
+		<msg:MessageSendBox id="messageSendBox" 
+			messageSendCompleted="messageSendWindow.visible=false;refreshMessageList()"/>
 	</mx:TitleWindow>
 	
 	<mx:VBox width="100%" height="100%">
@@ -90,18 +72,12 @@
 				<mx:Button label="信箱" width="100" height="100"/>
 			</mx:VBox>
 			<mx:VBox width="100%" height="100%">
-				<msg:MessageListBox id="messageListBox"  backgroundColor="#FFFFFF"/>
+				<msg:MessageListBox id="messageListBox" backgroundColor="#FFFFFF"
+					 userDisplay="displayUser(event)"
+					 messageDisplay="displayMessage(event)"/>
+				<acc:InformationBox id="informationBox" backgroundColor="#FFFFFF" 
+					messageSend="sendMessage(event)"/>
 			</mx:VBox>
 		</mx:HBox>
 	</mx:VBox>
-<!--<acc:InformationBox  user="{User.currentUser}"/>-->
-<!--		<mx:Spacer height="10"/>
-		<mx:Spacer height="10"/>
-		<mx:Accordion id="messageAccordion" width="100%" height="600" creationComplete="init()">
-			<msg:MessageListBox id="messageListBox"  backgroundColor="#FFFFFF"/>
-			<msg:MessageDetailBox id="messageDetailBox"/>
-			<msg:MessageBox  id="messageBox" />
-			<acc:InformationBox  id="informationBox" />
-			
-		</mx:Accordion>-->
 </mx:Canvas>

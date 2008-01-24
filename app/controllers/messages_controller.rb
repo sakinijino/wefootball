@@ -1,4 +1,5 @@
 class MessagesController < ApplicationController
+  before_filter :login_required
   # GET /messages
   # GET /messages.xml
   def index
@@ -14,7 +15,10 @@ class MessagesController < ApplicationController
   # GET /messages/1.xml
   def show
     @message = Message.find(params[:id])
-
+    if !@message.is_receiver_read
+      @message.is_receiver_read = true
+      @message.save
+    end
     respond_to do |format|
       proc = Proc.new { |options| 
           options[:builder].tag!('sender_nick', @message.sender.nickname)
@@ -27,7 +31,7 @@ class MessagesController < ApplicationController
   # POST /messages.xml
   def create
     @message = Message.new(params[:message])
-
+    @message.sender = self.current_user
     respond_to do |format|
       if @message.save
         format.xml  { render :xml => @message.to_xml(:dasherize=>false), :status => :ok, :location => @message }
