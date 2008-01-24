@@ -22,7 +22,9 @@
     		
 	private function messageReply():void {
 		messageInfoBack.sender_id=new int(messageInfo.receiver_id);
-		messageInfoBack.receiver_id=new int(messageInfo.sender_id); 
+		messageInfoBack.receiver_id=new int(messageInfo.sender_id);
+ 		messageInfoBack.receiver_nick = messageInfo.receiver_nick;
+		messageInfoBack.receiver_nick = messageInfo.sender_nick; 
 		messageInfoBack.subject = "re: "+messageInfo.subject;
 		messageInfoBack.content = "";
 		dispatchEvent(new MessageReplyEvent());
@@ -39,15 +41,13 @@
 	<mx:Form labelWidth="100" width="600">
 		
 		<mx:FormItem label="From">
-			<mx:TextInput id="fromTI" width="100%" editable="false" text="{messageInfo.sender_id}"/>
+			<mx:Text id="fromTI" width="100%" text="{messageInfo.sender_nick}"/>
 		</mx:FormItem>
 		<mx:FormItem label="To">
-			<mx:TextInput id="toTI" width="100%"
-			displayAsPassword="false" text="{messageInfo.receiver_id}" editable="false"/>
+			<mx:Text id="toTI" width="100%" text="{messageInfo.receiver_nick}" />
 		</mx:FormItem>
 		<mx:FormItem label="Subject">
-			<mx:TextInput id="subjectTI" width="100%"
-			displayAsPassword="false" text="{messageInfo.subject}" editable="false"/>
+			<mx:Text id="subjectTI" width="100%" text="{messageInfo.subject}"/>
 		</mx:FormItem>
 		<mx:FormItem label="Content" width="100%">
 			<mx:Text id="contentTA" height="100" text="{messageInfo.content}" />

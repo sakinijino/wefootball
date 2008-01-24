@@ -8,12 +8,14 @@
 
 	   <mx:Script>
     	<![CDATA[
+    		import mx.events.FlexEvent;
     		import mx.controls.LinkButton;
     		import com.wefootball.events.MessageDetailEvent;
     		import mx.controls.Alert;
     		import mx.rpc.events.ResultEvent;
     		import mx.rpc.events.FaultEvent;
     		import com.wefootball.events.MessageEvent;
+    		import com.wefootball.events.UserDisplayEvent;
     		import com.wefootball.model.User;
     		import com.wefootball.model.Message;
     		import mx.collections.XMLListCollection;
@@ -73,7 +75,6 @@
      			Alert.show(ResultEvent.RESULT.toString());
      		} 
      		
-		
      		internal function messageDetail(data:Object):void{
      			receiverRead(data);
      			Message.detail(data.id,handleMessageDetailResult,handleMessageFaultDetailResult);
@@ -84,6 +85,7 @@
      		private function handleMessageDetailResult(event:ResultEvent):void{
   	 			data= event.result;
   	 			this.messageInfo = XML(data);
+  	 			//Alert.show(data.toString());
      			dispatchEvent(new MessageDetailEvent());
      		} 	
      		private function handleMessageFaultDetailResult(event:FaultEvent):void{
@@ -101,6 +103,11 @@
      			return df.format(new Date(d));
      		}
      		
+     		public function seeOtherUser(user_id:int):void{
+     			//Alert.show(user_id.toString());
+     			dispatchEvent(new UserDisplayEvent(user_id));
+     		}
+     		
     	]]>
     </mx:Script>
 	
@@ -109,7 +116,14 @@
     <mx:Canvas id= "recieveBox" label="收件箱" >
 		<mx:DataGrid id="receiveDataGrid" initialize="listMessages()" dataProvider="{messagesReceiveXLC}" width="100%" rowCount="10">
 			<mx:columns >
-				<mx:DataGridColumn headerText="From" dataField="sender_nick"/>			
+				<mx:DataGridColumn headerText="From" dataField="sender_nick">	
+					<mx:itemRenderer >
+						<mx:Component>
+						<mx:Text text="{data.sender_nick}" click="outerDocument.seeOtherUser(data.sender_id)"
+								 color="{outerDocument.LinkButtonColor(data.is_receiver_read)}"/>
+						</mx:Component>
+					</mx:itemRenderer>		
+				</mx:DataGridColumn>
 				<mx:DataGridColumn headerText="Subject" dataField="subject">
 					<mx:itemRenderer >
 						<mx:Component>
@@ -138,7 +152,14 @@
     <mx:Canvas id= "sendBox" label="发件箱">
 		<mx:DataGrid id="sendDataGrid" initialize="listMessages()" dataProvider="{messagesSendXLC}" width="100%" rowCount="10">
 			<mx:columns  >
-				<mx:DataGridColumn headerText="To" dataField="receiver_nick"/>
+				<mx:DataGridColumn headerText="To" dataField="receiver_nick">
+					<mx:itemRenderer>
+						<mx:Component>
+							<mx:Text text="{data.receiver_nick}" click="outerDocument.seeOtherUser(data.receiver_id)" 
+								color="0x000000"/>
+						</mx:Component>
+					</mx:itemRenderer>
+				</mx:DataGridColumn>
 				<mx:DataGridColumn headerText="Subject" dataField="subject">
 					<mx:itemRenderer>
 						<mx:Component>

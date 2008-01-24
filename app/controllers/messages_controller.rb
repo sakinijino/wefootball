@@ -16,7 +16,10 @@ class MessagesController < ApplicationController
     @message = Message.find(params[:id])
 
     respond_to do |format|
-      format.xml  { render :xml => @message.to_xml(:dasherize=>false) }
+      proc = Proc.new { |options| 
+          options[:builder].tag!('sender_nick', @message.sender.nickname)
+          options[:builder].tag!('receiver_nick', @message.receiver.nickname)}
+      format.xml  { render :xml => @message.to_xml(:dasherize=>false ,:procs => [ proc] )}
     end
   end
 

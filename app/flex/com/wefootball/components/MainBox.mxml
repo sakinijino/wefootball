@@ -29,35 +29,33 @@
 	{
 		this.removeChild(settingWindow);
 		this.removeChild(messageDetailWindow);
+		this.removeChild(messageSendWindow);
 		PopUpManager.addPopUp(settingWindow,this,false);
 		PopUpManager.addPopUp(messageDetailWindow,this,false);
+		PopUpManager.addPopUp(messageSendWindow,this,false);
 		
 		messageListBox.addEventListener("messageDetail", function():void{
 			messageDetailWindow.visible=true;
-			messageListBox.messageInfo = messageListBox.messageInfo;
+			messageDetailBox.messageInfo = messageListBox.messageInfo;
 			PopUpManager.centerPopUp(messageDetailWindow);
 		});
 		
-/* 		messageListBox.addEventListener("messageDetail", function():void{
-			messageAccordion.selectedChild=messageDetailBox;
-			messageDetailBox.messageInfo = messageListBox.messageInfo;
-		});
-		
 		messageListBox.addEventListener("messageSendDetail", function():void{
-			messageAccordion.selectedChild=messageDetailBox;
+			messageDetailWindow.visible=true;
 			messageDetailBox.messageInfo = messageListBox.messageInfo;
 		});
 		
-		messageBox.addEventListener("sendMessageComplete", function():void{
-			messageAccordion.selectedChild = messageListBox;
+ 		messageBox.addEventListener("sendMessageComplete", function():void{
+ 			messageSendWindow.visible=false;
 			messageListBox.listMessages();
 			messageListBox.tn.selectedIndex=1;
-		});
+		}); 
 		
 		messageDetailBox.addEventListener("messageReply", function():void{
-			messageAccordion.selectedChild = messageBox;
+			messageDetailWindow.visible=false;
+			messageSendWindow.visible=true;
 			messageBox.messageInfoBack = messageDetailBox.messageInfoBack;
-		}); */
+		}); 
 	} 
 	
 	private function pouUpMySetting():void
@@ -71,10 +69,17 @@
 		 showCloseButton="true" close="event.target.visible=false" borderColor="#A1DAED"  borderAlpha="1">
 		<acc:UpdateBox  id="UpdateBox" userInfo="{User.currentUser}"/>
 	</mx:TitleWindow>
+	
 	<mx:TitleWindow id="messageDetailWindow" title="" visible="false"
 		 showCloseButton="true" close="event.target.visible=false" borderColor="#A1DAED"  borderAlpha="1">
 		<msg:MessageDetailBox id="messageDetailBox"/>
 	</mx:TitleWindow>
+	
+	<mx:TitleWindow id="messageSendWindow" title="" visible="false"
+		 showCloseButton="true" close="event.target.visible=false" borderColor="#A1DAED"  borderAlpha="1">
+		<msg:MessageBox id="messageBox"/>
+	</mx:TitleWindow>
+	
 	<mx:VBox width="100%" height="100%">
 		<mx:HBox height="100" width="100%" verticalAlign="bottom" horizontalAlign="right">
 			<mx:LinkButton label="{User.currentUser.nickname}的设置" click="pouUpMySetting()"/>
