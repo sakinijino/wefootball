@@ -11,14 +11,14 @@ class PreFriendRelationTest < ActiveSupport::TestCase
     #~ assert_equal 2,  teams(:milan).request_join_users.length
   #~ end
   
-  def test_create
-    assert_difference 'TeamJoinRequest.count' do
-      t = create_request
-      assert_equal t.message, ''
-      assert_equal t.is_invitation, false
-      assert_not_nil t.apply_date
-    end
-  end
+#  def test_create
+#    assert_difference 'TeamJoinRequest.count' do
+#      t = create_request
+#      assert_equal t.message, ''
+#      assert_equal t.is_invitation, false
+#      assert_not_nil t.apply_date
+#    end
+#  end
   
   def test_can
     #~ test if the fake url can reject an application
