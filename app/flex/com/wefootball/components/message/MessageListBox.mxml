@@ -79,6 +79,9 @@
      			receiverRead(data);
      			Message.detail(data.id,handleMessageDetailResult,handleMessageFaultDetailResult);
      		}	  		
+     		internal function messageSendDetail(data:Object):void{
+     			Message.detail(data.id,handleMessageDetailResult,handleMessageFaultDetailResult);
+     		}
      		public function handleMessageDetailResult(event:ResultEvent):void{
   	 			data= event.result;
   	 			this.messageInfo = XML(data);
@@ -139,7 +142,7 @@
 				<mx:DataGridColumn headerText="Subject" dataField="subject" width="300">
 					<mx:itemRenderer>
 						<mx:Component>
-							<mx:LinkButton label="{data.subject}" click="outerDocument.messageDetail(data)"/>
+							<mx:LinkButton label="{data.subject}" click="outerDocument.messageSendDetail(data)"/>
 						</mx:Component>
 					</mx:itemRenderer>
 				</mx:DataGridColumn>
