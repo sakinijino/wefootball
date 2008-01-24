@@ -20,7 +20,7 @@ class User < ActiveRecord::Base
             :dependent => :destroy
   has_many :trainings, :through=>:training_joins
 
-  validates_presence_of     :login
+  validates_presence_of     :login, :nickname
   validates_format_of       :login, 
     :with=> /^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$/,
     :message => ' should be an E-mail address'

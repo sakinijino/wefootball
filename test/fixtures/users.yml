@@ -1,5 +1,6 @@
 quentin:
   id: 1
+  nickname: quentin
   login: quire@example.com
   salt: 7e3041ebc2fc05a40c60028e2c4901a81035d3cd
   crypted_password: 00742970dc9e6319f8019fd54864d3ea740f04b1 # test
@@ -9,6 +10,7 @@ quentin:
 
 aaron:
   id: 2
+  nickname: aaron
   login: aaron@example.com
   salt: 7e3041ebc2fc05a40c60028e2c4901a81035d3cd
   crypted_password: 00742970dc9e6319f8019fd54864d3ea740f04b1 # test
@@ -29,6 +31,7 @@ saki:
 
 mike1:
   id: 4
+  nickname: mike1
   login: mike1@163.com
   salt: 7e3041ebc2fc05a40c60028e2c4901a81035d3cd
   crypted_password: 00742970dc9e6319f8019fd54864d3ea740f04b1 # test
@@ -36,6 +39,7 @@ mike1:
 
 mike2:
   id: 5
+  nickname: mike2
   login: mike2@163.com
   salt: 7e3041ebc2fc05a40c60028e2c4901a81035d3cd
   crypted_password: 00742970dc9e6319f8019fd54864d3ea740f04b1 # test
@@ -43,6 +47,7 @@ mike2:
 
 mike3:
   id: 6
+  nickname: mike3
   login: mike3@163.com
   salt: 7e3041ebc2fc05a40c60028e2c4901a81035d3cd
   crypted_password: 00742970dc9e6319f8019fd54864d3ea740f04b1 # test

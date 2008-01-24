@@ -17,7 +17,7 @@
 		
 	private function handleAccountCreate(e:AccountCreateEvent):void {
 		accord.selectedIndex = 0;
-		loginbox.loginTI.text = e.user.login;
+		loginbox.loginTI.text = e.login;
 	}
 ]]>
 </mx:Script>

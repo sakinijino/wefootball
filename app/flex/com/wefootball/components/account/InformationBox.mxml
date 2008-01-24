@@ -1,144 +1,87 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml"
 	xmlns:wfv="com.wefootball.validators.*" 
-	label="Personal Information">
+	label="Personal Information" >
 	
 	<mx:Script>
 		<![CDATA[
-			import mx.collections.ArrayCollection;
-			import mx.events.ListEvent;
-			import mx.containers.Box;
-			import mx.controls.CheckBox;
-			import mx.controls.Alert;
 			import com.wefootball.model.User;
     		import mx.rpc.events.ResultEvent;
     		import mx.rpc.events.FaultEvent;
-    		import mx.validators.Validator;
-			import mx.events.ValidationResultEvent;
-			import com.wefootball.validators.ServerErrors;
-			
-    		[Bindable]
-			private var _serverErrors:ServerErrors;
-			
+    		import mx.collections.ArrayCollection;
+
  			[Bindable]
-			public var userInfo:User = User.currentUser; 
-			
-			private function setInformation():void {
-  				User.update({
-  								id:userInfo.id,
-  								nickname:this.nicknameTI.text,
-  								height:this.heightTI.text,
-  								weight:this.weightTI.text,
-  								birthday:this.birthdayTI.selectedDate,
-  								fitfoot:_texttofoot[this.fitfootCB.selectedItem],
-  								positions:getPositions(),
-  								summary:this.summaryTA.text
-  							},
-							handleSetInformationResult,
-							handleFault);
+			public var user:User = null;
+			public function set userId(i:String):void {
+				getUser(i);
 			}
-			
-  			private function getPositions():Array{
-				var ar:Array = new Array;
-				for (var o:Object in positionTile.getChildren())
-				{
-					var child:CheckBox = CheckBox(positionTile.getChildAt(int(o)));
- 					if(child.selected == true){
-						ar.push(child.label.toString());
-					} 
-				}
-				return ar;
+			public function refreshBinding():void {
+				var tmp:User = user;
+				user = null;
+				user = tmp;
 			}
-			 
-			private function handleSetInformationResult(event:ResultEvent):void {
-   				var result:XML = XML(event.result);
-				if (result.name().localName == "errors") {
- 					_serverErrors = new ServerErrors(result);
-				} 
-				else {
-					//dispatchEvent(new AccountCreateEvent(result));
-				}
+			public function refresh():void {
+				if (user != null && user.id != "") getUser(user.id);
 			}
-			
+			private function getUser(id:String):void {
+  				User.show(id,
+						  handleSuccess,
+						  handleFault);
+			}
+			private function handleSuccess(u:User, event:ResultEvent):void {
+   				user = u;
+			}
 			private function handleFault(event:FaultEvent):void {
-				Alert.show('Unknown Error', "Personal information haven't been updated");
-			}						                             
-			
- 			private var _texttofoot:Object = {
-				'左脚':'L', '右脚':'R', '左右开弓':'B'
 			}
+			
 			private var _foottotext:Object = {
 				'L':'左脚', 'R':'右脚', 'B':'左右开弓'
 			}
 			private function foottotext(f:String):String {
-				return _foottotext[userInfo.fitfoot]
-			} 
-			
-			private function checkPosition(ar:ArrayCollection,pos:String):Boolean {
-				return (ar.getItemIndex(pos) != -1);
+				return _foottotext[f]
+			}
+			private var _postotext:Object = {
+				'GK':'门将', 'SW':'清道夫', 'CB':'中后卫', 'LB':'左后卫',
+				'RB':'右后卫', 'DM':'后腰', 'CM':'中前卫', 'LM':'左前卫',
+				'RM':'右前卫', 'AM':'前腰', 'SS':'前锋', 'CF':'中锋'
+			}
+			internal function postotext(f:String):String {
+				return _postotext[f]
 			}
 		]]>
 	</mx:Script>
 	
-		<mx:Form labelWidth="100" width="600">
-		<mx:FormItem label="昵称">
-			<mx:TextInput id="nicknameTI" width="100%" editable="true" text="{userInfo.nickname}"/>
+	<mx:Form labelWidth="100" width="600">
+		<mx:FormItem label="昵称" >
+			<mx:Label text="{user.nickname}"/>
 		</mx:FormItem>
-		<mx:FormItem label="身高">
-<!--			<mx:NumericStepper value="5"/>-->
-			<mx:TextInput id="heightTI" width="100%" editable="true" text="{userInfo.height}"/>
+		<mx:FormItem label="身高" >
+			<mx:Label text="{user.height>0 ? user.height+'cm' : ''}"/>
 		</mx:FormItem>
-		<mx:FormItem label="体重">
-<!--			<mx:NumericStepper value="100"/>-->
-			<mx:TextInput id="weightTI" width="100%" editable="true" text="{userInfo.weight}"/>
+		<mx:FormItem label="体重" >
+			<mx:Label text="{user.weight>0 ? user.weight+'kg' : ''}" />
 		</mx:FormItem>
 	    <mx:FormItem label="生日" >
-	        <mx:DateField id="birthdayTI" yearNavigationEnabled="true" width="100%" 
-	        	editable="false" selectedDate="{userInfo.birthday}" displayedYear="1980" 
-	        	monthNames="['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月']" formatString="YYYY-MM-DD"/>
+	        <mx:Label text="{df.format(user.birthday)}" />
 	    </mx:FormItem>
 		<mx:FormItem label="惯用脚" >
-			<mx:ComboBox id="fitfootCB" selectedItem="{foottotext(userInfo.fitfoot)}" 
-				enabled="true" editable="false">
-				<mx:dataProvider>
-			        <mx:ArrayCollection>
-			            <mx:String>左脚</mx:String>
-			            <mx:String>右脚</mx:String>
-			            <mx:String>左右开弓</mx:String>
-			        </mx:ArrayCollection>
-	 		    </mx:dataProvider>
-			</mx:ComboBox>
+			<mx:Label text="{foottotext(user.fitfoot)}" />
 	    </mx:FormItem>
-	    <mx:FormItem label="喜欢的位置"  width="385">
-	    	<mx:HBox width="100%">
-	    		<mx:Tile id="positionTile" width="271" height="100%" >
-	    			<mx:CheckBox label="GK" selected="{checkPosition(userInfo.positions, 'GK')}"/>
-	    			<mx:CheckBox label="SW" selected="{checkPosition(userInfo.positions, 'SW')}"/>
-	    			<mx:CheckBox label="CB" selected="{checkPosition(userInfo.positions, 'CB')}"/>
-	    			<mx:CheckBox label="LB" selected="{checkPosition(userInfo.positions, 'LB')}"/>
-	    			<mx:CheckBox label="RB" selected="{checkPosition(userInfo.positions, 'RB')}"/>
-	    			<mx:CheckBox label="DM" selected="{checkPosition(userInfo.positions, 'DM')}"/>
-	    			<mx:CheckBox label="CM" selected="{checkPosition(userInfo.positions, 'CM')}"/>
-	    			<mx:CheckBox label="LM" selected="{checkPosition(userInfo.positions, 'LM')}"/>
-	    			<mx:CheckBox label="RM" selected="{checkPosition(userInfo.positions, 'RM')}"/>
-	    			<mx:CheckBox label="AM" selected="{checkPosition(userInfo.positions, 'AM')}"/>
-	    			<mx:CheckBox label="CF" selected="{checkPosition(userInfo.positions, 'CF')}"/>
-	    			<mx:CheckBox label="SS" selected="{checkPosition(userInfo.positions, 'SS')}"/>
-	    		</mx:Tile>
-	    	</mx:HBox>
+	    <mx:FormItem label="适合的位置" >
+			<mx:TileList dataProvider="{user.positions}"  
+				borderStyle="none" width="300" height="80"
+				columnCount="4" textAlign="left">
+				<mx:itemRenderer>
+					<mx:Component>
+						<mx:CheckBox label="{outerDocument.postotext(data.toString())}" selected="true" mouseEnabled="false" />
+					</mx:Component>
+				</mx:itemRenderer>
+			</mx:TileList>
 	    </mx:FormItem>
 	    <mx:FormItem label="个人简介" >
-	   	   	<mx:TextArea id="summaryTA" text="{userInfo.summary}" width="385">
-	   	   	</mx:TextArea>	    
-	    </mx:FormItem>
-	    <mx:FormItem>
-	    	<mx:Button label="修改" click="setInformation()" />
-	    </mx:FormItem>	    	    	
+	   	   	<mx:Text text="{user.summary}" width="285" height="100"/>   
+	    </mx:FormItem>	    	
 	</mx:Form>
-	<wfv:ServerErrorValidator field="weight" listener="{weightTI}" serverErrors="{_serverErrors}" />
-	<wfv:ServerErrorValidator field="height" listener="{heightTI}" serverErrors="{_serverErrors}" />
-	<wfv:ServerErrorValidator field="fitfoot" listener="{fitfootCB}" serverErrors="{_serverErrors}" />
-	<wfv:ServerErrorValidator field="nickname" listener="{nicknameTI}" serverErrors="{_serverErrors}" />
-	<wfv:ServerErrorValidator field="summary" listener="{summaryTA}" serverErrors="{_serverErrors}" />
+	<mx:DateFormatter id="df" formatString="YYYY-MM-DD" />
 </mx:VBox>
 

@@ -34,20 +34,23 @@
 	}
 	
 	private function createAccount():void {
-		User.create(loginTI.text,passwordTI.text,confirmPasswordTI.text,
-		handleAccountCreateResult,handleFault);
+		User.create(
+			{
+				login:loginTI.text,
+				password:passwordTI.text,
+				confirmPassword:confirmPasswordTI.text,
+				createerrors: handleCreateErrors
+			},
+			handleSuccess,
+			handleFault);
 	}
 	
-	private function handleAccountCreateResult(event:ResultEvent):void {
-		var result:XML = XML(event.result);
-		if (result.name().localName == "errors") {
-			Alert.show("Please correct the validation errors highlighted on the form.", "Account Not Created");
-			_serverErrors = new ServerErrors(result);
-		} else {
-			dispatchEvent(new AccountCreateEvent(result));
-		}
+	private function handleSuccess(event:ResultEvent):void {
+		dispatchEvent(new AccountCreateEvent(XML(event.result).login));
+	}		
+	private function handleCreateErrors(errors:ServerErrors, event:ResultEvent):void {
+		_serverErrors = errors;
 	}
-	
 	private function handleFault(event:FaultEvent):void {
 		Alert.show('Unknown Error', "Account Not Created");
 	}

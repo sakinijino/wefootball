@@ -32,12 +32,14 @@ class UsersController < ApplicationController
     # request forgery protection.
     # uncomment at your own risk
     # reset_session
+    params[:user][:nickname] = params[:user][:login].split('@')[0] if ( params[:user][:login]!=nil &&
+      (!params[:user][:nickname] || params[:user][:nickname] == "")) 
     @user = User.new(params[:user])
     @user.save!
     self.current_user = @user
     respond_to do |format|
       #~ @short_format = true
-      format.xml {render :xml=>@user.to_xml({:dasherize=>false, :only=>['id', 'login']}) }
+      format.xml {render :xml=>@user.to_xml({:dasherize=>false, :only=>['id', 'login', 'nickname']}) }
     end
   rescue ActiveRecord::RecordInvalid
     respond_to do |format|

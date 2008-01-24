@@ -22,7 +22,7 @@ class UsersControllerTest < Test::Unit::TestCase
     assert_difference 'User.count' do
       create_user
       assert_select 'login', 'sakinijino@gmail.com'
-      assert_nil find_tag(:tag=>'nickname')
+      assert_select 'nickname', 'sakinijino'
       assert_nil find_tag(:tag=>'password')
     end
   end

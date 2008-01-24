@@ -62,6 +62,7 @@
 			<msg:MessageDetailBox id="messageDetailBox"/>
 			<msg:MessageBox  id="messageBox" />
 			<acc:InformationBox  id="informationBox" />
+			<acc:UpdateBox  id="UpdateBox" />
 		</mx:Accordion>
 	<mx:Label text="We football!!"/>
 </mx:VBox>

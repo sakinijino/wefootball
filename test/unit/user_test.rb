@@ -20,6 +20,13 @@ class UserTest < Test::Unit::TestCase
     end
   end
   
+  def test_should_require_nickname
+    assert_no_difference 'User.count' do
+      u = create_user(:nickname => nil)
+      assert u.errors.on(:nickname)
+    end
+  end
+  
   def test_login_should_be_email
     assert_no_difference 'User.count' do
       u = create_user(:login => 'saki')
@@ -134,7 +141,7 @@ class UserTest < Test::Unit::TestCase
 
 protected
   def create_user(options = {})
-    User.create({ :login => 'sakinijino@gmail.com', 
+    User.create({ :login => 'sakinijino@gmail.com', :nickname=>'saki',
         :password => 'quire', :password_confirmation => 'quire' }.merge(options))
   end
 end

@@ -3,11 +3,11 @@ package com.wefootball.events {
 	
 	public class AccountCreateEvent extends Event {
 		public static const ACCOUNT_CREATE:String ="accountCreate";
-		public var user:XML;
+		public var login:String;
 		
-		public function AccountCreateEvent(user:XML) {
+		public function AccountCreateEvent(login:String) {
 			super(ACCOUNT_CREATE, true);
-			this.user = user;
+			this.login = login;
 		}
 	}
 }
