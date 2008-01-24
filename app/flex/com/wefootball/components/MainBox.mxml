@@ -33,6 +33,11 @@
 			messageDetailBox.messageInfo = messageListBox.messageInfo;
 		});
 		
+		messageListBox.addEventListener("messageSendDetail", function():void{
+			messageAccordion.selectedChild=messageDetailBox;
+			messageDetailBox.messageInfo = messageListBox.messageInfo;
+		});
+		
 		messageBox.addEventListener("sendMessageComplete", function():void{
 			messageAccordion.selectedChild = messageListBox;
 			messageListBox.listMessages();

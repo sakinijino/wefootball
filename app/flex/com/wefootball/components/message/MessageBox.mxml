@@ -56,11 +56,11 @@
 			displayAsPassword="false" text="{messageInfoBack.receiver_id}"/>
 		</mx:FormItem>
 		<mx:FormItem label="Subject">
-			<mx:TextInput id="subjectTI" width="100%" text=""
+			<mx:TextInput id="subjectTI" width="100%" text="{messageInfoBack.subject}"
 			displayAsPassword="false"/>
 		</mx:FormItem>
 		<mx:FormItem label="Content" width="100%">
-			<mx:TextArea id="contentTA" height="100" text=""/>
+			<mx:TextArea id="contentTA" height="100" text="{messageInfoBack.content}"/>
 	    </mx:FormItem>
 		<mx:FormItem>
 			<mx:Button id="sendButton" 

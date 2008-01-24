@@ -2,8 +2,8 @@ class MessagesController < ApplicationController
   # GET /messages
   # GET /messages.xml
   def index
-    @as_sender_messages = Message.find_all_by_sender_id(current_user.id)
-    @as_receiver_messages = Message.find_all_by_receiver_id(current_user.id)    
+    @as_sender_messages = Message.find_all_by_sender_id_and_is_delete_by_sender(current_user.id,false)
+    @as_receiver_messages = Message.find_all_by_receiver_id_and_is_delete_by_receiver(current_user.id,false)    
 
     respond_to do |format|
       format.html # index.html.erb
@@ -77,7 +77,20 @@ class MessagesController < ApplicationController
   # DELETE /messages/1.xml
   def destroy
     @message = Message.find(params[:id])
-    @message.destroy
+    
+    if(@message.sender_id == @message.receiver_id)
+      @message.destroy
+    elsif((@message.sender_id == current_user.id )&& (@message.is_delete_by_receiver == false))
+      @message.is_delete_by_sender = true
+      @message.save
+    elsif((@message.sender_id == current_user.id) && (@message.is_delete_by_receiver == true))
+      @message.destroy
+    elsif(@message.receiver_id == current_user.id && @message.is_delete_by_sender == false)
+      @message.is_delete_by_receiver = true
+      @message.save
+    elsif(@message.receiver_id == current_user.id && @message.is_delete_by_sender == true)
+      @message.destroy
+    end
 
     respond_to do |format|
       format.html { redirect_to(messages_url) }

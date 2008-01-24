@@ -9,6 +9,7 @@
 	import mx.rpc.events.FaultEvent;
 	import com.wefootball.events.MessageReplyEvent;
 	import com.wefootball.events.MessageDetailEvent;
+	import com.wefootball.model.User;
 	
 	[Bindable]
     public var messageInfo:XML;
@@ -22,6 +23,8 @@
 	private function messageReply():void {
 		messageInfoBack.sender_id=new int(messageInfo.receiver_id);
 		messageInfoBack.receiver_id=new int(messageInfo.sender_id); 
+		messageInfoBack.subject = "re: "+messageInfo.subject;
+		messageInfoBack.content = "";
 		dispatchEvent(new MessageReplyEvent());
 	}
 	
@@ -33,7 +36,6 @@
 
 </mx:Script>
 			
-	<mx:TextInput id="test" width="100%" editable="true"/>
 	<mx:Form labelWidth="100" width="600">
 		
 		<mx:FormItem label="From">
@@ -53,7 +55,9 @@
 		<mx:FormItem>
 			<mx:Button id="sendButton" 
 				label="Reply Message" 
-				 click="messageReply();"/>
+				 click="messageReply();"
+				 visible="{User.currentUser.id != messageInfo.sender_id}"
+				 />
 		</mx:FormItem>
 	</mx:Form>
 </mx:VBox>
