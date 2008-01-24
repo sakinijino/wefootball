@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:VBox xmlns="*" xmlns:mx="http://www.adobe.com/2006/mxml" width="100%"
-	height="100%" label="Messege List" xmlns:msg="com.wefootball.components.message.*"  
-	creationComplete=" Alert.show('Welcome ' + User.currentUser.login);">
+	height="100%" label="Messege List" >
 
 <mx:Metadata>
 	[Event(name="messageDetail", type="com.wefootball.events.MessageDetailEvent")]
@@ -82,21 +81,24 @@
      		internal function messageSendDetail(data:Object):void{
      			Message.detail(data.id,handleMessageDetailResult,handleMessageFaultDetailResult);
      		}
-     		public function handleMessageDetailResult(event:ResultEvent):void{
+     		private function handleMessageDetailResult(event:ResultEvent):void{
   	 			data= event.result;
   	 			this.messageInfo = XML(data);
      			dispatchEvent(new MessageDetailEvent());
      		} 	
-     		public function handleMessageFaultDetailResult(event:FaultEvent):void{
+     		private function handleMessageFaultDetailResult(event:FaultEvent):void{
      			Alert.show("Get detail failed"); 			
      		} 
      		
-     		public function LinkButtonColor(is_receiver_read:String):uint
-     		{
+     		internal function LinkButtonColor(is_receiver_read:String):uint {
      			if(is_receiver_read == "false")
      				return 0xFC0101;
      			else
      				return 0x000000;
+     		}
+     		
+     		internal function parseDate(d:String):String {
+     			return df.format(new Date(d));
      		}
      		
     	]]>
@@ -118,7 +120,13 @@
 						</mx:Component>
 					</mx:itemRenderer>
 				</mx:DataGridColumn>
-				<mx:DataGridColumn headerText="Date and Time" dataField="created_at" width="300"/>
+				<mx:DataGridColumn headerText="Date and Time" dataField="created_at" width="300" >
+					<mx:itemRenderer>
+						<mx:Component>
+							<mx:Label text="{outerDocument.parseDate(data.created_at.toString())}"/>
+						</mx:Component>
+					</mx:itemRenderer>
+				</mx:DataGridColumn>
 	        	<mx:DataGridColumn headerText="">
 	        		<mx:itemRenderer>
 	        			<mx:Component>
@@ -145,7 +153,13 @@
 						</mx:Component>
 					</mx:itemRenderer>
 				</mx:DataGridColumn>
-        		<mx:DataGridColumn headerText="Date and Time" dataField="created_at" width="300"/>
+        		<mx:DataGridColumn headerText="Date and Time" width="300" >
+        			<mx:itemRenderer>
+						<mx:Component>
+							<mx:Label text="{outerDocument.parseDate(data.created_at.toString())}"/>
+						</mx:Component>
+					</mx:itemRenderer>
+        		</mx:DataGridColumn>
 	        	<mx:DataGridColumn headerText="">
 	        		<mx:itemRenderer>
 	        			<mx:Component>
@@ -160,4 +174,5 @@
 		</mx:Form>
     </mx:VBox>
     </mx:TabNavigator>
+    <mx:DateFormatter id="df" formatString="YYYY-MM-DD JJ:NN:SS" />
 </mx:VBox>
