@@ -5,6 +5,7 @@ package com.wefootball.model
 	import com.wefootball.validators.ServerErrors;
 	
 	import mx.collections.ArrayCollection;
+	import mx.controls.Alert;
 	import mx.rpc.events.ResultEvent;
 	
 	[Bindable]
@@ -75,21 +76,21 @@ package com.wefootball.model
 		} 		
 		
 		
-		static public function create(req:Object, success:Function,fault:Function):void
+		static public function create(u:Object, success:Function,fault:Function):void
 		{
 			var req:Object = CREATE();
 			User.proxy.send({
 				url:req.url,
 				method:req.method,
 				request:{
-					'user[login]':req['login'],
-					'user[password]':req['password'], 
-					'user[password_confirmation]':req['confirmPassword']
+					'user[login]':u['login'],
+					'user[password]':u['password'], 
+					'user[password_confirmation]':u['confirmPassword']
 				},
 				success:function(event:ResultEvent):void {
 					var result:XML = XML(event.result);
 					if (result.name().localName == "errors") {
-						req['createerrors'](new ServerErrors(result), event)
+						u['createerrors'](new ServerErrors(result), event)
 					}
 					else {
 						success(event);
