@@ -115,8 +115,6 @@
 						<mx:Component>
 						<mx:Text text="{data.subject}" click="outerDocument.messageDetail(data)"
 								 color="{outerDocument.LinkButtonColor(data.is_receiver_read)}"/>
-<!--							<mx:LinkButton label="{data.subject}" click="outerDocument.messageDetail(data)"
-								 color="{outerDocument.LinkButtonColor(data.is_receiver_read)}"/>-->
 						</mx:Component>
 					</mx:itemRenderer>
 				</mx:DataGridColumn>
@@ -142,7 +140,8 @@
 				<mx:DataGridColumn headerText="Subject" dataField="subject" width="300">
 					<mx:itemRenderer>
 						<mx:Component>
-							<mx:LinkButton label="{data.subject}" click="outerDocument.messageSendDetail(data)"/>
+							<mx:Text text="{data.subject}" click="outerDocument.messageSendDetail(data)" 
+								color="0x000000"/>
 						</mx:Component>
 					</mx:itemRenderer>
 				</mx:DataGridColumn>

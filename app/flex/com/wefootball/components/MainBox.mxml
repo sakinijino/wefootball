@@ -58,7 +58,7 @@
 			<mx:Text width="100"/>
 		<mx:Spacer height="10"/>
 		<mx:Accordion id="messageAccordion" width="800" height="600" creationComplete="init()">
-			<msg:MessageListBox id="messageListBox" />
+			<msg:MessageListBox id="messageListBox"  backgroundColor="#FFFFFF"/>
 			<msg:MessageDetailBox id="messageDetailBox"/>
 			<msg:MessageBox  id="messageBox" />
 			<acc:InformationBox  id="informationBox" />
