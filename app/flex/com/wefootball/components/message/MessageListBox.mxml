@@ -116,7 +116,7 @@
     <mx:Canvas id= "recieveBox" label="收件箱" >
 		<mx:DataGrid id="receiveDataGrid" initialize="listMessages()" dataProvider="{messagesReceiveXLC}" width="100%" rowCount="10">
 			<mx:columns >
-				<mx:DataGridColumn headerText="From" dataField="sender_nick">	
+				<mx:DataGridColumn headerText="发件人" dataField="sender_nick">	
 					<mx:itemRenderer >
 						<mx:Component>
 						<mx:Text text="{data.sender_nick}" click="outerDocument.seeOtherUser(data.sender_id)"
@@ -124,7 +124,7 @@
 						</mx:Component>
 					</mx:itemRenderer>		
 				</mx:DataGridColumn>
-				<mx:DataGridColumn headerText="Subject" dataField="subject">
+				<mx:DataGridColumn headerText="主题" dataField="subject">
 					<mx:itemRenderer >
 						<mx:Component>
 						<mx:Text text="{data.subject}" click="outerDocument.messageDetail(data)"
@@ -132,7 +132,7 @@
 						</mx:Component>
 					</mx:itemRenderer>
 				</mx:DataGridColumn>
-				<mx:DataGridColumn headerText="Date and Time" dataField="created_at" width="150">
+				<mx:DataGridColumn headerText="日期/时间" dataField="created_at" width="150">
 					<mx:itemRenderer>
 						<mx:Component>
 							<mx:Label text="{outerDocument.parseDate(data.created_at.toString())}"/>
@@ -152,7 +152,7 @@
     <mx:Canvas id= "sendBox" label="发件箱">
 		<mx:DataGrid id="sendDataGrid" initialize="listMessages()" dataProvider="{messagesSendXLC}" width="100%" rowCount="10">
 			<mx:columns  >
-				<mx:DataGridColumn headerText="To" dataField="receiver_nick">
+				<mx:DataGridColumn headerText="收件人" dataField="receiver_nick">
 					<mx:itemRenderer>
 						<mx:Component>
 							<mx:Text text="{data.receiver_nick}" click="outerDocument.seeOtherUser(data.receiver_id)" 
@@ -160,7 +160,7 @@
 						</mx:Component>
 					</mx:itemRenderer>
 				</mx:DataGridColumn>
-				<mx:DataGridColumn headerText="Subject" dataField="subject">
+				<mx:DataGridColumn headerText="主题" dataField="subject">
 					<mx:itemRenderer>
 						<mx:Component>
 							<mx:Text text="{data.subject}" click="outerDocument.messageSendDetail(data)" 
@@ -168,7 +168,7 @@
 						</mx:Component>
 					</mx:itemRenderer>
 				</mx:DataGridColumn>
-        		<mx:DataGridColumn headerText="Date and Time"  width="150">
+        		<mx:DataGridColumn headerText="日期/时间"  width="150">
         			<mx:itemRenderer>
 						<mx:Component>
 							<mx:Label text="{outerDocument.parseDate(data.created_at.toString())}"/>
