@@ -22,8 +22,9 @@ class MessagesController < ApplicationController
     respond_to do |format|
       proc = Proc.new { |options| 
           options[:builder].tag!('sender_nick', @message.sender.nickname)
-          options[:builder].tag!('receiver_nick', @message.receiver.nickname)}
-      format.xml  { render :xml => @message.to_xml(:dasherize=>false ,:procs => [ proc] )}
+          options[:builder].tag!('receiver_nick', @message.receiver.nickname)
+          options[:builder].tag!('created_at', @message.created_at)}
+      format.xml  { render :xml => @message.to_xml(:dasherize=>false ,:except=>['created_at', 'updated_at'], :procs => [ proc] )}
     end
   end
 
@@ -34,7 +35,11 @@ class MessagesController < ApplicationController
     @message.sender = self.current_user
     respond_to do |format|
       if @message.save
-        format.xml  { render :xml => @message.to_xml(:dasherize=>false), :status => :ok, :location => @message }
+        proc = Proc.new { |options| 
+          options[:builder].tag!('sender_nick', @message.sender.nickname)
+          options[:builder].tag!('receiver_nick', @message.receiver.nickname)
+          options[:builder].tag!('created_at', @message.created_at)}
+        format.xml  { render :xml => @message.to_xml(:dasherize=>false ,:except=>['created_at', 'updated_at'], :procs => [ proc]), :status => :ok, :location => @message }
       else
         format.xml  { render :xml => @message.errors, :status => :unprocessable_entity }
       end

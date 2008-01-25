@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml"
 	xmlns:wfv="com.wefootball.validators.*" 
-	label="Update Personal Information">
+	label="Update Personal Information" height="630" width="422">
 	
 	<mx:Script>
 		<![CDATA[
@@ -107,6 +107,9 @@
          			<mx:Object label="左右开弓" data="B"/>
 			    </mx:ArrayCollection>
 			</mx:ComboBox>
+	    </mx:FormItem>
+	    <mx:FormItem label="适合的位置"  >
+			<mx:Image autoLoad="true" scaleContent="true" width="256" height="256" source="/images/footballfield.JPG" resize="true"/>
 	    </mx:FormItem>
 	    <mx:FormItem label="适合的位置"  >
 	    	<mx:HBox width="100%">

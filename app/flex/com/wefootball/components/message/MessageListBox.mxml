@@ -3,14 +3,15 @@
 	height="100%" initialize="refresh()">
 
 <mx:Metadata>
-	[Event(name="messageDisplay", type="com.wefootball.events.MessageDisplayEvent")]
+	[Event(name="messageDisplay", type="com.wefootball.events.MessageDetailEvent")]
 	[Event(name="userDisplay", type="com.wefootball.events.UserDisplayEvent")]
 </mx:Metadata>
 
 	   <mx:Script>
     	<![CDATA[
+    		import mx.collections.ArrayCollection;
     		import mx.controls.LinkButton;
-    		import com.wefootball.events.MessageDisplayEvent;
+    		import com.wefootball.events.MessageDetailEvent;
     		import mx.controls.Alert;
     		import mx.rpc.events.ResultEvent;
     		import mx.rpc.events.FaultEvent;
@@ -19,19 +20,18 @@
     		import com.wefootball.model.Message;
     		import mx.collections.XMLListCollection;
 
+			[Bindable]
+    		private var sendMessageList:ArrayCollection;
     		[Bindable]
-    		public var messagesReceiveXLC:XMLListCollection;
-    		[Bindable]
-    		public var messagesSendXLC:XMLListCollection;    		
+			private var receiveMessageList:ArrayCollection;  		
     		
     		internal function deleteMessage(data:Object):void{
-    			Message.destory(data.id,
+      			Message.destory(Message(data),
     				handleMessageDestoryResult,
     				handleMessageDestoryFaultResult
     			); 
     		}
-    		private function handleMessageDestoryResult(event:ResultEvent):void{
-				refresh();
+    		private function handleMessageDestoryResult(event:ResultEvent):void{				
 			}
 			private function handleMessageDestoryFaultResult(event:FaultEvent):void{
 				Alert.show("Delete failed");
@@ -40,18 +40,18 @@
      		public function refresh():void{	
      			Message.list(handleMessageListResult,handleMessageFaultListResult); 
      		}
-     		public function handleMessageListResult(event:ResultEvent):void{
-     			this.messagesReceiveXLC = new XMLListCollection;
-  	 			this.messagesReceiveXLC.source = event.result['as_receiver']['message'];
-  	 			this.messagesSendXLC = new XMLListCollection;
-  	 			this.messagesSendXLC.source = event.result['as_sender']['message'];
+     		public function handleMessageListResult(event:ResultEvent, sendList:ArrayCollection, recieveList:ArrayCollection):void{
+     			this.sendMessageList = sendList;
+     			this.receiveMessageList = recieveList;
      		} 	
      		public function handleMessageFaultListResult(event:FaultEvent):void{
      			Alert.show("GET Messages List failed");
      		} 
      		
      		internal function displayMessageDetail(data:Object):void{
-     			dispatchEvent(new MessageDisplayEvent(data.id.toString()));
+     			var e:MessageDetailEvent = new MessageDetailEvent("messageDisplay")
+     			e.message = Message(data)
+     			dispatchEvent(e);
      		}	
      		internal function LinkButtonColor(is_receiver_read:String):uint {
      			if(is_receiver_read == "false")
@@ -59,10 +59,7 @@
      			else
      				return 0x000000;
      		}
-     		
-     		internal function parseDate(d:String):String {
-     			return df.format(new Date(d));
-     		}
+
      		public function displayUser(user_id:String):void{
      			dispatchEvent(new UserDisplayEvent(user_id));
      		}
@@ -73,74 +70,74 @@
     <mx:TabNavigator id="tn"  width="100%" height="100%">
     <!-- Define each panel using a VBox container. -->
     <mx:Canvas id= "recieveBox" label="收件箱" >
-		<mx:DataGrid id="receiveDataGrid" dataProvider="{messagesReceiveXLC}" width="100%" rowCount="10">
+		<mx:DataGrid id="receiveDataGrid" dataProvider="{receiveMessageList}" width="100%" rowCount="10">
 			<mx:columns >
 				<mx:DataGridColumn headerText="发件人" dataField="sender_nick">	
 					<mx:itemRenderer >
 						<mx:Component>
-						<mx:Text text="{data.sender_nick}" click="outerDocument.displayUser(data.sender_id)"
-								 color="{outerDocument.LinkButtonColor(data.is_receiver_read)}"/>
+						<mx:LinkButton label="{data.sender_nick}" click="outerDocument.displayUser(data.sender_id)"
+								 color="{outerDocument.LinkButtonColor(data.is_receiver_read)}" textAlign="left" fontWeight="normal"/>
 						</mx:Component>
 					</mx:itemRenderer>		
 				</mx:DataGridColumn>
 				<mx:DataGridColumn headerText="主题" dataField="subject">
 					<mx:itemRenderer >
 						<mx:Component>
-						<mx:Text text="{data.subject}" click="outerDocument.displayMessageDetail(data)"
-								 color="{outerDocument.LinkButtonColor(data.is_receiver_read)}"/>
+						<mx:LinkButton label="{data.subject}" click="outerDocument.displayMessageDetail(data)"
+								 color="{outerDocument.LinkButtonColor(data.is_receiver_read)}" textAlign="left" fontWeight="normal"/>
 						</mx:Component>
 					</mx:itemRenderer>
 				</mx:DataGridColumn>
-				<mx:DataGridColumn headerText="日期/时间" dataField="created_at" width="150">
+				<mx:DataGridColumn headerText="日期/时间" width="150" dataField="created_at">
 					<mx:itemRenderer>
 						<mx:Component>
-							<mx:Label text="{outerDocument.parseDate(data.created_at.toString())}"/>
+							<mx:Label text="{outerDocument.df.format(data.created_at)}"/>
 						</mx:Component>
 					</mx:itemRenderer>
 				</mx:DataGridColumn>
-	        	<mx:DataGridColumn headerText="" width="50">
+	        	<mx:DataGridColumn headerText="" width="50" dataField="id">
 	        		<mx:itemRenderer>
 	        			<mx:Component>
-	        				<mx:Button label="删除" click="outerDocument.deleteMessage(data)"/>
+	        				<mx:Button label="删除" click="outerDocument.deleteMessage(data)" />
 	        			</mx:Component>
 	        		</mx:itemRenderer>
-        		</mx:DataGridColumn>        	
+        		</mx:DataGridColumn>
 			</mx:columns>		
 		</mx:DataGrid>
     </mx:Canvas>
     <mx:Canvas id= "sendBox" label="发件箱">
-		<mx:DataGrid id="sendDataGrid" dataProvider="{messagesSendXLC}" width="100%" rowCount="10">
+		<mx:DataGrid id="sendDataGrid" dataProvider="{sendMessageList}" width="100%" rowCount="10">
 			<mx:columns  >
 				<mx:DataGridColumn headerText="收件人" dataField="receiver_nick">
 					<mx:itemRenderer>
 						<mx:Component>
-							<mx:Text text="{data.receiver_nick}" click="outerDocument.displayUser(data.receiver_id)" 
-								color="0x000000"/>
+							<mx:LinkButton label="{data.receiver_nick}" click="outerDocument.displayUser(data.receiver_id)" 
+								color="0x000000" textAlign="left" fontWeight="normal"/>
 						</mx:Component>
 					</mx:itemRenderer>
 				</mx:DataGridColumn>
 				<mx:DataGridColumn headerText="主题" dataField="subject">
 					<mx:itemRenderer>
 						<mx:Component>
-							<mx:Text text="{data.subject}" click="outerDocument.displayMessageDetail(data)" 
-								color="0x000000"/>
+							<mx:LinkButton label="{data.subject}" click="outerDocument.displayMessageDetail(data)" 
+								color="0x000000" textAlign="left" fontWeight="normal"/>
 						</mx:Component>
 					</mx:itemRenderer>
 				</mx:DataGridColumn>
-        		<mx:DataGridColumn headerText="日期/时间"  width="150">
+        		<mx:DataGridColumn headerText="日期/时间"  width="150" dataField="created_at">
         			<mx:itemRenderer>
 						<mx:Component>
-							<mx:Label text="{outerDocument.parseDate(data.created_at.toString())}"/>
+							<mx:Label text="{outerDocument.df.format(data.created_at)}"/>
 						</mx:Component>
 					</mx:itemRenderer>
         		</mx:DataGridColumn>
-	        	<mx:DataGridColumn headerText="" width="50">
+	        	<mx:DataGridColumn headerText="" width="50" dataField="id">
 	        		<mx:itemRenderer>
 	        			<mx:Component>
 	        				<mx:Button label="删除" click="outerDocument.deleteMessage(data)" />
 	        			</mx:Component>
 	        		</mx:itemRenderer>
-        		</mx:DataGridColumn>     
+        		</mx:DataGridColumn>
 			</mx:columns>		
 		</mx:DataGrid>
     </mx:Canvas>

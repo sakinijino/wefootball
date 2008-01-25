@@ -10,7 +10,6 @@
 	import mx.rpc.events.ResultEvent;
 	import mx.rpc.events.FaultEvent;
 	import com.wefootball.events.MessageDetailEvent;
-	import com.wefootball.events.MessageDisplayEvent;
 	import com.wefootball.model.Message;
 	import com.wefootball.model.User;
 	
@@ -48,16 +47,16 @@
 			
 	<mx:Form>
 		<mx:FormItem label="From">
-			<mx:Text width="100%" text="{message.sender_nick}"/>
+			<mx:Label width="286" text="{message.sender_nick}"/>
 		</mx:FormItem>
 		<mx:FormItem label="To">
-			<mx:Text width="100%" text="{message.receiver_nick}" />
+			<mx:Label width="284" text="{message.receiver_nick}" />
 		</mx:FormItem>
 		<mx:FormItem label="Subject">
-			<mx:Text width="100%" text="{message.subject}"/>
+			<mx:Label width="285" text="{message.subject}"/>
 		</mx:FormItem>
 		<mx:FormItem label="Content" >
-			<mx:Text text="{message.content}" width="285" height="100"/>
+			<mx:TextArea text="{message.content}" width="285" height="100" editable="false"/>
 	    </mx:FormItem>
 		<mx:FormItem>
 			<mx:Button label="Reply Message" 
