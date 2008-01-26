@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml"
 	xmlns:wfv="com.wefootball.validators.*" 
-	label="Personal Information" >
+	styleName="content" >
 	<mx:Metadata>
 		[Event(name="messageSend", type="com.wefootball.events.MessageDetailEvent")]
 	</mx:Metadata>
@@ -16,7 +16,6 @@
  			[Bindable]
 			public var user:User = null;
 			public function set userId(i:String):void {
-				user = null
 				getUserInfoRemote(i);
 			}
 			public function refresh():void {

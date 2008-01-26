@@ -1,69 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml" width="100%"
-	height="100%">
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" >
 <mx:Metadata>
 	[Event(name="messageReply", type="com.wefootball.events.MessageDetailEvent")]
 </mx:Metadata>
 <mx:Script>
-<![CDATA[
-	import mx.controls.Alert;
-	import mx.rpc.events.ResultEvent;
-	import mx.rpc.events.FaultEvent;
-	import com.wefootball.events.MessageDetailEvent;
-	import com.wefootball.model.Message;
-	import com.wefootball.model.User;
-	
-	[Bindable]
-    public var message:Message;
-	public function set messageId(i:String):void {
-		message = null
-		displayMessageDetail(i);
-	}	
-	private function messageReply():void {
-		dispatchEvent(new MessageDetailEvent(
-			"messageReply",
-			message.receiver_id,
-			message.receiver_nick,
-			message.sender_id,
-			message.sender_nick,
-			"re: "+message.subject
-		));
-	}
-	
-	internal function displayMessageDetail(mid:String):void{
-    	Message.show(mid,
-     		handleMessageDetailResult,
-     		handleMessageFaultDetailResult);
-    }
-  	private function handleMessageDetailResult(m:Message, event:ResultEvent):void{
-   		this.message = m
- 	}
- 	private function handleMessageFaultDetailResult(event:FaultEvent):void{
- 		Alert.show("Get detail failed"); 			
- 	}	
-]]>
-
+	<![CDATA[
+		import mx.controls.Alert;
+		import mx.rpc.events.ResultEvent;
+		import mx.rpc.events.FaultEvent;
+		import com.wefootball.events.MessageDetailEvent;
+		import com.wefootball.model.Message;
+		import com.wefootball.model.User;
+		
+		[Bindable]
+	    public var message:Message;
+		public function set messageId(i:String):void {
+			displayMessageDetail(i);
+		}	
+		private function messageReply():void {
+			dispatchEvent(new MessageDetailEvent(
+				"messageReply",
+				message.receiver_id,
+				message.receiver_nick,
+				message.sender_id,
+				message.sender_nick,
+				"re: "+message.subject
+			));
+		}		
+		private function displayMessageDetail(mid:String):void{
+	    	Message.show(mid,
+	     		handleMessageDetailResult,
+	     		handleMessageFaultDetailResult);
+	    }
+	  	private function handleMessageDetailResult(m:Message, event:ResultEvent):void{
+	   		this.message = m
+	 	}
+	 	private function handleMessageFaultDetailResult(event:FaultEvent):void{
+	 		Alert.show("读取失败"); 			
+	 	}
+	 	private function messageDestroy():void {
+	 		if (this.message==null) return;
+	 		Message.destory(this.message, handleDestroySuccessDetailResult, handleDestroyFaultDetailResult)
+	 	}
+	 	private function handleDestroySuccessDetailResult(event:ResultEvent):void{			
+	 	}
+	 	private function handleDestroyFaultDetailResult(event:FaultEvent):void{
+	 		Alert.show("删除失败"); 			
+	 	}
+	]]>
 </mx:Script>
-			
-	<mx:Form>
-		<mx:FormItem label="From">
-			<mx:Label width="286" text="{message.sender_nick}"/>
-		</mx:FormItem>
-		<mx:FormItem label="To">
-			<mx:Label width="284" text="{message.receiver_nick}" />
-		</mx:FormItem>
-		<mx:FormItem label="Subject">
-			<mx:Label width="285" text="{message.subject}"/>
-		</mx:FormItem>
-		<mx:FormItem label="Content" >
-			<mx:TextArea text="{message.content}" width="285" height="100" editable="false"/>
-	    </mx:FormItem>
-		<mx:FormItem>
-			<mx:Button label="Reply Message" 
-				 click="messageReply()"
-				 visible="{User.currentUser.id != message.sender_id}"
-				 creationComplete="event.target.visible = false"
-			/>
-		</mx:FormItem>
-	</mx:Form>
-</mx:VBox>
+	<mx:VBox styleName="content" width="100%" height="100%">	
+		<mx:Form visible="{message!=null}">
+			<mx:FormItem label="来自" >
+				<mx:Label text="{message.sender_nick}" />
+			</mx:FormItem>
+			<mx:FormItem label="送往" >
+				<mx:Label text="{message.receiver_nick}" />
+			</mx:FormItem>
+			<mx:FormItem label="主题">
+				<mx:Label text="{message.subject}"/>
+			</mx:FormItem>
+			<mx:FormItem >
+				<mx:TextArea text="{message.content}" height="100" editable="false" borderThickness="0" />
+			</mx:FormItem>
+			<mx:FormItem direction="horizontal">
+				<mx:Button label="删除" 
+					click="messageDestroy()"
+					visible="{message.canDestroy()}"
+					creationComplete="event.target.visible = false" />
+				<mx:Button label="回复" 
+					click="messageReply()"
+					visible="{User.currentUser.id != message.sender_id}"
+					creationComplete="event.target.visible = false" />
+			</mx:FormItem>
+		</mx:Form>
+		
+	</mx:VBox>
+</mx:Canvas>

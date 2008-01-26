@@ -5,7 +5,6 @@ package com.wefootball.model
 	import com.wefootball.validators.ServerErrors;
 	
 	import mx.collections.ArrayCollection;
-	import mx.controls.Alert;
 	import mx.rpc.events.ResultEvent;
 	
 	[Bindable]

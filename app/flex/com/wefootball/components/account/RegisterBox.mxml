@@ -2,7 +2,7 @@
 <mx:VBox 
 	xmlns:mx="http://www.adobe.com/2006/mxml" 
 	xmlns:wfv="com.wefootball.validators.*" 
-	width="100%" height="100%" label="Create Account" >
+	label="注册" >
 
 <mx:Metadata>
 	[Event(name="register", type="com.wefootball.events.RegisterEvent")]
@@ -52,7 +52,7 @@
 		_serverErrors = errors;
 	}
 	private function handleFault(event:FaultEvent):void {
-		Alert.show('Unknown Error', "Account Not Created");
+		Alert.show('注册失败', "注册失败");
 	}
 	
 	private function clearServerErrors():void {
@@ -62,19 +62,19 @@
 </mx:Script>
 
 	<mx:Form labelWidth="150">
-		<mx:FormItem required="true" label="Email Address">
+		<mx:FormItem required="true" label="你的email地址">
 			<mx:TextInput id="loginTI" change="clearServerErrors()"/>
 		</mx:FormItem>
-		<mx:FormItem required="true" label="Password">
+		<mx:FormItem required="true" label="密码">
 			<mx:TextInput id="passwordTI" displayAsPassword="true" change="clearServerErrors()"/>
 		</mx:FormItem>
-		<mx:FormItem required="true" label="Confirm Password">
+		<mx:FormItem required="true" label="确认密码">
 			<mx:TextInput id="confirmPasswordTI" displayAsPassword="true" change="clearServerErrors()"/>
 		</mx:FormItem>
 		<mx:FormItem>
 			<mx:Button id="createAccountButton"
 				enabled = "{validate(loginTI.text, passwordTI.text, confirmPasswordTI.text)}"
-				label="Create Account"
+				label="注册"
 				click="createAccount()"/>
 		</mx:FormItem>
 	</mx:Form>

@@ -4,7 +4,6 @@ package com.wefootball.model
 	import com.wefootball.proxies.*;
 	
 	import mx.collections.ArrayCollection;
-	import mx.controls.Alert;
 	import mx.rpc.events.ResultEvent;
 	
 	[Bindable]
@@ -35,9 +34,13 @@ package com.wefootball.model
 		static private const MESSAGE_PARSER:Function = parseMessageFromXML;
 		static private const MESSAGE_LIST_PARSER:Function=parseMessageListFromXML
 		
-		public function Message()
-			{
+		public function Message() {
 			super();
+		}
+		public function canDestroy():Boolean {
+			if (User.currentUser.id == this.sender_id) return !this.is_delete_by_sender
+			if (User.currentUser.id == this.receiver_id) return !this.is_delete_by_receiver
+			return false;
 		}
 		
 		static public function create(receiver_id:String,subject:String,content:String,
@@ -94,7 +97,7 @@ package com.wefootball.model
 		}
 		
 		static public function destory(data:Message,success:Function,fault:Function):void{
-			
+			if (!data.canDestroy()) return;
 			//if sender destoried
 			Message.proxy.send({
 				url:("/messages/"+data.id+".xml"),

@@ -1,0 +1,41 @@
+/* CSS file */
+
+Application
+{
+	backgroundGradientColors: #9bafb9, #68808c;
+	paddingBottom: 0;
+	paddingLeft: 0;
+	paddingRight: 0;
+	paddingTop: 0;
+	fontSize: 12;
+	vertical-align: middle;
+	horizontal-align: center;
+}
+Accordion {
+   headerStyleName: "accordionHeader";
+}
+DataGrid {
+   verticalGridLines: false;
+   borderThickness: 0;
+}
+TitleWindow {
+	borderAlpha : 1;
+}
+
+.accordionHeader {
+   fontSize: 12;
+   fontWeight: bold;
+}
+
+.head {
+	fontSize: 14;
+	color: #ffffff;
+}
+.content {
+	background-color: #ffffff
+}
+
+DataGridColumn.em {
+	fontWeight: bold;
+	color: red;
+}
