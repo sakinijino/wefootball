@@ -1,28 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:TitleWindow xmlns:mx="http://www.adobe.com/2006/mxml" 
-		 showCloseButton="true" close="event.target.visible=false" >
+<mx:TitleWindow xmlns:mx="http://www.adobe.com/2006/mxml" xmlns:wfv="com.wefootball.validators.*"
+		 showCloseButton="true" close="event.target.visible=false" title="发信">
 	<mx:VBox width="100%" height="100%">
-	<mx:Script>
-	
+	<mx:Script>	
 	<![CDATA[
 		import mx.controls.Alert;
 		import mx.rpc.events.ResultEvent;
 		import mx.rpc.events.FaultEvent;
 		import com.wefootball.events.MessageDetailEvent;
 		import com.wefootball.model.Message;
+		import mx.validators.Validator;
+		import mx.events.ValidationResultEvent;
+		import com.wefootball.validators.ServerErrors;
+		
+		[Bindable]
+		private var _serverErrors:ServerErrors;
+		private function validate(subj:String, content:String):Boolean {
+			var results:Array = Validator.validateAll([
+				subjectValidator,
+				contentValidator]);
+			if (results.length > 0) return false;
+			return true;
+		}
 		
 		[Bindable]
 	    public var message:Message;
 	    
 		private function sendMessage():void {
 	  		Message.create(message.receiver_id, subjectTI.text, contentTA.text,
-						handleSendMessageResult,handleMessageFault);  
+						handleSendMessageResult, handleSendMessageErrors, handleSendMessageFault);  
 		}
 		
 		private function handleSendMessageResult(m:Message, event:ResultEvent):void {
-			this.visible = true;
+			this.visible = false;
 		}
-		private function handleMessageFault(event:FaultEvent):void {
+		private function handleSendMessageErrors(errors:ServerErrors, event:ResultEvent):void {
+			_serverErrors = errors;
+		}
+		private function handleSendMessageFault(event:FaultEvent):void {
 			Alert.show("消息发送失败")
 		}
 	]]>
@@ -45,4 +60,9 @@
 			</mx:FormItem>
 		</mx:Form>
 	</mx:VBox>
+	<mx:StringValidator id="subjectValidator" source="{subjectTI}" property="text" maxLength="200" required="true" />
+	<mx:StringValidator id="contentValidator" source="{contentTA}" property="text" maxLength="2000" required="true" />
+	<wfv:ServerErrorValidator field="subject" listener="{subjectTI}" serverErrors="{_serverErrors}" />
+	<wfv:ServerErrorValidator field="content" listener="{contentTA}" serverErrors="{_serverErrors}" />
+	<mx:Binding source="validate(subjectTI.text, contentTA.text)" destination="sendButton.enabled" />
 </mx:TitleWindow>

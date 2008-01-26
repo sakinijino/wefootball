@@ -2,8 +2,10 @@ package com.wefootball.model
 {
 	import com.wefootball.events.*;
 	import com.wefootball.proxies.*;
+	import com.wefootball.validators.ServerErrors;
 	
 	import mx.collections.ArrayCollection;
+	import mx.controls.Alert;
 	import mx.rpc.events.ResultEvent;
 	
 	[Bindable]
@@ -44,7 +46,7 @@ package com.wefootball.model
 		}
 		
 		static public function create(receiver_id:String,subject:String,content:String,
-									success:Function,fault:Function):void{
+									success:Function, errors:Function, fault:Function):void{
 			Message.proxy.send({
 				url:CREATE.url,
 				method:CREATE.method,
@@ -52,10 +54,16 @@ package com.wefootball.model
 						'message[subject]':subject,
 						'message[content]':content},
 				success:function(event:ResultEvent):void{
-					var m:Message = new Message;
-					MESSAGE_PARSER(event.result, m);
-					sendMessageList.addItem(m);
-					success(m, event);
+					var xml:XML = XML(event.result);
+					if (xml.name().localName == "errors") {
+						errors(new ServerErrors(xml), event)
+					}
+					else {
+						var m:Message = new Message;
+						MESSAGE_PARSER(event.result, m);
+						sendMessageList.addItem(m);
+						success(m, event);
+					}
 				},
 				fault:fault
 			});

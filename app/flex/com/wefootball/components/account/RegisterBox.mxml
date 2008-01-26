@@ -73,7 +73,6 @@
 		</mx:FormItem>
 		<mx:FormItem>
 			<mx:Button id="createAccountButton"
-				enabled = "{validate(loginTI.text, passwordTI.text, confirmPasswordTI.text)}"
 				label="注册"
 				click="createAccount()"/>
 		</mx:FormItem>
@@ -99,4 +98,5 @@
 	<wfv:ServerErrorValidator field="login" listener="{loginTI}" serverErrors="{_serverErrors}" />
 	<wfv:ServerErrorValidator field="password" listener="{passwordTI}" serverErrors="{_serverErrors}" />
 	<wfv:ServerErrorValidator field="password_confirmation" listener="{confirmPasswordTI}" serverErrors="{_serverErrors}" />
+	<mx:Binding source="validate(loginTI.text, passwordTI.text, confirmPasswordTI.text)" destination="createAccountButton.enabled" />
 </mx:VBox>

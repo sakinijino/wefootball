@@ -3,19 +3,28 @@ class MessagesController < ApplicationController
   # GET /messages
   # GET /messages.xml
   def index
-    @as_sender_messages = Message.find_all_by_sender_id_and_is_delete_by_sender(current_user.id,false)
-    @as_receiver_messages = Message.find_all_by_receiver_id_and_is_delete_by_receiver(current_user.id,false)    
-
+    @as_sender_messages = Message.find_all_by_sender_id_and_is_delete_by_sender(current_user.id, false, :include=>[:sender, :receiver])
+    @as_receiver_messages = Message.find_all_by_receiver_id_and_is_delete_by_receiver(current_user.id, false, :include=>[:sender, :receiver])
     respond_to do |format|
-      format.xml  { render :status => 200, :template=>"shared/requests_with_messages" }
+      format.xml  { render :status => 200 }
     end
   end
 
   # GET /messages/1
   # GET /messages/1.xml
   def show
-    @message = Message.find(params[:id])
-    if !@message.is_receiver_read
+    @message = Message.find(params[:id], :include=>[:sender, :receiver])
+    if (@message.sender_id != self.current_user.id && 
+        @message.receiver_id != self.current_user.id)
+        head 401
+        return
+    end
+    if ((@message.sender_id == self.current_user.id && @message.is_delete_by_sender) ||
+        (@message.receiver_id == self.current_user.id && @message.is_delete_by_receiver))
+        head 401
+        return
+    end
+    if (!@message.is_receiver_read && @message.receiver_id == self.current_user.id)
       @message.is_receiver_read = true
       @message.save
     end
@@ -26,45 +35,43 @@ class MessagesController < ApplicationController
           options[:builder].tag!('created_at', @message.created_at)}
       format.xml  { render :xml => @message.to_xml(:dasherize=>false ,:except=>['created_at', 'updated_at'], :procs => [ proc] )}
     end
+  rescue ActiveRecord::RecordNotFound => e
+    respond_to do |format|
+      format.xml {head 404}
+    end
   end
 
   # POST /messages
   # POST /messages.xml
   def create
+    @user = User.find(params[:message][:receiver_id])
+    if (@user == self.current_user) 
+      head 400
+      return
+    end
     @message = Message.new(params[:message])
     @message.sender = self.current_user
     respond_to do |format|
       if @message.save
         proc = Proc.new { |options| 
           options[:builder].tag!('sender_nick', @message.sender.nickname)
-          options[:builder].tag!('receiver_nick', @message.receiver.nickname)
+          options[:builder].tag!('receiver_nick',@user.nickname)
           options[:builder].tag!('created_at', @message.created_at)}
         format.xml  { render :xml => @message.to_xml(:dasherize=>false ,:except=>['created_at', 'updated_at'], :procs => [ proc]), :status => :ok, :location => @message }
       else
-        format.xml  { render :xml => @message.errors, :status => :unprocessable_entity }
+        format.xml  { render :xml => @message.errors.to_xml_full, :status => 200 }
       end
     end
-  end
-
-  # PUT /messages/1
-  # PUT /messages/1.xml
-  def update
-    @message = Message.find(params[:id])
-
+  rescue ActiveRecord::RecordNotFound => e
     respond_to do |format|
-      if @message.update_attributes(params[:message])
-        format.xml  { head :ok }
-      else
-        format.xml  { render :xml => @message.errors, :status => :unprocessable_entity }
-      end
+      format.xml {head 404}
     end
   end
 
   # DELETE /messages/1
   # DELETE /messages/1.xml
   def destroy
-    @message = Message.find(params[:id])
-    
+    @message = Message.find(params[:id])    
     if(@message.sender_id == @message.receiver_id)
       @message.destroy
     elsif((@message.sender_id == current_user.id )&& (@message.is_delete_by_receiver == false))
@@ -81,6 +88,10 @@ class MessagesController < ApplicationController
 
     respond_to do |format|
       format.xml  { head :ok }
+    end
+  rescue ActiveRecord::RecordNotFound => e
+    respond_to do |format|
+      format.xml {head 404}
     end
   end
 end

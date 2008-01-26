@@ -1,19 +1,56 @@
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
 
-#~ one:
-  #~ sender_id: 1
-  #~ receiver_id: 2
-  #~ subject: hello
-  #~ content: hello content
+saki_mike1:
+  id: 1
+  sender_id: 3
+  receiver_id: 4
+  subject: hello
+  content: hello content
+  is_delete_by_sender: false
+  is_delete_by_receiver: false
+  is_receiver_read: false
+  created_at: <%= DateTime.now%>
 
-#~ two:
-  #~ sender_id: 1
-  #~ receiver_id: 3
-  #~ subject: hello
-  #~ content: hello content
+saki_mike1_2:
+  id: 2
+  sender_id: 3
+  receiver_id: 4
+  subject: hello
+  content: hello content
+  is_delete_by_sender: true
+  is_delete_by_receiver: false
+  is_receiver_read: false
+  created_at: <%= DateTime.now%>
 
-#~ three:
-  #~ sender_id: 1
-  #~ receiver_id: 4
-  #~ subject: hello
-  #~ content: hello content
+saki_mike1_3:
+  id: 3
+  sender_id: 3
+  receiver_id: 4
+  subject: hello
+  content: hello content
+  is_delete_by_sender: false
+  is_delete_by_receiver: true
+  is_receiver_read: false
+  created_at: <%= DateTime.now%>
+
+mike2_saki:
+  id: 4
+  sender_id: 5
+  receiver_id: 3
+  subject: hello
+  content: hello content
+  is_delete_by_sender: false
+  is_delete_by_receiver: false
+  is_receiver_read: false
+  created_at: <%= DateTime.now%>
+
+mike2_saki_2:
+  id: 5
+  sender_id: 5
+  receiver_id: 3
+  subject: hello
+  content: hello content
+  is_delete_by_sender: false
+  is_delete_by_receiver: true
+  is_receiver_read: false
+  created_at: <%= DateTime.now%>

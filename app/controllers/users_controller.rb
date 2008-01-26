@@ -48,7 +48,7 @@ class UsersController < ApplicationController
   end
   
   def show
-    @user = User.find(params[:id])
+    @user = User.find(params[:id], :include=>[:positions])
     respond_to do |format|
       format.xml {render :xml=>@user.to_xml(default_user_to_xml_options)}
     end

@@ -72,10 +72,9 @@
 				user = u;
 				this.visible = false;
 			}
-			private function handleUpdateErrors(errors:ServerErrors, event:FaultEvent):void {
+			private function handleUpdateErrors(errors:ServerErrors, event:ResultEvent):void {
 				_serverErrors = errors;
 			}
-			
 			private function handleFault(errors:ServerErrors, event:FaultEvent):void {
 				//Unkown Error
 			}
@@ -130,8 +129,7 @@
 		   	   	</mx:TextArea>	    
 		    </mx:FormItem>
 		    <mx:FormItem direction="horizontal">
-		    	<mx:Button label="修改" click="updateInformation()" 
-		    		enabled="{validate(nicknameTI.text, summaryTA.text, birthdayTI.selectedDate)}"/>
+		    	<mx:Button label="修改" click="updateInformation()" enabled="{validate(nicknameTI.text, summaryTA.text, birthdayTI.selectedDate)}"/>
 		    	<mx:Button label="取消" click="refeshBinding()" />
 		    </mx:FormItem>
 		</mx:Form>
