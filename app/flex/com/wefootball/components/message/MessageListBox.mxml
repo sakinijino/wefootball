@@ -51,6 +51,7 @@
      		}
     	]]>
     </mx:Script>
+
 	<mx:columns >
 		<mx:DataGridColumn dataField="receiver_nick" headerText="{sendBox ? '送往' : '来自'}" >	
 			<mx:itemRenderer >
@@ -84,4 +85,5 @@
 		</mx:DataGridColumn>
 	</mx:columns>
     <mx:DateFormatter id="df" formatString="YYYY-MM-DD JJ:NN:SS" />
+ 
 </mx:DataGrid>

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:VBox xmlns="*" xmlns:mx="http://www.adobe.com/2006/mxml" initialize="refresh()" xmlns:message="com.wefootball.components.message.*">
+<mx:VDividedBox width="625" height="100%"  xmlns="*" xmlns:mx="http://www.adobe.com/2006/mxml" initialize="refresh()" xmlns:message="com.wefootball.components.message.*">
+<!--<mx:VBox>-->
 
 <mx:Metadata>
 	[Event(name="userDisplay", type="com.wefootball.events.UserDisplayEvent")]
@@ -40,17 +41,17 @@
      		
     	]]>
     </mx:Script>
-	<mx:VDividedBox width="100%" height="100%" >
-		<mx:TabNavigator width="625" height="100%" >
+	<!--<mx:VDividedBox width="625" height="100%" >-->
+		<mx:TabNavigator width="100%" height="49%" >
 		    <mx:Canvas label="收件箱" >
 				<message:MessageListBox messageDisplay="displayMessage(event)"
-					dataProvider="{receiveMessageList}" width="620" sendBox="false"/>
+					dataProvider="{receiveMessageList}" width="100%" height="49%" sendBox="false"/>
 		    </mx:Canvas>
 		    <mx:Canvas label="发件箱" >
 		    	<message:MessageListBox messageDisplay="displayMessage(event)"
-		    		dataProvider="{sendMessageList}" width="620" sendBox="true"/>
+		    		dataProvider="{sendMessageList}" width="100%" height="100%" sendBox="true"/>
 		    </mx:Canvas>
     	</mx:TabNavigator>
 		<message:MessageDetailBox id="messageDetailBox" width="100%" height="100%"/>	
 	</mx:VDividedBox>
-</mx:VBox>
+<!--</mx:VBox>-->
