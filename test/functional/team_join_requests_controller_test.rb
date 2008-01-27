@@ -30,7 +30,7 @@ class TeamJoinRequestsControllerTest < ActionController::TestCase
   
   def test_create_request
     assert_difference('TeamJoinRequest.count') do
-      assert_difference('users(:mike1).request_join_teams.length') do
+      assert_difference('TeamJoinRequest.count :conditions=>["user_id = ?", users(:mike1).id]') do
         login_as :mike1
         post :create, :team_join_request => { 
           :user_id => users(:mike1).id, 
@@ -90,10 +90,10 @@ class TeamJoinRequestsControllerTest < ActionController::TestCase
   def test_destroy
     login_as :saki
     c1 = TeamJoinRequest.count
-    c2 = users(:mike2).request_join_teams.length
+    c2 = TeamJoinRequest.count :conditions=>["user_id = ?", users(:mike2).id]
     delete :destroy, :id => 6
     assert_response 200
     assert_equal c1-1, TeamJoinRequest.count
-    assert_equal c2-1, users(:mike2).request_join_teams.length
+    assert_equal c2-1, (TeamJoinRequest.count :conditions=>["user_id = ?", users(:mike2).id])
   end
 end

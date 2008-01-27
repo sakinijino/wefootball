@@ -5,15 +5,13 @@ class TeamJoinRequestsController < ApplicationController
   # GET /users/:user_id/team_join_requests.xml
   def index
     if (params[:user_id]) #显示用户申请参加的所有队伍
-      @user = User.find(params[:user_id])
       respond_to do |format|
-        @requests = @user.request_join_teams
+        @requests = TeamJoinRequest.find_all_by_user_id_and_is_invitation(params[:user_id], false, :include=>[:team])
         format.xml  { render :status => 200, :template=>"shared/requests_with_teams" }
       end
     else #显示所有申请参加该队伍的用户
-      @team = Team.find(params[:team_id])
       respond_to do |format|
-        @requests = @team.request_join_users
+        @requests = TeamJoinRequest.find_all_by_team_id_and_is_invitation(params[:team_id], false, :include=>[:user])
         format.xml  { render :status => 200, :template=>"shared/requests_with_users" }
       end
     end

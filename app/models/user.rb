@@ -100,24 +100,6 @@ class User < ActiveRecord::Base
     friends_id_list = (friends_id_list.map{|x|[x.user1_id,x.user2_id]}).flatten.reject {|id| id == self.id}
     User.find(friends_id_list)
   end
-  
-  def request_join_teams
-    teams = Team.find(:all,
-      :select => "tjr.id as r_id, tjr.message, tjr.apply_date, t.*",
-      :joins => " as t inner join team_join_requests as tjr on t.id = tjr.team_id and tjr.is_invitation = false",
-      :conditions => ["tjr.user_id = :uid", {:uid=>self.id}]
-    )
-    teams.each {|t| t.apply_date = Date.parse(t.apply_date)}
-  end
-  
-  def invited_join_teams
-    teams = Team.find(:all,
-      :select => "tjr.id as r_id, tjr.message, tjr.apply_date, t.*",
-      :joins => " as t inner join team_join_requests as tjr on t.id = tjr.team_id and tjr.is_invitation = true",
-      :conditions => ["tjr.user_id = :uid", {:uid=>self.id}]
-    )
-    teams.each {|t| t.apply_date = Date.parse(t.apply_date)}
-  end
 
   protected
     # before filter 
