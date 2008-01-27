@@ -2,25 +2,25 @@
 <mx:DataGrid xmlns="*" xmlns:mx="http://www.adobe.com/2006/mxml" >
 
 <mx:Metadata>
-	[Event(name="messageDisplay", type="com.wefootball.events.MessageDetailEvent")]
+	[Event(name="teamDisplay", type="com.wefootball.events.TeamDetailEvent")]
 	[Event(name="userDisplay", type="com.wefootball.events.UserDisplayEvent")]
 </mx:Metadata>
 
 	   <mx:Script>
     	<![CDATA[
     		import mx.controls.LinkButton;
-    		import com.wefootball.events.MessageDetailEvent;
+    		import com.wefootball.events.TeamDetailEvent;
     		import mx.controls.Alert;
     		import mx.rpc.events.ResultEvent;
     		import mx.rpc.events.FaultEvent;
     		import com.wefootball.events.UserDisplayEvent;
     		import com.wefootball.model.User;
-    		import com.wefootball.model.Message;
+    		import com.wefootball.model.Team;
     		
     		[Bindable]
     		public var sendBox:Boolean = false;
     		
-    		internal function deleteMessage(data:Object):void{
+/*     		internal function deleteMessage(data:Object):void{
       			Message.destory(Message(data),
     				handleMessageDestoryResult,
     				handleMessageDestoryFaultResult
@@ -30,14 +30,14 @@
 			}
 			private function handleMessageDestoryFaultResult(event:FaultEvent):void{
 				Alert.show("删除失败");
-			}
+			}*/
 			
-     		internal function displayMessageDetail(data:Object):void{
-     			var e:MessageDetailEvent = new MessageDetailEvent("messageDisplay")
-     			e.message = Message(data)
+     		internal function displayTeamDetail(data:Object):void{
+     			var e:TeamDetailEvent = new TeamDetailEvent("teamDisplay")
+     			e.team = Team(data);
      			dispatchEvent(e);
      		}
-     		internal function displayUser(m:Object):void{
+/*      		internal function displayUser(m:Object):void{
      			if (sendBox) dispatchEvent(new UserDisplayEvent(m.receiver_id));
      			else dispatchEvent(new UserDisplayEvent(m.sender_id));
      		}	
@@ -48,42 +48,34 @@
      		internal function nick(m:Object):String {
      			if (sendBox) return m.receiver_nick;
      			else return m.sender_nick;
-     		}
+     		}  */
     	]]>
     </mx:Script>
 
 	<mx:columns >
-		<mx:DataGridColumn dataField="receiver_nick" headerText="{sendBox ? '送往' : '来自'}" >	
+		<mx:DataGridColumn headerText="球队名称" dataField="name">
 			<mx:itemRenderer >
 				<mx:Component>
-				<mx:LinkButton label="{outerDocument.nick(data)}" click="outerDocument.displayUser(data)"
-						 styleName="{outerDocument.unreadStyle(data)}" textAlign="left" fontWeight="normal"/>
+				<mx:LinkButton label="{data.name}" click="outerDocument.displayTeamDetail(data)"
+					textAlign="left" fontWeight="normal"/>
 				</mx:Component>
 			</mx:itemRenderer>
 		</mx:DataGridColumn>
-		<mx:DataGridColumn headerText="话题" dataField="subject">
-			<mx:itemRenderer >
-				<mx:Component>
-				<mx:LinkButton label="{data.subject}" click="outerDocument.displayMessageDetail(data)"
-						 styleName="{outerDocument.unreadStyle(data)}" textAlign="left" fontWeight="normal"/>
-				</mx:Component>
-			</mx:itemRenderer>
-		</mx:DataGridColumn>
-		<mx:DataGridColumn headerText="时间" width="150" dataField="created_at">
+		<mx:DataGridColumn headerText="创建时间" width="150" dataField="found_time">
 			<mx:itemRenderer>
 				<mx:Component>
-					<mx:Label text="{outerDocument.df.format(data.created_at)}"/>
+					<mx:Label text="{outerDocument.df.format(data.found_time)}"/>
 				</mx:Component>
 			</mx:itemRenderer>
 		</mx:DataGridColumn>
-    	<mx:DataGridColumn headerText="" width="50" dataField="id">
+<!--    	<mx:DataGridColumn headerText="" width="50" dataField="id">
     		<mx:itemRenderer>
     			<mx:Component>
-    				<mx:LinkButton label="删除" click="outerDocument.deleteMessage(data)" />
+    				<mx:LinkButton label="退出球队" click="outerDocument.deleteMessage(data)" />
     			</mx:Component>
     		</mx:itemRenderer>
-		</mx:DataGridColumn>
+		</mx:DataGridColumn>-->
 	</mx:columns>
-    <mx:DateFormatter id="df" formatString="YYYY-MM-DD JJ:NN" />
+    <mx:DateFormatter id="df" formatString="YYYY-MM-DD" />
  
 </mx:DataGrid>

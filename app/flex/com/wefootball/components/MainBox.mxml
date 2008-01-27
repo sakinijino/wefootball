@@ -7,6 +7,7 @@
 	creationComplete="init()">
 <mx:Script>
 <![CDATA[
+	import com.wefootball.components.team.TeamCreateBox;
 	import mx.core.IFlexDisplayObject;
 	import com.wefootball.model.Message;
 	import com.wefootball.events.*;
@@ -14,16 +15,19 @@
 	import com.wefootball.model.User;
 	import com.wefootball.components.message.MessageSendBox;
 	import com.wefootball.components.account.UpdateBox;
+	import com.wefootball.components.team.TeamCreateBox;
 	import com.wefootball.components.team.TeamBox;
 	import mx.managers.PopUpManager;
 	
 	private var messageSendBox:MessageSendBox = new MessageSendBox;
 	private var settingWindow:UpdateBox = new UpdateBox;
+	private var newTeamWindow:TeamCreateBox = new TeamCreateBox;
 	
  	private function init():void
 	{	
-		initPopupWindow(messageSendBox)
-		initPopupWindow(settingWindow)	
+		initPopupWindow(messageSendBox);
+		initPopupWindow(settingWindow);	
+		initPopupWindow(newTeamWindow);
 	}
 	private function initPopupWindow(dis:IFlexDisplayObject):void {
 		PopUpManager.addPopUp(dis, this);
@@ -48,6 +52,7 @@
 				<mx:LinkButton label="我的球队" click="mainStack.selectedChild = myTeam"/>
 				<mx:LinkButton label="我的信箱" click="mainStack.selectedChild = myMessageBox"/>
 				<mx:LinkButton label="我的设置" click="settingWindow.visible = true;"/>
+				<mx:LinkButton label="新建球队" click="newTeamWindow.visible = true;"/>
 			</mx:VBox>
 		</mx:ApplicationControlBar>
 		<mx:ApplicationControlBar width="700" height="100%" paddingTop="20" paddingBottom="20" >

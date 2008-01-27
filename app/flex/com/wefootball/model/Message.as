@@ -140,7 +140,7 @@ package com.wefootball.model
 			m.receiver_nick = eventXML.receiver_nick;
 			m.subject = eventXML.subject;
 			m.content = eventXML.content;
-			m.created_at = new Date(eventXML.created_at.toString()) 
+			m.created_at = new Date(eventXML.created_at.toString());
 			m.is_delete_by_sender = (eventXML.is_delete_by_sender == "true");
 			m.is_delete_by_receiver = (eventXML.is_delete_by_receiver == "true");
 			m.is_receiver_read = (eventXML.is_receiver_read == "true");
