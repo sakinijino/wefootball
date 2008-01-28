@@ -65,8 +65,8 @@ package com.wefootball.model
 							var r:Request = new Request;
 							parseRequestFromXML(xml,r);
 							requestList.addItem(r);
-							success(event);
 						}
+						success(event); 
 					}						
 				},
 				fault:fault

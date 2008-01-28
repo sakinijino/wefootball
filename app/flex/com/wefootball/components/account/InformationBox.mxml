@@ -4,7 +4,7 @@
 	styleName="content" >
 	<mx:Metadata>
 		[Event(name="messageSend", type="com.wefootball.events.MessageDetailEvent")]
-		[Event(name="freindRequestCreation", type="com.wefootball.events.UserDisplayEvent")]
+		[Event(name="freindRequestCreation", type="com.wefootball.events.UserEvent")]
 	</mx:Metadata>
 	<mx:Script>
 		<![CDATA[
@@ -13,7 +13,7 @@
     		import mx.rpc.events.FaultEvent;
     		import mx.collections.ArrayCollection;
     		import com.wefootball.events.MessageDetailEvent;
-    		import com.wefootball.events.UserDisplayEvent;
+    		import com.wefootball.events.UserEvent;
 
  			[Bindable]
 			public var user:User = null;
@@ -43,7 +43,7 @@
 			}
 			public function addAsFriend():void {
 				if (user != null && user.id != "") 
-					dispatchEvent(new UserDisplayEvent(
+					dispatchEvent(new UserEvent(
 						"freindRequestCreation", user.id))
 			}
 			

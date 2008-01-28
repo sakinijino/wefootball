@@ -3,7 +3,7 @@
 
 <mx:Metadata>
 	[Event(name="teamDisplay", type="com.wefootball.events.TeamDetailEvent")]
-	[Event(name="userDisplay", type="com.wefootball.events.UserDisplayEvent")]
+	[Event(name="userDisplay", type="com.wefootball.events.UserEvent")]
 </mx:Metadata>
 
 	   <mx:Script>
@@ -13,7 +13,7 @@
     		import mx.controls.Alert;
     		import mx.rpc.events.ResultEvent;
     		import mx.rpc.events.FaultEvent;
-    		import com.wefootball.events.UserDisplayEvent;
+    		import com.wefootball.events.UserEvent;
     		import com.wefootball.model.User;
     		import com.wefootball.model.Team;
     		

@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Box xmlns:mx="http://www.adobe.com/2006/mxml">
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml">
+
+<mx:Metadata>
+	[Event(name="userDisplay", type="com.wefootball.events.UserEvent")]
+</mx:Metadata>
 
     <mx:Script>
     	<![CDATA[
@@ -7,12 +11,17 @@
     		import mx.controls.Image;
     		import mx.controls.Alert;
     		import mx.rpc.events.ResultEvent;
-    		import mx.rpc.events.FaultEvent; 	
+    		import mx.rpc.events.FaultEvent;
+    		import com.wefootball.events.UserEvent; 	
 			import com.wefootball.model.Request;
 			import com.wefootball.model.User;
 			
     		[Bindable]
 			private var friendList:ArrayCollection;			    			 				
+
+			public function set userId(i:String):void {
+				listFriend(i);
+			}
     		 	
      		private function listFriend(user_id:String):void
      		{
@@ -25,20 +34,23 @@
      		
 			private function handleFriendListFault(event:FaultEvent):void {
 				Alert.show('Unknown Error', "Friends haven't been listed");
-			}    					  		
+			}
+     		internal function displayUser(data:Object):void{
+     			dispatchEvent(new UserEvent("userDisplay", data.id));
+     		}			   					  		
     	]]>	
     </mx:Script>
 
 <!--	这里暂时用currentUser的id，实际上应该来自于外部事件的参数-->
-	<mx:TileList initialize="listFriend(User.currentUser.id)" dataProvider="{friendList}" rowHeight="200" columnWidth="200">
+	<mx:TileList dataProvider="{friendList}" rowHeight="150" columnWidth="100">
 		<mx:itemRenderer>
 			<mx:Component>
-				<mx:VBox>
+				<mx:VBox click="outerDocument.displayUser(data)">
 					<mx:Image source="{data.img}"/>
-					<mx:Label text="{data.nickname}"/>					
+					<mx:Label text="{data.nickname}"/>			
 				</mx:VBox>
         	</mx:Component>
         </mx:itemRenderer>
 	</mx:TileList>
     
-</mx:Box>
+</mx:Canvas>

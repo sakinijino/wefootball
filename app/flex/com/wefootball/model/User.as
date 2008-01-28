@@ -64,7 +64,7 @@ package com.wefootball.model
 				method:req.method,
 				request:{'login':login,'password':password},
 				success: function(event:ResultEvent):void{
-					USER_PARSER(event.result,User.currentUser);
+					USER_PARSER(XML(event.result),User.currentUser);
 					User.users[User.currentUser.id] = User.currentUser
 					success(event);
 				},
@@ -80,7 +80,7 @@ package com.wefootball.model
 				method:req.method,
 				success: function(event:ResultEvent):void{
 					var u:User = new User;
-					USER_PARSER(event, u);
+					USER_PARSER(XML(event.result), u);
 					success(u, event);
 				},
 				fault:fault
@@ -133,7 +133,7 @@ package com.wefootball.model
 							u['updateerrors'](new ServerErrors(result), event)
 						}
 						else {
-							USER_PARSER(event.result, User.users[u.id]);
+							USER_PARSER(XML(event.result), User.users[u.id]);
 							success(User.users[u.id], event);
 						}
 					},
@@ -160,7 +160,6 @@ package com.wefootball.model
 						var f:User = new User;
 						FRIEND_PARSER(event.result,f);
 						currentUserFriendList.addItem(f);
-						Alert.show(currentUserFriendList.length.toString());									
 					}
 					success(event);					
 				},	

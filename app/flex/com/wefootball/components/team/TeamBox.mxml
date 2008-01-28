@@ -15,7 +15,7 @@
     		import mx.controls.Alert;
     		import mx.rpc.events.ResultEvent;
     		import mx.rpc.events.FaultEvent;
-    		import com.wefootball.events.UserDisplayEvent;
+    		import com.wefootball.events.UserEvent;
     		import com.wefootball.model.User;
     		import com.wefootball.model.Team;
     		import mx.collections.XMLListCollection;

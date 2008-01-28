@@ -19,7 +19,7 @@ class PreFriendRelationsController < ApplicationController
       head 400
       return
     end
-    if(params[:pre_friend_relation][:applier_id] != current_user.id)
+    if(params[:pre_friend_relation][:applier_id] != current_user.id.to_s)
       head 401
       return
     end

@@ -3,7 +3,7 @@
 
 <mx:Metadata>
 	[Event(name="messageDisplay", type="com.wefootball.events.MessageDetailEvent")]
-	[Event(name="userDisplay", type="com.wefootball.events.UserDisplayEvent")]
+	[Event(name="userDisplay", type="com.wefootball.events.UserEvent")]
 </mx:Metadata>
 
 	   <mx:Script>
@@ -13,7 +13,7 @@
     		import mx.controls.Alert;
     		import mx.rpc.events.ResultEvent;
     		import mx.rpc.events.FaultEvent;
-    		import com.wefootball.events.UserDisplayEvent;
+    		import com.wefootball.events.UserEvent;
     		import com.wefootball.model.User;
     		import com.wefootball.model.Message;
     		
@@ -38,8 +38,8 @@
      			dispatchEvent(e);
      		}
      		internal function displayUser(m:Object):void{
-     			if (sendBox) dispatchEvent(new UserDisplayEvent("userDisplay", m.receiver_id));
-     			else dispatchEvent(new UserDisplayEvent("userDisplay", m.sender_id));
+     			if (sendBox) dispatchEvent(new UserEvent("userDisplay", m.receiver_id));
+     			else dispatchEvent(new UserEvent("userDisplay", m.sender_id));
      		}	
      		internal function unreadStyle(m:Object):String {
      			if(!m.is_receiver_read && m.receiver_id == User.currentUser.id) return 'em';
