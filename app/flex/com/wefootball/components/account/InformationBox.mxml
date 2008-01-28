@@ -4,6 +4,7 @@
 	styleName="content" >
 	<mx:Metadata>
 		[Event(name="messageSend", type="com.wefootball.events.MessageDetailEvent")]
+		[Event(name="freindRequestCreation", type="com.wefootball.events.UserDisplayEvent")]
 	</mx:Metadata>
 	<mx:Script>
 		<![CDATA[
@@ -12,6 +13,7 @@
     		import mx.rpc.events.FaultEvent;
     		import mx.collections.ArrayCollection;
     		import com.wefootball.events.MessageDetailEvent;
+    		import com.wefootball.events.UserDisplayEvent;
 
  			[Bindable]
 			public var user:User = null;
@@ -38,6 +40,11 @@
 						"messageSend",
 						User.currentUser.id, 
 						User.currentUser.nickname, user.id, user.nickname))
+			}
+			public function addAsFriend():void {
+				if (user != null && user.id != "") 
+					dispatchEvent(new UserDisplayEvent(
+						"freindRequestCreation", user.id))
 			}
 			
 			private var _foottotext:Object = {
@@ -89,6 +96,7 @@
 	    </mx:FormItem>
 	    <mx:FormItem direction="horizontal">
 	    	<mx:Button label="发信" click="sendMessage()" visible="{user.id != User.currentUser.id}"/>
+	    	<mx:Button label="加为好友" click="addAsFriend()" visible="{user.id != User.currentUser.id}"/>
 	    </mx:FormItem>
 	</mx:Form>
 	<mx:DateFormatter id="df" formatString="YYYY-MM-DD" />

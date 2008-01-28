@@ -22,7 +22,6 @@ package com.wefootball.model
 		
 		static private var proxy:Proxy = new HTTPProxy;
 		static private const CREATE:Object = {url:"/teams.xml",method:"POST"};
-		static private const DESTORY:Object = {method:"POST"};
 		static private const LIST:Object = {method:"POST"};
 		static private const DETAIL:Object = {method:"POST"};
 		static private const UPDATE:Function = function(id:String):Object {
