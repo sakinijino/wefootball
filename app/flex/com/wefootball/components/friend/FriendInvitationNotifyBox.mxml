@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<!--<?xml version="1.0" encoding="utf-8"?>
 <mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml"
 	xmlns:wfFriend="com.wefootball.components.friend.*"
 	creationComplete="init()">
@@ -9,7 +9,7 @@
 			import mx.rpc.events.ResultEvent;
 			import com.wefootball.components.friend.FriendInvitationListBox;
 	        import mx.managers.PopUpManager;
-			import com.wefootball.model.Quest;
+			import com.wefootball.model.Request;
     		import mx.rpc.events.ResultEvent;
     		import mx.rpc.events.FaultEvent; 
     		import com.wefootball.events.FriendUpdateEvent;
@@ -33,7 +33,7 @@
           	}
           	
           	public function getFriendInvSummary():void {
-          		Quest.countRequests(handleRequestCountResult,handleRequestCountFault);
+          		Request.countRequests(handleRequestCountResult,handleRequestCountFault);
           	}
           	private function handleRequestCountResult(event:ResultEvent):void
           	{
@@ -62,3 +62,4 @@
 			friendUpdate="friInvLB.listRequests();getFriendInvSummary()"/>
 	</mx:TitleWindow>
 </mx:VBox>
+-->
