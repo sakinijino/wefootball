@@ -3,6 +3,10 @@
 	initialize="refresh()" xmlns:message="com.wefootball.components.message.*" xmlns:team="com.wefootball.components.team.*">
 <!--<mx:VBox>-->
 
+<mx:Metadata>
+	[Event(name="teamDisplay", type="com.wefootball.events.TeamDetailEvent")]
+</mx:Metadata>
+
 	   <mx:Script>
     	<![CDATA[
     		import mx.collections.ArrayCollection;
@@ -40,7 +44,6 @@
 		 		Alert.show("读取细节失败"); 			
 		 	}
 	 	
-     		
     	]]>
     </mx:Script>
 		<mx:TabNavigator width="100%" height="49%" >
@@ -53,6 +56,4 @@
 		    		dataProvider="{teamList}" width="100%" height="100%" sendBox="true"/>
 		    </mx:Canvas>-->
     	</mx:TabNavigator>
-		<team:TeamDetailBox id="teamDetailBox" width="100%" height="100%"/>	
-		<team:TeamUpdateBox id="teamUpdateBox" width="100%" height="100%"/>
 	</mx:VDividedBox>

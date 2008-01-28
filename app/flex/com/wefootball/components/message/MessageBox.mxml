@@ -41,10 +41,10 @@
      		
     	]]>
     </mx:Script>
-	<mx:TabNavigator width="100%" height="49%" >
+	<mx:TabNavigator width="100%" height="100%" >
 	    <mx:Canvas label="收件箱" >
 			<message:MessageListBox messageDisplay="displayMessage(event)"
-				dataProvider="{receiveMessageList}" width="100%" height="49%" sendBox="false"/>
+				dataProvider="{receiveMessageList}" width="100%" height="100%" sendBox="false"/>
 	    </mx:Canvas>
 	    <mx:Canvas label="发件箱" >
 	    	<message:MessageListBox messageDisplay="displayMessage(event)"

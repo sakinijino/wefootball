@@ -45,7 +45,7 @@
 		</mx:FormItem>
 		<mx:FormItem label="创建日期" >
 	        <mx:DateField id="foundDateTI" yearNavigationEnabled="true" 
-	        	editable="true" displayedYear="1980" 
+	        	editable="true"
 	        	monthNames="['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月']" formatString="YYYY-MM-DD" width="115"/>
 		</mx:FormItem>
 		<mx:FormItem label="球队风格">

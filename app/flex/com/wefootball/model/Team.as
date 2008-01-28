@@ -44,14 +44,14 @@ package com.wefootball.model
 						'team[summary]':team.summary,
 						'team[found_time]':team.found_time,
 						'team[style]':team.style},
-/* 				success:function(event:ResultEvent):void{
+ 				success:function(event:ResultEvent):void{
  					var xml:XML = XML(event.result);
-					var t:Message = new Message;
-					MESSAGE_PARSER(event.result, m);
-					sendMessageList.addItem(m); 
+					var t:Team = new Team;
+					TEAM_PARSER(event.result, t);
+					teamList.addItem(t); 
 					success(event);
-				}, */
-				success:success,
+				}, 
+				//success:success,
 				fault:fault
 			});
 		} 

@@ -1,25 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:HBox xmlns="*" xmlns:mx="http://www.adobe.com/2006/mxml"
+<mx:VBox xmlns="*" xmlns:mx="http://www.adobe.com/2006/mxml"
 	xmlns:msg="com.wefootball.components.message.*" xmlns:acc="com.wefootball.components.account.*"
-	xmlns:tm="com.wefootball.components.team.*" 	xmlns:fri="com.wefootball.components.friend.*"	
-	height="100%" 
-	paddingLeft="20" paddingRight="20" paddingTop="20" paddingBottom="20"
-	creationComplete="init()">
+	xmlns:tm="com.wefootball.components.team.*" 
+	xmlns:rt="com.wefootball.components.*"
+	height="100%" width="100%"
+	paddingLeft="20" paddingRight="20" paddingTop="20" paddingBottom="20">
 <mx:Script>
+
 <![CDATA[
-	import com.wefootball.components.team.TeamCreateBox;
-	import mx.core.IFlexDisplayObject;
-	import com.wefootball.model.Message;
-	import com.wefootball.events.*;
+	import com.wefootball.components.PersonMainBox;
+	import com.wefootball.components.TeamMainBox;
+	import com.wefootball.events.TeamDetailEvent;
 	import mx.controls.Alert;
-	import com.wefootball.model.User;
-	import com.wefootball.components.message.MessageSendBox;
-	import com.wefootball.components.account.UpdateBox;
-	import com.wefootball.components.team.TeamCreateBox;
-	import com.wefootball.components.team.TeamBox;
-	import mx.managers.PopUpManager;
 	
-	private var messageSendBox:MessageSendBox = new MessageSendBox;
+/* 	private var messageSendBox:MessageSendBox = new MessageSendBox;
 	private var settingWindow:UpdateBox = new UpdateBox;
 	private var newTeamWindow:TeamCreateBox = new TeamCreateBox;
 	
@@ -38,23 +32,36 @@
 	private function sendMessage(m:MessageDetailEvent):void {
 		messageSendBox.visible=true;
 		messageSendBox.message = m.message;
-	}
-	private function userDisplay(u:UserDisplayEvent):void {
-		informationBox.userId = u.user_id;
-		mainStack.selectedChild = userPage;
+	}*/
+	private function turnToTeamPerspective(t:TeamDetailEvent):void {
+/* 		informationBox.userId = u.user_id; */
+		mainStack.selectedChild = teamMain;
+	} 
+	
+	private function turnToPersonPerspective():void{
+		mainStack.selectedChild = personMain;
 	}
 ]]>
 </mx:Script>
-		<mx:ApplicationControlBar width="200" height="100%" 
+	<mx:HBox height="50" width="100%" >
+	</mx:HBox>
+	<mx:HBox height="20" width="500"  horizontalAlign="right">
+		<mx:Button label="Button"/>
+		<mx:Button label="Button"/>
+		<mx:Button label="个人页面" click="turnToPersonPerspective()"/>
+	</mx:HBox>
+	<mx:ViewStack id="mainStack" width="100%" height="100%">
+		<rt:PersonMainBox id="personMain" teamDisplay="turnToTeamPerspective(event)"/>
+		<rt:TeamMainBox id="teamMain" />
+	</mx:ViewStack>
+<!--		<mx:ApplicationControlBar width="200" height="100%" 
 			paddingLeft="20" paddingRight="20" paddingTop="20" paddingBottom="20" >
 			<mx:VBox height="100%" width="100%" >
 				<mx:LinkButton label="我的信息" click="informationBox.user=User.currentUser;mainStack.selectedChild = userPage"/>
 				<mx:LinkButton label="我的球队" click="mainStack.selectedChild = myTeam"/>
 				<mx:LinkButton label="我的信箱" click="mainStack.selectedChild = myMessageBox"/>
-				<mx:LinkButton label="我的邀请" click="mainStack.selectedChild = friendInvitationPage"/>				
-				<mx:LinkButton label="我的好友" click="mainStack.selectedChild = myFriendListPage"/>				
+				<mx:LinkButton label="我的好友" click="mainStack.selectedChild = myFriend"/>
 				<mx:LinkButton label="我的设置" click="settingWindow.visible = true;"/>
-				<!--<mx:LinkButton label="邀请" click="mainStack.selectedChild = myTest"/>				-->
 				<mx:LinkButton label="新建球队" click="newTeamWindow.visible = true;"/>
 			</mx:VBox>
 		</mx:ApplicationControlBar>
@@ -70,26 +77,21 @@
 					<mx:Label text="我的信箱" styleName="head"/>
 					<msg:MessageBox height="100%" messageReply="sendMessage(event)" userDisplay="userDisplay(event)"/>
 				</mx:VBox>
-				<mx:VBox width="100%" height="100%" id="friendInvitationPage"
-					paddingLeft="20" paddingRight="20" paddingBottom="20" >
-					<mx:Label text="我的邀请" styleName="head"/>
-					<fri:FriendInvitationListBox id="friendInvitationListBox"/>
-				</mx:VBox>
-				<mx:VBox width="100%" height="100%" id="myFriendListPage"
-					paddingLeft="20" paddingRight="20" paddingBottom="20" >
-					<mx:Label text="我的好友" styleName="head"/>
-					<fri:FriendListBox id="friendListBox" />
-				</mx:VBox>
-<!--				<mx:VBox width="100%" height="100%" id="myTest"
-					paddingLeft="20" paddingRight="20" paddingBottom="20" >
-					<mx:Label text="yaoqing" styleName="head"/>
-					<fri:FriendInvitationApplyBox id="friendApplyBox" />
-				</mx:VBox>-->											
 				<mx:VBox width="100%" height="100%" id="myTeam"
 					paddingLeft="20" paddingRight="20" paddingBottom="20" >
 					<mx:Label text="我的球队" styleName="head"/>
 					<tm:TeamBox height="100%"/>
 				</mx:VBox>
+				<mx:VBox width="100%" height="100%" id="myFriend"
+					paddingLeft="20" paddingRight="20" paddingBottom="20" >
+					<mx:Label text="我的好友" styleName="head"/>
+					<mx:VDividedBox width="625" height="100%">
+						<fr:FriendListBox height="100%"/>
+						<fr:FriendInvitationApplyBox height="100%"/>
+						<fr:FriendInvitationListBox height="100%"/>
+						<fr:FriendInvitationNotifyBox height="100%"/>
+					</mx:VDividedBox>
+				</mx:VBox>
 			</mx:ViewStack>
-		</mx:ApplicationControlBar>
-</mx:HBox>
+		</mx:ApplicationControlBar>-->
+</mx:VBox>
