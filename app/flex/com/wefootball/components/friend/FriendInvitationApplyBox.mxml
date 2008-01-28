@@ -1,35 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Box xmlns:mx="http://www.adobe.com/2006/mxml">
+<mx:Box xmlns:mx="http://www.adobe.com/2006/mxml" xmlns:wfv="com.wefootball.validators.*">
 	<mx:Script>		
 		<![CDATA[
 			import mx.controls.Alert;
-			import mx.rpc.events.ResultEvent;
+			import com.wefootball.model.User;
+			import com.wefootball.model.Request;
+    		import mx.rpc.events.ResultEvent;
+    		import mx.rpc.events.FaultEvent;
+    		import mx.validators.Validator;
+			import mx.events.ValidationResultEvent;
+			import com.wefootball.validators.ServerErrors;			
+			
+			[Bindable]
+			private var _serverErrors:ServerErrors;
+			private function validate(message:String):Boolean {
+				var results:Array = Validator.validateAll([messageValidator]);
+				if (results.length > 0) return false;
+				return true;
+			}		
           	
-          	public function createPreFriendRelation():void {
-          		svcPreFriendRelationCreate.request
-          			['pre_friend_relation[applier_id]'] = 10;
-          		svcPreFriendRelationCreate.request
-          			['pre_friend_relation[host_id]'] = 11;
-          		svcPreFriendRelationCreate.request['pre_friend_relation[message]']
-          											= "hello";
-          		svcPreFriendRelationCreate.send();
+          	public function createRequest():void {
+          		var applier_id:String = User.currentUser.id;
+          		var host_id:String = "1";//这里需要修改！！
+          		var message:String = messageTA.text;
+          		
+          		Request.createRequest(applier_id,host_id,message,
+          							 handleCreateRequestResult,
+          							 handleCreateRequestError,
+          							 handleCreateRequestFault);
           	}
-          	private function handlePreFriendRelationCount(event:ResultEvent):void
-          	{
-          		/*错误处理*/
-          		Alert.show("User Created!!");
-          	}
+          	
+			private function handleCreateRequestResult(event:ResultEvent):void {
+			}
+			
+			private function handleCreateRequestError(errors:ServerErrors, event:ResultEvent):void {
+				_serverErrors = errors;
+			}			
+			
+			private function handleCreateRequestFault(event:FaultEvent):void {
+				Alert.show('Unknown Error', "Request hasn't been created");
+			}          	
+          	
 		]]>
 	</mx:Script>
 	
-	<mx:HTTPService
-	    id="svcPreFriendRelationCreate"
-	    url="/pre_friend_relations.xml"
-	    resultFormat="e4x"
-	    method="POST"
-	    result="handlePreFriendRelationCount(event)"
-	/>
 	<mx:Label text="请输入您想留的简短信息：" />
-	<mx:TextArea />
-	<mx:Button id="inviteButton" label="发出邀请" click="createPreFriendRelation()" />
+	<mx:TextArea id="messageTA"/>
+	<mx:Button id="inviteButton" label="发出邀请" click="createRequest()" enabled="{validate(messageTA.text)}"/>
+	
+	<mx:StringValidator id="messageValidator" source="{messageTA}" property="text" maxLength="500" required="false"/>
+	<wfv:ServerErrorValidator field="message" listener="{messageTA}" serverErrors="{_serverErrors}" />	
+	
 </mx:Box>

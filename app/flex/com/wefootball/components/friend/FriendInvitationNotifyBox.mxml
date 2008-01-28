@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml"
-	xmlns:wfFriend="com.wefootball.components.friend.*">
+	xmlns:wfFriend="com.wefootball.components.friend.*"
+	creationComplete="init()">
 	<mx:Script>		
 		<![CDATA[
 			import mx.controls.Alert;
@@ -8,12 +9,19 @@
 			import mx.rpc.events.ResultEvent;
 			import com.wefootball.components.friend.FriendInvitationListBox;
 	        import mx.managers.PopUpManager;
-
+			import com.wefootball.model.Quest;
+    		import mx.rpc.events.ResultEvent;
+    		import mx.rpc.events.FaultEvent; 
+    		import com.wefootball.events.FriendUpdateEvent;
+			
+			private function init():void {
+				this.removeChild(friendInvListPopupWindow)
+				PopUpManager.addPopUp(friendInvListPopupWindow, this, false);
+			}
 			private function showFriendInvList(e:MouseEvent):void
 			{
 				if(friendInvListPopupWindow.visible == false)			
             	{
-            		PopUpManager.addPopUp(friendInvListPopupWindow, this, false);
             		friendInvListPopupWindow.visible = true;
             	}
             	else
@@ -25,34 +33,32 @@
           	}
           	
           	public function getFriendInvSummary():void {
-          		svcPreFriendRelationCount.send();
+          		Quest.countRequests(handleRequestCountResult,handleRequestCountFault);
           	}
-          	private function handlePreFriendRelationCount(event:ResultEvent):void
+          	private function handleRequestCountResult(event:ResultEvent):void
           	{
-				var t_invNumber:int = event.result["pre_friend_relation"].length();
-				if(t_invNumber > 0)
+          		invNumber = int(event.result);
+				if(invNumber > 0)
 				{
-					var friendInvSummary:LinkButton = new LinkButton();
-          			friendInvSummary.label = t_invNumber.toString() + "个好友添加邀请";
-          			friendInvSummary.addEventListener(MouseEvent.CLICK,
-          											showFriendInvList);
-          			this.addChildAt(friendInvSummary,0);
+          			friendInvSummary.label = invNumber.toString() + "个好友添加邀请";         											
+    			}
+    			else
+    			{
+    				friendInvSummary.label = "您现在暂无好友添加邀请";
+    				friendInvSummary.mouseEnabled = false;
     			}
           	}
+			private function handleRequestCountFault(event:FaultEvent):void {
+				Alert.show('Unknown Error', "Request hasn't been counted");
+			}              	          	
 		]]>
 	</mx:Script>
 	
-	<mx:HTTPService
-	    id="svcPreFriendRelationCount"
-	    url="/pre_friend_relations.xml"
-	    resultFormat="e4x"
-	    method="GET"
-	    result="handlePreFriendRelationCount(event)"
-	/>
-	
+	<mx:LinkButton id="friendInvSummary" click="showFriendInvList(event)"/>
 	<mx:TitleWindow id="friendInvListPopupWindow" visible="false"
 	    showCloseButton="true" 
 		close="removeFriendInvList();">
-		<wfFriend:FriendInvitationListBox />
+		<wfFriend:FriendInvitationListBox id="friInvLB"
+			friendUpdate="friInvLB.listRequests();getFriendInvSummary()"/>
 	</mx:TitleWindow>
 </mx:VBox>

@@ -2,11 +2,12 @@ class PreFriendRelationsController < ApplicationController
   # GET /pre_friend_relations
   # GET /pre_friend_relations.xml
   def index
-    @pre_friend_relations = PreFriendRelation.find(:all)
+    #only return the quests for current user
+    @pre_friend_relations = PreFriendRelation.find_all_by_host_id(current_user.id,:include=>[:applier])
 
     respond_to do |format|
       format.html # index.html.erb
-      format.xml  { render :xml => @pre_friend_relations.to_xml(:dasherize=>false) }
+      format.xml  {render :status => 200}
     end
   end
 
@@ -40,20 +41,28 @@ class PreFriendRelationsController < ApplicationController
   # POST /pre_friend_relations
   # POST /pre_friend_relations.xml
   def create
-    params[:pre_friend_relation]["apply_date"] = Date.today
+    @applier = User.find(params[:pre_friend_relation][:applier_id])
+    @host = User.find(params[:pre_friend_relation][:host_id])
+    if(params[:pre_friend_relation][:applier_id] == params[:pre_friend_relation][:host_id])
+      head 400
+      return
+    end    
+    
     @pre_friend_relation = PreFriendRelation.new(params[:pre_friend_relation])
-
     respond_to do |format|
       if @pre_friend_relation.save
         flash[:notice] = 'PreFriendRelation was successfully created.'
         format.html { redirect_to(@pre_friend_relation) }
-        format.xml  { render :xml => @pre_friend_relation.to_xml(:dasherize=>false), 
-                              :status => :ok, :location => @pre_friend_relation}
+        format.xml  { render :status=>200}
       else
         format.html { render :action => "new" }
-        format.xml  { render :xml => @pre_friend_relation.errors, :status => :unprocessable_entity }
+        format.xml  { render :xml => @pre_friend_relation.errors.to_xml_full, :status => 200 }
       end
     end
+  rescue ActiveRecord::RecordNotFound => e
+    respond_to do |format|
+      format.xml {head 404}
+    end     
   end
 
   # PUT /pre_friend_relations/1
@@ -84,4 +93,14 @@ class PreFriendRelationsController < ApplicationController
       format.xml  { head :ok }
     end
   end
+  
+  # GET /pre_friend_relations/count.xml
+  def count
+    countNumber = PreFriendRelation.count(:conditions=>["host_id = ?",current_user.id])
+    s = "<count>" + countNumber.to_s + "</count>"
+    puts s
+    respond_to do |format|
+      format.xml  { render :xml => s }
+    end
+  end  
 end

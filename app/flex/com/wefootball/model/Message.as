@@ -34,7 +34,7 @@ package com.wefootball.model
 		static public var receiveMessageList:ArrayCollection = new ArrayCollection();
 		
 		static private const MESSAGE_PARSER:Function = parseMessageFromXML;
-		static private const MESSAGE_LIST_PARSER:Function=parseMessageListFromXML
+		static private const MESSAGE_LIST_PARSER:Function=parseMessageListFromXML;
 		
 		public function Message() {
 			super();

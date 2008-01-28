@@ -2,12 +2,11 @@ class FriendRelationsController < ApplicationController
   # GET /friend_relations
   # GET /friend_relations.xml
   def index 
-    friendsList = User.find_by_id(params[:user_id]).friends
+    @friendsList = User.find_by_id(params[:user_id]).friends
 
     respond_to do |format|
       format.html # index.html.erb
-      format.xml  { render :xml => friendsList.to_xml(
-                           :only=>[:id,:nickname],:dasherize=>false)}   
+      format.xml  { render :status=>200}   
     end
   end
 
@@ -41,18 +40,27 @@ class FriendRelationsController < ApplicationController
   # POST /friend_relations
   # POST /friend_relations.xml
   def create
-    @friend_relation = FriendRelation.new(params[:friend_relation])
-    PreFriendRelation.delete(params[:pre_id])
+    @request = PreFriendRelation.find(params[:request_id],:include=>[:applier])    
+    
+    if(@request.applier_id != current_user.id)
+      head 401
+      return
+    end
+
+    @friend_relation = FriendRelation.new
+    @friend_relation.user1_id = @request.applier_id
+    @friend_relation.user2_id = @request.host_id
+    if @friend_relation.save!
+      PreFriendRelation.delete(params[:request_id])
+    end
 
     respond_to do |format|
-      if @friend_relation.save
-        flash[:notice] = 'FriendRelation was successfully created.'
-        format.html { redirect_to(@friend_relation) }
-        format.xml  { render :xml => @friend_relation.to_xml(:dasherize=>false), :status => :ok, :location => @friend_relation }
-      else
-        format.html { render :action => "new" }
-        format.xml  { render :xml => @friend_relation.errors, :status => :unprocessable_entity }
-      end
+      #~ @short_format = true
+      format.xml {render :status => 200}
+    end
+  rescue ActiveRecord::RecordInvalid
+    respond_to do |format|
+      format.xml { render :xml => @friend_relation.errors.to_xml_full}
     end
   end
 
@@ -84,4 +92,5 @@ class FriendRelationsController < ApplicationController
       format.xml  { head :ok }
     end
   end
+
 end

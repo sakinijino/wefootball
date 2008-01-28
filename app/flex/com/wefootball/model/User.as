@@ -5,7 +5,8 @@ package com.wefootball.model
 	import com.wefootball.validators.ServerErrors;
 	
 	import mx.collections.ArrayCollection;
-	import mx.rpc.events.ResultEvent;
+	import mx.controls.Alert;
+	import mx.rpc.events.ResultEvent;	
 	
 	[Bindable]
 	public class User
@@ -13,14 +14,17 @@ package com.wefootball.model
 		public var id:String;
 		public var login:String;
 		public var nickname:String;
+		public var img:String = "/images/defaultUserPic.jpg";
 		public var height:Number;
 		public var weight:Number;
 		public var fitfoot:String;
 		public var birthday:Date;
 		public var summary:String;
-		public var positions:ArrayCollection = new ArrayCollection;
+		public var positions:ArrayCollection = new ArrayCollection;		
 		
 		static public var currentUser:User = new User();
+		static private var friendListHasLoaded:Boolean = false;
+		static public var currentUserFriendList:ArrayCollection = new ArrayCollection;
 		static public var users:Object = {};
 		
 		static private var proxy:Proxy = new HTTPProxy;
@@ -36,7 +40,16 @@ package com.wefootball.model
 		static private const UPDATE:Function = function(id:String):Object {
 			return {url:"/users/"+id+".xml",method:"POST"};
 		}
-		static private const PARSER:Function = parseFromXML;
+		static private const CREATE_FRIEND:Object = {url:"/friend_relations.xml"
+													 ,method:"POST"};
+		static private const REJECT_FRIEND:Object = {url:"/friend_relations.xml"
+													 ,method:"POST"};
+		static private const LIST_FRIEND:Object = {url:"/friend_relations.xml"
+													 ,method:"GET"};													 		
+		
+		static private const USER_PARSER:Function = parseUserFromXML;
+		static private const FRIEND_PARSER:Function = parseFriendFromXML;
+		static private const FRIEND_LIST_PARSER:Function = parseFriendListFromXML;				
 				
 		public function User()
 		{
@@ -51,7 +64,7 @@ package com.wefootball.model
 				method:req.method,
 				request:{'login':login,'password':password},
 				success: function(event:ResultEvent):void{
-					PARSER(event,User.currentUser);
+					USER_PARSER(event.result,User.currentUser);
 					User.users[User.currentUser.id] = User.currentUser
 					success(event);
 				},
@@ -67,7 +80,7 @@ package com.wefootball.model
 				method:req.method,
 				success: function(event:ResultEvent):void{
 					var u:User = new User;
-					PARSER(event, u);
+					USER_PARSER(event, u);
 					success(u, event);
 				},
 				fault:fault
@@ -120,31 +133,99 @@ package com.wefootball.model
 							u['updateerrors'](new ServerErrors(result), event)
 						}
 						else {
-							PARSER(event, User.users[u.id]);
+							USER_PARSER(event.result, User.users[u.id]);
 							success(User.users[u.id], event);
 						}
 					},
 					fault:fault
 				}); 		
-		}						
-
-		static private function parseFromXML(event:ResultEvent, u:User):void
-		{
-			u.id = event.result.id;
-			u.login = event.result.login;
-			u.nickname = event.result.nickname;
-			if (event.result.height.@nil!='true') u.height = event.result.height;
-			else u.height = 0
-			if (event.result.weight.@nil!='true') u.weight = event.result.weight;
-			else u.weight = 0
-			if (event.result.fitfoot.@nil!='true') u.fitfoot = event.result.fitfoot.toString();
-			else u.fitfoot = null
-			if (event.result.birthday.@nil!='true') u.birthday = new Date(event.result.birthday.toString());
-			else u.birthday = null
-			u.summary = event.result.summary;
-			u.positions.removeAll()
-			for(var i: int = 0; i < event.result..position.length(); i++)
-				u.positions.addItem(event.result..position[i].toString());
 		}
+		
+		public function createFriend(request_id:String,
+									success:Function,
+									fault:Function):void
+		{
+			User.proxy.send({
+				url:CREATE_FRIEND.url,
+				method:CREATE_FRIEND.method,
+				request:{'request_id':request_id},
+				success:function(event:ResultEvent):void{
+					for (var i:int=0; i< Request.requestList.length; ++i)
+					{
+						if (Request.requestList.getItemAt(i).id == request_id)
+							Request.requestList.removeItemAt(i);
+					}
+					if(friendListHasLoaded == true)
+					{
+						var f:User = new User;
+						FRIEND_PARSER(event.result,f);
+						currentUserFriendList.addItem(f);
+						Alert.show(currentUserFriendList.length.toString());									
+					}
+					success(event);					
+				},	
+				fault:fault
+			});
+					
+		}
+		
+		static public function listFriends( user_id:String,
+											success:Function,
+											fault:Function):void
+		{
+     		if((user_id == currentUser.id) && (friendListHasLoaded == true))
+     			success((new ResultEvent(ResultEvent.RESULT)),currentUserFriendList);
+     		else
+     		{		
+				User.proxy.send({
+					url:LIST_FRIEND.url,
+					method:LIST_FRIEND.method,				
+					request:{'user_id':user_id},				
+					success:function(event:ResultEvent):void{
+						var fl:ArrayCollection = new ArrayCollection;
+						FRIEND_LIST_PARSER(event.result,fl);
+						if(user_id == currentUser.id)
+						{
+							friendListHasLoaded = true;
+							currentUserFriendList = fl;
+						}											
+						success(event,fl);
+					},	
+					fault:fault})
+			};
+		}					
+							
+		static private function parseUserFromXML(eventXML:XML, u:User):void
+		{
+			u.id = eventXML.id;
+			u.login = eventXML.login;
+			u.nickname = eventXML.nickname;
+			if (eventXML.height.@nil!='true') u.height = eventXML.height;
+			else u.height = 0
+			if (eventXML.weight.@nil!='true') u.weight = eventXML.weight;
+			else u.weight = 0
+			if (eventXML.fitfoot.@nil!='true') u.fitfoot = eventXML.fitfoot.toString();
+			else u.fitfoot = null
+			if (eventXML.birthday.@nil!='true') u.birthday = new Date(eventXML.birthday.toString());
+			else u.birthday = null
+			u.summary = eventXML.summary;
+			u.positions.removeAll()
+			for(var i: int = 0; i < eventXML..position.length(); i++)
+				u.positions.addItem(eventXML..position[i].toString());
+		}
+		static private function parseFriendFromXML(eventXML:XML,u:User):void
+		{
+ 			u.id = eventXML.id;
+			u.nickname = eventXML.nickname;
+		}
+		static private function parseFriendListFromXML(eventXML:XML, fl:ArrayCollection):void
+		{ 
+ 			for(var i:int = 0;i < eventXML['friend'].length();i++)
+			{
+				var u:User = new User();
+				parseFriendFromXML(eventXML['friend'][i],u);
+				fl.addItem(u);
+			} 
+		}				
 	}
 }

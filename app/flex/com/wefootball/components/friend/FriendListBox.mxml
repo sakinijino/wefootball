@@ -3,52 +3,39 @@
 
     <mx:Script>
     	<![CDATA[
+    		import mx.collections.ArrayCollection;
     		import mx.controls.Image;
     		import mx.controls.Alert;
-    		import mx.rpc.events.ResultEvent; 		 				
+    		import mx.rpc.events.ResultEvent;
+    		import mx.rpc.events.FaultEvent; 	
+			import com.wefootball.model.Request;
+			import com.wefootball.model.User;
+			
+    		[Bindable]
+			private var friendList:ArrayCollection;			    			 				
     		 	
-     		private function listFriend():void{
-     			//这里仅为测试之用，实际的取值应该来自于所传入的事件     			
-     			svcFriendList.request["user_id"] = 1;
-     			svcFriendList.send();
-     		}
-     		private function handleFriendList(event:ResultEvent):void{
-     			  prepareDataSource(event.result);   			
+     		private function listFriend(user_id:String):void
+     		{
+     			User.listFriends(user_id,handleFriendListResult,handleFriendListFault);
      		}
      		
-     		//var img:Image = new Image;
-
-     		private function prepareDataSource(result:Object):void
-     		{
-     			//this.addChild(img)
-     			//img.source = '/images/defaultUserPic.jpg';
-     			for(var i:int = 0;i < result['user']["nickname"].length();i ++)
-     			{
-/*       				var tempImg:Image = new Image;
-     				tempImg.source = "/images/defaultUserPic.jpg"; */ 
-     				var userInfo:Object = {label:result['user']["nickname"][i],img:"/images/defaultUserPic.jpg"};
-     				friendListAC.addItem(userInfo);
-     			}
-     		}    					  		
+     		private function handleFriendListResult(event:ResultEvent,fl:ArrayCollection):void{
+     			friendList = fl;		
+     		}
+     		
+			private function handleFriendListFault(event:FaultEvent):void {
+				Alert.show('Unknown Error', "Friends haven't been listed");
+			}    					  		
     	]]>	
     </mx:Script>
-   
-	<mx:HTTPService
-	    id="svcFriendList"
-	    url="/friend_relations.xml"
-	    resultFormat="e4x"
-	    method="GET"
-	    result="handleFriendList(event)"
-	/>
-	
-	<mx:ArrayCollection id="friendListAC" />
 
-	<mx:TileList initialize="listFriend()" dataProvider="{friendListAC}" rowHeight="200" columnWidth="200">
+<!--	这里暂时用currentUser的id，实际上应该来自于外部事件的参数-->
+	<mx:TileList initialize="listFriend(User.currentUser.id)" dataProvider="{friendList}" rowHeight="200" columnWidth="200">
 		<mx:itemRenderer>
 			<mx:Component>
 				<mx:VBox>
 					<mx:Image source="{data.img}"/>
-					<mx:Label text="{data.label}"/>					
+					<mx:Label text="{data.nickname}"/>					
 				</mx:VBox>
         	</mx:Component>
         </mx:itemRenderer>

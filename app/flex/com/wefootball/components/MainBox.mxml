@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:HBox xmlns="*" xmlns:mx="http://www.adobe.com/2006/mxml"
 	xmlns:msg="com.wefootball.components.message.*" xmlns:acc="com.wefootball.components.account.*"
-	xmlns:tm="com.wefootball.components.team.*"
+	xmlns:tm="com.wefootball.components.team.*" 	xmlns:fri="com.wefootball.components.friend.*"	
 	height="100%" 
 	paddingLeft="20" paddingRight="20" paddingTop="20" paddingBottom="20"
 	creationComplete="init()">
@@ -51,7 +51,10 @@
 				<mx:LinkButton label="我的信息" click="informationBox.user=User.currentUser;mainStack.selectedChild = userPage"/>
 				<mx:LinkButton label="我的球队" click="mainStack.selectedChild = myTeam"/>
 				<mx:LinkButton label="我的信箱" click="mainStack.selectedChild = myMessageBox"/>
+				<mx:LinkButton label="我的邀请" click="mainStack.selectedChild = friendInvitationPage"/>				
+				<mx:LinkButton label="我的好友" click="mainStack.selectedChild = myFriendListPage"/>				
 				<mx:LinkButton label="我的设置" click="settingWindow.visible = true;"/>
+				<!--<mx:LinkButton label="邀请" click="mainStack.selectedChild = myTest"/>				-->
 				<mx:LinkButton label="新建球队" click="newTeamWindow.visible = true;"/>
 			</mx:VBox>
 		</mx:ApplicationControlBar>
@@ -67,6 +70,21 @@
 					<mx:Label text="我的信箱" styleName="head"/>
 					<msg:MessageBox height="100%" messageReply="sendMessage(event)" userDisplay="userDisplay(event)"/>
 				</mx:VBox>
+				<mx:VBox width="100%" height="100%" id="friendInvitationPage"
+					paddingLeft="20" paddingRight="20" paddingBottom="20" >
+					<mx:Label text="我的邀请" styleName="head"/>
+					<fri:FriendInvitationListBox id="friendInvitationListBox"/>
+				</mx:VBox>
+				<mx:VBox width="100%" height="100%" id="myFriendListPage"
+					paddingLeft="20" paddingRight="20" paddingBottom="20" >
+					<mx:Label text="我的好友" styleName="head"/>
+					<fri:FriendListBox id="friendListBox" />
+				</mx:VBox>
+<!--				<mx:VBox width="100%" height="100%" id="myTest"
+					paddingLeft="20" paddingRight="20" paddingBottom="20" >
+					<mx:Label text="yaoqing" styleName="head"/>
+					<fri:FriendInvitationApplyBox id="friendApplyBox" />
+				</mx:VBox>-->											
 				<mx:VBox width="100%" height="100%" id="myTeam"
 					paddingLeft="20" paddingRight="20" paddingBottom="20" >
 					<mx:Label text="我的球队" styleName="head"/>
