@@ -21,13 +21,16 @@
 	import com.wefootball.components.message.MessageSendBox;
 	import com.wefootball.components.team.TeamCreateBox;
 	import com.wefootball.components.team.TeamBox;
+	import com.wefootball.components.friend.FriendInvitationApplyBox;
 	import mx.managers.PopUpManager;
 	
 	private var messageSendBox:MessageSendBox = new MessageSendBox;
 	private var newTeamWindow:TeamCreateBox = new TeamCreateBox;
+	private var requestSendBox:FriendInvitationApplyBox = new FriendInvitationApplyBox;
 	
  	private function init():void
 	{	
+		initPopupWindow(requestSendBox);
 		initPopupWindow(messageSendBox);
 		initPopupWindow(newTeamWindow);
 	}
@@ -41,10 +44,25 @@
 		messageSendBox.visible=true;
 		messageSendBox.message = m.message;
 	}
-	private function userDisplay(u:UserDisplayEvent):void {
+	private function sendRequest(u:UserEvent):void {
+		requestSendBox.visible=true;
+		requestSendBox.hostId = u.user_id;
+	}	
+	private function userDisplay(u:UserEvent):void {
 		informationBox.userId = u.user_id;
 		personMainStack.selectedChild = userPage;
 	}
+ 	private function handleIndexChange():void
+	{
+		if(personMainStack.selectedChild == userPage)
+		{
+			informationBox.user=User.currentUser;			
+		}
+		else if(personMainStack.selectedChild == myFriendListPage)
+		{
+			friendListBox.userId=User.currentUser.id;
+		}
+	} 
 ]]>
 </mx:Script>
 		<mx:ApplicationControlBar width="200" height="100%" 
@@ -60,11 +78,12 @@
 			</mx:VBox>
 		</mx:ApplicationControlBar>
 		<mx:ApplicationControlBar width="700" height="100%" paddingTop="20" paddingBottom="20" >
-			<mx:ViewStack id="personMainStack" width="100%" height="100%">
+			<mx:ViewStack id="personMainStack" width="100%" height="100%" change= "handleIndexChange()">
 				<mx:VBox width="100%" height="100%" id="userPage"
 					paddingLeft="20" paddingRight="20" paddingBottom="20" >
 					<mx:Label text="个人信息" styleName="head"/>
-					<acc:InformationBox height="100%" messageSend="sendMessage(event)" id="informationBox" user="{User.currentUser}"/>
+					<acc:InformationBox height="100%" messageSend="sendMessage(event)"
+					 freindRequestCreation="sendRequest(event)" id="informationBox" user="{User.currentUser}"/>
 				</mx:VBox>
 				<mx:VBox width="100%" height="100%" id="myMessageBox"
 					paddingLeft="20" paddingRight="20" paddingBottom="20" >
@@ -84,8 +103,8 @@
 				<mx:VBox width="100%" height="100%" id="myFriendListPage"
 					paddingLeft="20" paddingRight="20" paddingBottom="20" >
 					<mx:Label text="我的好友" styleName="head"/>
-					<fri:FriendListBox id="friendListBox" />
-				</mx:VBox>
+					<fri:FriendListBox id="friendListBox" userDisplay="userDisplay(event)"/>
+				</mx:VBox>	
 			</mx:ViewStack>
 		</mx:ApplicationControlBar>
 </mx:HBox>
