@@ -1,9 +1,9 @@
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
 
-#one:
-#  user1_id: 1
-#  user2_id: 1
-#
-#two:
-#  user1_id: 1
-#  user2_id: 1
+saki_aaron:
+  user1_id: 3
+  user2_id: 2
+
+mike2_saki:
+  user1_id: 5
+  user2_id: 3

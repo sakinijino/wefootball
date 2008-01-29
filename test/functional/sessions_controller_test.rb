@@ -31,6 +31,7 @@ class SessionsControllerTest < Test::Unit::TestCase
     assert_select 'summary', 'weFootball!'
     assert_select 'position', 'CB'
     assert_select 'position', :count=>3
+    assert_select 'is_my_friend', 'false'
     assert_nil find_tag(:tag=>'password')
   end
 

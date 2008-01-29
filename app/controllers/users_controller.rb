@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
   # Be sure to include AuthenticationSystem in Application Controller instead
-  before_filter :login_required, :only=>[:update]
+  before_filter :login_required, :only=>[:update, :show, :index]
   
   # GET /teams/:team_id/users.xml
   # GET /trainings/:training_id/users.xml
@@ -50,7 +50,11 @@ class UsersController < ApplicationController
   def show
     @user = User.find(params[:id], :include=>[:positions])
     respond_to do |format|
-      format.xml {render :xml=>@user.to_xml(default_user_to_xml_options)}
+      options = default_user_to_xml_options
+      options[:procs] = Proc.new { |options| 
+        options[:builder].tag!('is_my_friend', FriendRelation.are_friends?(@user.id, current_user.id))
+      }
+      format.xml {render :xml=>@user.to_xml(options)}
     end
   rescue ActiveRecord::RecordNotFound => e
     respond_to do |format|
@@ -75,11 +79,24 @@ class UsersController < ApplicationController
             @user.positions<<Position.new({:label=>label})
           end
           @user.save
-          render :xml=>@user.to_xml(default_user_to_xml_options)
+          options = default_user_to_xml_options
+          options[:procs] = Proc.new { |options| 
+            options[:builder].tag!('is_my_friend', FriendRelation.are_friends?(@user.id, current_user.id))
+          }
+          render :xml=>@user.to_xml(options)
         else
           render :xml => @user.errors.to_xml_full
         end
       }
     end
+  end
+  
+  protected
+  def default_user_to_xml_options
+    {
+      :dasherize=>false,
+      :except=>[:crypted_password, :salt, :created_at, :updated_at, :remember_token, :remember_token_expires_at],
+      :include => [:positions],
+    }
   end
 end

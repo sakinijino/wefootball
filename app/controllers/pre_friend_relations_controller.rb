@@ -15,20 +15,37 @@ class PreFriendRelationsController < ApplicationController
   def create
     @applier = User.find(params[:pre_friend_relation][:applier_id])
     @host = User.find(params[:pre_friend_relation][:host_id])
+    if (FriendRelation.are_friends?(params[:pre_friend_relation][:applier_id], params[:pre_friend_relation][:host_id]))
+      head 400
+      return
+    end
     if(params[:pre_friend_relation][:applier_id] == params[:pre_friend_relation][:host_id])
       head 400
       return
     end
-    if(params[:pre_friend_relation][:applier_id] != current_user.id.to_s)
+    if(params[:pre_friend_relation][:applier_id].to_s != current_user.id.to_s)
       head 401
       return
     end
-    @pre_friend_relation = PreFriendRelation.new(params[:pre_friend_relation])
-    respond_to do |format|
-      if @pre_friend_relation.save
-        format.xml  { render :status=>200}
-      else
-        format.xml  { render :xml => @pre_friend_relation.errors.to_xml_full, :status => 200 }
+    
+    @pre_friend_relation = PreFriendRelation.find_by_applier_id_and_host_id(
+      params[:pre_friend_relation][:applier_id], params[:pre_friend_relation][:host_id])
+    if (@pre_friend_relation==nil)
+      @pre_friend_relation = PreFriendRelation.new(params[:pre_friend_relation])
+      respond_to do |format|
+        if @pre_friend_relation.save
+          format.xml  { render :status=>200}
+        else
+          format.xml  { render :xml => @pre_friend_relation.errors.to_xml_full, :status => 200 }
+        end
+      end
+    else
+      respond_to do |format|
+        if @pre_friend_relation.update_attributes(params[:pre_friend_relation])
+          format.xml  { render :status=>200}
+        else
+          format.xml  { render :xml => @pre_friend_relation.errors.to_xml_full, :status => 200 }
+        end
       end
     end
   rescue ActiveRecord::RecordNotFound => e

@@ -11,7 +11,15 @@ class SessionsController < ApplicationController
       end
       respond_to do |format|
         @user = self.current_user
-        format.xml {render :xml=>@user.to_xml(default_user_to_xml_options) }
+        proc = Proc.new { |options| 
+            options[:builder].tag!('is_my_friend', false)
+        }
+        format.xml {render :xml=>@user.to_xml({
+          :dasherize=>false,
+          :except=>[:crypted_password, :salt, :created_at, :updated_at, :remember_token, :remember_token_expires_at],
+          :include => [:positions],
+          :procs => proc
+        }) }
       end  
     else
       respond_to do |format|

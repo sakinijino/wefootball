@@ -1,4 +1,4 @@
 xml.friend do
-	xml.id(@request.applier.id)
-	xml.nickname(@request.applier.nickname)
+	xml.id(@req.applier.id)
+	xml.nickname(@req.applier.nickname)
 end

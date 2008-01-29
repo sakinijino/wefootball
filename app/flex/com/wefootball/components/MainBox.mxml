@@ -46,14 +46,11 @@
 	}
 ]]>
 </mx:Script>
-	<mx:HBox height="50" width="100%" >
-	</mx:HBox>
-	<mx:HBox height="20" width="500"  horizontalAlign="right">
-		<mx:Button label="Button"/>
+	<mx:HBox height="40" width="950"  horizontalAlign="right" paddingLeft="20" paddingRight="20" >
 		<mx:Button label="我的设置" click="personSettingWindow.visible = true;"/>
 		<mx:Button label="个人页面" click="turnToPersonPerspective()"/>
 	</mx:HBox>
-	<mx:ViewStack id="mainStack" width="100%" height="100%">
+	<mx:ViewStack id="mainStack" width="950" height="100%">
 		<rt:PersonMainBox id="personMain" teamDisplay="turnToTeamPerspective(event)"/>
 		<rt:TeamMainBox id="teamMain" />
 	</mx:ViewStack>

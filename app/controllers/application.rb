@@ -49,12 +49,4 @@ class ApplicationController < ActionController::Base
       format.xml {head 401}
     end
   end
-  
-    def default_user_to_xml_options
-      {
-        :dasherize=>false,
-        :except=>[:crypted_password, :salt, :created_at, :updated_at, :remember_token, :remember_token_expires_at],
-        :include => [:positions]
-      }
-    end
 end

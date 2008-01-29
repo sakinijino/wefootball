@@ -1,45 +1,54 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
 class FriendRelationsControllerTest < ActionController::TestCase
-#  def test_should_get_index
-#    get :index
-#    assert_response :success
-#    assert_not_nil assigns(:friend_relations)
-#  end
-#
-#  def test_should_get_new
-#    get :new
-#    assert_response :success
-#  end
-#
-#  def test_should_create_friend_relation
-#    assert_difference('FriendRelation.count') do
-#      post :create, :friend_relation => { }
-#    end
-#
-#    assert_redirected_to friend_relation_path(assigns(:friend_relation))
-#  end
-#
-#  def test_should_show_friend_relation
-#    get :show, :id => friend_relations(:one).id
-#    assert_response :success
-#  end
-#
-#  def test_should_get_edit
-#    get :edit, :id => friend_relations(:one).id
-#    assert_response :success
-#  end
-#
-#  def test_should_update_friend_relation
-#    put :update, :id => friend_relations(:one).id, :friend_relation => { }
-#    assert_redirected_to friend_relation_path(assigns(:friend_relation))
-#  end
-#
-#  def test_should_destroy_friend_relation
-#    assert_difference('FriendRelation.count', -1) do
-#      delete :destroy, :id => friend_relations(:one).id
-#    end
-#
-#    assert_redirected_to friend_relations_path
-#  end
+  def test_should_get_index
+    login_as :mike1
+    get :index, :user_id=>users(:saki).id
+    assert_response :success
+    assert_select "friend", 2
+    assert_select "nickname", "mike2"
+  end
+
+  def test_should_create_friend_relation
+    login_as :aaron
+    assert_difference('FriendRelation.count') do
+      assert_difference('PreFriendRelation.count', -1) do
+        post :create, :request_id => pre_friend_relations(:mike2_to_aaron).id
+        assert_response :success
+      end
+    end
+  end
+  
+  def test_should_create_friend_relation_twice
+    @req1 = FriendRelation.create(:user1_id => users(:mike2).id, :user2_id => users(:aaron).id)
+    login_as :aaron
+    assert_no_difference('FriendRelation.count') do
+      assert_difference('PreFriendRelation.count', -1) do
+        post :create, :request_id => pre_friend_relations(:mike2_to_aaron).id
+        assert_response :success
+      end
+    end
+  end
+  
+  def test_should_create_friend_relation_error
+    login_as :saki
+    assert_no_difference('FriendRelation.count') do
+      assert_no_difference('PreFriendRelation.count') do
+        post :create, :request_id => pre_friend_relations(:mike2_to_aaron).id
+        assert_response 401
+      end
+    end
+  end
+
+  def test_should_destroy_friend_relation
+    login_as :saki
+    assert_difference('FriendRelation.count', -1) do
+      delete :destroy, :user_id => users(:aaron).id
+      assert_response 200
+    end
+    assert_difference('FriendRelation.count', -1) do
+      delete :destroy, :user_id => users(:mike2).id
+      assert_response 200
+    end
+  end
 end

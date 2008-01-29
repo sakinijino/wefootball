@@ -46,7 +46,7 @@
 		<mx:itemRenderer>
 			<mx:Component>
 				<mx:VBox click="outerDocument.displayUser(data)">
-					<mx:Image source="{data.img}"/>
+					<mx:Image source="{data.img}" width="80" height="80"/>
 					<mx:Label text="{data.nickname}"/>			
 				</mx:VBox>
         	</mx:Component>

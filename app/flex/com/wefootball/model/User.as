@@ -5,7 +5,6 @@ package com.wefootball.model
 	import com.wefootball.validators.ServerErrors;
 	
 	import mx.collections.ArrayCollection;
-	import mx.controls.Alert;
 	import mx.rpc.events.ResultEvent;	
 	
 	[Bindable]
@@ -20,7 +19,8 @@ package com.wefootball.model
 		public var fitfoot:String;
 		public var birthday:Date;
 		public var summary:String;
-		public var positions:ArrayCollection = new ArrayCollection;		
+		public var ismyfriend:Boolean = false;
+		public var positions:ArrayCollection = new ArrayCollection;
 		
 		static public var currentUser:User = new User();
 		static private var friendListHasLoaded:Boolean = false;
@@ -208,6 +208,7 @@ package com.wefootball.model
 			if (eventXML.birthday.@nil!='true') u.birthday = new Date(eventXML.birthday.toString());
 			else u.birthday = null
 			u.summary = eventXML.summary;
+			u.ismyfriend = (eventXML.is_my_friend.toString() == 'true');
 			u.positions.removeAll()
 			for(var i: int = 0; i < eventXML..position.length(); i++)
 				u.positions.addItem(eventXML..position[i].toString());

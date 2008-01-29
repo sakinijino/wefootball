@@ -68,9 +68,15 @@ class UsersControllerTest < Test::Unit::TestCase
   end  
   
   def test_show_user
+    login_as :saki
     get :show, :id=>users(:saki).id
     assert_select 'login', 'sakinijino0725@163.com'
     assert_select 'birthday', '03/10/1984'
+    assert_select 'is_my_friend', 'false'
+    get :show, :id=>users(:mike1).id
+    assert_select 'is_my_friend', 'false'
+    get :show, :id=>users(:mike2).id
+    assert_select 'is_my_friend', 'true'
     get :show, :id=>-1
     assert_response 404
   end
@@ -111,12 +117,14 @@ class UsersControllerTest < Test::Unit::TestCase
   end
   
   def test_should_get_team_users_index
+    login_as :saki
     get :index, :team_id => teams(:inter).id
     assert_response 200
     assert_select "user", :count=>2
   end
   
   def test_should_get_training_users_index
+    login_as :saki
     get :index, :training_id => trainings(:training1).id
     assert_response 200
     assert_select "user", 1
