@@ -46,7 +46,7 @@
 ]]>
 </mx:Script>
 		<mx:ApplicationControlBar width="200" height="100%" 
-			paddingLeft="20" paddingRight="20" paddingTop="20" paddingBottom="20" >
+			paddingLeft="20" paddingRight="20" paddingTop="20" paddingBottom="20" styleName="menu">
 			<mx:VBox height="100%" width="100%" >
 				<mx:LinkButton label="我的信息" click="informationBox.user=User.currentUser;mainStack.selectedChild = userPage"/>
 				<mx:LinkButton label="我的球队" click="mainStack.selectedChild = myTeam"/>
@@ -58,26 +58,22 @@
 				<mx:LinkButton label="新建球队" click="newTeamWindow.visible = true;"/>
 			</mx:VBox>
 		</mx:ApplicationControlBar>
-		<mx:ApplicationControlBar width="700" height="100%" paddingTop="20" paddingBottom="20" >
+		<mx:Panel width="700" height="100%" paddingTop="20" paddingBottom="20" >
 			<mx:ViewStack id="mainStack" width="100%" height="100%">
 				<mx:VBox width="100%" height="100%" id="userPage"
 					paddingLeft="20" paddingRight="20" paddingBottom="20" >
-					<mx:Label text="个人信息" styleName="head"/>
 					<acc:InformationBox height="100%" messageSend="sendMessage(event)" id="informationBox" user="{User.currentUser}"/>
 				</mx:VBox>
 				<mx:VBox width="100%" height="100%" id="myMessageBox"
 					paddingLeft="20" paddingRight="20" paddingBottom="20" >
-					<mx:Label text="我的信箱" styleName="head"/>
 					<msg:MessageBox height="100%" messageReply="sendMessage(event)" userDisplay="userDisplay(event)"/>
 				</mx:VBox>
 				<mx:VBox width="100%" height="100%" id="friendInvitationPage"
 					paddingLeft="20" paddingRight="20" paddingBottom="20" >
-					<mx:Label text="我的邀请" styleName="head"/>
 					<fri:FriendInvitationListBox id="friendInvitationListBox"/>
 				</mx:VBox>
 				<mx:VBox width="100%" height="100%" id="myFriendListPage"
 					paddingLeft="20" paddingRight="20" paddingBottom="20" >
-					<mx:Label text="我的好友" styleName="head"/>
 					<fri:FriendListBox id="friendListBox" />
 				</mx:VBox>
 <!--				<mx:VBox width="100%" height="100%" id="myTest"
@@ -87,9 +83,8 @@
 				</mx:VBox>-->											
 				<mx:VBox width="100%" height="100%" id="myTeam"
 					paddingLeft="20" paddingRight="20" paddingBottom="20" >
-					<mx:Label text="我的球队" styleName="head"/>
 					<tm:TeamBox height="100%"/>
 				</mx:VBox>
 			</mx:ViewStack>
-		</mx:ApplicationControlBar>
+		</mx:Panel>
 </mx:HBox>

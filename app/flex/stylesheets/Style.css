@@ -2,7 +2,7 @@
 
 Application
 {
-	backgroundGradientColors: #9bafb9, #68808c;
+	backgroundGradientColors: #acc7af, #577d5b;
 	paddingBottom: 0;
 	paddingLeft: 0;
 	paddingRight: 0;
@@ -10,32 +10,101 @@ Application
 	fontSize: 12;
 	vertical-align: middle;
 	horizontal-align: center;
+	color: #000000
 }
 Accordion {
+   fillAlphas: 1, 1, 0.75, 0.65;
+   fillColors: #37aa4f, #194c23, #37aa4f, #194c23;
+   backgroundColor: #cce8cf;
    headerStyleName: "accordionHeader";
 }
-DataGrid {
+/* DataGrid {
    verticalGridLines: false;
    borderThickness: 0;
-}
+}*/
 TitleWindow {
 	borderAlpha : 1;
+}
+
+ApplicationControlBar.menu {
+	fillAlphas: 1, 1;
+    fillColors: #5C6971, #5C6971;
+	color: #ffffff;
+}
+
+MessageDetailBox {
+	background-alpha: 0;
+	color: #fff;
 }
 
 .accordionHeader {
    fontSize: 12;
    fontWeight: bold;
+   color: #ffffff;
 }
-
+  
 .head {
 	fontSize: 14;
 	color: #ffffff;
+	headerColors: #37aa4f, #194c23;
 }
 .content {
 	background-color: #ffffff
 }
 
-DataGridColumn.em {
+Panel {
+   borderAlpha: 1;
+   borderThicknessLeft: 0;
+   borderThicknessTop: 0;
+   borderThicknessBottom: 0;
+   borderThicknessRight: 0;
+   cornerRadius: 2;
+   backgroundAlpha: 0.0;
+   highlightAlphas: 0, 0;
+   headerColors: #37aa4f, #194c23;
+   titleStyleName: "mypanelTitle";
+}
+
+.mypanelTitle {
+   color: #ffffff;
+   fontSize: 12;
+   fontWeight: bold;
+}
+
+DataGrid {
+   /* backgroundAlpha: 0.5; */
+   backgroundColor: #194c23;
+   alternatingItemColors: #236c32, #1d5929;
+   headerColors: #37aa4f, #194c23;
+   horizontalGridLines: true;
+   horizontalGridLineColor: #ffffff;
+   verticalGridLines: false;
+   rollOverColor: #37aa4f;
+   textRollOverColor: #ffffff;
+   selectionColor: #37aa4f;
+   color: #ffffff;
+   fontWeight: bold;
+   textSelectedColor: #ffffff;
+   headerStyleName: "mydataGridHeaderStyle";
+}
+
+
+LinkButtom.read {
 	fontWeight: bold;
-	color: red;
+	color: #ffffff;
+}
+
+
+LinkButtom.unread {
+	fontWeight: bold;
+	color: #C4E95D;
+}
+
+.mydataGridHeaderStyle {
+   color: #ffffff;
+   fontFamily: Times New Roman;
+   fontWeight: bold;
+   fontSize: 12;
+   fontStyle: normal;
+   textDecoration: none;
 }

@@ -42,8 +42,8 @@
      			else dispatchEvent(new UserDisplayEvent("userDisplay", m.sender_id));
      		}	
      		internal function unreadStyle(m:Object):String {
-     			if(!m.is_receiver_read && m.receiver_id == User.currentUser.id) return 'em';
-     			else return '';
+     			if(!m.is_receiver_read && m.receiver_id == User.currentUser.id) return 'unread';
+     			else return 'read';
      		}
      		internal function nick(m:Object):String {
      			if (sendBox) return m.receiver_nick;
