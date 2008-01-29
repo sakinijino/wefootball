@@ -14,7 +14,6 @@ class PreFriendRelationsControllerTest < ActionController::TestCase
     assert_difference('PreFriendRelation.count') do
       post :create, :pre_friend_relation => {
         :host_id=>users(:saki).id,
-        :applier_id=>users(:mike1).id,
         :message=>"Hi"
       }
       assert_response :success
@@ -25,7 +24,6 @@ class PreFriendRelationsControllerTest < ActionController::TestCase
     login_as :mike2
     assert_no_difference('PreFriendRelation.count') do
       post :create, :pre_friend_relation => {
-        :applier_id =>users(:mike2).id,
         :host_id =>users(:aaron).id,
         :message=>"Hello"
       }
@@ -38,7 +36,6 @@ class PreFriendRelationsControllerTest < ActionController::TestCase
     login_as :mike2
     assert_no_difference('PreFriendRelation.count') do
       post :create, :pre_friend_relation => {
-        :applier_id =>users(:mike2).id,
         :host_id =>users(:aaron).id,
         :message=>"Hello"*1000
       }
@@ -52,7 +49,6 @@ class PreFriendRelationsControllerTest < ActionController::TestCase
     login_as :saki
     assert_no_difference('PreFriendRelation.count') do
       post :create, :pre_friend_relation => {
-        :applier_id =>users(:saki).id,
         :host_id =>users(:mike2).id,
         :message=>"Hi"
       }
@@ -64,17 +60,10 @@ class PreFriendRelationsControllerTest < ActionController::TestCase
     login_as :saki
     assert_no_difference('PreFriendRelation.count') do
       post :create, :pre_friend_relation => {
-        :applier_id =>users(:saki).id,
         :host_id =>users(:saki).id,
         :message=>"Hi"
       }
       assert_response 400
-      post :create, :pre_friend_relation => {
-        :applier_id =>users(:mike1).id,
-        :host_id =>users(:saki).id,
-        :message=>"Hi"
-      }
-      assert_response 401
     end
   end
   
@@ -82,7 +71,6 @@ class PreFriendRelationsControllerTest < ActionController::TestCase
     login_as :saki
     assert_no_difference('PreFriendRelation.count') do
       post :create, :pre_friend_relation => {
-        :applier_id =>users(:saki).id,
         :host_id =>users(:mike1).id,
         :message=>"Hi"*500
       }

@@ -27,10 +27,9 @@
           	private function createRequest():void {
           		if(host_id == "")
           			return;
-          		var applier_id:String = User.currentUser.id;
           		var message:String = messageTA.text;
           		
-          		Request.createRequest(applier_id,host_id,message,
+          		Request.createRequest(host_id,message,
           							 handleCreateRequestResult,
           							 handleCreateRequestError,
           							 handleCreateRequestFault);

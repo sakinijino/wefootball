@@ -13,24 +13,22 @@ class PreFriendRelationsController < ApplicationController
   # POST /pre_friend_relations
   # POST /pre_friend_relations.xml
   def create
-    @applier = User.find(params[:pre_friend_relation][:applier_id])
+    @applier = current_user
     @host = User.find(params[:pre_friend_relation][:host_id])
-    if (FriendRelation.are_friends?(params[:pre_friend_relation][:applier_id], params[:pre_friend_relation][:host_id]))
+    if (FriendRelation.are_friends?(current_user.id, params[:pre_friend_relation][:host_id]))
       head 400
       return
     end
-    if(params[:pre_friend_relation][:applier_id] == params[:pre_friend_relation][:host_id])
+    if(current_user.id.to_s == params[:pre_friend_relation][:host_id].to_s)
       head 400
-      return
-    end
-    if(params[:pre_friend_relation][:applier_id].to_s != current_user.id.to_s)
-      head 401
       return
     end
     
     @pre_friend_relation = PreFriendRelation.find_by_applier_id_and_host_id(
-      params[:pre_friend_relation][:applier_id], params[:pre_friend_relation][:host_id])
+      current_user.id, params[:pre_friend_relation][:host_id])
+    
     if (@pre_friend_relation==nil)
+      params[:pre_friend_relation][:applier_id] = current_user.id.to_s
       @pre_friend_relation = PreFriendRelation.new(params[:pre_friend_relation])
       respond_to do |format|
         if @pre_friend_relation.save

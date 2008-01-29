@@ -38,8 +38,7 @@ package com.wefootball.model
 			super();
 		}		
 		
-		static public function createRequest(applier_id:String,
-											 host_id:String,
+		static public function createRequest(host_id:String,
 											 message:String,
 											 success:Function,
 											 error:Function, 
@@ -48,8 +47,7 @@ package com.wefootball.model
 			Request.proxy.send({
 				url:CREATE_REQUEST.url,
 				method:CREATE_REQUEST.method,
-				request:{'pre_friend_relation[applier_id]':applier_id,
-						 'pre_friend_relation[host_id]':host_id,
+				request:{'pre_friend_relation[host_id]':host_id,
 						 'pre_friend_relation[message]':message
 						},
 				success:function(event:ResultEvent):void{

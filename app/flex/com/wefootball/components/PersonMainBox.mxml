@@ -79,7 +79,7 @@
 				<mx:LinkButton label="搜索用户" click="personMainStack.selectedChild = userSearchPage"/>
 				<mx:LinkButton label="搜索队伍" click="personMainStack.selectedChild = teamSearchPage"/>
 				<!--<mx:LinkButton label="我的设置" click="settingWindow.visible = true;"/>-->
-				<!--<mx:LinkButton label="新建球队" click="newTeamWindow.visible = true;"/>-->
+				<mx:LinkButton label="新建球队" click="newTeamWindow.visible = true;"/>
 			</mx:VBox>
 		</mx:ApplicationControlBar>
 		<mx:ApplicationControlBar width="700" height="100%" paddingTop="20" paddingBottom="20" >
