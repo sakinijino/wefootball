@@ -27,6 +27,8 @@ package com.wefootball.model
 		static private const UPDATE:Function = function(id:String):Object {
 			return {url:"/teams/"+id+".xml",method:"POST"};
 		}
+		static private const SEARCH:Object = {url:"/teams/search.xml"
+											  ,method:"GET"};
 		
 		static public const TEAM_PARSER:Function = parseTeamFromXML;
 		static public const TEAM_LIST_PARSER:Function=parseTeamListFromXML;
@@ -121,7 +123,23 @@ package com.wefootball.model
 				},
 				fault:fault
 			});
-		} 
+		}
+		
+		static public function search( query:String,
+										success:Function,
+										fault:Function):void
+		{	
+			Team.proxy.send({
+				url:SEARCH.url,
+				method:SEARCH.method,				
+				request:{'query':query},				
+				success:function(event:ResultEvent):void{
+					var ul:ArrayCollection = new ArrayCollection;
+					TEAM_LIST_PARSER(event.result,ul);
+					success(event,ul);
+				},	
+				fault:fault})
+		}
 		
 		static private function parseTeamFromXML(eventXML:XML, t:Team):void
 		{
@@ -133,12 +151,12 @@ package com.wefootball.model
 			t.style = eventXML.style;
 		}
 		
- 		static private function parseTeamListFromXML(event:ResultEvent, tml:ArrayCollection):void
+ 		static private function parseTeamListFromXML(eventXML:XML, tml:ArrayCollection):void
 		{
-			for(var i:int = 0;i < event.result['team'].length();i++)
+			for(var i:int = 0;i < eventXML.result['team'].length();i++)
 			{
 				var t:Team = new Team();
-				parseTeamFromXML(event.result['team'][i],t);
+				parseTeamFromXML(eventXML.result['team'][i],t);
 				tml.addItem(t);
 			}			
 		} 

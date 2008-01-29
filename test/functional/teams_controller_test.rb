@@ -81,6 +81,18 @@ class TeamsControllerTest < ActionController::TestCase
     assert_response 200
     assert_select "team", :count=>2
   end
+  
+  def test_search
+    login_as :saki
+    create_team({:name => 'Beijing Guo An', :shortname=>'BGA'})
+    get :search, :query => "BGA"
+    assert_response 200
+    assert_select "team", 1
+    create_team({:name => 'Beijing Kuan Li', :shortname=>'BKL'})
+    get :search, :query => "Beijing"
+    assert_response 200
+    assert_select "team", 2
+  end
 #
 #  def test_should_destroy_team
 #    assert_difference('Team.count', -1) do
@@ -89,4 +101,8 @@ class TeamsControllerTest < ActionController::TestCase
 #
 #    assert_redirected_to teams_path
 #  end
+  protected
+    def create_team(options = {})
+      post :create, :team => options
+    end
 end

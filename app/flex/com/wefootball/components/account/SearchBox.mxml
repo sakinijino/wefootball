@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml" >
+<mx:Metadata>
+	[Event(name="userDisplay", type="com.wefootball.events.UserEvent")]
+</mx:Metadata>
+
+	<mx:Script>
+		<![CDATA[
+			import com.wefootball.model.User;
+			import mx.controls.Alert;
+    		import mx.rpc.events.ResultEvent;
+    		import mx.rpc.events.FaultEvent;
+    		import com.wefootball.events.UserEvent;
+    		import mx.collections.ArrayCollection;
+			
+			[Bindable]
+			private var userList:ArrayCollection;
+			
+			private function searchUsers(query:String):void
+     		{
+     			User.search(query,handleSearchResult,handleSearchFault);
+     		}
+     		
+     		private function handleSearchResult(event:ResultEvent,ul:ArrayCollection):void{
+     			userList = ul;		
+     		}
+     		
+			private function handleSearchFault(event:FaultEvent):void {
+				Alert.show('Unknown Error', "Search Error");
+			}
+     		internal function displayUser(data:Object):void{
+     			dispatchEvent(new UserEvent("userDisplay", data.id));
+     		}		
+		]]>
+	</mx:Script>
+	<mx:TextInput id="queryTI" />
+	<mx:Button label="搜索用户" click="searchUsers(queryTI.text)"/>
+	<mx:TileList dataProvider="{userList}" rowHeight="120" columnWidth="85" columnCount="7">
+		<mx:itemRenderer>
+			<mx:Component>
+				<mx:VBox click="outerDocument.displayUser(data)">
+					<mx:Image source="{data.img}" width="80" height="80"/>
+					<mx:Label text="{data.nickname}"/>			
+				</mx:VBox>
+        	</mx:Component>
+        </mx:itemRenderer>
+	</mx:TileList>
+</mx:VBox>

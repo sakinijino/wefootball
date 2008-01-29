@@ -38,6 +38,16 @@ class User < ActiveRecord::Base
   validates_inclusion_of    :fitfoot, :in => %w{L B R}, :allow_nil =>true
   validates_length_of       :nickname, :maximum => 70
   validates_length_of       :summary, :maximum => 500
+
+  GENERIC_ANALYSIS_REGEX = /([a-zA-Z]|[\xc0-\xdf][\x80-\xbf])+|[0-9]+|[\xe0-\xef][\x80-\xbf][\x80-\xbf]/
+  GENERIC_ANALYZER = Ferret::Analysis::RegExpAnalyzer.new(GENERIC_ANALYSIS_REGEX, true)  
+#  GENERIC_ANALYZER = MultilingualFerretTools::Analyzer.new
+#  GENERIC_ANALYZER = Ferret::Analysis::StandardAnalyzer.new
+  acts_as_ferret({:fields => [
+        :login,
+        :nickname
+      ]},
+    { :analyzer => GENERIC_ANALYZER })
   
   before_save :encrypt_password
   

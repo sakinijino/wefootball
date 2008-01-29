@@ -130,6 +130,17 @@ class UsersControllerTest < Test::Unit::TestCase
     assert_select "user", 1
     assert_select "users>user>nickname", 'saki'
   end
+  
+  def test_search
+    create_user({:login => 'sakinijinoo@gmail.com', :nickname=>'AiHaibara'})
+    get :search, :query => "AiHaibara"
+    assert_response 200
+    assert_select "user", 1
+    create_user({:login => 'sakinijinoo0725@gmail.com', :nickname=>'AiHaibara'})
+    get :search, :query => "gmail"
+    assert_response 200
+    assert_select "user", 2
+  end
 
   protected
     def create_user(options = {})

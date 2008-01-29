@@ -52,8 +52,12 @@
 	[Bindable]
 	private var displayuser:User = new User();	
 	private function userDisplay(u:UserEvent):void {
-		personMainStack.selectedChild = userInformationPage;
-		this.displayuser.id = u.user_id
+		if (u.user_id == User.currentUser.id)
+			personMainStack.selectedChild = myInformationPage;
+		else {
+			personMainStack.selectedChild = userInformationPage;
+			this.displayuser.id = u.user_id
+		}
 	}
  	private function handleIndexChange():void
 	{
@@ -71,7 +75,9 @@
 				<mx:LinkButton label="我的球队" click="personMainStack.selectedChild = myTeamPage"/>
 				<mx:LinkButton label="我的信箱" click="personMainStack.selectedChild = myMessagePage"/>
 				<mx:LinkButton label="我的邀请" click="personMainStack.selectedChild = myFriendInvitationPage"/>	
-				<mx:LinkButton label="我的好友" click="personMainStack.selectedChild = myFriendListPage"/>	
+				<mx:LinkButton label="我的好友" click="personMainStack.selectedChild = myFriendListPage"/>
+				<mx:LinkButton label="搜索用户" click="personMainStack.selectedChild = userSearchPage"/>
+				<mx:LinkButton label="搜索队伍" click="personMainStack.selectedChild = teamSearchPage"/>
 				<!--<mx:LinkButton label="我的设置" click="settingWindow.visible = true;"/>-->
 				<!--<mx:LinkButton label="新建球队" click="newTeamWindow.visible = true;"/>-->
 			</mx:VBox>
@@ -102,6 +108,16 @@
 					paddingLeft="20" paddingRight="20" paddingBottom="20" >
 					<mx:Label text="我的好友" styleName="head"/>
 					<fri:FriendListBox id="friendListBox" userDisplay="userDisplay(event)"/>
+				</mx:VBox>
+				<mx:VBox width="100%" height="100%" id="userSearchPage"
+					paddingLeft="20" paddingRight="20" paddingBottom="20" >
+					<mx:Label text="用户搜索" styleName="head"/>
+					<acc:SearchBox id="userSearchBox" userDisplay="userDisplay(event)"/>
+				</mx:VBox>
+				<mx:VBox width="100%" height="100%" id="teamSearchPage"
+					paddingLeft="20" paddingRight="20" paddingBottom="20" >
+					<mx:Label text="队伍搜索" styleName="head"/>
+					<tm:TeamSearchBox id="teamSearchBox" />
 				</mx:VBox>
 				<mx:VBox width="100%" height="100%" id="userInformationPage"
 					paddingLeft="20" paddingRight="20" paddingBottom="20" >

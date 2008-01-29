@@ -13,6 +13,16 @@ class TeamsController < ApplicationController
       format.xml {head 404}
     end
   end
+  
+  # GET /teams/search.xml?query
+  def search
+    @teams = Team.find_by_contents(params[:query])
+    respond_to do |format|
+      format.xml  {
+        render :xml=> @teams.to_xml(:dasherize=>false, :only=>[:id, :name, :shortname]), :status => 200 
+      }
+    end
+  end
 
  # GET /teams/1.xml
   def show

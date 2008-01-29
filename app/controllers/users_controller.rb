@@ -26,6 +26,17 @@ class UsersController < ApplicationController
     end
   end
   
+  # GET /users/search.xml?query
+  def search
+    options = default_user_to_xml_options
+    options[:except]<<:summary
+    options.delete :include
+    @users = User.find_by_contents(params[:query]) 
+    respond_to do |format|
+      format.xml  { render :xml=>@users.to_xml(options), :status => 200 }
+    end
+  end
+  
   def create
     cookies.delete :auth_token
     # protects against session fixation attacks, wreaks havoc with 

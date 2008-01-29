@@ -29,7 +29,7 @@ ActionController::Routing::Routes.draw do |map|
   # See how all your routes lay out with "rake routes"
   
   # Install the default routes as the lowest priority.
-  map.resources :users do |users|
+  map.resources :users, :collection => { :search => :get } do |users|
     users.resources :teams do |teams|
       teams.resources :team_joins
     end
@@ -38,7 +38,7 @@ ActionController::Routing::Routes.draw do |map|
     users.resources :trainings
     users.resources :training_joins
   end
-  map.resources :teams do |teams|
+  map.resources :teams, :collection => { :search => :get } do |teams|
     teams.resources :users
     teams.resources :team_join_requests
     teams.resources :team_join_invitations

@@ -45,9 +45,12 @@ package com.wefootball.model
 		static private const REJECT_FRIEND:Object = {url:"/friend_relations.xml"
 													 ,method:"POST"};
 		static private const LIST_FRIEND:Object = {url:"/friend_relations.xml"
-													 ,method:"GET"};													 		
+													 ,method:"GET"};
+		static private const SEARCH:Object = {url:"/users/search.xml"
+											  ,method:"GET"};
 		
 		static private const USER_PARSER:Function = parseUserFromXML;
+		static private const USER_LIST_PARSER:Function = parseUserListFromXML;
 		static private const FRIEND_PARSER:Function = parseFriendFromXML;
 		static private const FRIEND_LIST_PARSER:Function = parseFriendListFromXML;				
 				
@@ -182,7 +185,7 @@ package com.wefootball.model
 					request:{'user_id':user_id},				
 					success:function(event:ResultEvent):void{
 						var fl:ArrayCollection = new ArrayCollection;
-						FRIEND_LIST_PARSER(event.result,fl);
+						FRIEND_LIST_PARSER(XML(event.result),fl);
 						if(user_id == currentUser.id)
 						{
 							friendListHasLoaded = true;
@@ -192,8 +195,33 @@ package com.wefootball.model
 					},	
 					fault:fault})
 			};
+		}
+		
+		static public function search( query:String,
+										success:Function,
+										fault:Function):void
+		{	
+			User.proxy.send({
+				url:SEARCH.url,
+				method:SEARCH.method,				
+				request:{'query':query},				
+				success:function(event:ResultEvent):void{
+					var ul:ArrayCollection = new ArrayCollection;
+					USER_LIST_PARSER(XML(event.result),ul);
+					success(event,ul);
+				},	
+				fault:fault})
+		}
+		
+		static private function parseUserListFromXML(eventXML:XML, ul:ArrayCollection):void
+		{ 
+ 			for(var i:int = 0;i < eventXML['user'].length();i++)
+			{
+				var u:User = new User();
+				parseUserFromXML(eventXML['user'][i],u);
+				ul.addItem(u);
+			} 
 		}					
-							
 		static private function parseUserFromXML(eventXML:XML, u:User):void
 		{
 			u.id = eventXML.id;
@@ -226,6 +254,6 @@ package com.wefootball.model
 				parseFriendFromXML(eventXML['friend'][i],u);
 				fl.addItem(u);
 			} 
-		}				
+		}
 	}
 }

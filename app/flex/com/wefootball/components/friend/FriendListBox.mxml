@@ -8,11 +8,10 @@
     <mx:Script>
     	<![CDATA[
     		import mx.collections.ArrayCollection;
-    		import mx.controls.Image;
     		import mx.controls.Alert;
     		import mx.rpc.events.ResultEvent;
     		import mx.rpc.events.FaultEvent;
-    		import com.wefootball.events.UserEvent; 	
+    		import com.wefootball.events.UserEvent;
 			import com.wefootball.model.Request;
 			import com.wefootball.model.User;
 			
@@ -37,7 +36,7 @@
 			}
      		internal function displayUser(data:Object):void{
      			dispatchEvent(new UserEvent("userDisplay", data.id));
-     		}			   					  		
+     		}
     	]]>	
     </mx:Script>
 
