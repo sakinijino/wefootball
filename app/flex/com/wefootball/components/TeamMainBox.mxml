@@ -69,31 +69,6 @@
 					<mx:Label text="管理球队" styleName="head"/>
 					<tm:TeamUpdateBox height="100%"  id="teamUpdateBox"/>
 				</mx:VBox>
-<!--				<mx:VBox width="100%" height="100%" id="teamCreatePage"
-					paddingLeft="20" paddingRight="20" paddingBottom="20" >
-					<mx:Label text="创建球队" styleName="head"/>
-					<tm:TeamCreateBox height="100%"  id="teamCreateBox"/>
-				</mx:VBox>-->
-<!--				<mx:VBox width="100%" height="100%" id="myMessageBox"
-					paddingLeft="20" paddingRight="20" paddingBottom="20" >
-					<mx:Label text="我的信箱" styleName="head"/>
-					<msg:MessageBox height="100%" messageReply="sendMessage(event)" userDisplay="userDisplay(event)"/>
-				</mx:VBox>
-				<mx:VBox width="100%" height="100%" id="myTeam"
-					paddingLeft="20" paddingRight="20" paddingBottom="20" >
-					<mx:Label text="我的球队" styleName="head"/>
-					<tm:TeamBox height="100%"/>
-				</mx:VBox>
-				<mx:VBox width="100%" height="100%" id="myFriend"
-					paddingLeft="20" paddingRight="20" paddingBottom="20" >
-					<mx:Label text="我的好友" styleName="head"/>
-					<mx:VDividedBox width="625" height="100%">
-						<fr:FriendListBox height="100%"/>
-						<fr:FriendInvitationApplyBox height="100%"/>
-						<fr:FriendInvitationListBox height="100%"/>
-						<fr:FriendInvitationNotifyBox height="100%"/>
-					</mx:VDividedBox>
-				</mx:VBox>-->
 			</mx:ViewStack>
 		</mx:ApplicationControlBar>
 </mx:HBox>
