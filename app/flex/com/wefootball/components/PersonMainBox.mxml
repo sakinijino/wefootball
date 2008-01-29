@@ -22,17 +22,20 @@
 	import com.wefootball.components.team.TeamCreateBox;
 	import com.wefootball.components.team.TeamBox;
 	import com.wefootball.components.friend.FriendInvitationApplyBox;
+	import com.wefootball.components.team.TeamInvatationBox;
 	import mx.managers.PopUpManager;
 	
 	private var messageSendBox:MessageSendBox = new MessageSendBox;
-	private var newTeamWindow:TeamCreateBox = new TeamCreateBox;
+	private var createTeamBox:TeamCreateBox = new TeamCreateBox;
 	private var requestSendBox:FriendInvitationApplyBox = new FriendInvitationApplyBox;
+	private var teamInvatationSendBox:TeamInvatationBox = new TeamInvatationBox;	
 	
  	private function init():void
 	{	
 		initPopupWindow(requestSendBox);
 		initPopupWindow(messageSendBox);
-		initPopupWindow(newTeamWindow);
+		initPopupWindow(createTeamBox);
+		initPopupWindow(teamInvatationSendBox);
 	}
 	private function initPopupWindow(dis:IFlexDisplayObject):void {
 		PopUpManager.addPopUp(dis, this);
@@ -48,9 +51,13 @@
 		requestSendBox.visible=true;
 		requestSendBox.hostId = u.user_id;
 	}
+	private function sendTeamInvation(u:UserEvent):void {
+		teamInvatationSendBox.visible=true;
+		teamInvatationSendBox.userId = u.user_id;		
+	}
 	
 	[Bindable]
-	private var displayuser:User = new User();	
+	private var displayuser:User = new User();
 	private function userDisplay(u:UserEvent):void {
 		if (u.user_id == User.currentUser.id)
 			personMainStack.selectedChild = myInformationPage;
@@ -79,7 +86,7 @@
 				<mx:LinkButton label="搜索用户" click="personMainStack.selectedChild = userSearchPage"/>
 				<mx:LinkButton label="搜索队伍" click="personMainStack.selectedChild = teamSearchPage"/>
 				<!--<mx:LinkButton label="我的设置" click="settingWindow.visible = true;"/>-->
-				<mx:LinkButton label="新建球队" click="newTeamWindow.visible = true;"/>
+				<mx:LinkButton label="新建球队" click="createTeamBox.visible = true;"/>
 			</mx:VBox>
 		</mx:ApplicationControlBar>
 		<mx:ApplicationControlBar width="700" height="100%" paddingTop="20" paddingBottom="20" >
@@ -123,6 +130,7 @@
 					paddingLeft="20" paddingRight="20" paddingBottom="20" >
 					<mx:Label text="{userInformationBox.user.nickname}的信息" styleName="head"/>
 					<acc:InformationBox height="100%" messageSend="sendMessage(event)"
+					 sendTeamJoinInvitation="sendTeamInvation(event)"
 					 freindRequestCreation="sendRequest(event)" id="userInformationBox" />
 				</mx:VBox>
 			</mx:ViewStack>

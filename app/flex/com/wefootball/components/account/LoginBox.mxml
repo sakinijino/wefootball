@@ -30,10 +30,10 @@
 	
 	<mx:Form labelWidth="150">
 		<mx:FormItem label="你的email地址">
-			<mx:TextInput id="loginTI" text="csdt@csdt.com"/>
+			<mx:TextInput id="loginTI" text="saki@saki.com"/>
 		</mx:FormItem>
 		<mx:FormItem label="密码">
-			<mx:TextInput id="passwordTI" text="csdtcsdt"
+			<mx:TextInput id="passwordTI" text="111111"
 			displayAsPassword="true"/>
 		</mx:FormItem>
 		<mx:FormItem>

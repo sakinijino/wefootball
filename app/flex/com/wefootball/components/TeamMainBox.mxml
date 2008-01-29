@@ -8,53 +8,46 @@
 
 <mx:Script>
 <![CDATA[
-	import com.wefootball.components.team.TeamCreateBox;
-	import mx.core.IFlexDisplayObject;
-	import com.wefootball.model.Message;
 	import com.wefootball.events.*;
 	import mx.controls.Alert;
-	import com.wefootball.model.User;
-	import com.wefootball.components.message.MessageSendBox;
-	import com.wefootball.components.account.UpdateBox;
-	import com.wefootball.components.team.TeamCreateBox;
+	import com.wefootball.model.Team;
 	import com.wefootball.components.team.TeamBox;
-	import mx.managers.PopUpManager;
-	
-	private var messageSendBox:MessageSendBox = new MessageSendBox;
-	private var settingWindow:UpdateBox = new UpdateBox;
-	private var newTeamWindow:TeamCreateBox = new TeamCreateBox;
+	import com.wefootball.components.team.TeamMemberBox;
+    import mx.rpc.events.ResultEvent;
+    import mx.rpc.events.FaultEvent;
 	
   	private function init():void
-	{	
-/* 		initPopupWindow(messageSendBox);
-		initPopupWindow(settingWindow);	*/
-		initPopupWindow(newTeamWindow); 
-	}
-	private function initPopupWindow(dis:IFlexDisplayObject):void {
-		PopUpManager.addPopUp(dis, this);
-		PopUpManager.centerPopUp(dis);
-		dis.visible = false;
+	{
 	}
 	
-/*	private function sendMessage(m:MessageDetailEvent):void {
-		messageSendBox.visible=true;
-		messageSendBox.message = m.message;
+	[Bindable]
+	public var team:Team = null;
+	public function set teamId(i:String):void {
+		team = null;
+		displayTeam(i);
 	}
-	private function userDisplay(u:UserDisplayEvent):void {
-		informationBox.userId = u.user_id;
-		mainStack.selectedChild = userPage;
-	} */
+	private function displayTeam(id:String):void {
+  		Team.show(id,
+     		handleTeamDetailResult,
+     		handleTeamFaultDetailResult);
+	} 
+  	private function handleTeamDetailResult(t:Team, event:ResultEvent):void{
+   		Team.TEAM_PARSER(event.result, Team.currentTeam);
+ 	}
+ 	private function handleTeamFaultDetailResult(event:FaultEvent):void{
+ 		Alert.show("读取细节失败"); 			
+ 	}
+	
 ]]>
 </mx:Script>
 		<mx:ApplicationControlBar width="200" height="100%" 
 			paddingLeft="20" paddingRight="20" paddingTop="20" paddingBottom="20" >
 			<mx:VBox height="100%" width="100%" >
 				<mx:LinkButton label="球队信息" click="teamMainStack.selectedChild = teamInfoPage"/>
-<!--				<mx:LinkButton label="球队成员" click="teamMainStack.selectedChild = teamMember"/>
-				<mx:LinkButton label="球队训练" click="teamMainStack.selectedChild = teamTraining"/>
+				<mx:LinkButton label="球队成员" click="teamMainStack.selectedChild = teamMemberPage"/>
+<!--				<mx:LinkButton label="球队训练" click="teamMainStack.selectedChild = teamTraining"/>
 				<mx:LinkButton label="球队论坛" click="teamMainStack.selectedChild = teamForum"/>-->
 				<mx:LinkButton label="球队管理" click="teamMainStack.selectedChild = teamManagePage;"/>
-				<mx:LinkButton label="新建球队" click="newTeamWindow.visible = true;"/>
 			</mx:VBox>
 		</mx:ApplicationControlBar>
 		<mx:ApplicationControlBar width="700" height="100%" paddingTop="20" paddingBottom="20" >
@@ -63,6 +56,11 @@
 					paddingLeft="20" paddingRight="20" paddingBottom="20" >
 					<mx:Label text="球队信息" styleName="head"/>
 					<tm:TeamDetailBox height="100%"  id="teamDetailBox"/>
+				</mx:VBox>
+				<mx:VBox width="100%" height="100%" id="teamMemberPage"
+					paddingLeft="20" paddingRight="20" paddingBottom="20" >
+					<mx:Label text="球队成员" styleName="head"/>
+					<tm:TeamMemberBox height="100%"  id="teamMemberBox"/>
 				</mx:VBox>
 				<mx:VBox width="100%" height="100%" id="teamManagePage"
 					paddingLeft="20" paddingRight="20" paddingBottom="20" >

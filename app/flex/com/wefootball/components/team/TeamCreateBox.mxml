@@ -26,8 +26,7 @@
 	}
 	
 	private function handleSuccess(event:ResultEvent):void {
-		Alert.show('创建成功', "创建成功");
-	//	dispatchEvent(new RegisterEvent(XML(event.result).login));
+		this.visible = false;
 	}		
 
 	private function handleFault(event:FaultEvent):void {

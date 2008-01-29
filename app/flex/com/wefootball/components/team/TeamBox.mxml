@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:VDividedBox width="625" height="100%"  xmlns="*" xmlns:mx="http://www.adobe.com/2006/mxml" 
-	initialize="refresh()" xmlns:message="com.wefootball.components.message.*" xmlns:team="com.wefootball.components.team.*">
+	initialize=" refreshTeamInvitationList()" xmlns:message="com.wefootball.components.message.*" xmlns:team="com.wefootball.components.team.*">
 <!--<mx:VBox>-->
 
 <mx:Metadata>
@@ -18,42 +18,40 @@
     		import com.wefootball.events.UserEvent;
     		import com.wefootball.model.User;
     		import com.wefootball.model.Team;
+    		import com.wefootball.model.TeamInvitation;
     		import mx.collections.XMLListCollection;
 
 			[Bindable]
-    		private var teamList:ArrayCollection;		
-			
-     		public function refresh():void{	
-     			Team.list(handleTeamListResult,handleTeamListFaultResult); 
+    		private var teamList:ArrayCollection;
+    		[Bindable]	
+			private var teamInvitationList:ArrayCollection;
+     		
+     		public function refreshTeamInvitationList():void{	
+     			TeamInvitation.listTeamInvitations(handleTeamInvitationListResult,handleTeamInvitationListFaultResult); 
      		}
-     		public function handleTeamListResult(event:ResultEvent, tl:ArrayCollection):void{
-     			this.teamList = tl; 
+     		public function handleTeamInvitationListResult(event:ResultEvent, til:ArrayCollection):void{
+     			this.teamInvitationList = til; 
      		} 	
-     		public function handleTeamListFaultResult(event:FaultEvent):void{
-     			Alert.show("读取球队列表失败");
+     		public function handleTeamInvitationListFaultResult(event:FaultEvent):void{
+     			Alert.show("读取球邀请队列表失败");
      		}
-      		private function displayTeam(t:TeamDetailEvent):void {
-      			Team.show(t.team.id,
-		     		handleTeamDetailResult,
-		     		handleTeamFaultDetailResult);
-			} 
-		  	private function handleTeamDetailResult(t:Team, event:ResultEvent):void{
-		   		Team.TEAM_PARSER(event.result, Team.currentTeam);
-		 	}
-		 	private function handleTeamFaultDetailResult(event:FaultEvent):void{
-		 		Alert.show("读取细节失败"); 			
-		 	}
+		 	
+		 	private function handleTabChange():void
+			{
+				if(myTeamTN.selectedChild == myJoinTeamPage)
+				{
+					myJoinTeamListBox.refreshTeamList(User.currentUser.id);		
+				}
+			}		 	
 	 	
     	]]>
     </mx:Script>
-		<mx:TabNavigator width="100%" height="49%" >
-		    <mx:Canvas label="我加入的球队" >
-				<team:TeamListBox teamDisplay="displayTeam(event)" dataProvider="{teamList}" 
-					width="100%" height="100%" sendBox="false"/>
+		<mx:TabNavigator id="myTeamTN" width="100%" height="49%" change="handleTabChange()">
+		    <mx:Canvas id="myJoinTeamPage" label="我加入的球队" >
+				<team:TeamListBox id="myJoinTeamListBox" initialize="myJoinTeamListBox.refreshTeamList(User.currentUser.id)" width="100%" height="100%" sendBox="false"/>
 		    </mx:Canvas>
-<!--		    <mx:Canvas label="邀请我的球队" >
-		    	<team:TeamListBox messageDisplay="displayMessage(event)"
-		    		dataProvider="{teamList}" width="100%" height="100%" sendBox="true"/>
-		    </mx:Canvas>-->
+		    <mx:Canvas label="邀请我的球队" >
+		    	<team:TeamInvitationListBox dataProvider="{teamInvitationList}" width="100%" height="100%"/>
+		    </mx:Canvas>
     	</mx:TabNavigator>
 	</mx:VDividedBox>

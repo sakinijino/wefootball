@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:DataGrid xmlns="*" xmlns:mx="http://www.adobe.com/2006/mxml" >
+
+<mx:Metadata>
+	[Event(name="teamInvitationUpdate",type="com.wefootball.events.TeamJoinUpdateEvent")]
+</mx:Metadata>
+
+	   <mx:Script>
+    	<![CDATA[
+    		import mx.collections.ArrayCollection;
+    		import com.wefootball.events.FriendUpdateEvent;
+    		import mx.collections.XMLListCollection;
+    		import mx.controls.Alert;
+			import com.wefootball.model.Request;
+			import com.wefootball.model.User;
+			import com.wefootball.model.Team;
+			import com.wefootball.model.TeamInvitation;
+    		import mx.rpc.events.ResultEvent;
+    		import mx.rpc.events.FaultEvent;    		
+    		import com.wefootball.events.TeamJoinUpdateEvent;
+    		
+    		[Bindable]
+    		private var requestList:ArrayCollection = new ArrayCollection;
+    		
+    		internal function acceptTeamInvitation(teamInvitationid:Object):void{      													     			
+     			Team.createMember(teamInvitationid['id'],
+     										  handleFriendCreateResult,
+     										  handleFriendCreateFault
+     										  );
+    		}
+     		private function handleFriendCreateResult(event:ResultEvent):void{
+				dispatchEvent(new FriendUpdateEvent());
+    		}
+			private function handleFriendCreateFault(event:FaultEvent):void {
+				Alert.show('Unknown Error', "Team hasn't been joined");
+			}         		
+    		
+    		
+    		internal function rejectTeamInvitation(teamInvitationid:String):void{      										 
+     			TeamInvitation.rejectTeamInvitation(teamInvitationid,
+     								 handleRequestRejectResult,
+     								 handleRequestRejectFault
+     								);
+    		}
+     		private function handleRequestRejectResult(event:ResultEvent):void{
+				dispatchEvent(new TeamJoinUpdateEvent());
+     		}
+			private function handleRequestRejectFault(event:FaultEvent):void {
+				Alert.show('Unknown Error', "Team invitation hasn't been rejected");
+			}     		 		 				
+    		 	
+    		 	
+     		public function listIRequests():void{
+     			Request.listRequests(handleRequestListResult,handleRequestListFault);
+     		}
+     		private function handleRequestListResult(event:ResultEvent,rl:ArrayCollection):void{
+     			requestList = rl;			
+     		}
+			private function handleRequestListFault(event:FaultEvent):void {
+				Alert.show('Unknown Error', "Request hasn't been listed");
+			}
+    	]]>
+    </mx:Script>
+
+	<mx:columns >
+		<mx:DataGridColumn headerText="球队简称" dataField="team_shortname">
+			<mx:itemRenderer >
+				<mx:Component>
+				<mx:LinkButton label="{data.team_shortname}" 
+					textAlign="left" fontWeight="normal"/>
+				</mx:Component>
+			</mx:itemRenderer>
+		</mx:DataGridColumn>
+		<mx:DataGridColumn headerText="邀请留言" dataField="message">
+			<mx:itemRenderer >
+				<mx:Component>
+				<mx:LinkButton label="{data.message}"
+					textAlign="left" fontWeight="normal"/>
+				</mx:Component>
+			</mx:itemRenderer>
+		</mx:DataGridColumn>
+		<mx:DataGridColumn headerText="邀请时间" width="150" dataField="apply_date">
+			<mx:itemRenderer>
+				<mx:Component>
+					<mx:Label text="{outerDocument.df.format(data.apply_date)}"/>
+				</mx:Component>
+			</mx:itemRenderer>
+		</mx:DataGridColumn>
+        	<mx:DataGridColumn headerText="" resizable="false" sortable="false" dataField="message">
+        		<mx:itemRenderer>
+        			<mx:Component>
+        				<mx:Button label="接受" click="outerDocument.acceptTeamInvitation(data)" />
+        			</mx:Component>
+        		</mx:itemRenderer>
+        	</mx:DataGridColumn>
+        	<mx:DataGridColumn headerText="" resizable="false" sortable="false" dataField="message">
+        		<mx:itemRenderer>
+        			<mx:Component>
+        				<mx:Button label="拒绝" click="outerDocument.rejectTeamInvitation(data['id'])" />
+        			</mx:Component>
+        		</mx:itemRenderer>
+        	</mx:DataGridColumn>
+		</mx:columns>
+    <mx:DateFormatter id="df" formatString="YYYY-MM-DD" />
+ 
+</mx:DataGrid>

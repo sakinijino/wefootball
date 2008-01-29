@@ -5,6 +5,7 @@
 	<mx:Metadata>
 		[Event(name="messageSend", type="com.wefootball.events.MessageDetailEvent")]
 		[Event(name="freindRequestCreation", type="com.wefootball.events.UserEvent")]
+		[Event(name="sendTeamJoinInvitation", type="com.wefootball.events.UserEvent")]
 	</mx:Metadata>
 	<mx:Script>
 		<![CDATA[
@@ -46,6 +47,10 @@
 				if (user != null && user.id != "") 
 					dispatchEvent(new UserEvent(
 						"freindRequestCreation", user.id))
+			}
+			public function inviteAsTeamMember():void{
+				if (user != null && user.id != "") 
+					dispatchEvent(new UserEvent("sendTeamJoinInvitation", user.id))				
 			}
 			
 			private var _foottotext:Object = {
@@ -110,6 +115,7 @@
 	    		visible="{canAddAsFriend(user.ismyfriend)}" />
 	    	<mx:Button label="删除好友"
 	    		visible="{canRemoveFromFriend(user.ismyfriend)}" />
+	    	<mx:Button label="邀请入队" click="inviteAsTeamMember()" visible="{user.id != User.currentUser.id}"/>	    	
 	    </mx:FormItem>
 	</mx:Form>
 	<mx:DateFormatter id="df" formatString="YYYY-MM-DD" />

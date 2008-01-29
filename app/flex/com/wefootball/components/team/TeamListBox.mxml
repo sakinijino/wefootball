@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:DataGrid xmlns="*" xmlns:mx="http://www.adobe.com/2006/mxml" >
+<mx:DataGrid dataProvider="{teamList}" xmlns:mx="http://www.adobe.com/2006/mxml" >
 
 <mx:Metadata>
 	[Event(name="teamDisplay", type="com.wefootball.events.TeamDetailEvent")]
@@ -8,6 +8,7 @@
 
 	   <mx:Script>
     	<![CDATA[
+    		import mx.collections.ArrayCollection;
     		import mx.controls.LinkButton;
     		import com.wefootball.events.TeamDetailEvent;
     		import mx.controls.Alert;
@@ -20,35 +21,24 @@
     		[Bindable]
     		public var sendBox:Boolean = false;
     		
-/*     		internal function deleteMessage(data:Object):void{
-      			Message.destory(Message(data),
-    				handleMessageDestoryResult,
-    				handleMessageDestoryFaultResult
-    			); 
-    		}
-    		private function handleMessageDestoryResult(event:ResultEvent):void{				
-			}
-			private function handleMessageDestoryFaultResult(event:FaultEvent):void{
-				Alert.show("删除失败");
-			}*/
+    		[Bindable]
+    		public var teamList:ArrayCollection = new ArrayCollection;
+    		
+    		public function refreshTeamList(uid:String):void{	
+     			Team.list(uid,handleTeamListResult,handleTeamListFaultResult); 
+     		}
+     		public function handleTeamListResult(event:ResultEvent, tl:ArrayCollection):void{
+     			this.teamList = tl;
+     		} 	
+     		public function handleTeamListFaultResult(event:FaultEvent):void{
+     			Alert.show("读取球队列表失败");
+     		}
 			
      		internal function displayTeamDetail(data:Object):void{
      			var e:TeamDetailEvent = new TeamDetailEvent("teamDisplay")
      			e.team = Team(data);
      			dispatchEvent(e);
      		}
-/*      		internal function displayUser(m:Object):void{
-     			if (sendBox) dispatchEvent(new UserDisplayEvent(m.receiver_id));
-     			else dispatchEvent(new UserDisplayEvent(m.sender_id));
-     		}	
-     		internal function unreadStyle(m:Object):String {
-     			if(!m.is_receiver_read && m.receiver_id == User.currentUser.id) return 'em';
-     			else return '';
-     		}
-     		internal function nick(m:Object):String {
-     			if (sendBox) return m.receiver_nick;
-     			else return m.sender_nick;
-     		}  */
     	]]>
     </mx:Script>
 
@@ -68,13 +58,6 @@
 				</mx:Component>
 			</mx:itemRenderer>
 		</mx:DataGridColumn>
-<!--    	<mx:DataGridColumn headerText="" width="50" dataField="id">
-    		<mx:itemRenderer>
-    			<mx:Component>
-    				<mx:LinkButton label="退出球队" click="outerDocument.deleteMessage(data)" />
-    			</mx:Component>
-    		</mx:itemRenderer>
-		</mx:DataGridColumn>-->
 	</mx:columns>
     <mx:DateFormatter id="df" formatString="YYYY-MM-DD" />
  

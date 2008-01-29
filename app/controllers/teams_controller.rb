@@ -74,4 +74,18 @@ class TeamsController < ApplicationController
       format.xml {head 404}
     end
   end
+  
+  
+   # GET /users/:user_id/teams/admin.xml
+  def admin #列出用户参加的所有球队
+    @user = User.find(params[:user_id])
+    @teams = @user.teams.admin
+    respond_to do |format|   
+      format.xml  { render :xml => @teams.to_xml(:dasherize=>false, :only=>[:id,:shortname]), :status => 200 }
+    end
+  rescue ActiveRecord::RecordNotFound => e
+    respond_to do |format|
+      format.xml {head 404}
+    end
+  end 
 end

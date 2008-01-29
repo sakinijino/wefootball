@@ -1,10 +1,12 @@
 class TeamJoinsController < ApplicationController
   before_filter :login_required
   
+  # POST /team_joins.xml
   def create
     @tjs = TeamJoinRequest.find(params[:id]) # 根据一个加入球队的请求来创建
     @user =@tjs.user
-    @team = @tjs.team
+    @team = @tjs.team   
+    
     if (@team.users.include?(@user)) #如果已经在球队中不能申请加入
       respond_to do |format|
         format.xml {head 400}
@@ -23,7 +25,7 @@ class TeamJoinsController < ApplicationController
     @tu.user = @user
     @tu.save
     respond_to do |format|
-      format.xml { head 200}
+      format.xml { render :xml => @team.to_xml(:dasherize=>false), :status => 200}
     end
   rescue ActiveRecord::RecordNotFound => e
     respond_to do |format|
@@ -31,7 +33,7 @@ class TeamJoinsController < ApplicationController
     end
   end
   
-  # PUT /users/:user_id/teams/:team_id/team_joins/0.xml
+  # PUT /users/:user_id/teams/:team_id/team_joins.xml
   def update
     @tj = UserTeam.find_by_user_id_and_team_id(params[:user_id], params[:team_id])
     @user =@tj.user
@@ -57,7 +59,7 @@ class TeamJoinsController < ApplicationController
     end
   end
   
-  # DELETE /users/:user_id/teams/:team_id/team_joins/0.xml
+  # DELETE /users/:user_id/teams/:team_id/team_joins.xml
   def destroy
     @tj = UserTeam.find_by_user_id_and_team_id(params[:user_id], params[:team_id])
     if (!@tj.can_destroy_by?(self.current_user))

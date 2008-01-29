@@ -15,8 +15,11 @@ package com.wefootball.model
 		public var summary:String
 		public var found_time:Date
 		public var style:String
+		import mx.controls.Alert;
 		
 		static public var currentTeam:Team = new Team();
+		static private var teamInvitationListHasLoaded:Boolean = false;
+		static private var teamListHasLoaded:Boolean = false;		
 		static public var teamList:ArrayCollection = new ArrayCollection();
 		static public var teamInviteList:ArrayCollection = new ArrayCollection();
 		
@@ -27,8 +30,8 @@ package com.wefootball.model
 		static private const UPDATE:Function = function(id:String):Object {
 			return {url:"/teams/"+id+".xml",method:"POST"};
 		}
-		static private const SEARCH:Object = {url:"/teams/search.xml"
-											  ,method:"GET"};
+		static private const SEARCH:Object = {url:"/teams/search.xml",method:"GET"};
+		static private const ADD_MEMBER:Object = {url:"/team_joins.xml",method:"POST"};
 		
 		static public const TEAM_PARSER:Function = parseTeamFromXML;
 		static public const TEAM_LIST_PARSER:Function=parseTeamListFromXML;
@@ -49,7 +52,7 @@ package com.wefootball.model
  				success:function(event:ResultEvent):void{
  					var xml:XML = XML(event.result);
 					var t:Team = new Team;
-					TEAM_PARSER(event.result, t);
+					TEAM_PARSER(XML(event.result), t);
 					teamList.addItem(t); 
 					success(event);
 				}, 
@@ -57,6 +60,31 @@ package com.wefootball.model
 				fault:fault
 			});
 		} 
+		
+		static public function createMember(team_invitation_id:String,success:Function,fault:Function):void
+		{
+			Team.proxy.send({
+				url:ADD_MEMBER.url,
+				method:ADD_MEMBER.method,
+				request:{'id':team_invitation_id},
+				success:function(event:ResultEvent):void
+				{
+					for (var i:int=0; i< TeamInvitation.invitationList.length; ++i)
+					{
+						if (TeamInvitation.invitationList.getItemAt(i).id == team_invitation_id)
+							TeamInvitation.invitationList.removeItemAt(i);
+					}
+					if(teamListHasLoaded == true)
+					{
+						var t:Team = new Team;
+						TEAM_PARSER(XML(event.result),t);
+						teamList.addItem(t);
+					}
+					success(event);					
+				},	
+				fault:fault
+			});
+		}
 		
 		static public function update(t:Object,success:Function,fault:Function):void
 		{				
@@ -80,31 +108,41 @@ package com.wefootball.model
 								newT = teamList.getItemAt(i);
 							}
 						if (newT == null) newT = new Team();
-						TEAM_PARSER(event.result, newT);
-						//TEAM_PARSER(event.result, currentTeam);
+						TEAM_PARSER(XML(event.result), newT);
 						success(newT, event);
 					},
 					fault:fault
 				}); 		
 		}	
 		
- 		static public function list(success:Function,fault:Function):void{
-			Team.proxy.send({
-				url:("/users/"+User.currentUser.id+"/teams.xml"),
-				method:LIST.method,
-				success:function(event:ResultEvent):void{
-					TEAM_LIST_PARSER(event,teamList);
-					success(event, teamList);
-				},				
-				fault:fault
-			});
+ 		static public function list(uid:String,success:Function,fault:Function):void{
+ 			
+ 			if((uid==User.currentUser.id) && (teamListHasLoaded == true))
+     			success((new ResultEvent(ResultEvent.RESULT)),teamList);
+     		else
+     		{
+				Team.proxy.send({
+					url:("/users/"+uid+"/teams.xml"),
+					method:LIST.method,
+					success:function(event:ResultEvent):void{
+						var tl:ArrayCollection = new ArrayCollection;
+						TEAM_LIST_PARSER(event.result,tl);
+						if(uid == User.currentUser.id)
+						{
+							teamList = tl;
+							teamListHasLoaded = true;
+							success(event, teamList);
+						}						
+						success(event, tl);
+					},				
+					fault:fault
+				});
+     		}
 		} 
 		
  		static public function show(id:String, 
 			success:Function, 
 			fault:Function):void{
-			
-			//if sender destoried
 			Team.proxy.send({
 				url:("/teams/"+id+".xml"),
 				method:DETAIL.method,
@@ -117,13 +155,25 @@ package com.wefootball.model
 							t = teamList.getItemAt(i);
 						}
 					if (t == null) t = new Team();
-					TEAM_PARSER(event.result, t);
-					//TEAM_PARSER(event.result, currentTeam);
+					TEAM_PARSER(XML(event.result), t);
 					success(t, event);
 				},
 				fault:fault
 			});
 		}
+		
+		static public function getManagedTeams(user_id:String,success:Function,fault:Function):void{
+			Team.proxy.send({
+				url:("/users/"+user_id+"/teams/admin.xml"),
+				method:LIST.method,
+				success: function(event:ResultEvent):void{
+					var tl:ArrayCollection = new ArrayCollection;
+					TEAM_LIST_PARSER(XML(event.result), tl);
+					success(event,tl);
+				},
+				fault:fault
+			});			
+		} 		
 		
 		static public function search( query:String,
 										success:Function,
@@ -135,7 +185,7 @@ package com.wefootball.model
 				request:{'query':query},				
 				success:function(event:ResultEvent):void{
 					var ul:ArrayCollection = new ArrayCollection;
-					TEAM_LIST_PARSER(event.result,ul);
+					TEAM_LIST_PARSER(XML(event.result),ul);
 					success(event,ul);
 				},	
 				fault:fault})
@@ -153,10 +203,10 @@ package com.wefootball.model
 		
  		static private function parseTeamListFromXML(eventXML:XML, tml:ArrayCollection):void
 		{
-			for(var i:int = 0;i < eventXML.result['team'].length();i++)
+			for(var i:int = 0;i < eventXML['team'].length();i++)
 			{
 				var t:Team = new Team();
-				parseTeamFromXML(eventXML.result['team'][i],t);
+				parseTeamFromXML(eventXML['team'][i],t);
 				tml.addItem(t);
 			}			
 		} 

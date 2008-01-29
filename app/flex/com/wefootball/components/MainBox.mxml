@@ -16,11 +16,10 @@
 	import com.wefootball.components.account.UpdateBox;
 	import mx.managers.PopUpManager;
 	import mx.controls.Alert;
+	import com.wefootball.model.Team;
 	
 	private var personSettingWindow:UpdateBox = new UpdateBox;
-/* 	private var messageSendBox:MessageSendBox = new MessageSendBox;
-	private var newTeamWindow:TeamCreateBox = new TeamCreateBox;*/
-	
+
  	private function init():void
 	{	
 		initPopupWindow(personSettingWindow);	
@@ -31,26 +30,25 @@
 		PopUpManager.centerPopUp(dis);
 		dis.visible = false;
 	}
-	
-	/*private function sendMessage(m:MessageDetailEvent):void {
-		messageSendBox.visible=true;
-		messageSendBox.message = m.message;
-	}*/
 	private function turnToTeamPerspective(t:TeamDetailEvent):void {
-/* 		informationBox.userId = u.user_id; */
 		mainStack.selectedChild = teamMain;
+		Team.currentTeam.id = t.team.id
 	} 
-	
 	private function turnToPersonPerspective():void{
 		mainStack.selectedChild = personMain;
 	}
+	private function handleIndexChange():void
+	{
+		if(mainStack.selectedChild == teamMain)
+			teamMain.teamId = Team.currentTeam.id
+	} 
 ]]>
 </mx:Script>
 	<mx:HBox height="40" width="950"  horizontalAlign="right" paddingLeft="20" paddingRight="20" >
 		<mx:Button label="我的设置" click="personSettingWindow.visible = true;"/>
 		<mx:Button label="个人页面" click="turnToPersonPerspective()"/>
 	</mx:HBox>
-	<mx:ViewStack id="mainStack" width="950" height="100%">
+	<mx:ViewStack id="mainStack" width="950" height="100%" change="handleIndexChange()">
 		<rt:PersonMainBox id="personMain" teamDisplay="turnToTeamPerspective(event)"/>
 		<rt:TeamMainBox id="teamMain" />
 	</mx:ViewStack>

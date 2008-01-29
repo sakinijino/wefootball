@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:TitleWindow xmlns:mx="http://www.adobe.com/2006/mxml" xmlns:wfv="com.wefootball.validators.*"
-	showCloseButton="true" close="event.target.visible=false" title="邀请">
+	showCloseButton="true" close="event.target.visible=false" title="邀请加为好友">
 	<mx:Script>		
 		<![CDATA[
 			import mx.controls.Alert;

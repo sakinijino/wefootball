@@ -29,7 +29,9 @@
 				Alert.show('Unknown Error', "Search Error");
 			}
      		internal function displayTeam(data:Object):void{
-     			dispatchEvent(new TeamDetailEvent("teamDisplay", data.id));
+     			var e:TeamDetailEvent = new TeamDetailEvent("teamDisplay")
+     			e.team = Team(data);
+     			dispatchEvent(e);
      		}		
 		]]>
 	</mx:Script>
@@ -40,7 +42,7 @@
 			<mx:Component>
 				<mx:VBox click="outerDocument.displayTeam(data)">
 					<mx:Image source="{data.img}" width="80" height="80"/>
-					<mx:Label text="{data.shorname}"/>			
+					<mx:Label text="{data.shortname}"/>			
 				</mx:VBox>
         	</mx:Component>
         </mx:itemRenderer>

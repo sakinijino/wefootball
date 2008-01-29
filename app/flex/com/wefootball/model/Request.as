@@ -26,10 +26,8 @@ package com.wefootball.model
 		static private var proxy:Proxy = new HTTPProxy;
 		static private const CREATE_REQUEST:Object = {url:"/pre_friend_relations.xml"
 													 ,method:"POST"};
-		static private const REJECT_QUEST:Object = {url:"/pre_friend_relations.xml"
-													 ,method:"POST"};													 
-		static private const COUNT_REQUEST:Object = {url:"/pre_friend_relations/count.xml"
-													 ,method:"GET"};													 
+		static private const REJECT_REQUEST:Object = {url:"/pre_friend_relations.xml"
+													 ,method:"POST"};													 													 
 		static private const LIST_REQUEST:Object = {url:"/pre_friend_relations.xml"
 													 ,method:"GET"};												 													
 				
@@ -58,12 +56,6 @@ package com.wefootball.model
 					}
 					else 
 					{					
-						if (requestListHasLoaded == true)
-						{
-							var r:Request = new Request;
-							parseRequestFromXML(xml,r);
-							requestList.addItem(r);
-						}
 						success(event); 
 					}						
 				},
@@ -98,7 +90,7 @@ package com.wefootball.model
 		{
 			Request.proxy.send({
 				url:("/pre_friend_relations/"+request_id+".xml"),
-				method:REJECT_QUEST.method,
+				method:REJECT_REQUEST.method,
 				request:{'_method':"DELETE"},				
 				success:function(event:ResultEvent):void{
 					for (var i:int=0; i< requestList.length; ++i)

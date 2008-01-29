@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:TitleWindow xmlns:mx="http://www.adobe.com/2006/mxml" xmlns:wfv="com.wefootball.validators.*"
+	showCloseButton="true" close="event.target.visible=false" title="邀请加入球队">
+	<mx:Script>		
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import com.wefootball.model.User;
+			import com.wefootball.model.Team;
+			import com.wefootball.model.TeamInvitation;
+    		import mx.rpc.events.ResultEvent;
+    		import mx.rpc.events.FaultEvent;
+    		import mx.validators.Validator;
+			import mx.events.ValidationResultEvent;
+			import com.wefootball.validators.ServerErrors;			
+			
+			[Bindable]
+			private var _serverErrors:ServerErrors;
+			private function validate(message:String):Boolean {
+				var results:Array = Validator.validateAll([messageValidator]);
+				if (results.length > 0) return false;
+				return true;
+			}
+			private var host_id:String = "";
+			[Bindable]
+			private var managedTeamList:ArrayCollection;	
+           	
+           	public function set userId(uid:String):void{
+           		host_id = uid;
+          		Team.getManagedTeams(User.currentUser.id,handleGetManagedTeamsResult,handleGetManagedTeamsFault);
+          	} 
+
+			private function handleGetManagedTeamsResult(event:ResultEvent,tl:ArrayCollection):void {
+				managedTeamList = tl;
+			}		
+			
+			private function handleGetManagedTeamsFault(event:FaultEvent):void {
+				Alert.show('Unknown Error', "Managed team hasn't been got");
+			}
+			
+			
+          	private function createInvitation():void {
+          		//Alert.show(managedTeamCB.selectedItem.id.toString());
+            	var team_id:String = managedTeamCB.selectedItem.id;
+          		var message:String = messageTA.text;
+          		
+          		TeamInvitation.createInvitation(team_id,host_id,message,
+          							 handleCreateInvitationResult,
+          							 handleCreateInvitationError,
+          							 handleCreateInvitationFault);  
+          	}			   	
+          	
+ 			private function handleCreateInvitationResult(event:ResultEvent):void {
+				this.visible = false;
+			}
+			
+			private function handleCreateInvitationError(errors:ServerErrors, event:ResultEvent):void {
+				_serverErrors = errors;
+			}			
+			
+			private function handleCreateInvitationFault(event:FaultEvent):void {
+				Alert.show('Unknown Error', "Request hasn't been created");
+			}           	
+          	
+		]]>
+	</mx:Script>
+	
+	<mx:Label text="加入：" />
+	<mx:ComboBox id="managedTeamCB" labelField="shortname" dataProvider="{managedTeamList}" />
+	<mx:Label text="稍句话吧：" />
+	<mx:TextArea id="messageTA"/>
+
+	<mx:Button id="inviteButton" label="邀请" click="createInvitation()" enabled="{validate(messageTA.text)}" />
+	
+	<mx:StringValidator id="messageValidator" source="{messageTA}" property="text" maxLength="500" required="false"/>
+	<wfv:ServerErrorValidator field="message" listener="{messageTA}" serverErrors="{_serverErrors}" />	
+	
+</mx:TitleWindow>

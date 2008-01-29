@@ -30,7 +30,7 @@ ActionController::Routing::Routes.draw do |map|
   
   # Install the default routes as the lowest priority.
   map.resources :users, :collection => { :search => :get } do |users|
-    users.resources :teams do |teams|
+    users.resources :teams,:collection =>{:admin => :get} do |teams|
       teams.resources :team_joins
     end
     users.resources :team_join_requests
