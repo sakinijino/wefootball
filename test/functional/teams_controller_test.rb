@@ -82,6 +82,15 @@ class TeamsControllerTest < ActionController::TestCase
     assert_select "team", :count=>2
   end
   
+  def test_should_get_user_admin_teams
+    get :admin, :user_id => users(:saki).id
+    assert_response 200
+    assert_select "team", :count=>2
+    get :admin, :user_id => users(:aaron).id
+    assert_response 200
+    assert_select "team", :count=>0
+  end
+  
   def test_search
     login_as :saki
     create_team({:name => 'Beijing Guo An', :shortname=>'BGA'})

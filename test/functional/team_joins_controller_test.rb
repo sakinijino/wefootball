@@ -18,6 +18,7 @@ class TeamJoinsControllerTest < ActionController::TestCase
       assert_difference('User.find(users(:mike1).id).teams.length') do
         post :create, :id=>5
         assert_response 200
+        assert_select 'shortname', 'Inter'
       end
     end
   end
@@ -28,6 +29,7 @@ class TeamJoinsControllerTest < ActionController::TestCase
       assert_difference('User.find(users(:mike2).id).teams.length') do
         post :create, :id=>6
         assert_response 200
+        assert_select 'shortname', 'Inter'
       end
     end
   end
