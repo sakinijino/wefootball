@@ -5,4 +5,9 @@ class Message < ActiveRecord::Base
   validates_presence_of     :content, :subject
   validates_length_of       :content, :maximum =>2000
   validates_length_of       :subject, :maximum =>200
+  
+  def can_read_by(user)
+    (self.sender_id == user.id && !self.is_delete_by_sender) || 
+      (self.receiver_id == user.id && !self.is_delete_by_receiver)
+  end
 end

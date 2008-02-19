@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
   # Be sure to include AuthenticationSystem in Application Controller instead
-  before_filter :login_required, :only=>[:update, :show, :index]
+  before_filter :login_required, :only=>[:update, :edit]
   
   # render new.rhtml
   def new
@@ -44,7 +44,7 @@ class UsersController < ApplicationController
    # render edit.rhtml
   def edit
     if (!param_id_is_current_user)
-      redirect_to('/')
+      fake_params_redirect
     else
       @user = User.find(params[:id])
       @positions = @user.positions.map {|pos| pos.label}
@@ -53,7 +53,7 @@ class UsersController < ApplicationController
   
   def update
     if (!param_id_is_current_user)
-      redirect_to('/')
+      fake_params_redirect
       return
     end
     params[:user].delete :login # login can not be modified

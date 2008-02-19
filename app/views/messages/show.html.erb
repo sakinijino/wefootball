@@ -1,0 +1,21 @@
+<p>
+  <label>发件人</label>
+  <%=h @message.sender.nickname%>
+</p>
+
+<p>
+  <label>收件人</label>
+  <%=h @message.receiver.nickname%>
+</p>
+
+<p>
+  <label>主题</label>
+  <%=h @message.subject%>
+</p>
+
+<p>
+  <label>内容</label>
+  <%=simple_format @message.content%>
+</p>
+
+<%=link_to "回复", new_message_path(:to=>@message.sender.id) if @message.sender!=current_user%>

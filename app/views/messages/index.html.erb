@@ -1,0 +1,17 @@
+<table>
+<tr>
+  <th>发件人</th>
+  <th>收件人</th>
+  <th>主题</th>
+  <th></th>
+</tr>
+
+  <%@messages.each do |m|%>
+    <tr>
+      <td><%=h m.sender.nickname%></td>
+      <td><%=h m.receiver.nickname%></td>
+      <td><%=link_to m.subject, message_path(m.id)%></td>
+      <td><%=link_to "删除", message_path(m.id), :method=>"delete"%></td>
+    </tr>
+  <%end%>
+</table>

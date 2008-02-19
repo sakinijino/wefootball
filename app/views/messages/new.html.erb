@@ -1,0 +1,14 @@
+<span>写给: <%=h @receiver.nickname%></span>
+
+<%= error_messages_for :message %>
+<% form_for :message, :url => messages_path do |f| %>
+  <p><label for="subject">标题</label><br/>
+  <%= f.text_field :subject %>
+
+  <p><label for="content">内容</label><br/>
+  <%= f.text_area :content %>
+  
+  <%= f.hidden_field :receiver_id,  :value=>@receiver.id%>
+  
+  <p><%= submit_tag '发送' %></p>
+<%end%>
