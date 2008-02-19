@@ -2,6 +2,10 @@ class UsersController < ApplicationController
   # Be sure to include AuthenticationSystem in Application Controller instead
   before_filter :login_required, :only=>[:update, :show, :index]
   
+  # render new.rhtml
+  def new
+  end
+  
   # GET /teams/:team_id/users.xml
   # GET /trainings/:training_id/users.xml
   def index # 列出某个队伍的所有队员
@@ -49,11 +53,12 @@ class UsersController < ApplicationController
     @user.save!
     self.current_user = @user
     respond_to do |format|
-      #~ @short_format = true
+      format.html {redirect_back_or_default('/')}
       format.xml {render :xml=>@user.to_xml({:dasherize=>false, :only=>['id', 'login', 'nickname']}) }
     end
   rescue ActiveRecord::RecordInvalid
     respond_to do |format|
+      format.html {render :action => 'new'}
       format.xml { render :xml=>@user.errors.to_xml_full}
     end
   end
