@@ -9,36 +9,18 @@ class UsersController < ApplicationController
   # GET /teams/:team_id/users.xml
   # GET /trainings/:training_id/users.xml
   def index # 列出某个队伍的所有队员
-    options = default_user_to_xml_options
-    options[:except]<<:summary
     if (params[:team_id])
       @team = Team.find(params[:team_id])
-      respond_to do |format|
-        @users = @team.users
-        format.xml  { render :xml=>@users.to_xml(options), :status => 200 }
-      end
+      @users = @team.users
     else #训练中的所有队员
       @tr = Training.find(params[:training_id])
-      respond_to do |format|
-        @users = @tr.users
-        format.xml  { render :xml=>@users.to_xml(options), :status => 200 }
-      end
-    end
-  rescue ActiveRecord::RecordNotFound => e
-    respond_to do |format|
-      format.xml {head 404}
+      @users = @tr.users
     end
   end
   
   # GET /users/search.xml?query
   def search
-    options = default_user_to_xml_options
-    options[:except]<<:summary
-    options.delete :include
-    @users = User.find_by_contents(params[:query]) 
-    respond_to do |format|
-      format.xml  { render :xml=>@users.to_xml(options), :status => 200 }
-    end
+    @users = User.find_by_contents(params[:q]) 
   end
   
   def create
@@ -52,67 +34,46 @@ class UsersController < ApplicationController
     @user = User.new(params[:user])
     @user.save!
     self.current_user = @user
-    respond_to do |format|
-      format.html {redirect_back_or_default('/')}
-      format.xml {render :xml=>@user.to_xml({:dasherize=>false, :only=>['id', 'login', 'nickname']}) }
-    end
-  rescue ActiveRecord::RecordInvalid
-    respond_to do |format|
-      format.html {render :action => 'new'}
-      format.xml { render :xml=>@user.errors.to_xml_full}
-    end
+    redirect_back_or_default('/')
   end
   
   def show
     @user = User.find(params[:id], :include=>[:positions])
-    respond_to do |format|
-      options = default_user_to_xml_options
-      options[:procs] = Proc.new { |options| 
-        options[:builder].tag!('is_my_friend', FriendRelation.are_friends?(@user.id, current_user.id))
-      }
-      format.xml {render :xml=>@user.to_xml(options)}
-    end
-  rescue ActiveRecord::RecordNotFound => e
-    respond_to do |format|
-      format.xml {head 404}
+  end
+  
+   # render edit.rhtml
+  def edit
+    if (!param_id_is_current_user)
+      redirect_to('/')
+    else
+      @user = User.find(params[:id])
+      @positions = @user.positions.map {|pos| pos.label}
     end
   end
   
   def update
-    respond_to do |format|
-      format.xml {
-        if (self.current_user.id.to_s != params[:id].to_s)
-          head 401
-          return
-        end
-        params[:user].delete :login # login can not be modified
-        @user=self.current_user
-        if self.current_user.update_attributes(params[:user])
-          @user.positions.clear
-          params[:positions]=[] if (!params[:positions]) 
-          params[:positions].uniq!
-          for label in params[:positions]
-            @user.positions<<Position.new({:label=>label})
-          end
-          @user.save
-          options = default_user_to_xml_options
-          options[:procs] = Proc.new { |options| 
-            options[:builder].tag!('is_my_friend', FriendRelation.are_friends?(@user.id, current_user.id))
-          }
-          render :xml=>@user.to_xml(options)
-        else
-          render :xml => @user.errors.to_xml_full
-        end
-      }
+    if (!param_id_is_current_user)
+      redirect_to('/')
+      return
+    end
+    params[:user].delete :login # login can not be modified
+    @user=self.current_user
+    if self.current_user.update_attributes(params[:user])
+      @user.positions.clear
+      params[:positions]=[] if (!params[:positions]) 
+      params[:positions].uniq!
+      for label in params[:positions]
+        @user.positions<<Position.new({:label=>label})
+      end
+      @user.save
+      redirect_to edit_user_url(@user)
+    else
+      render :action => "edit" 
     end
   end
   
   protected
-  def default_user_to_xml_options
-    {
-      :dasherize=>false,
-      :except=>[:crypted_password, :salt, :created_at, :updated_at, :remember_token, :remember_token_expires_at],
-      :include => [:positions],
-    }
+  def param_id_is_current_user
+    self.current_user.id.to_s == params[:id].to_s
   end
 end

@@ -1,5 +1,7 @@
 class Position < ActiveRecord::Base
-  validates_inclusion_of :label, :in => %w{GK SW CB LB RB DM CM LM RM AM CF SS}
+  POSITIONS = %w{GK SW CB LB RB DM CM LM RM AM CF SS}
+  
+  validates_inclusion_of :label, :in => POSITIONS
   
   def to_xml(options = {})
     options[:indent] ||= 2

@@ -13,28 +13,11 @@ class SessionsController < ApplicationController
         self.current_user.remember_me
         cookies[:auth_token] = { :value => self.current_user.remember_token , :expires => self.current_user.remember_token_expires_at }
       end
-      respond_to do |format|
-        @user = self.current_user
-        format.html {
-          redirect_back_or_default('/')
-          flash[:notice] = "Logged in successfully"
-        }
-        format.xml {
-          proc = Proc.new { |options| 
-              options[:builder].tag!('is_my_friend', false)
-          }
-          render :xml=>@user.to_xml({
-          :dasherize=>false,
-          :except=>[:crypted_password, :salt, :created_at, :updated_at, :remember_token, :remember_token_expires_at],
-          :include => [:positions],
-          :procs => proc
-        }) }
-      end  
+      @user = self.current_user
+      redirect_back_or_default('/')
+      flash[:notice] = "Logged in successfully"
     else
-      respond_to do |format|
-        format.html {render :action => 'new'}
-        format.xml { head 401 }
-      end
+      render :action => 'new'
     end
   end
   
@@ -42,12 +25,7 @@ class SessionsController < ApplicationController
     self.current_user.forget_me if logged_in?
     cookies.delete :auth_token
     reset_session
-    respond_to do |format|
-      format.html {
-        flash[:notice] = "You have been logged out."
-        redirect_back_or_default('/')
-      }
-      format.xml { head 200}
-    end
+    flash[:notice] = "You have been logged out."
+    redirect_back_or_default('/')
   end
 end

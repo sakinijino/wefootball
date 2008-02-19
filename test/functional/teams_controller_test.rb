@@ -23,7 +23,7 @@ class TeamsControllerTest < ActionController::TestCase
   end
   
   def test_should_login_before_create_team
-    post :create, :team => { :name=>'Inter Milan', :shortname=>'inter'}
+    post :create, :team => { :name=>'Inter Milan', :shortname=>'inter'}, :format=>'xml'
     assert_response 401
   end
   
