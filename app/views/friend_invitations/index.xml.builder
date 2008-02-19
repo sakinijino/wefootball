@@ -1,6 +1,6 @@
-xml.pre_friend_relations do
-  for r in @pre_friend_relations
-	  xml.pre_friend_relation do
+xml.friend_invitations do
+  for r in @friend_invitations
+	  xml.friend_invitation do
 	    xml.id(r.id)
 	    xml.apply_date(r.apply_date.to_s(:flex))
 	    xml.applier_id(r.applier.id)

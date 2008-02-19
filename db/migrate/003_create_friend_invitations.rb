@@ -1,6 +1,6 @@
-class CreatePreFriendRelations < ActiveRecord::Migration
+class CreateFriendInvitations < ActiveRecord::Migration
   def self.up
-    create_table :pre_friend_relations do |t|
+    create_table :friend_invitations do |t|
       t.integer :applier_id
       t.integer :host_id
       t.text :message
@@ -9,6 +9,6 @@ class CreatePreFriendRelations < ActiveRecord::Migration
   end
 
   def self.down
-    drop_table :pre_friend_relations
+    drop_table :friend_invitations
   end
 end

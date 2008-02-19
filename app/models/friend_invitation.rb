@@ -1,4 +1,4 @@
-class PreFriendRelation < ActiveRecord::Base
+class FriendInvitation < ActiveRecord::Base
   belongs_to :applier, :class_name=>"User", :foreign_key=>"applier_id"
   belongs_to :host, :class_name=>"User", :foreign_key=>"host_id"
 

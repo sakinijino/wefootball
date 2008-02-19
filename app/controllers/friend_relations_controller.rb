@@ -13,10 +13,10 @@ class FriendRelationsController < ApplicationController
   # POST /friend_relations
   # POST /friend_relations.xml
   def create
-    @req = PreFriendRelation.find(params[:request_id],:include=>[:applier])    
+    @req = FriendInvitation.find(params[:request_id],:include=>[:applier])    
     
     if (FriendRelation.are_friends?(@req.applier_id, @req.host_id))
-      PreFriendRelation.delete(params[:request_id])
+      FriendInvitation.delete(params[:request_id])
       head 200
       return
     end
@@ -30,7 +30,7 @@ class FriendRelationsController < ApplicationController
     @friend_relation.user1_id = @req.applier_id
     @friend_relation.user2_id = @req.host_id
     if @friend_relation.save
-      PreFriendRelation.delete(params[:request_id])
+      FriendInvitation.delete(params[:request_id])
       respond_to do |format|
         format.xml {render :status => 200}
       end

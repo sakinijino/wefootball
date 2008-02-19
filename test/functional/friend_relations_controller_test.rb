@@ -12,8 +12,8 @@ class FriendRelationsControllerTest < ActionController::TestCase
   def test_should_create_friend_relation
     login_as :aaron
     assert_difference('FriendRelation.count') do
-      assert_difference('PreFriendRelation.count', -1) do
-        post :create, :request_id => pre_friend_relations(:mike2_to_aaron).id
+      assert_difference('FriendInvitation.count', -1) do
+        post :create, :request_id => friend_invitations(:mike2_to_aaron).id
         assert_response :success
       end
     end
@@ -23,8 +23,8 @@ class FriendRelationsControllerTest < ActionController::TestCase
     @req1 = FriendRelation.create(:user1_id => users(:mike2).id, :user2_id => users(:aaron).id)
     login_as :aaron
     assert_no_difference('FriendRelation.count') do
-      assert_difference('PreFriendRelation.count', -1) do
-        post :create, :request_id => pre_friend_relations(:mike2_to_aaron).id
+      assert_difference('FriendInvitation.count', -1) do
+        post :create, :request_id => friend_invitations(:mike2_to_aaron).id
         assert_response :success
       end
     end
@@ -33,8 +33,8 @@ class FriendRelationsControllerTest < ActionController::TestCase
   def test_should_create_friend_relation_error
     login_as :saki
     assert_no_difference('FriendRelation.count') do
-      assert_no_difference('PreFriendRelation.count') do
-        post :create, :request_id => pre_friend_relations(:mike2_to_aaron).id
+      assert_no_difference('FriendInvitation.count') do
+        post :create, :request_id => friend_invitations(:mike2_to_aaron).id
         assert_response 401
       end
     end
