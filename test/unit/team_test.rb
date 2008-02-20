@@ -1,6 +1,11 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
 class TeamTest < ActiveSupport::TestCase
+  def test_image_path
+    assert_equal "/images/teams/t00000001.jpg", teams(:inter).image
+    assert_equal "/images/default_team.jpg", teams(:milan).image
+  end
+  
   def test_validation
     assert_no_difference 'Team.count' do
       u = create_team({

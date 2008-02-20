@@ -2,7 +2,7 @@ class TeamImage < ActiveRecord::Base
   belongs_to :team
   has_attachment  :storage => :file_system, 
                   :content_type => :image, 
-                  :resize_to => '100x100!',
+                  :resize_to => '50x50!',
                   :path_prefix => 'public/images/teams',
                   :max_size => 2.megabytes,
                   :processor => :MiniMagick # attachment_fu looks in this order: ImageScience, Rmagick, MiniMagick
@@ -33,7 +33,7 @@ class TeamImage < ActiveRecord::Base
     end
     # ImageScience doesn't create gif thumbnails, only pngs
     ext.sub!(/gif$/, 'png') if attachment_options[:processor] == "ImageScienceProcessor"
-    return "u%08d#{ext}" % self.team_id.to_s if thumbnail.blank?
-    "u%08d_#{thumbnail}#{ext}" % self.team_id.to_s
+    return "t%08d#{ext}" % self.team_id.to_s if thumbnail.blank?
+    "t%08d_#{thumbnail}#{ext}" % self.team_id.to_s
   end
 end

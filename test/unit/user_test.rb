@@ -138,6 +138,11 @@ class UserTest < Test::Unit::TestCase
       assert u.errors.on(:summary)
     end
   end
+  
+  def test_image_path
+    assert_equal "/images/users/u00000003.jpg", users(:saki).image
+    assert_equal "/images/default_user.jpg", users(:aaron).image
+  end
 
 protected
   def create_user(options = {})

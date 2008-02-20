@@ -38,7 +38,7 @@ class UsersController < ApplicationController
   end
   
   def show
-    @user = User.find(params[:id], :include=>[:positions])
+    @user = User.find(params[:id], :include=>[:positions, :user_image])
   end
   
    # render edit.rhtml
@@ -46,7 +46,7 @@ class UsersController < ApplicationController
     if (!param_id_is_current_user)
       fake_params_redirect
     else
-      @user = User.find(params[:id], :include=>[:positions])
+      @user = User.find(params[:id], :include=>[:positions, :user_image])
       @positions = @user.positions.map {|pos| pos.label}
     end
   end

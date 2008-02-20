@@ -1,5 +1,6 @@
 <%@users.each do |user| %>
-  <div>
-    <%=link_to user.nickname, user_path(user.id)%>
-  </div>
+  <dl>
+    <dt><%=link_to  image_tag(user.image, :width=>50, :height=>50), user_path(user.id) %></dt>
+    <dd><%=link_to user.nickname, user_path(user.id)%></dd>
+  </dl>
 <%end%>
