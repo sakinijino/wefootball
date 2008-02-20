@@ -1,4 +1,8 @@
 class Team < ActiveRecord::Base
+  DEFAULT_IMAGE = "/images/default_team.jpg"
+          
+  has_one :team_image
+  
   has_many :trainings,
             :dependent => :destroy
   
@@ -28,4 +32,9 @@ class Team < ActiveRecord::Base
         :shortname
       ]},
     { :analyzer => GENERIC_ANALYZER })
+  
+  def image
+    return self.team_image.public_filename if self.team_image != nil
+    DEFAULT_IMAGE
+  end
 end

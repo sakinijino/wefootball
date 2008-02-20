@@ -75,7 +75,6 @@ class TeamsController < ApplicationController
     end
   end
   
-  
    # GET /users/:user_id/teams/admin.xml
   def admin #列出用户参加的所有球队
     @user = User.find(params[:user_id])
@@ -87,5 +86,18 @@ class TeamsController < ApplicationController
     respond_to do |format|
       format.xml {head 404}
     end
-  end 
+  end
+
+  protected
+  def update_image
+    if (@team.team_image==nil)
+      @team.team_image = TeamImage.new
+    end
+    if @team.team_image.update_attributes({:uploaded_data => params[:team][:uploaded_data]})
+      @team.save
+      true
+    else
+      false
+    end
+  end
 end

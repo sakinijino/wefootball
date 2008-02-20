@@ -59,40 +59,42 @@ class UsersController < ApplicationController
     params[:user].delete :login # login can not be modified
     @user=self.current_user
     if (params[:user][:uploaded_data]!=nil)
-      update_image
-      return
-    end
-    pre_process_player_info if params[:user][:is_playable]!=nil #update player info
-    if self.current_user.update_attributes(params[:user])
-      redirect_to edit_user_url(@user)
+      if update_image
+        redirect_to edit_user_url(@user)
+      else
+        @user.user_image.errors.each do |attr, msg|
+          @user.errors.add(attr, msg)
+        end
+        @user.user_image.reload
+        @positions = @user.positions.map {|pos| pos.label}
+        render :action => "edit" 
+      end
     else
-      @positions = @user.positions.map {|pos| pos.label}
-      render :action => "edit" 
-    end
-  end
-  
-  def update_image
-    if (!param_id_is_current_user)
-      fake_params_redirect
-      return
-    end
-    @user=self.current_user
-    if (@user.user_image==nil)
-      @user.user_image = UserImage.new
-    end
-    if @user.user_image.update_attributes({:uploaded_data => params[:user][:uploaded_data]})
-      @user.save
-      redirect_to edit_user_url(@user)
-    else
-      @positions = @user.positions.map {|pos| pos.label}
-      @user.user_image.reload
-      render :action => "edit" 
+      pre_process_player_info if params[:user][:is_playable]!=nil #update player info
+      if self.current_user.update_attributes(params[:user])
+        redirect_to edit_user_url(@user)
+      else
+        @positions = @user.positions.map {|pos| pos.label}
+        render :action => "edit" 
+      end
     end
   end
   
   protected
   def param_id_is_current_user
     self.current_user.id.to_s == params[:id].to_s
+  end
+  
+  def update_image
+    if (@user.user_image==nil)
+      @user.user_image = UserImage.new
+    end
+    if @user.user_image.update_attributes({:uploaded_data => params[:user][:uploaded_data]})
+      @user.save
+      true
+    else
+      false
+    end
   end
   
   def pre_process_player_info
