@@ -1,9 +1,15 @@
 require 'digest/sha1'
 class User < ActiveRecord::Base
   # Virtual attribute for the unencrypted password
+  FITFOOT = %w{R L B}
+  
+  DEFAULT_IMAGE = "/images/default_user.jpg"
+  
   attr_accessor :password
   has_many :positions,
             :dependent => :destroy
+          
+  has_one :user_image
   
   has_many :user_teams,
             :dependent => :destroy
@@ -31,13 +37,16 @@ class User < ActiveRecord::Base
   validates_length_of        :login,    :within => 3..40
   validates_uniqueness_of   :login, :case_sensitive => false
   
+  validates_length_of       :nickname, :maximum => 70
+  validates_length_of       :summary, :maximum => 500
+  validates_length_of       :favorite_star, :maximum => 50
+  
   validates_inclusion_of    :weight, :in => 0..400, :allow_nil =>true,
     :message => '... Are you kidding me?'
   validates_inclusion_of    :height, :in => 0..250, :allow_nil =>true,
     :message => '... Are you kidding me?'
-  validates_inclusion_of    :fitfoot, :in => %w{L B R}, :allow_nil =>true
-  validates_length_of       :nickname, :maximum => 70
-  validates_length_of       :summary, :maximum => 500
+  validates_inclusion_of    :fitfoot, :in => FITFOOT, :allow_nil =>true
+  validates_inclusion_of   :premier_position, :in => Position::POSITIONS, :allow_nil =>true
 
   GENERIC_ANALYSIS_REGEX = /([a-zA-Z]|[\xc0-\xdf][\x80-\xbf])+|[0-9]+|[\xe0-\xef][\x80-\xbf][\x80-\xbf]/
   GENERIC_ANALYZER = Ferret::Analysis::RegExpAnalyzer.new(GENERIC_ANALYSIS_REGEX, true)  
@@ -54,7 +63,8 @@ class User < ActiveRecord::Base
   # prevents a user from submitting a crafted form that bypasses activation
   # anything else you want your user to change should be added here.
   attr_accessible :login, :password, :password_confirmation
-  attr_accessible :weight, :height, :fitfoot, :nickname, :summary, :birthday
+  attr_accessible :nickname, :summary, :birthday, :favorite_star
+  attr_accessible :is_playable, :weight, :height, :fitfoot, :premier_position
 
   # Authenticates a user by their login name and unencrypted password.  Returns the user or nil.
   def self.authenticate(login, password)
@@ -109,6 +119,11 @@ class User < ActiveRecord::Base
                    
     friends_id_list = (friends_id_list.map{|x|[x.user1_id,x.user2_id]}).flatten.reject {|id| id == self.id}
     User.find(friends_id_list)
+  end
+  
+  def image
+    return self.user_image.public_filename if self.user_image != nil
+    DEFAULT_IMAGE
   end
 
   protected

@@ -46,7 +46,7 @@ class UsersController < ApplicationController
     if (!param_id_is_current_user)
       fake_params_redirect
     else
-      @user = User.find(params[:id])
+      @user = User.find(params[:id], :include=>[:positions])
       @positions = @user.positions.map {|pos| pos.label}
     end
   end
@@ -58,16 +58,34 @@ class UsersController < ApplicationController
     end
     params[:user].delete :login # login can not be modified
     @user=self.current_user
+    if (params[:user][:uploaded_data]!=nil)
+      update_image
+      return
+    end
+    pre_process_player_info if params[:user][:is_playable]!=nil #update player info
     if self.current_user.update_attributes(params[:user])
-      @user.positions.clear
-      params[:positions]=[] if (!params[:positions]) 
-      params[:positions].uniq!
-      for label in params[:positions]
-        @user.positions<<Position.new({:label=>label})
-      end
+      redirect_to edit_user_url(@user)
+    else
+      @positions = @user.positions.map {|pos| pos.label}
+      render :action => "edit" 
+    end
+  end
+  
+  def update_image
+    if (!param_id_is_current_user)
+      fake_params_redirect
+      return
+    end
+    @user=self.current_user
+    if (@user.user_image==nil)
+      @user.user_image = UserImage.new
+    end
+    if @user.user_image.update_attributes({:uploaded_data => params[:user][:uploaded_data]})
       @user.save
       redirect_to edit_user_url(@user)
     else
+      @positions = @user.positions.map {|pos| pos.label}
+      @user.user_image.reload
       render :action => "edit" 
     end
   end
@@ -75,5 +93,24 @@ class UsersController < ApplicationController
   protected
   def param_id_is_current_user
     self.current_user.id.to_s == params[:id].to_s
+  end
+  
+  def pre_process_player_info
+    if params[:user][:is_playable] == '0' # unchecked
+      params[:user][:weight] = nil
+      params[:user][:height] = nil
+      params[:user][:fitfoot] = nil
+      params[:user][:premier_position] = nil
+      params[:positions]=[]
+    end
+    if params[:user][:is_playable] == '1' # checked
+      params[:positions]=[] if (!params[:positions]) 
+      params[:positions]<<params[:user][:premier_position]
+    end
+    @user.positions.clear # poor performance, need refactoring
+    params[:positions].uniq!
+    for label in params[:positions]
+      @user.positions<<Position.new({:label=>label})
+    end
   end
 end
