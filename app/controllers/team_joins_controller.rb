@@ -8,15 +8,11 @@ class TeamJoinsController < ApplicationController
     @team = @tjs.team   
     
     if (@team.users.include?(@user)) #如果已经在球队中不能申请加入
-      respond_to do |format|
-        format.xml {head 400}
-      end
+      fake_params_redirect
       return
     end
     if !@tjs.can_accept_by?(self.current_user)
-      respond_to do |format|
-        format.xml  { head 401 }
-      end
+      fake_params_redirect
       return
     end
     @tjs.destroy
@@ -24,13 +20,9 @@ class TeamJoinsController < ApplicationController
     @tu.team = @team
     @tu.user = @user
     @tu.save
-    respond_to do |format|
-      format.xml { render :xml => @team.to_xml(:dasherize=>false), :status => 200}
-    end
+    redirect_back
   rescue ActiveRecord::RecordNotFound => e
-    respond_to do |format|
-      format.xml {head 404}
-    end
+    fake_params_redirect
   end
   
   # PUT /users/:user_id/teams/:team_id/team_joins.xml
@@ -63,18 +55,12 @@ class TeamJoinsController < ApplicationController
   def destroy
     @tj = UserTeam.find_by_user_id_and_team_id(params[:user_id], params[:team_id])
     if (!@tj.can_destroy_by?(self.current_user))
-      respond_to do |format|
-        format.xml  { head 401 }
-      end
+      fake_params_redirect
       return
     end
     @tj.destroy
-    respond_to do |format|
-      format.xml { head 200}
-    end
+    redirect_to team_join_invitations_path
   rescue ActiveRecord::RecordNotFound => e
-    respond_to do |format|
-      format.xml {head 404}
-    end
+    fake_params_redirect
   end
 end

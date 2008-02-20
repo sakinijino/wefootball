@@ -1,0 +1,12 @@
+<div>
+  <h1>队伍列表</h1>
+</div>
+
+<%@teamsList.each do |team| %>
+  <div>
+    <%=link_to team.shortname, team_path(team.id)%>
+  </div>
+<%end%>
+
+
+

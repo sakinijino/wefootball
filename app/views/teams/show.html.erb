@@ -1,0 +1,36 @@
+<p>
+  <label>队伍名称</label>
+  <%=h @team.name%>
+</p>
+
+<p>
+  <label>队伍简称</label>
+  <%=h @team.shortname%>
+</p>
+
+<p>
+  <label>建队日期</label>
+  <%= @team.found_time%>
+</p>
+
+<%if @team.style!=nil%>
+  <p>
+    <label>球队风格</label>
+    <%=h @team.style%>
+  </p>
+<%end%>
+
+<%if @team.summary!=nil%>
+  <p>
+    <label>球队简介</label>
+    <%=simple_format @team.summary%>
+  </p>
+<%end%>
+
+<%#if @user.id != current_user.id%>
+  <%#= link_to("发信", new_message_path(:to=>@user.id))%>
+  <%#= link_to_if(!current_user.is_my_friend?(@user), "加为好友", 
+                  new_friend_invitation_path(:host_id=>@user.id)){}%>
+  <%#= link_to_if(current_user.is_my_friend?(@user), "不和他玩", 
+                  friend_relation_path(:user_id=>@user.id),:method=>"delete"){}%>
+<%#end%>

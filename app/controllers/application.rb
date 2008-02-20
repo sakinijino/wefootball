@@ -9,8 +9,13 @@ class ApplicationController < ActionController::Base
   # TODO - this will be uncommented once we explain sessions
   # in iteration 5.
   # protect_from_forgery
-  # :secret => 'dd92c128b5358a710545b5e755694d57'
+  # :secret => 'dd92c128b5358a710545b5e755694d57' 
   def fake_params_redirect
     redirect_to '/'
   end
+  
+  def redirect_back
+    redirect_to(session[:return_to])
+    session[:return_to] = nil
+  end  
 end

@@ -110,6 +110,10 @@ class User < ActiveRecord::Base
     self.remember_token            = nil
     save(false)
   end
+  
+  def is_my_friend?(user)
+    FriendRelation.are_friends?(self.id, user.id)
+  end
 
   def friends
     friends_id_list = FriendRelation.find(:all,

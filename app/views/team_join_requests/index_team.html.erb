@@ -1,0 +1,26 @@
+<div>
+  <h1>申请加入的球队列表</h1>
+</div>
+<table>
+  <tr>
+    <th>时间</th>
+    <th>球队</th>
+    <th>留言</th>
+    <th></th>
+    <th></th>   
+  </tr>
+  
+<% for req in @requests %>
+  <tr>
+    <td><%=h req.apply_date %></td>
+    <td><%= link_to req.team.name, team_path(req.team_id) %></td>
+    <td><%=h req.message %></td>
+  </tr>
+<% end %>
+</table>
+
+<%#= link_to 'Previous page', admin_user_url({ :page => @user_pages.current.previous }) if @user_pages.current.previous %>
+<%#= link_to 'Next page', admin_user_url({ :page => @user_pages.current.next }) if @user_pages.current.next %> 
+
+
+

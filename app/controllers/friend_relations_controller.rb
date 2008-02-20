@@ -3,11 +3,8 @@ class FriendRelationsController < ApplicationController
   # GET /friend_relations
   # GET /friend_relations.xml
   def index
-    @friendsList = User.find_by_id(params[:user_id]).friends
-
-    respond_to do |format|
-      format.xml  { render :status=>200}   
-    end
+    user_id = (params[:user_id]==nil) ? current_user.id : params[:user_id]
+    @friendsList = User.find(user_id).friends
   end
 
   # POST /friend_relations
@@ -17,32 +14,21 @@ class FriendRelationsController < ApplicationController
     
     if (FriendRelation.are_friends?(@req.applier_id, @req.host_id))
       FriendInvitation.delete(params[:request_id])
-      head 200
+      redirect_to friend_invitations_path
       return
     end
     
     if(@req.host_id != current_user.id)
-      head 401
+      redirect_to friend_invitations_path
       return
     end
 
     @friend_relation = FriendRelation.new
     @friend_relation.user1_id = @req.applier_id
     @friend_relation.user2_id = @req.host_id
-    if @friend_relation.save
-      FriendInvitation.delete(params[:request_id])
-      respond_to do |format|
-        format.xml {render :status => 200}
-      end
-    else
-      respond_to do |format|
-        format.xml  { render :xml => @friend_relation.errors.to_xml_full, :status => 200 }
-      end
-    end
-  rescue ActiveRecord::RecordInvalid
-    respond_to do |format|
-      format.xml { head 404 }
-    end
+    @friend_relation.save
+    FriendInvitation.delete(params[:request_id])
+    redirect_to friend_invitations_path
   end
 
   # DELETE /friend_relations/1
@@ -50,8 +36,6 @@ class FriendRelationsController < ApplicationController
   def destroy
     FriendRelation.destroy_all(["(user1_id = ? and user2_id = ?) or (user1_id = ? and user2_id = ?)", 
       current_user.id, params[:user_id], params[:user_id], current_user.id] )
-    respond_to do |format|
-      format.xml  { head :ok }
-    end
+    redirect_to friend_relations_path
   end
 end

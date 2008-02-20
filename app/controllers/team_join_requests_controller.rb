@@ -1,70 +1,55 @@
 class TeamJoinRequestsController < ApplicationController
   before_filter :login_required
   
-  # GET /teams/:team_id/team_join_requests.xml
-  # GET /users/:user_id/team_join_requests.xml
+  def new
+    @team_id = params[:team_id]
+  end  
+  
   def index
-    if (params[:user_id]) #显示用户申请参加的所有队伍
-      respond_to do |format|
+    if (params[:user_id]) # 显示所有邀请用户的队伍
         @requests = TeamJoinRequest.find_all_by_user_id_and_is_invitation(params[:user_id], false, :include=>[:team])
-        format.xml  { render :status => 200, :template=>"shared/requests_with_teams" }
-      end
-    else #显示所有申请参加该队伍的用户
-      respond_to do |format|
+        render :action=>"index_team"
+    else # 显示队伍所有邀请的用户
+        store_location
         @requests = TeamJoinRequest.find_all_by_team_id_and_is_invitation(params[:team_id], false, :include=>[:user])
-        format.xml  { render :status => 200, :template=>"shared/requests_with_users" }
-      end
-    end
-  rescue ActiveRecord::RecordNotFound => e
-    respond_to do |format|
-      format.xml {head 404}
+        render :action=>"index_user"
     end
   end
   
   def create
-    if params[:team_join_request][:user_id].to_s!=self.current_user.id.to_s
-      respond_to do |format|
-        format.xml {head 401}
-      end
-      return
-    end
     @team = Team.find(params[:team_join_request][:team_id])
-    if (@team.users.include?(self.current_user)) #如果已经在球队中不能申请加入
-      respond_to do |format|
-        format.xml {head 400}
-      end
+    @user = User.find(params[:team_join_request][:user_id])
+    if (@team.users.include?(@user)) # 如果已经在球队中，不能邀请     
+      fake_params_redirect
       return
     end
     params[:team_join_request][:is_invitation] = false;
-    @tjs = TeamJoinRequest.new(params[:team_join_request])
-    respond_to do |format|
+    @tjs = TeamJoinRequest.find_by_team_id_and_user_id(@team.id,@user.id)
+    
+    if (@tjs==nil)    
+      @tjs = TeamJoinRequest.new(params[:team_join_request])
       if @tjs.save
-        format.xml  { render :xml => @tjs.to_xml(:dasherize=>false), :status => 200, :location => @tjs }
+        redirect_to team_path(@team)
+        return
       else
-        format.xml  { render :xml => @tjs.errors.to_xml_full, :status => 200 }
+        render :action=>"new",:team_id=>@team.id
       end
-    end
-  rescue ActiveRecord::RecordNotFound => e
-    respond_to do |format|
-      format.xml {head 404}
+    else
+      if @tjs.update_attributes(params[:team_join_request])
+        redirect_to team_path(@team)
+      else
+        render :action=>"new",:team_id=>@team.id
+      end
     end
   end
   
   def destroy
-    @tjs = TeamJoinRequest.find(params[:id])
-    if !@tjs.can_destroy_by?(self.current_user)
-      respond_to do |format|
-        format.xml  { head 401 }
-      end
+    @tjs = TeamJoinRequest.find(params[:id],:include=>[:team])
+    if (!@tjs.team.users.admin.include?(self.current_user)) # 管理员才可以删除
+      fake_params_redirect
       return
     end
     @tjs.destroy
-    respond_to do |format|
-      format.xml { head 200}
-    end
-  rescue ActiveRecord::RecordNotFound => e
-    respond_to do |format|
-      format.xml {head 404}
-    end
+    redirect_to team_join_requests_path(:team_id=>@tjs.team.id)
   end
 end

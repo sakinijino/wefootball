@@ -1,23 +1,19 @@
 class TeamJoinInvitationsController < ApplicationController
   before_filter :login_required
   
-  # GET /teams/:team_id/team_join_invitations.xml
-  # GET /users/:user_id/team_join_invitations.xml
+  def new
+    @teams = current_user.teams.admin.map{|t| [t.shortname,t.id]}
+    @user_id = params[:user_id]
+  end
+  
   def index
+    store_location
     if (params[:user_id]) # 显示所有邀请用户的队伍
-      respond_to do |format|
         @requests = TeamJoinRequest.find_all_by_user_id_and_is_invitation(params[:user_id], true, :include=>[:team])
-        format.xml  { render :status => 200, :template=>"shared/requests_with_teams" }
-      end
+        render :action=>"index_team"
     else # 显示队伍所有邀请的用户
-      respond_to do |format|
         @requests = TeamJoinRequest.find_all_by_team_id_and_is_invitation(params[:team_id], true, :include=>[:user])
-        format.xml  { render :status => 200, :template=>"shared/requests_with_users" }
-      end
-    end
-  rescue ActiveRecord::RecordNotFound => e
-    respond_to do |format|
-      format.xml {head 404}
+        render :action=>"index_user"
     end
   end
   
@@ -25,47 +21,32 @@ class TeamJoinInvitationsController < ApplicationController
     @team = Team.find(params[:team_join_request][:team_id])
     @user = User.find(params[:team_join_request][:user_id])
     if (!@team.users.admin.include?(self.current_user)) # 管理员才可以邀请
-      respond_to do |format|
-        format.xml {head 401}
-      end
+      fake_params_redirect
       return
     end
-    if (@team.users.include?(@user)) # 如果已经在球队中，不能邀请
-      respond_to do |format|
-        format.xml {head 400}
-      end
+    if (@team.users.include?(@user)) # 如果已经在球队中，不能邀请     
+      fake_params_redirect
       return
     end
     params[:team_join_request][:is_invitation] = true;
     @tjs = TeamJoinRequest.new(params[:team_join_request])
-    respond_to do |format|
-      if @tjs.save
-        format.xml  { render :xml => @tjs.to_xml(:dasherize=>false), :status => 200, :location => @tjs }
-      else
-        format.xml  { render :xml => @tjs.errors.to_xml_full, :status => 200 }
-      end
-    end
-  rescue ActiveRecord::RecordNotFound => e
-    respond_to do |format|
-      format.xml {head 404}
+    if @tjs.save
+      redirect_to team_path(@team)
+      return
+    else
+      render :action=>"new",:user_id=>@user.id
     end
   end
+  
+    
   
   def destroy
     @tjs = TeamJoinRequest.find(params[:id])
     if !@tjs.can_destroy_by?(self.current_user)
-      respond_to do |format|
-        format.xml  { head 401 }
-      end
+      fake_params_redirect
       return
     end
     @tjs.destroy
-    respond_to do |format|
-      format.xml { head 200}
-    end
-  rescue ActiveRecord::RecordNotFound => e
-    respond_to do |format|
-      format.xml {head 404}
-    end
+    redirect_back
   end
 end

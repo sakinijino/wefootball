@@ -36,3 +36,11 @@
 <%end%>
 
 <p><%=simple_format @user.summary%></p>
+
+<%if @user.id != current_user.id%>
+  <%= link_to("发信", new_message_path(:to=>@user.id))%>
+  <%= link_to_if(!current_user.is_my_friend?(@user), "加为好友", 
+                  new_friend_invitation_path(:host_id=>@user.id)){}%>
+  <%= link_to_if(current_user.is_my_friend?(@user), "不和他玩", 
+                  friend_relation_path(:user_id=>@user.id),:method=>"delete"){}%>
+<%end%>

@@ -1,55 +1,47 @@
 class TeamsController < ApplicationController
   before_filter :login_required, :only=>[:create, :update]
   
+  def new
+  end
+
+  def edit
+    @team = Team.find(params[:id])
+    rescue ActiveRecord::RecordNotFound => e
+      fake_params_redirect    
+  end   
+  
   # GET /users/:user_id/teams.xml
   def index #列出用户参加的所有球队
     @user = User.find(params[:user_id])
-    respond_to do |format|
-      @teams = @user.teams
-      format.xml  { render :xml => @teams.to_xml(:dasherize=>false, :except=>[:summary]), :status => 200 }
-    end
+    @teamsList = @user.teams
   rescue ActiveRecord::RecordNotFound => e
-    respond_to do |format|
-      format.xml {head 404}
-    end
+    fake_params_redirect
   end
   
   # GET /teams/search.xml?query
   def search
-    @teams = Team.find_by_contents(params[:query])
-    respond_to do |format|
-      format.xml  {
-        render :xml=> @teams.to_xml(:dasherize=>false, :only=>[:id, :name, :shortname]), :status => 200 
-      }
-    end
+    @teams = Team.find_by_contents(params[:q])
   end
 
  # GET /teams/1.xml
   def show
     @team = Team.find(params[:id])
-    respond_to do |format|
-      format.xml  { render :xml => @team.to_xml(:dasherize=>false) }
-    end
   rescue ActiveRecord::RecordNotFound => e
-    respond_to do |format|
-      format.xml {head 404}
-    end
+    fake_params_redirect
   end
 
   # POST /teams.xml
   def create
     @team = Team.new(params[:team])
-    respond_to do |format|
-      if @team.save
-        @tu = UserTeam.new
-        @tu.team = @team
-        @tu.user = self.current_user
-        @tu.is_admin = true
-        @tu.save
-        format.xml  { render :xml => @team.to_xml(:dasherize=>false), :status => 200, :location => @team }
-      else
-        format.xml  { render :xml => @team.errors.to_xml_full, :status => 200 }
-      end
+    if @team.save
+      @tu = UserTeam.new
+      @tu.team = @team
+      @tu.user = self.current_user
+      @tu.is_admin = true
+      @tu.save
+      redirect_to team_path(@team)
+    else
+      render :action=>"new"
     end
   end
 
@@ -57,37 +49,24 @@ class TeamsController < ApplicationController
   def update
     @team = Team.find(params[:id])
     if (!@team.users.admin.include?(self.current_user))
-      respond_to do |format|
-        format.xml  { head 401 }
-      end
+      fake_params_redirect
       return
     end
-    respond_to do |format|
-      if @team.update_attributes(params[:team])
-        format.xml  { render :xml => @team.to_xml(:dasherize=>false), :status => 200, :location => @team }
-      else
-        format.xml  { render :xml => @team.errors.to_xml_full, :status => 400 }
-      end
-    end
-  rescue ActiveRecord::RecordNotFound => e
-    respond_to do |format|
-      format.xml {head 404}
-    end
+    if @team.update_attributes(params[:team])
+      redirect_to team_path(params[:id])
+    else
+      render :action=>"edit"
+    end 
+    rescue ActiveRecord::RecordNotFound => e
+      fake_params_redirect
   end
   
    # GET /users/:user_id/teams/admin.xml
-  def admin #列出用户参加的所有球队
+  def admin #列出用户管理的所有球队
     @user = User.find(params[:user_id])
-    @teams = @user.teams.admin
-    respond_to do |format|   
-      format.xml  { render :xml => @teams.to_xml(:dasherize=>false, :only=>[:id,:shortname]), :status => 200 }
+    @teamsList = @user.teams.admin
+    render :action=>"index"
     end
-  rescue ActiveRecord::RecordNotFound => e
-    respond_to do |format|
-      format.xml {head 404}
-    end
-  end
-
   protected
   def update_image
     if (@team.team_image==nil)

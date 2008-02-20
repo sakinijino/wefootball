@@ -57,7 +57,7 @@ ActionController::Routing::Routes.draw do |map|
   
   map.resources :sessions
   map.resources :friend_relations
-  map.resources :pre_friend_relations, :collection => { :count => :get }
+  map.resources :friend_invitations, :collection => { :count => :get }
   map.resources :messages
   map.connect ':controller/:action/:id'
   map.connect ':controller/:action/:id.:format'
