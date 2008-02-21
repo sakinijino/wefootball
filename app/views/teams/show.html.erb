@@ -18,10 +18,9 @@
   <%=simple_format @team.summary%>
 </p>
 
-<%#if @user.id != current_user.id%>
-  <%#= link_to("发信", new_message_path(:to=>@user.id))%>
+<%= link_to_if(current_user.is_team_member_of?(@team),"退出球队",
+  "/users/#{current_user.id}/teams/#{@team.id}/team_joins/0",:method=>:delete){}%>
   <%#= link_to_if(!current_user.is_my_friend?(@user), "加为好友", 
                   new_friend_invitation_path(:host_id=>@user.id)){}%>
   <%#= link_to_if(current_user.is_my_friend?(@user), "不和他玩", 
                   friend_relation_path(:user_id=>@user.id),:method=>"delete"){}%>
-<%#end%>

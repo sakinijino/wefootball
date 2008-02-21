@@ -20,25 +20,25 @@ class TeamJoinInvitationsController < ApplicationController
   def create
     @team = Team.find(params[:team_join_request][:team_id])
     @user = User.find(params[:team_join_request][:user_id])
-    if (!@team.users.admin.include?(self.current_user)) # 管理员才可以邀请
-      fake_params_redirect
-      return
-    end
-    if (@team.users.include?(@user)) # 如果已经在球队中，不能邀请     
+    
+    # 管理员才可以邀请;
+    # 如果已经在球队中，也不能邀请    
+    if (!current_user.is_team_admin_of?(@team)||@user.is_team_member_of?(@team))
       fake_params_redirect
       return
     end
     params[:team_join_request][:is_invitation] = true;
-    @tjs = TeamJoinRequest.new(params[:team_join_request])
-    if @tjs.save
+    @tjs = TeamJoinRequest.find_or_initialize_by_team_id_and_user_id(@team.id,@user.id)    
+    @tjs.team = @team
+    @tjs.user = @user
+    if @tjs.update_attributes(params[:team_join_request])
       redirect_to team_path(@team)
-      return
     else
-      render :action=>"new",:user_id=>@user.id
+      @user_id = @user.id
+      @teams = current_user.teams.admin.map{|t| [t.shortname,t.id]}
+      render :action=>"new"
     end
-  end
-  
-    
+  end   
   
   def destroy
     @tjs = TeamJoinRequest.find(params[:id])

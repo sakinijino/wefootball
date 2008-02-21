@@ -1,0 +1,22 @@
+<div>
+  <h1>加入的用户列表</h1>
+</div>
+
+<%@uts.each do |ut| %>
+  <div>
+    <%=link_to ut.user.nickname, user_path(ut.user.id)%>
+    <%=link_to_if(ut.can_destroy_by?(current_user),"逐出球队",user_team_team_join_path(ut.user.id,@team_id,0),:method=>:delete){}%>
+    <%=link_to_if(ut.can_promote_as_admin_by?(current_user),"提成管理员",
+      user_team_team_join_path(ut.user.id,@team_id,0,:team_join=>{:is_admin=>true}),
+        :method=>:put){}%>
+    <%=link_to_if(ut.can_degree_as_common_user_by?(current_user),"降为普通用户",
+      user_team_team_join_path(ut.user.id,@team_id,0,:team_join=>{:is_admin=>false}),
+        :method=>:put){}%>
+  </div>
+<%end%>
+
+<%#= link_to 'Previous page', admin_user_url({ :page => @user_pages.current.previous }) if @user_pages.current.previous %>
+<%#= link_to 'Next page', admin_user_url({ :page => @user_pages.current.next }) if @user_pages.current.next %> 
+
+
+

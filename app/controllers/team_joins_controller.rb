@@ -1,13 +1,25 @@
 class TeamJoinsController < ApplicationController
   before_filter :login_required
   
+  def index
+    store_location
+    if (params[:user_id]) # 显示用户参加的所有队伍
+        @uts = UserTeam.find_all_by_user_id(params[:user_id],:include=>[:team])
+        render :action=>"index_team"
+    else # 显示队伍的所有成员
+        @uts = UserTeam.find_all_by_team_id(params[:team_id],:include=>[:user])
+        @team_id = params[:team_id]
+        render :action=>"index_user"
+    end
+  end  
+  
   # POST /team_joins.xml
   def create
     @tjs = TeamJoinRequest.find(params[:id]) # 根据一个加入球队的请求来创建
     @user =@tjs.user
     @team = @tjs.team   
     
-    if (@team.users.include?(@user)) #如果已经在球队中不能申请加入
+    if (@user.is_team_member_of?(@team)) #如果已经在球队中不能申请加入
       fake_params_redirect
       return
     end
@@ -21,8 +33,6 @@ class TeamJoinsController < ApplicationController
     @tu.user = @user
     @tu.save
     redirect_back
-  rescue ActiveRecord::RecordNotFound => e
-    fake_params_redirect
   end
   
   # PUT /users/:user_id/teams/:team_id/team_joins.xml
@@ -30,24 +40,14 @@ class TeamJoinsController < ApplicationController
     @tj = UserTeam.find_by_user_id_and_team_id(params[:user_id], params[:team_id])
     @user =@tj.user
     @team = @tj.team
-    if (!@team.users.admin.include?(self.current_user))
-      respond_to do |format|
-        format.xml  { head 401 }
-      end
+    if (!current_user.is_team_admin_of?(@team))
+      fake_params_redirect
       return
     end
-    respond_to do |format|
-      params[:team_join].delete :user_id #不能修改user_id和team_id
-      params[:team_join].delete :team_id
-      if @tj.update_attributes(params[:team_join])
-        format.xml  { render :xml => @tj.to_xml(:dasherize=>false), :status => 200 }
-      else
-        format.xml  { render :xml => @tj.errors.to_xml_full, :status => 400 }
-      end
-    end
-  rescue ActiveRecord::RecordNotFound => e
-    respond_to do |format|
-      format.xml {head 404}
+    if @tj.update_attributes(params[:team_join])
+      redirect_to team_joins_path(:team_id=>@team.id)
+    else
+      fake_params_redirect
     end
   end
   
@@ -59,8 +59,6 @@ class TeamJoinsController < ApplicationController
       return
     end
     @tj.destroy
-    redirect_to team_join_invitations_path
-  rescue ActiveRecord::RecordNotFound => e
-    fake_params_redirect
+    redirect_back
   end
 end

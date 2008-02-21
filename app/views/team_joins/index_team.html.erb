@@ -1,0 +1,15 @@
+<div>
+  <h1>加入的球队列表</h1>
+</div>
+
+<%@uts.each do |ut| %>
+  <div>
+    <%=link_to ut.team.shortname, team_path(ut.team.id)%>
+  </div>
+<%end%>
+
+<%#= link_to 'Previous page', admin_user_url({ :page => @user_pages.current.previous }) if @user_pages.current.previous %>
+<%#= link_to 'Next page', admin_user_url({ :page => @user_pages.current.next }) if @user_pages.current.next %> 
+
+
+

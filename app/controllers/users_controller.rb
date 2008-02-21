@@ -10,10 +10,10 @@ class UsersController < ApplicationController
   # GET /trainings/:training_id/users.xml
   def index # 列出某个队伍的所有队员
     if (params[:team_id])
-      @team = Team.find(params[:team_id])
+      @team = Team.find(params[:team_id],:include=>[:users])
       @users = @team.users
     else #训练中的所有队员
-      @tr = Training.find(params[:training_id])
+      @tr = Training.find(params[:training_id],:include=>[:users])
       @users = @tr.users
     end
   end

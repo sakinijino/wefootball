@@ -131,11 +131,23 @@ class User < ActiveRecord::Base
   end
   
   def is_team_admin_of?(team)
-    UserTeam.find_by_user_id_and_team_id_and_is_admin(self.id, team.id, true) != nil
+    team_id = case team
+    when Team
+      team.id
+    else
+      team
+    end
+    UserTeam.find_by_user_id_and_team_id_and_is_admin(self.id, team_id, true) != nil
   end
   
   def is_team_member_of?(team)
-    UserTeam.find_by_user_id_and_team_id(self.id, team.id) != nil
+    team_id = case team
+    when Team
+      team.id
+    else
+      team
+    end    
+    UserTeam.find_by_user_id_and_team_id(self.id, team_id) != nil
   end
 
   protected

@@ -4,7 +4,10 @@ class FriendInvitation < ActiveRecord::Base
 
   validates_length_of :message, :maximum =>500  
   
+  attr_protected :applier_id, :host_id
+  
   def before_create
     self.apply_date = Date.today
-  end  
+  end
+  
 end

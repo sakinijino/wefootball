@@ -4,7 +4,7 @@
 
 <%= error_messages_for :friend_invitation %>
 
-<% form_for :friend_invitation, :url => friend_invitation_path, :method=>"POST" do |f| %>
+<% form_for :friend_invitation, :url => friend_invitations_path, :method=>"POST" do |f| %>
 
     <%= f.hidden_field :host_id,  :value=>@host_id%>
   

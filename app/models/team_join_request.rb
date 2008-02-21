@@ -2,6 +2,8 @@ class TeamJoinRequest < ActiveRecord::Base
   belongs_to :user
   belongs_to :team
   
+  attr_protected :user_id, :team_id  
+  
   validates_length_of  :message, :maximum => 500
   
   def before_create

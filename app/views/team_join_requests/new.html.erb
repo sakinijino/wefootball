@@ -5,7 +5,6 @@
 <%= error_messages_for :team_join_request %>
 
 <% form_for :team_join_request, :url => team_join_requests_path, :method=>"POST" do |f| %>
-    <%= f.hidden_field :user_id,  :value=>current_user.id%>
     <%= f.hidden_field :team_id,  :value=>@team_id%> 
 
   <p>

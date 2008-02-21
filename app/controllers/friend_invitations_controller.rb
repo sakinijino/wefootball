@@ -29,24 +29,16 @@ class FriendInvitationsController < ApplicationController
       fake_params_redirect
       return
     end
-    
-    @friend_invitation = FriendInvitation.find_by_applier_id_and_host_id(
+
+    @friend_invitation = FriendInvitation.find_or_initialize_by_applier_id_and_host_id(
       current_user.id, params[:friend_invitation][:host_id])
-    
-    if (@friend_invitation==nil)
-      params[:friend_invitation][:applier_id] = current_user.id.to_s
-      @friend_invitation = FriendInvitation.new(params[:friend_invitation])
-      if @friend_invitation.save
-         redirect_to user_path(@host.id)
-      else
-         render :action=>"new",:host_id=>@host.id
-      end
+    @friend_invitation.host = @host
+    @friend_invitation.applier = @applier
+    if @friend_invitation.update_attributes(params[:friend_invitation])
+      redirect_to user_path(@host.id)
     else
-      if @friend_invitation.update_attributes(params[:friend_invitation])
-        redirect_to user_path(@host.id)
-      else
-         render :action=>"new",:host_id=>@host.id
-      end
+      @host_id = @host.id
+      render :action=>"new"
     end
   end
 
