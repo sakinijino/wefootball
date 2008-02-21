@@ -129,6 +129,14 @@ class User < ActiveRecord::Base
     return self.user_image.public_filename if self.user_image != nil
     DEFAULT_IMAGE
   end
+  
+  def is_team_admin_of?(team)
+    UserTeam.find_by_user_id_and_team_id_and_is_admin(self.id, team.id, true) != nil
+  end
+  
+  def is_team_member_of?(team)
+    UserTeam.find_by_user_id_and_team_id(self.id, team.id) != nil
+  end
 
   protected
     # before filter 

@@ -1,7 +1,14 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
 class UserTeamTest < ActiveSupport::TestCase
-  # Replace this with your real tests.
+  def test_user_is_of
+    assert users(:saki).is_team_member_of?(teams(:inter))
+    assert !users(:aaron).is_team_member_of?(teams(:inter))
+    
+    assert users(:saki).is_team_admin_of?(teams(:inter))
+    assert !users(:aaron).is_team_admin_of?(teams(:inter))
+    assert !users(:aaron).is_team_admin_of?(teams(:milan))
+  end
   def test_through
     assert_equal 2,  users(:saki).teams.length
     assert_equal 2, users(:saki).teams.admin.length

@@ -1,8 +1,11 @@
 class UserImage < ActiveRecord::Base
+  WIDTH = 48
+  HEIGHT = 48
+  
   belongs_to :user
   has_attachment  :storage => :file_system, 
                   :content_type => :image, 
-                  :resize_to => '50x50!',
+                  :resize_to => '48x48!',
                   :path_prefix => 'public/images/users',
                   :max_size => 2.megabytes,
                   :processor => :MiniMagick # attachment_fu looks in this order: ImageScience, Rmagick, MiniMagick

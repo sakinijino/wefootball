@@ -1,5 +1,5 @@
 <%= error_messages_for :team %>
-<% form_for @team, :url => team_path(@team.id), :method=>"PUT" do |f| -%>
+<% form_for @team, :url => team_path(@team.id), :method=>"PUT" do |f| %>
 
 <p><label for="name">球队名称</label><br/>
 <%= f.text_field :name %></p>
@@ -8,7 +8,7 @@
 <%= f.text_field :shortname %></p>
 
 <p><label for="found_time">建队日期</label><br/>
-<%= f.datetime_select :found_time, :discard_hour=>true, :discard_minute=>true  %>
+<%= f.date_select :found_time, :start_year=>1900, :end_year=>Date.today.year %></p>
 
 <p><label for="style">球队风格</label><br/>
 <%= f.text_field :style %></p>
@@ -17,5 +17,17 @@
 <%= f.text_area :summary %></p>
 
 <p><%= submit_tag '修改' %></p>
-<% end -%>
+<% end %>
+
+<% form_for(@team, :html => { :multipart => true }) do |f| %>
+  <%= team_image_tag @team %>
+  <p>
+    <label>更改队标</label><br/>
+    <%= f.file_field  :uploaded_data %>
+  </p>
+
+  <p>
+    <%= f.submit "Update" %>
+  </p>
+<% end %>
 

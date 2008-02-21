@@ -1,8 +1,11 @@
 class TeamImage < ActiveRecord::Base
+  WIDTH = 100
+  HEIGHT = 100
+  
   belongs_to :team
   has_attachment  :storage => :file_system, 
                   :content_type => :image, 
-                  :resize_to => '50x50!',
+                  :resize_to => '100x100!',
                   :path_prefix => 'public/images/teams',
                   :max_size => 2.megabytes,
                   :processor => :MiniMagick # attachment_fu looks in this order: ImageScience, Rmagick, MiniMagick

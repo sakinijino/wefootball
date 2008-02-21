@@ -1,12 +1,7 @@
-<p>
-  <label>队伍名称</label>
-  <%=h @team.name%>
-</p>
+<h1><%=h @team.name%></h1>
+<h2><%=h @team.shortname%></h2>
 
-<p>
-  <label>队伍简称</label>
-  <%=h @team.shortname%>
-</p>
+<%= team_image_tag @team%>
 
 <p>
   <label>建队日期</label>

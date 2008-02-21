@@ -5,17 +5,17 @@ class TeamsController < ApplicationController
   end
 
   def edit
-    @team = Team.find(params[:id])
-    rescue ActiveRecord::RecordNotFound => e
-      fake_params_redirect    
+    @team = Team.find(params[:id], :include=>[:team_image])
+    if (!self.current_user.is_team_admin_of?(@team))
+      fake_params_redirect
+      return
+    end
   end   
   
   # GET /users/:user_id/teams.xml
   def index #列出用户参加的所有球队
     @user = User.find(params[:user_id])
     @teamsList = @user.teams
-  rescue ActiveRecord::RecordNotFound => e
-    fake_params_redirect
   end
   
   # GET /teams/search.xml?query
@@ -25,9 +25,7 @@ class TeamsController < ApplicationController
 
  # GET /teams/1.xml
   def show
-    @team = Team.find(params[:id])
-  rescue ActiveRecord::RecordNotFound => e
-    fake_params_redirect
+    @team = Team.find(params[:id], :include=>[:team_image])
   end
 
   # POST /teams.xml
@@ -47,18 +45,28 @@ class TeamsController < ApplicationController
 
  # PUT /teams/1.xml
   def update
-    @team = Team.find(params[:id])
-    if (!@team.users.admin.include?(self.current_user))
+    @team = Team.find(params[:id], :include=>[:team_image])
+    if (!self.current_user.is_team_admin_of?(@team))
       fake_params_redirect
       return
     end
-    if @team.update_attributes(params[:team])
-      redirect_to team_path(params[:id])
+    if (params[:team][:uploaded_data]!=nil)
+      if update_image
+        redirect_to edit_team_url(@team)
+      else
+        @team.team_image.errors.each do |attr, msg|
+          @team.errors.add(attr, msg)
+        end
+        @team.team_image.reload
+        render :action => "edit" 
+      end
     else
-      render :action=>"edit"
-    end 
-    rescue ActiveRecord::RecordNotFound => e
-      fake_params_redirect
+      if @team.update_attributes(params[:team])
+        redirect_to team_path(params[:id])
+      else
+        render :action=>"edit"
+      end
+    end
   end
   
    # GET /users/:user_id/teams/admin.xml
@@ -66,7 +74,7 @@ class TeamsController < ApplicationController
     @user = User.find(params[:user_id])
     @teamsList = @user.teams.admin
     render :action=>"index"
-    end
+  end
   protected
   def update_image
     if (@team.team_image==nil)
