@@ -62,7 +62,7 @@ class User < ActiveRecord::Base
   
   # prevents a user from submitting a crafted form that bypasses activation
   # anything else you want your user to change should be added here.
-  attr_accessible :login, :password, :password_confirmation
+  attr_accessible :password, :password_confirmation
   attr_accessible :nickname, :summary, :birthday, :favorite_star
   attr_accessible :is_playable, :weight, :height, :fitfoot, :premier_position
 

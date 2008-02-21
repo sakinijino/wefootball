@@ -5,7 +5,7 @@ class UserTeam < ActiveRecord::Base
   attr_protected :user_id, :team_id
   
   def can_destroy_by?(user)
-    return false if (self.team.users.admin.length==1 && self.team.users.admin.include?(self.user))
-    self.team.users.admin.include?(user) || self.user==user
+    return false if (self.team.users.admin.length==1 && self.user.is_team_admin_of?(self.team))
+    user.is_team_admin_of?(self.team) || self.user==user
   end
 end

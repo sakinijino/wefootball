@@ -32,6 +32,7 @@ class UsersController < ApplicationController
     params[:user][:nickname] = params[:user][:login].split('@')[0] if ( params[:user][:login]!=nil &&
       (!params[:user][:nickname] || params[:user][:nickname] == "")) 
     @user = User.new(params[:user])
+    @user.login = params[:user][:login]
     if @user.save
       self.current_user = @user
       redirect_back_or_default('/')
@@ -59,7 +60,6 @@ class UsersController < ApplicationController
       fake_params_redirect
       return
     end
-    params[:user].delete :login # login can not be modified
     @user=self.current_user
     if (params[:user][:uploaded_data]!=nil)
       if update_image
