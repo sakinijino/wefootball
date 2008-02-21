@@ -32,9 +32,12 @@ class UsersController < ApplicationController
     params[:user][:nickname] = params[:user][:login].split('@')[0] if ( params[:user][:login]!=nil &&
       (!params[:user][:nickname] || params[:user][:nickname] == "")) 
     @user = User.new(params[:user])
-    @user.save!
-    self.current_user = @user
-    redirect_back_or_default('/')
+    if @user.save
+      self.current_user = @user
+      redirect_back_or_default('/')
+    else
+      render :action=>'new'
+    end
   end
   
   def show

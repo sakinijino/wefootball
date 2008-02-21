@@ -15,10 +15,18 @@ class TrainingTest < ActiveSupport::TestCase
   end
   
   def test_can_join
-    assert trainings(:training1).already_join?(users(:saki))
-    assert !trainings(:training1).already_join?(users(:quentin))
-    assert trainings(:training1).can_join?(users(:quentin))
-    assert !trainings(:training1).can_join?(users(:saki))
-    assert !trainings(:training1).can_join?(users(:mike1))
+    assert trainings(:training1).has_member?(users(:saki))
+    assert !trainings(:training1).has_member?(users(:quentin))
+    assert trainings(:training1).can_be_joined_by?(users(:quentin))
+    assert !trainings(:training1).can_be_joined_by?(users(:saki))
+    assert !trainings(:training1).can_be_joined_by?(users(:mike1))
+  end
+  
+  def test_no_accessible
+    @t = trainings(:training1)
+    tid = @t.team_id
+    @t.update_attributes(:team_id=>2, :location=>'Shanghai')
+    assert_equal tid, @t.team_id
+    assert_equal 'Shanghai', @t.location
   end
 end

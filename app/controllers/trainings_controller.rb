@@ -1,107 +1,74 @@
 class TrainingsController < ApplicationController
   before_filter :login_required
 
-  # GET /users/:user_id/trainings.xml
-  # GET /teams/:team_id/trainings.xml
+  # GET /users/:user_id/trainings
+  # GET /teams/:team_id/trainings
   def index
     if (params[:user_id]) #显示用户参与的训练
-      @user = User.find(params[:user_id])
-      respond_to do |format|
-        @trainings = @user.trainings
-        format.xml  { render :xml => @trainings.to_xml(:dasherize=>false), :status => 200  }
-      end
+      @user = User.find(params[:user_id], :include=>:trainings)
+      @trainings = @user.trainings
+      render :action=>'index_user'
     else #显示队伍的所有训练
-      @team = Team.find(params[:team_id])
-      respond_to do |format|
-        @trainings = @team.trainings
-        format.xml  { render :xml => @trainings.to_xml(:dasherize=>false), :status => 200  }
-      end
-    end
-  rescue ActiveRecord::RecordNotFound => e
-    respond_to do |format|
-      format.xml {head 404}
+      @team = Team.find(params[:team_id], :include=>:trainings)
+      @trainings = @team.trainings
+      render :action=>'index_team'
     end
   end
 
   # GET /trainings/1
   # GET /trainings/1.xml
   def show
-    @training = Training.find(params[:id])
-    respond_to do |format|
-      format.xml  { render :xml => @training.to_xml(:dasherize=>false) }
-    end
-  rescue ActiveRecord::RecordNotFound => e
-    respond_to do |format|
-      format.xml {head 404}
-    end
+    @training = Training.find(params[:id], :include=>[:team, :users])
+  end
+  
+  def new
+    @team = Team.find(params[:team_id])
+    fake_params_redirect if (!current_user.is_team_admin_of?(@team))
   end
 
   # POST /trainings
-  # POST /trainings.xml
-  # POST /teams/:team_id/trainings.xml
   def create
     @team = Team.find(params[:training][:team_id])
-    if (!@team.users.admin.include?(self.current_user))
-      respond_to do |format|
-        format.xml {head 401}
-      end
+    if (!current_user.is_team_admin_of?(@team))
+      fake_params_redirect
       return
     end
     @training = Training.new(params[:training])
-    respond_to do |format|
-      if @training.save
-        format.xml  { render :xml => @training.to_xml(:dasherize=>false), :status => 200, :location => @training }
-      else
-        format.xml  { render :xml => @training.errors.to_xml_full, :status => 200 }
-      end
-    end
-  rescue ActiveRecord::RecordNotFound => e
-    respond_to do |format|
-      format.xml {head 404}
+    @training.team = @team
+    if @training.save
+      redirect_to training_path(@training)
+    else
+      render :action=>"new"
     end
   end
-
+  
+  def edit
+    @training = Training.find(params[:id], :include=>[:team])
+    @team = @training.team
+    fake_params_redirect if (!current_user.is_team_admin_of?(@training.team))
+  end
+  
   # PUT /trainings/1
-  # PUT /trainings/1.xml
   def update
-    @training = Training.find(params[:id])
-    if (!@training.team.users.admin.include?(self.current_user))
-      respond_to do |format|
-        format.xml {head 401}
-      end
-      return
-    end
-    params[:training].delete :team_id
-    respond_to do |format|
-      if @training.update_attributes(params[:training])
-        format.xml  { render :xml => @training.to_xml(:dasherize=>false), :status => 200 }
-      else
-        format.xml  { render :xml => @training.errors.to_xml_full, :status => 200 }
-      end
-    end
-  rescue ActiveRecord::RecordNotFound => e
-    respond_to do |format|
-      format.xml {head 404}
+    @training = Training.find(params[:id], :include=>[:team])
+    if (!current_user.is_team_admin_of?(@training.team))
+      fake_params_redirect
+    elsif @training.update_attributes(params[:training])
+      redirect_to training_path(params[:id])
+    else
+      render :action=>'edit'
     end
   end
 
   # DELETE /trainings/1
-  # DELETE /trainings/1.xml
   def destroy
-    @training = Training.find(params[:id])
-    if (!@training.team.users.admin.include?(self.current_user))
-      respond_to do |format|
-        format.xml {head 401}
-      end
-      return
-    end
-    @training.destroy
-    respond_to do |format|
-      format.xml  { head :ok }
-    end
-  rescue ActiveRecord::RecordNotFound => e
-    respond_to do |format|
-      format.xml {head 404}
+    @training = Training.find(params[:id], :include=>[:team])
+    @team = @training.team
+    if (!current_user.is_team_admin_of?(@training.team))
+      fake_params_redirect
+    else
+      @training.destroy
+      redirect_to team_path(@team)
     end
   end
 end

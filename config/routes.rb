@@ -36,20 +36,19 @@ ActionController::Routing::Routes.draw do |map|
     users.resources :team_join_requests
     users.resources :team_join_invitations
     users.resources :trainings
-    users.resources :training_joins
   end
+  
   map.resources :teams, :collection => { :search => :get } do |teams|
     teams.resources :users
     teams.resources :team_join_requests
     teams.resources :team_join_invitations
     teams.resources :trainings
-    teams.resources :training_joins
   end
   
   map.resources :trainings do |trainings|
     trainings.resources :users
+    trainings.resources :training_joins
   end
-  map.resources :training_joins
   
   map.resources :team_join_requests
   map.resources :team_join_invitations
@@ -57,7 +56,7 @@ ActionController::Routing::Routes.draw do |map|
   
   map.resources :sessions
   map.resources :friend_relations
-  map.resources :friend_invitations, :collection => { :count => :get }
+  map.resources :friend_invitations
   map.resources :messages
   map.connect ':controller/:action/:id'
   map.connect ':controller/:action/:id.:format'

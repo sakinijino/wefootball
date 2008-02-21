@@ -8,19 +8,15 @@
   <%= @team.found_time%>
 </p>
 
-<%if @team.style!=nil%>
-  <p>
-    <label>球队风格</label>
-    <%=h @team.style%>
-  </p>
-<%end%>
+<p>
+  <label>球队风格</label>
+  <%=h @team.style%>
+</p>
 
-<%if @team.summary!=nil%>
-  <p>
-    <label>球队简介</label>
-    <%=simple_format @team.summary%>
-  </p>
-<%end%>
+<p>
+  <label>球队简介</label>
+  <%=simple_format @team.summary%>
+</p>
 
 <%#if @user.id != current_user.id%>
   <%#= link_to("发信", new_message_path(:to=>@user.id))%>

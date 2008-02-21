@@ -1,0 +1,19 @@
+<%= error_messages_for :training %>
+<% form_for :training, :url => trainings_path do |f| %>
+
+<p><label for="start_time">开始时间</label><br/>
+<%= f.datetime_select :start_time, :minute_step=>5 %></p>
+
+<p><label for="end_time">结束时间</label><br/>
+<%= f.datetime_select :end_time, :minute_step=>5 %></p>
+
+<p><label for="location">地点</label><br/>
+<%= f.text_field :location %></p>
+  
+<p><label for="summary">说明</label><br/>
+<%= f.text_area :summary %></p>
+
+<%= f.hidden_field :team_id, :value=>@team.id%>
+
+<p><%= submit_tag '创建' %></p>
+<% end %>

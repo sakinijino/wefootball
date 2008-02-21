@@ -6,10 +6,7 @@ class TeamsController < ApplicationController
 
   def edit
     @team = Team.find(params[:id], :include=>[:team_image])
-    if (!self.current_user.is_team_admin_of?(@team))
-      fake_params_redirect
-      return
-    end
+    fake_params_redirect if (!self.current_user.is_team_admin_of?(@team))
   end   
   
   # GET /users/:user_id/teams.xml
@@ -32,11 +29,9 @@ class TeamsController < ApplicationController
   def create
     @team = Team.new(params[:team])
     if @team.save
-      @tu = UserTeam.new
-      @tu.team = @team
-      @tu.user = self.current_user
-      @tu.is_admin = true
-      @tu.save
+      ut = UserTeam.new({:is_admin=>true});
+      ut.user = current_user; ut.team = @team
+      ut.save
       redirect_to team_path(@team)
     else
       render :action=>"new"

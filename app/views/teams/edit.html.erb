@@ -1,5 +1,5 @@
 <%= error_messages_for :team %>
-<% form_for @team, :url => team_path(@team.id), :method=>"PUT" do |f| %>
+<% form_for @team do |f| %>
 
 <p><label for="name">球队名称</label><br/>
 <%= f.text_field :name %></p>
