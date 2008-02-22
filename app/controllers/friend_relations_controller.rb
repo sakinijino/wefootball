@@ -36,6 +36,6 @@ class FriendRelationsController < ApplicationController
   def destroy
     FriendRelation.destroy_all(["(user1_id = ? and user2_id = ?) or (user1_id = ? and user2_id = ?)", 
       current_user.id, params[:user_id], params[:user_id], current_user.id] )
-    redirect_to friend_relations_path
+    redirect_to user_view_path(params[:user_id])
   end
 end

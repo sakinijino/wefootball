@@ -2,8 +2,8 @@ class TeamJoinInvitationsController < ApplicationController
   before_filter :login_required
   
   def new
-    @teams = current_user.teams.admin.map{|t| [t.shortname,t.id]}
-    @user_id = params[:user_id]
+    @user = User.find(params[:user_id])
+    @teams = (current_user.teams.admin - @user.teams).map{|t| [t.shortname,t.id]}
   end
   
   def index
@@ -32,11 +32,9 @@ class TeamJoinInvitationsController < ApplicationController
     @tjs.team = @team
     @tjs.user = @user
     if @tjs.update_attributes(params[:team_join_request])
-      redirect_to team_path(@team)
+      redirect_to team_team_join_invitations_path(@team)
     else
-      @user_id = @user.id
-      @teams = current_user.teams.admin.map{|t| [t.shortname,t.id]}
-      render :action=>"new"
+      fake_params_redirect
     end
   end   
   

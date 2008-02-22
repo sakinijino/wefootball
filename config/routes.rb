@@ -36,7 +36,8 @@ ActionController::Routing::Routes.draw do |map|
     users.resources :team_join_requests
     users.resources :team_join_invitations
     users.resources :trainings
-  end
+  end 
+  map.resources :user_views
   
   map.resources :teams, :collection => { :search => :get } do |teams|
     teams.resources :users
@@ -44,6 +45,7 @@ ActionController::Routing::Routes.draw do |map|
     teams.resources :team_join_invitations
     teams.resources :trainings
   end
+  map.resources :team_views
   
   map.resources :trainings do |trainings|
     trainings.resources :users

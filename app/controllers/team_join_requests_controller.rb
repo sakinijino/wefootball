@@ -28,10 +28,9 @@ class TeamJoinRequestsController < ApplicationController
     @tjs.team = @team
     @tjs.user = @user
     if @tjs.update_attributes(params[:team_join_request])
-      redirect_to team_path(@team)
+      redirect_to team_view_path(@team)
     else
-      @team_id = @team.id
-      render :action=>"new"
+      fake_params_redirect
     end
   end
   

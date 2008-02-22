@@ -4,13 +4,22 @@ class Team < ActiveRecord::Base
   has_one :team_image
   
   has_many :trainings,
-            :dependent => :destroy
+            :dependent => :destroy do
+    def recent(limit=nil, timeline=Time.now)
+      find :all, :conditions => ['start_time > ?', timeline], 
+        :order=>'start_time', 
+        :limit=>limit
+    end
+  end
   
   has_many :user_teams,
             :dependent => :destroy
   has_many :users, :through=>:user_teams do
     def admin
       find :all, :conditions => ['is_admin = ?', true]
+    end
+    def limit(num=nil)
+      find :all, :limit=>num
     end
   end
   

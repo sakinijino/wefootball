@@ -35,10 +35,9 @@ class FriendInvitationsController < ApplicationController
     @friend_invitation.host = @host
     @friend_invitation.applier = @applier
     if @friend_invitation.update_attributes(params[:friend_invitation])
-      redirect_to user_path(@host.id)
+      redirect_to user_view_path(@host.id)
     else
-      @host_id = @host.id
-      render :action=>"new"
+      fake_params_redirect
     end
   end
 

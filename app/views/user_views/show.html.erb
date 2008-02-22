@@ -1,0 +1,94 @@
+<h1><%= h @user.nickname %></h1>
+<%= user_image_tag @user %>
+
+<p>
+  <label>生日</label>
+  <%= @user.birthday%>
+</p>
+
+<p>
+  <label>喜欢的球星</label>
+  <%= @user.favorite_star%>
+</p>
+
+<p>
+    <label>个人简介</label>
+    <p><%=simple_format @user.summary%></p>
+</p>
+
+<%if @user.is_playable%>
+  <p>
+    <label>身高</label>
+    <%= @user.height%>cm
+  </p>
+  <p>
+    <label>体重</label>
+    <%= @user.weight%>kg
+  </p>
+  <p>
+    <label>惯用脚</label>
+    <%=fitfoot_text @user.fitfoot%>
+  </p>
+  <p>
+    <label>首选位置</label>
+    <%=position_text @user.premier_position%>
+  </p>
+  <p>
+    <label>可以踢的位置</label>
+    <%=(@user.positions.map {|p| position_text p.label}).join(', ')%>
+  </p>
+<%end%>
+
+<%if @user.id != current_user.id%>
+  <%= link_to("发信", new_message_path(:to=>@user.id))%>
+  <%= link_to("邀请入队", new_user_team_join_invitation_path(@user))%>
+  <%if !current_user.is_my_friend?(@user)%>
+    <%= error_messages_for :friend_invitation %>
+    <% form_for :friend_invitation, :url => friend_invitations_path, :method=>"POST" do |f| %>
+      <%= f.hidden_field :host_id,  :value=>@user.id%>
+      <p>
+        <b>留言</b><br />
+        <%= f.text_area :message %>
+      </p>
+      <p>
+        <%= f.submit "邀请" %>
+      </p>
+    <% end %>
+  <%else%>
+    <%= link_to("不和他玩", friend_relation_path(0, :user_id=>@user.id),:method=>"delete")%>
+  <%end%>
+<%end%>
+
+<h1><%=h @user.nickname%>的朋友</h1>
+<%@friends.each do |user| %>
+  <dl>
+    <dt><%=link_to  user_image_tag(user), user_view_path(user.id) %></dt>
+    <dd><%=link_to user.nickname, user_view_path(user.id)%></dd>
+  </dl>
+<%end%>
+
+<h1><%=h @user.nickname%>加入的球队</h1>
+<%@teams.each do |team| %>
+  <dl>
+    <dt><%=link_to  team_image_tag(team), team_view_path(team.id) %></dt>
+    <dd><%=link_to team.shortname, team_view_path(team.id)%></dd>
+  </dl>
+<%end%>
+
+<h1><%=h @user.nickname%>最近的训练</h1>
+<table>
+  <tr>
+    <th>日期</th>
+    <th>时间</th>
+    <th>地点</th>
+    <th></th>
+  </tr>
+  <%@trainings.each do |t|%>
+    <tr>
+      <td><%= t.start_time.strftime('%Y-%m-%d')%></td>
+      <td><%= t.start_time.strftime('%H-%M')%>-<%= t.end_time.strftime('%H-%M')%></td>
+      <td><%=h t.location%></td>
+      <td><%=link_to '查看', training_path(t)%></td>
+    </tr>
+  <%end%>
+</table>

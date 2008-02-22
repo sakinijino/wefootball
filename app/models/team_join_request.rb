@@ -5,6 +5,10 @@ class TeamJoinRequest < ActiveRecord::Base
   attr_protected :user_id, :team_id  
   
   validates_length_of  :message, :maximum => 500
+
+  def before_validation
+    self.message = self.message.slice(0, 500)
+  end
   
   def before_create
     self.apply_date = Date.today

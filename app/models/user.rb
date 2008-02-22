@@ -17,6 +17,9 @@ class User < ActiveRecord::Base
     def admin
       find :all, :conditions => ['is_admin = ?', true]
     end
+    def limit(num=nil)
+      find :all, :limit=>num
+    end
   end
   
   has_many :team_join_requests,
@@ -24,7 +27,13 @@ class User < ActiveRecord::Base
   
   has_many :training_joins,
             :dependent => :destroy
-  has_many :trainings, :through=>:training_joins
+  has_many :trainings, :through=>:training_joins do
+    def recent(limit=nil, timeline=Time.now)
+      find :all, :conditions => ['start_time > ?', timeline], 
+        :order=>'start_time', 
+        :limit=>limit
+    end
+  end
 
   validates_presence_of     :login, :nickname
   validates_format_of       :login, 
@@ -41,6 +50,7 @@ class User < ActiveRecord::Base
   validates_length_of       :summary, :maximum => 500
   validates_length_of       :favorite_star, :maximum => 50
   
+  validates_numericality_of :weight, :height, :allow_nil =>true
   validates_inclusion_of    :weight, :in => 0..400, :allow_nil =>true,
     :message => '... Are you kidding me?'
   validates_inclusion_of    :height, :in => 0..250, :allow_nil =>true,
@@ -115,14 +125,14 @@ class User < ActiveRecord::Base
     FriendRelation.are_friends?(self.id, user.id)
   end
 
-  def friends
-    friends_id_list = FriendRelation.find(:all,
+  def friends(limit=nil)
+    friends_list = FriendRelation.find(:all,
                                           :select => 'user1_id, user2_id',
-                                          :conditions => ["user1_id=:uid or user2_id=:uid",{:uid=>self.id}]
+                                          :conditions => ["user1_id=:uid or user2_id=:uid",{:uid=>self.id}],
+                                          :limit=>limit,
+                                          :include=>[:user1, :user2]
                                          )
-                   
-    friends_id_list = (friends_id_list.map{|x|[x.user1_id,x.user2_id]}).flatten.reject {|id| id == self.id}
-    User.find(friends_id_list)
+    friends_list.map{|fr|[fr.user1, fr.user2]}.flatten.reject {|u| u==self}
   end
   
   def image

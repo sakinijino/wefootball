@@ -2,22 +2,26 @@
   <h1>加入球队邀请</h1>
 </div>
 
-<%= error_messages_for :team_join_request %>
+<%if !@teams.empty?%>
+  <%= error_messages_for :team_join_request %>
 
-<% form_for :team_join_request, :url => team_join_invitations_path, :method=>"POST" do |f| %>
-    <%= f.hidden_field :user_id,  :value=>@user_id%>    
-  
-  <p>
-    <b>球队</b><br />
-    <%= f.select :team_id, @teams %>
-  </p>
+  <% form_for :team_join_request, :url => team_join_invitations_path, :method=>"POST" do |f| %>
+      <%= f.hidden_field :user_id,  :value=>@user.id%>    
 
-  <p>
-    <b>留言</b><br />
-    <%= f.text_area :message %>
-  </p>  
+    <p>
+      <b>球队</b><br />
+      <%= f.select :team_id, @teams %>
+    </p>
 
-  <p>
-    <%= f.submit "邀请" %>
-  </p>
-<% end %>
+    <p>
+      <b>留言</b><br />
+      <%= f.text_area :message %>
+    </p>  
+
+    <p>
+      <%= f.submit "邀请" %>
+    </p>
+  <% end %>
+<%else%>
+    <span>加无可加</span>
+<%end%>
