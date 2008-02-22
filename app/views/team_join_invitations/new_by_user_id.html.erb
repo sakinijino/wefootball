@@ -10,7 +10,7 @@
 
     <p>
       <b>球队</b><br />
-      <%= f.select :team_id, @teams %>
+      <%= f.select :team_id, @teams.map{|t| [t.shortname,t.id]} %>
     </p>
 
     <p>

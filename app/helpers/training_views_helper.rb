@@ -1,0 +1,2 @@
+module TrainingViewsHelper
+end

@@ -5,10 +5,6 @@ class FriendInvitationsController < ApplicationController
   def index
     #only return the quests for current user
     @friend_invitations = FriendInvitation.find_all_by_host_id(current_user.id,:include=>[:applier])
-    respond_to do |format|
-      format.html # index.html.erb
-      format.xml  {render :status => 200}
-    end
   end
   
   # render new.rhtml

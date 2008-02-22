@@ -1,0 +1,35 @@
+<p>
+  <label>队伍</label>
+  <%= link_to @training.team.name, team_view_path(@training.team)%>
+</p>
+
+<p>
+  <label>时间</label>
+  <%= @training.start_time.strftime('%Y-%m-%d')%> <%= @training.start_time.strftime('%H:%M')%>-<%= @training.end_time.strftime('%H:%M')%>
+</p>
+
+<p>
+  <label>地点</label>
+  <%=h @training.location%>
+</p>
+
+<p>
+  <label>说明</label>
+  <%=simple_format @training.summary%>
+</p>
+
+<%=link_to_if(@training.can_be_joined_by?(current_user), '加入', training_training_joins_path(@training), :method=>'post'){} %>
+<%=link_to_if(@training.has_member?(current_user), '退出', training_training_join_path(@training, 0), :method=>'delete'){} %>
+
+<%if current_user.is_team_admin_of?(@training.team)%>
+  <%=link_to '修改', edit_training_path(@training)%>
+  <%=link_to '删除', training_path(@training), :method=>'delete'%>
+<%end%>
+  
+<h1>要参加这次训练的人</h1>
+<%@training.users.each do |user|%>
+  <dl>
+    <dt><%=link_to  user_image_tag(user), user_view_path(user.id) %></dt>
+    <dd><%=link_to user.nickname, user_view_path(user.id)%></dd>
+  </dl>
+<%end%>

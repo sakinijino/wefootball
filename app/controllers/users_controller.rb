@@ -8,15 +8,15 @@ class UsersController < ApplicationController
   
   # GET /teams/:team_id/users.xml
   # GET /trainings/:training_id/users.xml
-  def index # 列出某个队伍的所有队员
-    if (params[:team_id])
-      @team = Team.find(params[:team_id],:include=>[:users])
-      @users = @team.users
-    else #训练中的所有队员
-      @tr = Training.find(params[:training_id],:include=>[:users])
-      @users = @tr.users
-    end
-  end
+#  def index # 列出某个队伍的所有队员
+#    if (params[:team_id])
+#      @team = Team.find(params[:team_id],:include=>[:users])
+#      @users = @team.users
+#    else #训练中的所有队员
+#      @tr = Training.find(params[:training_id],:include=>[:users])
+#      @users = @tr.users
+#    end
+#  end
   
   # GET /users/search.xml?query
   def search

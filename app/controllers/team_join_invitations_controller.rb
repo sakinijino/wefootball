@@ -2,8 +2,17 @@ class TeamJoinInvitationsController < ApplicationController
   before_filter :login_required
   
   def new
-    @user = User.find(params[:user_id])
-    @teams = (current_user.teams.admin - @user.teams).map{|t| [t.shortname,t.id]}
+    if (params[:user_id] != nil)
+      @user = User.find(params[:user_id], :include=>[:teams])
+      @teams = (current_user.teams.admin - @user.teams)
+      render :action => 'new_by_user_id'
+    elsif (params[:team_id] != nil)
+      @team = Team.find(params[:team_id], :include=>[:users])
+      @friends = (current_user.friends - @team.users)
+      render :action => 'new_by_team_id'
+    else
+      fake_params_redirect
+    end
   end
   
   def index

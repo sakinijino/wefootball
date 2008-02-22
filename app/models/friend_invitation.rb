@@ -7,7 +7,7 @@ class FriendInvitation < ActiveRecord::Base
   attr_protected :applier_id, :host_id
   
   def before_validation
-    self.message = self.message.slice(0, 500)
+    self.message = self.message.slice(0, 500) if self.message.jlength > 500
   end
   
   def before_create

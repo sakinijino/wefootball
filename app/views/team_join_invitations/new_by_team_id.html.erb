@@ -1,0 +1,23 @@
+<%if !@friends.empty?%>
+  <%= error_messages_for :team_join_request %>
+
+  <% form_for :team_join_request, :url => team_join_invitations_path, :method=>"POST" do |f| %>
+      <%= f.hidden_field :team_id,  :value=>@team.id%>    
+
+    <p>
+      <b>朋友</b><br />
+      <%= f.select :user_id, @friends.map{|u| [u.nickname,u.id]} %>
+    </p>
+
+    <p>
+      <b>留言</b><br />
+      <%= f.text_area :message %>
+    </p>  
+
+    <p>
+      <%= f.submit "邀请" %>
+    </p>
+  <% end %>
+<%else%>
+    <span>邀无可邀</span>
+<%end%>

@@ -10,10 +10,10 @@ class TeamsController < ApplicationController
   end   
   
   # GET /users/:user_id/teams.xml
-  def index #列出用户参加的所有球队
-    @user = User.find(params[:user_id])
-    @teamsList = @user.teams
-  end
+#  def index #列出用户参加的所有球队
+#    @user = User.find(params[:user_id])
+#    @teamsList = @user.teams
+#  end
   
   # GET /teams/search.xml?query
   def search
@@ -57,7 +57,7 @@ class TeamsController < ApplicationController
       end
     else
       if @team.update_attributes(params[:team])
-        redirect_to team_path(params[:id])
+        redirect_to edit_team_path(params[:id])
       else
         render :action=>"edit"
       end
