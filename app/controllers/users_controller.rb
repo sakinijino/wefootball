@@ -6,18 +6,6 @@ class UsersController < ApplicationController
   def new
   end
   
-  # GET /teams/:team_id/users.xml
-  # GET /trainings/:training_id/users.xml
-#  def index # 列出某个队伍的所有队员
-#    if (params[:team_id])
-#      @team = Team.find(params[:team_id],:include=>[:users])
-#      @users = @team.users
-#    else #训练中的所有队员
-#      @tr = Training.find(params[:training_id],:include=>[:users])
-#      @users = @tr.users
-#    end
-#  end
-  
   # GET /users/search.xml?query
   def search
     @users = User.find_by_contents(params[:q]) 
@@ -29,8 +17,6 @@ class UsersController < ApplicationController
     # request forgery protection.
     # uncomment at your own risk
     # reset_session
-    params[:user][:nickname] = params[:user][:login].split('@')[0] if ( params[:user][:login]!=nil &&
-      (!params[:user][:nickname] || params[:user][:nickname] == "")) 
     @user = User.new(params[:user])
     @user.login = params[:user][:login]
     if @user.save
@@ -109,7 +95,9 @@ class UsersController < ApplicationController
       params[:positions]=[]
     end
     if params[:user][:is_playable] == '1' # checked
-      params[:positions]=[] if (!params[:positions]) 
+      params[:positions]=[] if (!params[:positions])
+      params[:user][:premier_position] = 'GK' if (params[:user][:premier_position]==nil && params[:positions].length==0)
+      params[:user][:premier_position] = params[:positions][0] if (params[:user][:premier_position]==nil && params[:positions].length!=0)
       params[:positions]<<params[:user][:premier_position]
     end
     @user.positions.clear # poor performance, need refactoring

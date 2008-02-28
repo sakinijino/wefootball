@@ -3,7 +3,7 @@ class CreateMessages < ActiveRecord::Migration
     create_table :messages do |t|
       t.integer :sender_id
       t.integer :receiver_id
-      t.text :content, :limit=>2000
+      t.text :content
       t.string :subject, :limit=>200
       t.boolean :is_delete_by_sender, :default=>false
       t.boolean :is_delete_by_receiver, :default=>false

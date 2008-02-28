@@ -7,7 +7,13 @@ class Message < ActiveRecord::Base
   validates_length_of       :subject, :maximum =>200
   
   def can_read_by(user)
-    (self.sender_id == user.id && !self.is_delete_by_sender) || 
-      (self.receiver_id == user.id && !self.is_delete_by_receiver)
+    user_id = case user
+    when User
+      user.id
+    else
+      user
+    end
+    (self.sender_id == user_id && !self.is_delete_by_sender) || 
+      (self.receiver_id == user_id && !self.is_delete_by_receiver)
   end
 end

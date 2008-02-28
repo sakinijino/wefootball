@@ -11,7 +11,6 @@ class Training < ActiveRecord::Base
   attr_protected :team_id
   
   def before_create
-    self.summary = '' if self.summary==nil
     self.start_time = DateTime.now if self.start_time==nil
     self.end_time = DateTime.now if self.end_time==nil
   end

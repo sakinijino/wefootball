@@ -4,10 +4,10 @@ class TeamJoinRequest < ActiveRecord::Base
   
   attr_protected :user_id, :team_id  
   
-  validates_length_of  :message, :maximum => 500
+  validates_length_of  :message, :maximum => 500, :allow_nil=>true
 
   def before_validation
-    self.message = self.message.slice(0, 500) if self.message.jlength > 500
+    self.message = self.message.slice(0, 500) if self.message!=nil && self.message.jlength > 500
   end
   
   def before_create

@@ -1,7 +1,8 @@
 class Team < ActiveRecord::Base
   DEFAULT_IMAGE = "/images/default_team.jpg"
           
-  has_one :team_image
+  has_one :team_image,
+            :dependent => :destroy
   
   has_many :trainings,
             :dependent => :destroy do
@@ -29,7 +30,7 @@ class Team < ActiveRecord::Base
   validates_presence_of     :name, :shortname
   validates_length_of        :name,    :maximum => 200
   validates_length_of        :shortname,    :maximum => 20
-  validates_length_of        :summary,    :maximum => 700
+  validates_length_of        :summary,    :maximum => 700, :allow_nil=>true
   validates_length_of        :style,    :maximum => 20
   
   GENERIC_ANALYSIS_REGEX = /([a-zA-Z]|[\xc0-\xdf][\x80-\xbf])+|[0-9]+|[\xe0-\xef][\x80-\xbf][\x80-\xbf]/

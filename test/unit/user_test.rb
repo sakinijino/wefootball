@@ -20,10 +20,10 @@ class UserTest < Test::Unit::TestCase
     end
   end
   
-  def test_should_require_nickname
-    assert_no_difference 'User.count' do
+  def test_default_nickname
+    assert_difference 'User.count' do
       u = create_user(:nickname => nil)
-      assert u.errors.on(:nickname)
+      assert 'sakinijino', u.nickname
     end
   end
   
@@ -54,7 +54,8 @@ class UserTest < Test::Unit::TestCase
   end
 
   def test_should_not_rehash_password
-    users(:quentin).update_attributes(:login => 'quire2@example.com')
+    users(:quentin).login = 'quire2@example.com'
+    users(:quentin).save
     assert_equal users(:quentin), User.authenticate('quire2@example.com', 'test')
   end
 
@@ -101,52 +102,73 @@ class UserTest < Test::Unit::TestCase
     assert users(:quentin).remember_token_expires_at.between?(before, after)
   end
   
-  def test_validation
-    assert_no_difference 'User.count' do
-      u = create_user({:login=>'saki@usertest.com',
-          :fitfoot=>'X'
-        })
-      assert u.errors.on(:fitfoot)
-    end
-    
-    assert_no_difference 'User.count' do
-      u = create_user({:login=>'saki@usertest.com',
-          :weight=>1000
-        })
-      assert u.errors.on(:weight)
-    end
-    
-    assert_no_difference 'User.count' do
-      u = create_user({:login=>'saki@usertest.com',
-          :height=>400
-        })
-
-      assert u.errors.on(:height)
-    end
-    
-    assert_no_difference 'User.count' do
-      u = create_user({:login=>'saki@usertest.com',
-          :nickname=>'s'*100
-        })
-      assert u.errors.on(:nickname)
-    end
-    
-    assert_no_difference 'User.count' do
-      u = create_user({:login=>'saki@usertest.com',
-          :summary=>'s'*1000
-        })
-      assert u.errors.on(:summary)
-    end
-  end
-  
   def test_image_path
     assert_equal "/images/users/u00000003.jpg", users(:saki).image
     assert_equal "/images/default_user.jpg", users(:aaron).image
   end
+  
+  def test_friends
+    assert users(:saki).is_my_friend?(users(:aaron))
+    assert users(:saki).is_my_friend?(users(:mike2))
+    assert_equal 2, users(:saki).friends.length
+  end
+  
+  def test_user_is_of
+    assert users(:saki).is_team_member_of?(teams(:inter))
+    assert !users(:aaron).is_team_member_of?(teams(:inter))
+    
+    assert users(:saki).is_team_admin_of?(teams(:inter))
+    assert !users(:aaron).is_team_admin_of?(teams(:inter))
+    assert !users(:aaron).is_team_admin_of?(teams(:milan))
+  end
+  
+  def test_through
+    assert_equal 2,  users(:saki).teams.length
+    assert_equal 2, users(:saki).teams.admin.length
+    assert_equal 1,  users(:quentin).teams.length
+    assert_equal 1,  users(:quentin).teams.admin.length
+    assert_equal 1,  users(:aaron).teams.length
+    assert_equal 0,  users(:aaron).teams.admin.length
+  end
+  
+  def test_recent_trainings
+    t = users(:saki)
+    assert_equal 2, t.trainings.recent(nil, DateTime.new(2008, 1, 19)).length
+    assert_equal 1, t.trainings.recent(1, DateTime.new(2008, 1, 19)).length
+    assert_equal 1, t.trainings.recent(nil, DateTime.new(2008, 1, 21)).length
+  end
+  
+  def test_destroy
+    assert_difference 'Position.count', -3 do
+    assert_difference 'UserImage.count', -1 do
+    assert_difference 'Message.count', -5 do
+    assert_difference 'TrainingJoin.count', -2 do
+    assert_difference 'UserTeam.count', -2 do
+    assert_difference 'TeamJoinRequest.count', -2 do
+      users(:saki).destroy
+    end
+    end
+    end
+    end
+    end
+    end
+  end
+  
+  def test_search
+    create_user({:login => 'sakinijinoo@gmail.com', :nickname=>'AiHaibara'})
+    create_user({:login => 'sakinijinoo0725@gmail.com', :nickname=>'NagatoYuki'})
+    users = User.find_by_contents("AiHaibara")
+    assert 1, users.length
+    users = User.find_by_contents("gmail")
+    assert 2, users.length
+  end
 
 protected
   def create_user(options = {})
-    User.create({ :login => 'sakinijino@gmail.com', :nickname=>'saki',
+    u = User.new({:nickname=>'saki',
         :password => 'quire', :password_confirmation => 'quire' }.merge(options))
+    u.login = options.key?(:login) ? options[:login]: 'sakinijino@gmail.com'
+    u.save
+    u
   end
 end

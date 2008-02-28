@@ -11,7 +11,6 @@ class TrainingTest < ActiveSupport::TestCase
     assert_not_nil t.start_time
     assert_not_nil t.end_time
     assert_not_nil t.location
-    assert_not_nil t.summary
   end
   
   def test_can_join
@@ -23,10 +22,10 @@ class TrainingTest < ActiveSupport::TestCase
   end
   
   def test_no_accessible
-    @t = trainings(:training1)
-    tid = @t.team_id
-    @t.update_attributes(:team_id=>2, :location=>'Shanghai')
-    assert_equal tid, @t.team_id
-    assert_equal 'Shanghai', @t.location
+    t = trainings(:training1)
+    tid = t.team_id
+    t.update_attributes(:team_id=>2, :location=>'Shanghai')
+    assert_equal tid, t.team_id
+    assert_equal 'Shanghai', t.location
   end
 end

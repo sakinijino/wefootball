@@ -1,7 +1,7 @@
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
 
 inter_image:
-  filename: mm4.jpg
+  filename: t00000001.jpg
   content_type: image/pjpeg
   size: 79683
   team_id: 1

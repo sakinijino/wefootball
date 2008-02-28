@@ -1,26 +1,13 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
 class UserTeamTest < ActiveSupport::TestCase
-  def test_user_is_of
-    assert users(:saki).is_team_member_of?(teams(:inter))
-    assert !users(:aaron).is_team_member_of?(teams(:inter))
-    
-    assert users(:saki).is_team_admin_of?(teams(:inter))
-    assert !users(:aaron).is_team_admin_of?(teams(:inter))
-    assert !users(:aaron).is_team_admin_of?(teams(:milan))
-  end
-  def test_through
-    assert_equal 2,  users(:saki).teams.length
-    assert_equal 2, users(:saki).teams.admin.length
-    assert_equal 1,  users(:quentin).teams.length
-    assert_equal 1,  users(:quentin).teams.admin.length
-    assert_equal 1,  users(:aaron).teams.length
-    assert_equal 0,  users(:aaron).teams.admin.length
-    
-    assert_equal 2,  teams(:inter).users.length
-    assert_equal 2,  teams(:milan).users.length
-    assert_equal 2,  teams(:inter).users.admin.length
-    assert_equal 1,  teams(:milan).users.admin.length
+  def test_admin_operation
+    assert_equal true, user_teams(:aaron_milan).can_promote_as_admin_by?(users(:saki))
+    assert_equal false, user_teams(:aaron_milan).can_promote_as_admin_by?(users(:quentin))
+    assert_equal true, user_teams(:saki_inter).can_degree_as_common_user_by?(users(:quentin))
+    assert_equal true, user_teams(:saki_inter).can_degree_as_common_user_by?(users(:saki))
+    assert_equal false, user_teams(:saki_inter).can_degree_as_common_user_by?(users(:aaron))
+    assert_equal false, user_teams(:saki_milan).can_degree_as_common_user_by?(users(:saki))
   end
   
   def test_can_destroy

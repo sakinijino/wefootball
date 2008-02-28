@@ -8,8 +8,13 @@ class User < ActiveRecord::Base
   attr_accessor :password
   has_many :positions,
             :dependent => :destroy
-          
-  has_one :user_image
+  has_one :user_image,
+            :dependent => :destroy
+  
+  has_many :sent_messages, :class_name=>"Message", :foreign_key=>"sender_id",
+            :dependent => :destroy
+  has_many :received_messages, :class_name=>"Message", :foreign_key=>"receiver_id",
+            :dependent => :destroy
   
   has_many :user_teams,
             :dependent => :destroy
@@ -47,7 +52,7 @@ class User < ActiveRecord::Base
   validates_uniqueness_of   :login, :case_sensitive => false
   
   validates_length_of       :nickname, :maximum => 70
-  validates_length_of       :summary, :maximum => 500
+  validates_length_of       :summary, :maximum => 500, :allow_nil=>true
   validates_length_of       :favorite_star, :maximum => 50
   
   validates_numericality_of :weight, :height, :allow_nil =>true
@@ -57,6 +62,10 @@ class User < ActiveRecord::Base
     :message => '... Are you kidding me?'
   validates_inclusion_of    :fitfoot, :in => FITFOOT, :allow_nil =>true
   validates_inclusion_of   :premier_position, :in => Position::POSITIONS, :allow_nil =>true
+  
+  def before_validation
+    self.nickname = self.login.split('@')[0] if self.login!=nil && (self.nickname==nil || self.nickname == "")
+  end
 
   GENERIC_ANALYSIS_REGEX = /([a-zA-Z]|[\xc0-\xdf][\x80-\xbf])+|[0-9]+|[\xe0-\xef][\x80-\xbf][\x80-\xbf]/
   GENERIC_ANALYZER = Ferret::Analysis::RegExpAnalyzer.new(GENERIC_ANALYSIS_REGEX, true)  
