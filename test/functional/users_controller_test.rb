@@ -57,17 +57,6 @@ class UsersControllerTest < Test::Unit::TestCase
     end
   end  
   
-  def test_show_user
-    login_as :saki
-    get :show, :id=>users(:saki).id
-    assert_template "show"
-    get :show, :id=>users(:mike1).id
-    assert_select 'a', '加为好友'
-    get :show, :id=>users(:mike2).id
-    assert_select 'a', '不和他玩'
-    assert_select 'a', '发信'
-  end
-  
   def test_update_success
     login_as :saki
     put :update, :id=>3, :user=>{:summary=>'Yada!!', :is_playable=>"1", :premier_position => 'CB'}, :positions=>['CB', 'DM']

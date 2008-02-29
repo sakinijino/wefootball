@@ -6,6 +6,12 @@ class TeamTest < ActiveSupport::TestCase
     assert_equal "/images/default_team.jpg", teams(:milan).image
   end
   
+  def test_public_posts
+    t = Team.find(1)
+    assert_equal 3, t.posts.length
+    assert_equal 2, t.posts.public.length
+  end
+  
   def test_recent_trainings
     t = Team.find(1)
     assert_equal 2, t.trainings.recent(nil, DateTime.new(2008, 1, 19)).length
@@ -25,8 +31,10 @@ class TeamTest < ActiveSupport::TestCase
     assert_difference 'Training.count', -2 do
     assert_difference 'UserTeam.count', -2 do
     assert_difference 'TeamJoinRequest.count', -4 do
+    assert_difference 'Post.count', -3 do
       inter = teams(:inter)
       inter.destroy
+    end
     end
     end
     end

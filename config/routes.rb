@@ -1,6 +1,4 @@
 ActionController::Routing::Routes.draw do |map|
-  map.resources :match_invitations
-
   # The priority is based upon order of creation: first created -> highest priority.
   
   # Sample of regular route:
@@ -48,12 +46,14 @@ ActionController::Routing::Routes.draw do |map|
     teams.resources :team_join_requests
     teams.resources :team_join_invitations
     teams.resources :trainings
+    teams.resources :posts
   end
   map.resources :team_views
   
   map.resources :trainings do |trainings|
     trainings.resources :users
     trainings.resources :training_joins
+    trainings.resources :posts
   end
   map.resources :training_views
   
@@ -65,6 +65,12 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :friend_relations
   map.resources :friend_invitations
   map.resources :messages
+  map.resources :match_invitations
+  
+  map.resources :posts do |posts|
+    posts.resources :replies
+  end
+  
   map.connect ':controller/:action/:id'
   map.connect ':controller/:action/:id.:format'
 end

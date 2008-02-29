@@ -26,12 +26,21 @@ class Team < ActiveRecord::Base
   
   has_many :team_join_requests,
             :dependent => :destroy
+          
+  has_many :posts, :dependent => :destroy, :order => "updated_at desc" do
+    def public
+      find :all, :conditions => ['is_private = ?', false]
+    end
+  end
   
   validates_presence_of     :name, :shortname
   validates_length_of        :name,    :maximum => 200
   validates_length_of        :shortname,    :maximum => 20
   validates_length_of        :summary,    :maximum => 700, :allow_nil=>true
   validates_length_of        :style,    :maximum => 20
+  validates_associated :team_image, :allow_nil => true
+  
+  attr_protected :uploaded_data
   
   GENERIC_ANALYSIS_REGEX = /([a-zA-Z]|[\xc0-\xdf][\x80-\xbf])+|[0-9]+|[\xe0-\xef][\x80-\xbf][\x80-\xbf]/
   GENERIC_ANALYZER = Ferret::Analysis::RegExpAnalyzer.new(GENERIC_ANALYSIS_REGEX, true)  

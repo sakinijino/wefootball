@@ -118,6 +118,16 @@ class UserTest < Test::Unit::TestCase
     assert users(:saki).errors.on(:premier_position)
   end
   
+  def test_positions_array
+    assert users(:saki).positions_array.include?('CB')
+    users(:saki).positions_array=['CB', 'GK', 'SW', 'SS', 'CF']
+    users(:saki).save
+    assert_equal 5, users(:saki).positions.length
+    users(:saki).positions_array=nil
+    users(:saki).save
+    assert_equal 1, users(:saki).positions.length #equal to 1, because premier_position
+  end
+  
   def test_image_path
     assert_equal "/images/users/u00000003.jpg", users(:saki).image
     assert_equal "/images/default_user.jpg", users(:aaron).image
@@ -161,7 +171,9 @@ class UserTest < Test::Unit::TestCase
     assert_difference 'TrainingJoin.count', -2 do
     assert_difference 'UserTeam.count', -2 do
     assert_difference 'TeamJoinRequest.count', -2 do
+    assert_difference 'Post.count', -3 do
       users(:saki).destroy
+    end
     end
     end
     end

@@ -14,12 +14,6 @@ class TrainingsController < ApplicationController
       render :action=>'index_team'
     end
   end
-
-  # GET /trainings/1
-  # GET /trainings/1.xml
-  def show
-    @training = Training.find(params[:id], :include=>[:team, :users])
-  end
   
   def new
     @team = Team.find(params[:team_id])

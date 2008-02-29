@@ -5,24 +5,13 @@ class TeamsController < ApplicationController
   end
 
   def edit
+    fake_params_redirect if (!self.current_user.is_team_admin_of?(params[:id]))
     @team = Team.find(params[:id], :include=>[:team_image])
-    fake_params_redirect if (!self.current_user.is_team_admin_of?(@team))
-  end   
-  
-  # GET /users/:user_id/teams.xml
-#  def index #列出用户参加的所有球队
-#    @user = User.find(params[:user_id])
-#    @teamsList = @user.teams
-#  end
+  end
   
   # GET /teams/search.xml?query
   def search
     @teams = Team.find_by_contents(params[:q])
-  end
-
- # GET /teams/1.xml
-  def show
-    @team = Team.find(params[:id], :include=>[:team_image])
   end
 
   # POST /teams.xml
@@ -32,7 +21,7 @@ class TeamsController < ApplicationController
       ut = UserTeam.new({:is_admin=>true});
       ut.user = current_user; ut.team = @team
       ut.save
-      redirect_to team_path(@team)
+      redirect_to team_view_path(@team.id)
     else
       render :action=>"new"
     end
@@ -45,22 +34,13 @@ class TeamsController < ApplicationController
       fake_params_redirect
       return
     end
-    if (params[:team][:uploaded_data]!=nil)
-      if update_image
-        redirect_to edit_team_url(@team)
-      else
-        @team.team_image.errors.each do |attr, msg|
-          @team.errors.add(attr, msg)
-        end
-        @team.team_image.reload
-        render :action => "edit" 
-      end
+    update_image if (params[:team][:uploaded_data]!=nil)
+    if @team.update_attributes(params[:team])
+      @team.team_image.save if params[:team][:uploaded_data]!=nil && @team.team_image!=nil
+      redirect_to edit_team_path(params[:id])
     else
-      if @team.update_attributes(params[:team])
-        redirect_to edit_team_path(params[:id])
-      else
-        render :action=>"edit"
-      end
+      @team.team_image.reload if @team.team_image!=nil && @team.team_image.errors.length > 0
+      render :action=>"edit"
     end
   end
   
@@ -70,13 +50,10 @@ class TeamsController < ApplicationController
     @teamsList = @user.teams.admin
     render :action=>"index"
   end
-  protected
+  
+protected
   def update_image
     @team.team_image = TeamImage.find_or_initialize_by_team_id(@team.id)
-    if @team.team_image.update_attributes({:uploaded_data => params[:team][:uploaded_data]})
-      @team.save
-    else
-      false
-    end
+    @team.team_image.uploaded_data = params[:team][:uploaded_data]
   end
 end

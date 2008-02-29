@@ -5,6 +5,12 @@ class Training < ActiveRecord::Base
             :dependent => :destroy
   has_many :users, :through=>:training_joins
   
+  has_many :posts, :dependent => :destroy, :order => "updated_at desc" do
+    def public
+      find :all, :conditions => ['is_private = ?', false]
+    end
+  end
+  
   validates_length_of        :location,    :maximum => 300
   validates_length_of        :summary,    :maximum => 700, :allow_nil=>true
   

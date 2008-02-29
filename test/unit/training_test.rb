@@ -21,11 +21,25 @@ class TrainingTest < ActiveSupport::TestCase
     assert !trainings(:training1).can_be_joined_by?(users(:mike1))
   end
   
+  def test_public_posts
+    t = Training.find(1)
+    assert_equal 3, t.posts.length
+    assert_equal 2, t.posts.public.length
+  end
+  
   def test_no_accessible
     t = trainings(:training1)
     tid = t.team_id
     t.update_attributes(:team_id=>2, :location=>'Shanghai')
     assert_equal tid, t.team_id
     assert_equal 'Shanghai', t.location
+  end
+  
+  def test_destroy
+    assert_difference 'TrainingJoin.count', -1 do
+    assert_difference 'Post.count', -3 do
+      trainings(:training1).destroy
+    end
+    end
   end
 end

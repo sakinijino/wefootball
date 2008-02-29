@@ -39,6 +39,8 @@ class User < ActiveRecord::Base
         :limit=>limit
     end
   end
+  
+  has_many :posts, :dependent => :destroy
 
   validates_presence_of     :login, :nickname
   validates_format_of       :login, 
@@ -62,6 +64,8 @@ class User < ActiveRecord::Base
     :message => '... Are you kidding me?'
   validates_inclusion_of    :fitfoot, :in => FITFOOT, :if=>:is_playable
   validates_inclusion_of   :premier_position, :in => Position::POSITIONS, :if=>:is_playable
+  
+  validates_associated :user_image, :allow_nil => true
   
   def before_validation
     self.nickname = self.login.split('@')[0] if self.login!=nil && (self.nickname==nil || self.nickname == "")
@@ -140,6 +144,21 @@ class User < ActiveRecord::Base
     self.remember_token_expires_at = nil
     self.remember_token            = nil
     save(false)
+  end
+  
+  def positions_array
+    self.positions.map {|p| p.label}
+  end
+  
+  def positions_array=(arr)
+    arr = [] if arr==nil
+    # poor performance, need refactoring
+    arr.uniq!
+    ps = []
+    for label in arr
+      ps<<Position.new({:label=>label})
+    end
+    self.positions.replace(ps)
   end
   
   def is_my_friend?(user)

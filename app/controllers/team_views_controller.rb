@@ -7,5 +7,6 @@ class TeamViewsController < ApplicationController
     @team = Team.find(params[:id], :include=>[:team_image])
     @trainings = @team.trainings.recent(TRAINING_LIST_LENGTH, Date.today)
     @users = @team.users.limit(USER_LIST_LENGTH)
+    @posts = @team.posts.find(:all, :limit=>10)
   end
 end
