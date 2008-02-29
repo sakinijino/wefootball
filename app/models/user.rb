@@ -55,16 +55,28 @@ class User < ActiveRecord::Base
   validates_length_of       :summary, :maximum => 500, :allow_nil=>true
   validates_length_of       :favorite_star, :maximum => 50
   
-  validates_numericality_of :weight, :height, :allow_nil =>true
-  validates_inclusion_of    :weight, :in => 0..400, :allow_nil =>true,
+  validates_numericality_of :weight, :height, :if=>:is_playable
+  validates_inclusion_of    :weight, :in => 0..400, :if=>:is_playable,
     :message => '... Are you kidding me?'
-  validates_inclusion_of    :height, :in => 0..250, :allow_nil =>true,
+  validates_inclusion_of    :height, :in => 0..250, :if=>:is_playable,
     :message => '... Are you kidding me?'
-  validates_inclusion_of    :fitfoot, :in => FITFOOT, :allow_nil =>true
-  validates_inclusion_of   :premier_position, :in => Position::POSITIONS, :allow_nil =>true
+  validates_inclusion_of    :fitfoot, :in => FITFOOT, :if=>:is_playable
+  validates_inclusion_of   :premier_position, :in => Position::POSITIONS, :if=>:is_playable
   
   def before_validation
     self.nickname = self.login.split('@')[0] if self.login!=nil && (self.nickname==nil || self.nickname == "")
+  end
+  
+  def before_save
+    if (!self.is_playable)
+      self.weight = nil
+      self.height = nil
+      self.fitfoot = nil
+      self.premier_position = nil
+      self.positions.clear
+    else
+      self.positions<< Position.new({:label=>self.premier_position}) if !self.positions.map {|p| p.label}.include?(self.premier_position)
+    end
   end
 
   GENERIC_ANALYSIS_REGEX = /([a-zA-Z]|[\xc0-\xdf][\x80-\xbf])+|[0-9]+|[\xe0-\xef][\x80-\xbf][\x80-\xbf]/

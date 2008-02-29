@@ -72,12 +72,9 @@ class TeamsController < ApplicationController
   end
   protected
   def update_image
-    if (@team.team_image==nil)
-      @team.team_image = TeamImage.new
-    end
+    @team.team_image = TeamImage.find_or_initialize_by_team_id(@team.id)
     if @team.team_image.update_attributes({:uploaded_data => params[:team][:uploaded_data]})
       @team.save
-      true
     else
       false
     end

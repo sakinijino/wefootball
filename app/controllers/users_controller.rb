@@ -59,8 +59,8 @@ class UsersController < ApplicationController
         render :action => "edit" 
       end
     else
-      pre_process_player_info if params[:user][:is_playable]!=nil #update player info
-      if self.current_user.update_attributes(params[:user])
+      pre_process_positions if params[:user][:is_playable]=="1"
+      if @user.update_attributes(params[:user])
         redirect_to edit_user_url(@user)
       else
         @positions = @user.positions.map {|pos| pos.label}
@@ -75,31 +75,16 @@ class UsersController < ApplicationController
   end
   
   def update_image
-    if (@user.user_image==nil)
-      @user.user_image = UserImage.new
-    end
+    @user.user_image = UserImage.find_or_initialize_by_user_id(@user.id)
     if @user.user_image.update_attributes({:uploaded_data => params[:user][:uploaded_data]})
       @user.save
-      true
     else
       false
     end
   end
   
-  def pre_process_player_info
-    if params[:user][:is_playable] == '0' # unchecked
-      params[:user][:weight] = nil
-      params[:user][:height] = nil
-      params[:user][:fitfoot] = nil
-      params[:user][:premier_position] = nil
-      params[:positions]=[]
-    end
-    if params[:user][:is_playable] == '1' # checked
-      params[:positions]=[] if (!params[:positions])
-      params[:user][:premier_position] = 'GK' if (params[:user][:premier_position]==nil && params[:positions].length==0)
-      params[:user][:premier_position] = params[:positions][0] if (params[:user][:premier_position]==nil && params[:positions].length!=0)
-      params[:positions]<<params[:user][:premier_position]
-    end
+  def pre_process_positions
+    params[:positions] = [] if params[:positions]==nil
     @user.positions.clear # poor performance, need refactoring
     params[:positions].uniq!
     for label in params[:positions]

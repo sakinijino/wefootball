@@ -102,6 +102,22 @@ class UserTest < Test::Unit::TestCase
     assert users(:quentin).remember_token_expires_at.between?(before, after)
   end
   
+  def test_set_is_playable
+    assert_no_difference 'users(:saki).positions.length' do
+      users(:saki).update_attributes({:premier_position=>'SS'})
+    end
+    users(:saki).update_attributes({:premier_position=>'GK'})
+    assert users(:saki).positions.map {|p| p.label}.include?('GK')
+    users(:saki).update_attributes({:is_playable=>false, :premier_position=>nil, :height=>nil})
+    assert 0, users(:saki).positions.length
+    assert_nil users(:saki).height
+    assert_nil users(:saki).weight
+    assert_nil users(:saki).fitfoot
+    assert_nil users(:saki).premier_position
+    users(:saki).update_attributes({:is_playable=>true, :premier_position=>nil})
+    assert users(:saki).errors.on(:premier_position)
+  end
+  
   def test_image_path
     assert_equal "/images/users/u00000003.jpg", users(:saki).image
     assert_equal "/images/default_user.jpg", users(:aaron).image

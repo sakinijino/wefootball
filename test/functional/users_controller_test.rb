@@ -69,19 +69,18 @@ class UsersControllerTest < Test::Unit::TestCase
   end
   
   def test_update_success
-    login_as :quentin
-    put :update, :id=>1, :user=>{:summary=>'Yada!!', :is_playable=>"1"}, :positions=>['SS', 'DM']
-    assert_redirected_to edit_user_url(assigns(:user))
+    login_as :saki
+    put :update, :id=>3, :user=>{:summary=>'Yada!!', :is_playable=>"1", :premier_position => 'CB'}, :positions=>['CB', 'DM']
     assert_equal 'Yada!!', assigns(:user).summary
     assert_equal 2, assigns(:user).positions.length
-    assert_equal 'SS', assigns(:user).premier_position
-    put :update, :id=>1, :user=>{:is_playable=>"1"}
     assert_redirected_to edit_user_url(assigns(:user))
+    put :update, :id=>3, :user=>{:is_playable=>"1"}
     assert_equal 1, assigns(:user).positions.length
-    assert_equal 'GK', assigns(:user).premier_position
-    put :update, :id=>1, :user=>{:is_playable=>"0"}, :positions=>['SW', 'LB']
+    assert_equal 'CB', assigns(:user).premier_position
     assert_redirected_to edit_user_url(assigns(:user))
+    put :update, :id=>3, :user=>{:is_playable=>"0"}, :positions=>['SW', 'LB']
     assert_equal 0, assigns(:user).positions.length
+    assert_redirected_to edit_user_url(assigns(:user))
   end
   
   def test_update_error
