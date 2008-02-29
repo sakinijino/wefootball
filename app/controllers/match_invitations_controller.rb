@@ -2,18 +2,17 @@ class MatchInvitationsController < ApplicationController
   before_filter :login_required
   
   def new
-    @team = Team.find(params[:team_id])
-    fake_params_redirect if (!current_user.is_team_admin_of?(@team))
+    @guest_team_id = params[:guest_team_id]
   end  
   
   def create
-    @myTeam = Team.find(params[:training][:team_id])
-    if (!current_user.is_team_admin_of?(@myTeam))
+    @team = Team.find(params[:training][:team_id])
+    if (!current_user.is_team_admin_of?(@team))
       fake_params_redirect
       return
     end
     @matchInvitation = MatchInvitation.new(params[:match_invitation])
-    @matchInvitation.host_team = @myTeam
+    @matchInvitation.host_team = @team
     if @training.save
       redirect_to training_view_path(@training)
     else

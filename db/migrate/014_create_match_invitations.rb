@@ -28,8 +28,6 @@ class CreateMatchInvitations < ActiveRecord::Migration
       t.text :new_description
       t.integer :new_half_match_length
       t.integer :new_rest_length
-      t.integer :new_host_team_leader_id
-      t.integer :new_guest_team_leader_id
       t.timestamps
     end
   end
