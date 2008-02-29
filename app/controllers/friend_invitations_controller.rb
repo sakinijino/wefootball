@@ -18,7 +18,7 @@ class FriendInvitationsController < ApplicationController
     @applier = current_user
     @host = User.find(params[:friend_invitation][:host_id])
     if (FriendRelation.are_friends?(current_user.id, params[:friend_invitation][:host_id]))
-      redirect_to user_path(@host.id)
+      redirect_to user_view_path(@host.id)
       return
     end
     if(current_user.id.to_s == params[:friend_invitation][:host_id].to_s)

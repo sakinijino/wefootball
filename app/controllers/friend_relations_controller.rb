@@ -10,15 +10,14 @@ class FriendRelationsController < ApplicationController
   # POST /friend_relations
   # POST /friend_relations.xml
   def create
-    @req = FriendInvitation.find(params[:request_id],:include=>[:applier])    
-    
-    if (FriendRelation.are_friends?(@req.applier_id, @req.host_id))
-      FriendInvitation.delete(params[:request_id])
-      redirect_to friend_invitations_path
+    @req = FriendInvitation.find(params[:request_id],:include=>[:applier])
+    if(@req.host_id != current_user.id)
+      fake_params_redirect
       return
     end
     
-    if(@req.host_id != current_user.id)
+    if (FriendRelation.are_friends?(@req.applier_id, @req.host_id))
+      FriendInvitation.delete(params[:request_id])
       redirect_to friend_invitations_path
       return
     end

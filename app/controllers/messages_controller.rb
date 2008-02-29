@@ -52,25 +52,17 @@ class MessagesController < ApplicationController
   # DELETE /messages/1
   # DELETE /messages/1.xml
   def destroy
-    @message = Message.find(params[:id])    
+    @message = Message.find(params[:id])
+    as = 'receiver'
     if(@message.sender_id == current_user.id )
-      if (!@message.is_delete_by_receiver)
         @message.is_delete_by_sender = true
-        @message.save
-      else
-        @message.destroy
-      end
-      redirect_to messages_path(:as=>"sender")
+        as = 'sender'
     elsif (@message.receiver_id == current_user.id)
-      if (!@message.is_delete_by_sender)
         @message.is_delete_by_receiver = true
-        @message.save
-      else
-        @message.destroy
-      end
-      redirect_to messages_path(:as=>"receiver")
     else
       fake_params_redirect
     end
+    (@message.is_delete_by_sender && @message.is_delete_by_receiver) ? @message.destroy : @message.save
+    redirect_to messages_path(:as=>as)
   end
 end

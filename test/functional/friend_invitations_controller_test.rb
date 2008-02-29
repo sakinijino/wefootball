@@ -4,9 +4,8 @@ class FriendInvitationsControllerTest < ActionController::TestCase
   def test_should_get_index
     login_as :aaron
     get :index
-    assert_response :success
-    assert_select "friend_invitation", 2
-    assert_select "apply_date", "01/11/2008"
+    assert 2, assigns(:friend_invitations).length
+    assert_template 'index'
   end
 
   def test_should_create_friend_invitation
@@ -16,7 +15,7 @@ class FriendInvitationsControllerTest < ActionController::TestCase
         :host_id=>users(:saki).id,
         :message=>"Hi"
       }
-      assert_response :success
+      assert_redirected_to user_view_path(users(:saki).id)
     end
   end
   
@@ -27,8 +26,8 @@ class FriendInvitationsControllerTest < ActionController::TestCase
         :host_id =>users(:aaron).id,
         :message=>"Hello"
       }
-      assert_response :success
-      assert_select 'message', 'Hello'
+      assert_redirected_to user_view_path(users(:aaron).id)
+      assert_equal "Hello", assigns(:friend_invitation).message
     end
   end
   
@@ -39,9 +38,7 @@ class FriendInvitationsControllerTest < ActionController::TestCase
         :host_id =>users(:aaron).id,
         :message=>"Hello"*1000
       }
-      assert_response :success
-      tag = find_tag :tag=>"error", :attributes=>{:field=>"message"}
-      assert_not_nil tag
+      assert 500, assigns(:friend_invitation).message.length
     end
   end
   
@@ -52,7 +49,7 @@ class FriendInvitationsControllerTest < ActionController::TestCase
         :host_id =>users(:mike2).id,
         :message=>"Hi"
       }
-      assert_response 400
+      assert_redirected_to user_view_path(users(:mike2).id)
     end
   end
   
@@ -63,20 +60,18 @@ class FriendInvitationsControllerTest < ActionController::TestCase
         :host_id =>users(:saki).id,
         :message=>"Hi"
       }
-      assert_response 400
+      assert_redirected_to '/'
     end
   end
   
   def test_should_create_friend_invitation_error
     login_as :saki
-    assert_no_difference('FriendInvitation.count') do
+    assert_difference('FriendInvitation.count') do
       post :create, :friend_invitation => {
         :host_id =>users(:mike1).id,
-        :message=>"Hi"*500
+        :message=>"Hi"*1000
       }
-      assert_response :success
-      tag = find_tag :tag=>"error", :attributes=>{:field=>"message"}
-      assert_not_nil tag
+      assert 500, assigns(:friend_invitation).message.length
     end
   end
 
