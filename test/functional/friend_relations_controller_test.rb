@@ -17,7 +17,7 @@ class FriendRelationsControllerTest < ActionController::TestCase
     end
   end
   
-  def test_should_create_friend_relation_twice
+  def test_should_not_create_friend_relation_twice
     @req1 = FriendRelation.create(:user1_id => users(:mike2).id, :user2_id => users(:aaron).id)
     login_as :aaron
     assert_no_difference('FriendRelation.count') do
@@ -28,7 +28,7 @@ class FriendRelationsControllerTest < ActionController::TestCase
     end
   end
   
-  def test_should_create_friend_relation_error
+  def test_create_friend_relation_error
     login_as :saki
     assert_no_difference('FriendRelation.count') do
       assert_no_difference('FriendInvitation.count') do

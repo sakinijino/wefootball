@@ -13,7 +13,7 @@
 
 <p>
     <label>个人简介</label>
-    <p><%=simple_format @user.summary%></p>
+    <p><%=simple_format auto_link(@user.summary, :urls, :target => '_blank')%></p>
 </p>
 
 <%if @user.is_playable%>

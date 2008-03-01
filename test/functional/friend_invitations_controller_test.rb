@@ -19,7 +19,7 @@ class FriendInvitationsControllerTest < ActionController::TestCase
     end
   end
   
-  def test_should_create_friend_invitation_twice
+  def test_should_not_create_friend_invitation_twice
     login_as :mike2
     assert_no_difference('FriendInvitation.count') do
       post :create, :friend_invitation => {
@@ -31,18 +31,18 @@ class FriendInvitationsControllerTest < ActionController::TestCase
     end
   end
   
-  def test_should_create_friend_invitation_twice_error
+  def test_create_friend_invitation_twice_with_long_message
     login_as :mike2
     assert_no_difference('FriendInvitation.count') do
       post :create, :friend_invitation => {
         :host_id =>users(:aaron).id,
         :message=>"Hello"*1000
       }
-      assert 500, assigns(:friend_invitation).message.length
+      assert 150, assigns(:friend_invitation).message.length
     end
   end
   
-  def test_should_create_friend_invitation_when_already_friends
+  def test_should_not_create_friend_invitation_when_already_friends
     login_as :saki
     assert_no_difference('FriendInvitation.count') do
       post :create, :friend_invitation => {
@@ -53,7 +53,7 @@ class FriendInvitationsControllerTest < ActionController::TestCase
     end
   end
   
-  def test_should_create_friend_invitation_noauth
+  def test_should_not_create_friend_invitation_noauth
     login_as :saki
     assert_no_difference('FriendInvitation.count') do
       post :create, :friend_invitation => {
@@ -64,14 +64,14 @@ class FriendInvitationsControllerTest < ActionController::TestCase
     end
   end
   
-  def test_should_create_friend_invitation_error
+  def test_create_friend_invitation_with_long_message
     login_as :saki
     assert_difference('FriendInvitation.count') do
       post :create, :friend_invitation => {
         :host_id =>users(:mike1).id,
         :message=>"Hi"*1000
       }
-      assert 500, assigns(:friend_invitation).message.length
+      assert 150, assigns(:friend_invitation).message.length
     end
   end
 
@@ -82,7 +82,7 @@ class FriendInvitationsControllerTest < ActionController::TestCase
     end
   end
   
-  def test_should_destroy_friend_invitation_noauth
+  def test_should_not_destroy_friend_invitation_noauth
     login_as :quentin
     assert_no_difference('FriendInvitation.count') do
       delete :destroy, :id => friend_invitations(:quentin_to_aaron).id

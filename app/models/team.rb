@@ -56,4 +56,8 @@ class Team < ActiveRecord::Base
     return self.team_image.public_filename if self.team_image != nil
     DEFAULT_IMAGE
   end
+  
+  def positions
+    UserTeam.team_positions(self)
+  end
 end

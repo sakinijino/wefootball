@@ -13,7 +13,7 @@ class FriendInvitationTest < ActiveSupport::TestCase
   def test_message_length
     fi = friend_invitations(:quentin_to_aaron)
     fi.update_attributes({:message=>'s'*1000})
-    assert_equal 500, fi.message.length
+    assert_equal 150, fi.message.length
   end
   
   def test_apply_date

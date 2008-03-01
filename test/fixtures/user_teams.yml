@@ -9,6 +9,8 @@ saki_inter:
   user_id: 3
   team_id: 1
   is_admin: true
+  is_player: true
+  position: CB
 
 saki_milan:
   user_id: 3
@@ -19,6 +21,8 @@ quentin_inter:
   user_id: 1
   team_id: 1
   is_admin: true
+  is_player: true
+  position: SW
 
 aaron_milan:
   user_id: 2

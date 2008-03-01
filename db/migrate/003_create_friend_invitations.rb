@@ -3,7 +3,7 @@ class CreateFriendInvitations < ActiveRecord::Migration
     create_table :friend_invitations do |t|
       t.integer :applier_id
       t.integer :host_id
-      t.text :message
+      t.text :message, :limit=>150
       t.date :apply_date
     end
   end

@@ -25,4 +25,17 @@ class UserTeamTest < ActiveSupport::TestCase
     assert_equal tid, @t.team_id
     assert_equal uid, @t.user_id
   end
+  
+  def test_team_positions
+    assert 2, UserTeam.team_positions(teams(:inter))
+  end
+  
+  def test_before_save
+    user_teams(:saki_inter).position = 'SW'
+    user_teams(:saki_inter).save
+    assert_nil user_teams(:quentin_inter).position
+    user_teams(:saki_inter).is_player = false
+    user_teams(:saki_inter).save
+    assert_nil user_teams(:saki_inter).position
+  end
 end

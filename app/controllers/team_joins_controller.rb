@@ -4,12 +4,12 @@ class TeamJoinsController < ApplicationController
   def index
     store_location
     if (params[:user_id]) # 显示用户参加的所有队伍
-        @uts = UserTeam.find_all_by_user_id(params[:user_id],:include=>[:team])
-        render :action=>"index_team"
+      @uts = UserTeam.find_all_by_user_id(params[:user_id],:include=>[:team])
+      render :action=>"index_team"
     else # 显示队伍的所有成员
-        @uts = UserTeam.find_all_by_team_id(params[:team_id],:include=>[:user])
-        @team_id = params[:team_id]
-        render :action=>"index_user"
+      @uts = UserTeam.find_all_by_team_id(params[:team_id],:include=>[:user])
+      @team_id = params[:team_id]
+      render :action=>"index_user"
     end
   end  
   
@@ -35,25 +35,28 @@ class TeamJoinsController < ApplicationController
     redirect_back
   end
   
-  # PUT /users/:user_id/teams/:team_id/team_joins.xml
+  # PUT team_joins/1
   def update
-    @tj = UserTeam.find_by_user_id_and_team_id(params[:user_id], params[:team_id])
+    @tj = UserTeam.find(params[:id])
     @user =@tj.user
     @team = @tj.team
     if (!current_user.is_team_admin_of?(@team))
       fake_params_redirect
       return
     end
-    if @tj.update_attributes(params[:team_join])
-      redirect_to team_joins_path(:team_id=>@team.id)
+    params[:ut][:position] = nil if params[:ut][:position]==""
+    params[:ut][:is_player] = false if !@user.is_playable
+    params[:ut][:position] = nil if (@team.positions.size > 11)
+    if @tj.update_attributes(params[:ut])
+      redirect_to team_team_joins_path(@team)
     else
       fake_params_redirect
     end
   end
   
-  # DELETE /users/:user_id/teams/:team_id/team_joins.xml
+  # DELETE team_joins/1
   def destroy
-    @tj = UserTeam.find_by_user_id_and_team_id(params[:user_id], params[:team_id])
+    @tj = UserTeam.find(params[:id])
     if (!@tj.can_destroy_by?(self.current_user))
       fake_params_redirect
       return

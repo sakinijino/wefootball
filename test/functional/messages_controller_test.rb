@@ -30,7 +30,7 @@ class MessagesControllerTest < ActionController::TestCase
     end
   end
   
-  def test_send_message_to_self
+  def test_should_not_send_message_to_self
     login_as :saki
     assert_no_difference('Message.count') do
       post :create, :message => {:receiver_id=>users(:saki).id, :subject=>'hello', :content=>'hello' }

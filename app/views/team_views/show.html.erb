@@ -19,11 +19,11 @@
 
 <p>
   <label>球队简介</label>
-  <%=simple_format @team.summary%>
+  <%=simple_format auto_link(@team.summary, :urls, :target => '_blank')%>
 </p>
 
 <%if current_user.is_team_member_of?(@team)%>
-  <%= link_to("退出球队", user_team_team_join_path(current_user, @team, 0),:method=>:delete){}%>
+  <%= link_to("退出球队", team_join_path(@user_team.id),:method=>:delete){}%>
 <%else%>
   <%= error_messages_for :team_join_request %>
   <% form_for :team_join_request, :url => team_join_requests_path, :method=>"POST" do |f| %>

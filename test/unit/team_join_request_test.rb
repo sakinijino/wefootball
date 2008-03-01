@@ -5,7 +5,7 @@ class TeamJoinRequestTest < ActiveSupport::TestCase
   def test_create
     assert_difference 'TeamJoinRequest.count' do
       t = create_request
-      assert_equal 500, t.message.length
+      assert_equal 150, t.message.length
       assert_equal false, t.is_invitation
       assert_equal Date.today, t.apply_date
     end

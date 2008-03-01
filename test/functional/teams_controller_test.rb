@@ -13,7 +13,7 @@ class TeamsControllerTest < ActionController::TestCase
     end
   end
   
-  def test_should_login_before_create_team
+  def test_should_not_create_team_unlogined
     post :create, :team => { :name=>'Inter Milan', :shortname=>'inter'}
     assert_redirected_to new_session_path
   end
@@ -36,14 +36,14 @@ class TeamsControllerTest < ActionController::TestCase
     assert_redirected_to edit_team_path(teams(:inter).id)
   end
   
-  def test_should_update_team_error
+  def test_update_team_error
     login_as :saki
     put :update, :id => teams(:inter).id, :team => {:name=>'Inter Milan'*100}
     assert assigns(:team).errors.on(:name)
     assert_template 'edit'
   end
   
-  def test_should_be_admin_update_team
+  def test_should_not_update_team_if_user_is_not_admin
     login_as :aaron
     put :update, :id => teams(:inter).id, :team => {:name => "Inter"}
     assert_redirected_to '/'
