@@ -43,7 +43,7 @@ class UsersController < ApplicationController
       redirect_to edit_user_url(@user)
     else
       @positions = @user.positions.map {|pos| pos.label}
-      @user.user_image.reload if @user.user_image!=nil && @user.user_image.errors.length > 0
+      @user.user_image.reload if @user.user_image!=nil
       render :action => "edit" 
     end
   end

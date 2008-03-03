@@ -39,16 +39,9 @@ class TeamsController < ApplicationController
       @team.team_image.save if params[:team][:uploaded_data]!=nil && @team.team_image!=nil
       redirect_to edit_team_path(params[:id])
     else
-      @team.team_image.reload if @team.team_image!=nil && @team.team_image.errors.length > 0
+      @team.team_image.reload if @team.team_image!=nil
       render :action=>"edit"
     end
-  end
-  
-   # GET /users/:user_id/teams/admin.xml
-  def admin #列出用户管理的所有球队
-    @user = User.find(params[:user_id])
-    @teamsList = @user.teams.admin
-    render :action=>"index"
   end
   
 protected

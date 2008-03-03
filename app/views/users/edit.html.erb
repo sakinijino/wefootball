@@ -7,8 +7,11 @@
   <p><label for="birthday">生日</label><br/>
   <%= f.date_select :birthday, :start_year=>1900, :end_year=>Date.today.year %></p>
   
-  <p><label for="favorite_star">喜欢的球星</label><br/>
+  <p><label for="favorite_star">我喜欢球星</label><br/>
   <%= f.text_field :favorite_star %></p>
+  
+  <p><label for="favorite_team">我喜欢球队</label><br/>
+  <%= f.text_field :favorite_team %></p>
   
   <p><label for="summary">个人简介</label><br/>
   <%= f.text_area :summary %></p>

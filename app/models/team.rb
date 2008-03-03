@@ -19,9 +19,6 @@ class Team < ActiveRecord::Base
     def admin
       find :all, :conditions => ['is_admin = ?', true]
     end
-    def limit(num=nil)
-      find :all, :limit=>num
-    end
   end
   
   has_many :team_join_requests,
@@ -34,23 +31,34 @@ class Team < ActiveRecord::Base
   end
   
   validates_presence_of     :name, :shortname
-  validates_length_of        :name,    :maximum => 200
-  validates_length_of        :shortname,    :maximum => 20
-  validates_length_of        :summary,    :maximum => 700, :allow_nil=>true
-  validates_length_of        :style,    :maximum => 20
+  validates_length_of        :name,    :maximum => 50
+  validates_length_of        :shortname,    :maximum => 15
+  validates_length_of        :summary,    :maximum => 1000, :allow_nil=>true
+  validates_length_of        :style,    :maximum => 50
   validates_associated :team_image, :allow_nil => true
   
   attr_protected :uploaded_data
   
-  GENERIC_ANALYSIS_REGEX = /([a-zA-Z]|[\xc0-\xdf][\x80-\xbf])+|[0-9]+|[\xe0-\xef][\x80-\xbf][\x80-\xbf]/
-  GENERIC_ANALYZER = Ferret::Analysis::RegExpAnalyzer.new(GENERIC_ANALYSIS_REGEX, true)  
-#  GENERIC_ANALYZER = MultilingualFerretTools::Analyzer.new
-#  GENERIC_ANALYZER = Ferret::Analysis::StandardAnalyzer.new
-  acts_as_ferret({:fields => [
-        :name,
-        :shortname
-      ]},
-    { :analyzer => GENERIC_ANALYZER })
+  def before_validation
+    self.name = (self.name.chars[0...50]).to_s if !self.name.nil? && self.name.chars.length > 50
+    self.shortname = (self.shortname.chars[0...15]).to_s if !self.shortname.nil? && self.shortname.chars.length > 15
+    self.summary = (self.summary.chars[0...1000]).to_s if !self.summary.nil? && self.summary.chars.length > 1000
+    self.style = (self.style.chars[0...50]).to_s if !self.style.nil? && self.style.chars.length > 50
+  end
+  
+#  GENERIC_ANALYSIS_REGEX = /([a-zA-Z]|[\xc0-\xdf][\x80-\xbf])+|[0-9]+|[\xe0-\xef][\x80-\xbf][\x80-\xbf]/
+#  GENERIC_ANALYZER = Ferret::Analysis::RegExpAnalyzer.new(GENERIC_ANALYSIS_REGEX, true)  
+##  GENERIC_ANALYZER = MultilingualFerretTools::Analyzer.new
+##  GENERIC_ANALYZER = Ferret::Analysis::StandardAnalyzer.new
+#  acts_as_ferret({:fields => [
+#        :name,
+#        :shortname
+#      ]},
+#    { :analyzer => GENERIC_ANALYZER })
+
+  def self.find_by_contents(q)
+    Team.find :all, :conditions => ["name like ? or shortname like ?", q, q]
+  end
   
   def image
     return self.team_image.public_filename if self.team_image != nil

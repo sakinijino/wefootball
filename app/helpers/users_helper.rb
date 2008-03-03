@@ -12,7 +12,9 @@ module UsersHelper
      'RM'=> '右前卫',
      'AM'=> '前腰',
      'CF'=> '中锋',
-     'SS'=> '二前锋'
+     'SS'=> '二前锋',
+     'LF'=> '左边锋',
+     'RF'=> '右边锋'
     }
   def fitfoot_text(label)
    UsersHelper::FITFOOT_TEXT[label]

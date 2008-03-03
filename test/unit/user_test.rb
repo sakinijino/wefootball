@@ -102,6 +102,22 @@ class UserTest < Test::Unit::TestCase
     assert users(:quentin).remember_token_expires_at.between?(before, after)
   end
   
+  def test_before_validation
+    users(:saki).update_attributes({:nickname => 'nickname'*50, 
+        :favorite_star => 'favorite_star'*50, 
+        :favorite_team => 'favorite_team'*50, 
+        :summary => 'summary'*500,
+        :height => '',
+        :weight => '',})
+    assert users(:saki).valid?
+    assert 15, users(:saki).nickname
+    assert 100, users(:saki).favorite_star
+    assert 100, users(:saki).favorite_team
+    assert 1000, users(:saki).summary
+    assert_nil users(:saki).height
+    assert_nil users(:saki).weight
+  end
+  
   def test_set_is_playable
     assert_no_difference 'users(:saki).positions.length' do
       users(:saki).update_attributes({:premier_position=>'SS'})

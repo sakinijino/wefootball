@@ -22,9 +22,6 @@ class User < ActiveRecord::Base
     def admin
       find :all, :conditions => ['is_admin = ?', true]
     end
-    def limit(num=nil)
-      find :all, :limit=>num
-    end
   end
   
   has_many :team_join_requests,
@@ -53,15 +50,16 @@ class User < ActiveRecord::Base
   validates_length_of        :login,    :within => 3..40
   validates_uniqueness_of   :login, :case_sensitive => false
   
-  validates_length_of       :nickname, :maximum => 70
-  validates_length_of       :summary, :maximum => 500, :allow_nil=>true
-  validates_length_of       :favorite_star, :maximum => 50
+  validates_length_of       :nickname, :maximum => 15
+  validates_length_of       :summary, :maximum => 1000, :allow_nil=>true
+  validates_length_of       :favorite_star, :maximum => 100
+  validates_length_of       :favorite_team, :maximum => 100
   
-  validates_numericality_of :weight, :height, :if=>:is_playable
+  validates_numericality_of :weight, :height, :if=>:is_playable, :allow_nil=>true
   validates_inclusion_of    :weight, :in => 0..400, :if=>:is_playable,
-    :message => '... Are you kidding me?'
+    :message => '... Are you kidding me?', :allow_nil=>true
   validates_inclusion_of    :height, :in => 0..250, :if=>:is_playable,
-    :message => '... Are you kidding me?'
+    :message => '... Are you kidding me?', :allow_nil=>true
   validates_inclusion_of    :fitfoot, :in => FITFOOT, :if=>:is_playable
   validates_inclusion_of   :premier_position, :in => Position::POSITIONS, :if=>:is_playable
   
@@ -69,6 +67,12 @@ class User < ActiveRecord::Base
   
   def before_validation
     self.nickname = self.login.split('@')[0] if self.login!=nil && (self.nickname==nil || self.nickname == "")
+    self.nickname = (self.nickname.chars[0...15]).to_s if !self.nickname.nil? && self.nickname.chars.length > 15
+    self.favorite_star = (self.favorite_star.chars[0...100]).to_s if !self.favorite_star.nil? && self.favorite_star.chars.length > 100
+    self.favorite_team = (self.favorite_team.chars[0...100]).to_s if !self.favorite_team.nil? && self.favorite_team.chars.length > 100
+    self.summary = (self.summary.chars[0...15]).to_s if !self.summary.nil? && self.summary.chars.length > 15
+    self.weight = nil if self.weight = ''
+    self.height = nil if self.height = ''
   end
   
   def before_save
@@ -82,24 +86,28 @@ class User < ActiveRecord::Base
       self.positions<< Position.new({:label=>self.premier_position}) if !self.positions.map {|p| p.label}.include?(self.premier_position)
     end
   end
-
-  GENERIC_ANALYSIS_REGEX = /([a-zA-Z]|[\xc0-\xdf][\x80-\xbf])+|[0-9]+|[\xe0-\xef][\x80-\xbf][\x80-\xbf]/
-  GENERIC_ANALYZER = Ferret::Analysis::RegExpAnalyzer.new(GENERIC_ANALYSIS_REGEX, true)  
-#  GENERIC_ANALYZER = MultilingualFerretTools::Analyzer.new
-#  GENERIC_ANALYZER = Ferret::Analysis::StandardAnalyzer.new
-  acts_as_ferret({:fields => [
-        :login,
-        :nickname
-      ]},
-    { :analyzer => GENERIC_ANALYZER })
   
   before_save :encrypt_password
   
   # prevents a user from submitting a crafted form that bypasses activation
   # anything else you want your user to change should be added here.
   attr_accessible :password, :password_confirmation
-  attr_accessible :nickname, :summary, :birthday, :favorite_star
+  attr_accessible :nickname, :summary, :birthday, :favorite_star, :favorite_team
   attr_accessible :is_playable, :weight, :height, :fitfoot, :premier_position
+  
+#  GENERIC_ANALYSIS_REGEX = /([a-zA-Z]|[\xc0-\xdf][\x80-\xbf])+|[0-9]+|[\xe0-\xef][\x80-\xbf][\x80-\xbf]/
+#  GENERIC_ANALYZER = Ferret::Analysis::RegExpAnalyzer.new(GENERIC_ANALYSIS_REGEX, true)  
+##  GENERIC_ANALYZER = MultilingualFerretTools::Analyzer.new
+##  GENERIC_ANALYZER = Ferret::Analysis::StandardAnalyzer.new
+#  acts_as_ferret({:fields => [
+#        :login,
+#        :nickname
+#      ]},
+#    { :analyzer => GENERIC_ANALYZER })
+
+  def self.find_by_contents(q)
+    User.find :all, :conditions => ["login like ? or nickname like ?", q, q]
+  end
 
   # Authenticates a user by their login name and unencrypted password.  Returns the user or nil.
   def self.authenticate(login, password)

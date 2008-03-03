@@ -12,6 +12,18 @@ class TeamTest < ActiveSupport::TestCase
     assert_equal 2, t.posts.public.length
   end
   
+  def test_before_validation
+    teams(:inter).update_attributes({:name => 'nickname'*50, 
+        :shortname => 'favorite_star'*50, 
+        :style => 'favorite_team'*50, 
+        :summary => 'summary'*500 })
+    assert teams(:inter).valid?
+    assert 50, teams(:inter).name
+    assert 15, teams(:inter).shortname
+    assert 50, teams(:inter).style
+    assert 1000, teams(:inter).summary
+  end
+  
   def test_recent_trainings
     t = Team.find(1)
     assert_equal 2, t.trainings.recent(nil, DateTime.new(2008, 1, 19)).length
