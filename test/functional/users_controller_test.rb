@@ -21,7 +21,7 @@ class UsersControllerTest < Test::Unit::TestCase
     assert_difference 'User.count' do
       create_user
       assert 'sakinijino@gmail.com', assigns["user"].login
-      assert_redirected_to "/"
+      assert_redirected_to user_view_path(assigns(:user))
     end
   end
 

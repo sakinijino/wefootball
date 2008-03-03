@@ -22,7 +22,8 @@ class UsersController < ApplicationController
     @user.login = params[:user][:login]
     if @user.save
       self.current_user = @user
-      redirect_back_or_default('/')
+      #redirect_back_or_default('/')
+      redirect_to user_view_path(@user)
     else
       render :action=>'new'
     end
