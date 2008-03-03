@@ -22,29 +22,35 @@
   <%=simple_format auto_link(@team.summary, :urls, :target => '_blank')%>
 </p>
 
-<%if current_user.is_team_member_of?(@team)%>
-  <%= link_to("退出球队", team_join_path(@user_team.id),:method=>:delete){}%>
-<%else%>
-  <%= error_messages_for :team_join_request %>
-  <% form_for :team_join_request, :url => team_join_requests_path, :method=>"POST" do |f| %>
-      <%= f.hidden_field :team_id,  :value=>@team.id%> 
-    <p>
-      <b>留言</b><br />
-      <%= f.text_area :message %>
-    </p>  
-    <p>
-      <%= f.submit "申请" %>
-    </p>
-  <% end %>
-<%end%>
+<%if logged_in?%>
+  <%if current_user.is_team_member_of?(@team)%>
+    <%= link_to("退出球队", team_join_path(@user_team.id),:method=>:delete){}%>
+  <%else%>
+    <%= error_messages_for :team_join_request %>
+    <% form_for :team_join_request, :url => team_join_requests_path, :method=>"POST" do |f| %>
+        <%= f.hidden_field :team_id,  :value=>@team.id%> 
+      <p>
+        <b>留言</b><br />
+        <%= f.text_area :message %>
+      </p>  
+      <p>
+        <%= f.submit "申请" %>
+      </p>
+    <% end %>
+  <%end%>
 
-<%if current_user.is_team_admin_of?(@team)%>
-  <%= link_to "编辑队伍信息", edit_team_path(@team)%>
-  <%= link_to "创建训练", new_team_training_path(@team)%>
-  <%= link_to "所有入队申请", team_team_join_requests_path(@team)%>
-  <%= link_to "所有入队邀请", team_team_join_invitations_path(@team)%>
-  <%= link_to "成员管理", team_team_joins_path(@team)%>
-  <%= link_to "邀请朋友加入", new_team_team_join_invitation_path(@team)%>
+  <%if current_user.is_team_admin_of?(@team)%>
+    <%= link_to "编辑队伍信息", edit_team_path(@team)%>
+    <%= link_to "创建训练", new_team_training_path(@team)%>
+    <%= link_to "所有入队申请", team_team_join_requests_path(@team)%>
+    <%= link_to "所有入队邀请", team_team_join_invitations_path(@team)%>
+    <%= link_to "成员管理", team_team_joins_path(@team)%>
+    <%= link_to "邀请朋友加入", new_team_team_join_invitation_path(@team)%>
+  <%end%>
+
+  <%if current_user.can_invite_team?(@team)%>
+    <%= link_to "邀请该队参加比赛", new_match_invitation_path(:guest_team_id=>@team)%>
+  <%end%>
 <%end%>
 
 <h1><%=h @team.shortname%>的成员</h1>
@@ -73,7 +79,7 @@
   <%end%>
 </table>
 
-<h1><%=h @team.name%>下的讨论</h1>
+<h1><%=h @team.shortname%>下的讨论</h1>
 <table>
   <tr>
     <th>话题</th>
