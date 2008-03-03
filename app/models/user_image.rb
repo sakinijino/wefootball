@@ -1,6 +1,8 @@
 class UserImage < ActiveRecord::Base
   WIDTH = 96
-  HEIGHT = 96
+  HEIGHT = 96  
+  SMALL_WIDTH = 48
+  SMALL_HEIGHT = 48
   
   belongs_to :user  
   has_attachment  :storage => :file_system, 

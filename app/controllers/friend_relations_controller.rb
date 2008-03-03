@@ -1,14 +1,12 @@
 class FriendRelationsController < ApplicationController
   before_filter :login_required
   # GET /friend_relations
-  # GET /friend_relations.xml
   def index
     user_id = (params[:user_id]==nil) ? current_user.id : params[:user_id]
     @friendsList = User.find(user_id).friends
   end
 
   # POST /friend_relations
-  # POST /friend_relations.xml
   def create
     @req = FriendInvitation.find(params[:request_id],:include=>[:applier])
     if(@req.host_id != current_user.id)
@@ -22,11 +20,13 @@ class FriendRelationsController < ApplicationController
       return
     end
 
-    @friend_relation = FriendRelation.new
-    @friend_relation.user1_id = @req.applier_id
-    @friend_relation.user2_id = @req.host_id
-    @friend_relation.save
-    FriendInvitation.delete(params[:request_id])
+    FriendRelation.transaction do
+      @friend_relation = FriendRelation.new
+      @friend_relation.user1_id = @req.applier_id
+      @friend_relation.user2_id = @req.host_id
+      @friend_relation.save
+      FriendInvitation.delete(params[:request_id])
+    end
     redirect_to friend_invitations_path
   end
 

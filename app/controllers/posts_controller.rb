@@ -1,4 +1,7 @@
 class PostsController < ApplicationController
+  before_filter :before_post, :only=>[:new, :create]
+  before_filter :before_modify, :only=>[:edit, :update]
+  
   # GET teams/1/posts
   # GET trainings/1/posts
   def index
@@ -29,25 +32,16 @@ class PostsController < ApplicationController
   # GET teams/1/posts/new
   # GET trainings/1/posts/new
   def new
-    if (!can_post)
-      fake_params_redirect
-      return
-    end
     @post = Post.new
   end
 
   # GET /posts/1/edit
   def edit
-    @post = Post.find(params[:id])
   end
 
   # POST teams/1/posts
   # POST trainings/1/posts
   def create
-    if (!can_post)
-      fake_params_redirect
-      return
-    end
     @post = Post.new(params[:post])
     @post.team = @team if @team
     if @training
@@ -65,11 +59,6 @@ class PostsController < ApplicationController
   # PUT /posts/1
   # PUT /posts/1.xml
   def update
-    @post = Post.find(params[:id])
-    if !@post.can_be_modified_by?(current_user)
-      fake_params_redirect
-      return
-    end
     if @post.update_attributes(params[:post])
       redirect_to(@post)
     else
@@ -84,22 +73,26 @@ class PostsController < ApplicationController
     team_id = @post.team_id
     if !@post.can_be_destroyed_by?(current_user)
       fake_params_redirect
-      return
+    else
+      @post.destroy
+      redirect_to team_posts_url(team_id)
     end
-    @post.destroy
-    redirect_to team_posts_url(team_id)
   end
 
 protected
-  def can_post
+  def before_post
     if (params[:team_id])
       @team = Team.find(params[:team_id])
-      return current_user.is_team_member_of?(@team)
+      tid = @team.id
     elsif (params[:training_id])
       @training = Training.find(params[:training_id])
-      return current_user.is_team_member_of?(@training.team_id)
-    else
-      false
+      tid = @training.team_id
     end
+    fake_params_redirect if !current_user.is_team_member_of?(tid)
+  end
+  
+  def before_modify
+    @post = Post.find(params[:id])
+    fake_params_redirect if !@post.can_be_modified_by?(current_user)
   end
 end

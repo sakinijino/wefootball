@@ -1,35 +1,8 @@
 <h1><%=h @post.title %></h1>
 
-<div>
-  <%=user_image_tag @post.user%>
+<%= render(:partial => 'shared/post', :object => @post)%>
 
-  <%=h @post.created_at.strftime('%Y-%m-%d %H:%M:%S')%>
-
-  来自<%=h @post.user.nickname%>
-  <p>
-    <b>Content:</b>
-    <%=simple_format auto_link(@post.content, :urls, :target => '_blank') %>
-  </p>
-
-  <%= link_to '修改', edit_post_path(@post) if @post.can_be_modified_by?(current_user)%> |
-  <%= link_to "删除", post_path(@post.id), :method=>"delete" if @post.can_be_destroyed_by?(current_user) %>
-</div>
-
-<% @post.replies.each do |reply|%>
-  <div>
-    <%=user_image_tag reply.user%>
-
-    <%=h reply.created_at.strftime('%Y-%m-%d %H:%M:%S')%>
-
-    来自<%=h reply.user.nickname%>
-    <p>
-      <b>Content:</b>
-      <%=simple_format auto_link(reply.content, :urls, :target => '_blank') %>
-    </p>
-
-    <%= link_to "删除", post_reply_path(@post, reply.id), :method=>"delete" if reply.can_be_destroyed_by?(current_user) %>
-  </div>
-<% end %>
+<%= render(:partial => 'shared/post', :collection => @post.replies, :locals => {:parent => @post})%>
 
 <%= error_messages_for :reply %>
   

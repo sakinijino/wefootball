@@ -183,8 +183,8 @@ class User < ActiveRecord::Base
     friends_list.map{|fr|[fr.user1, fr.user2]}.flatten.reject {|u| u==self}
   end
   
-  def image
-    return self.user_image.public_filename if self.user_image != nil
+  def image(thumbnail = nil)
+    return self.user_image.public_filename(thumbnail) if self.user_image != nil
     DEFAULT_IMAGE
   end
   

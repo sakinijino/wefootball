@@ -1,4 +1,4 @@
-<span>写给: <%=h @receiver.nickname%></span>
+写给:<%= render(:partial => 'shared/user_icon', :object => @receiver)%>
 
 <%= error_messages_for :message %>
 <% form_for :message, :url => messages_path do |f| %>

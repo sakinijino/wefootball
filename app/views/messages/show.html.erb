@@ -1,11 +1,11 @@
 <p>
   <label>发件人</label>
-  <%=h @message.sender.nickname%>
+  <%= render(:partial => 'shared/user_icon', :object => @message.sender)%>
 </p>
 
 <p>
   <label>收件人</label>
-  <%=h @message.receiver.nickname%>
+  <%= render(:partial => 'shared/user_icon', :object => @message.receiver)%>
 </p>
 
 <p>
@@ -15,7 +15,8 @@
 
 <p>
   <label>内容</label>
-  <%=simple_format @message.content%>
+  <%=simple_format auto_link(@message.content, :urls, :target => '_blank')%>
 </p>
 
 <%=link_to "回复", new_message_path(:to=>@message.sender.id) if @message.sender!=current_user%>
+<%=link_to "再写一封", new_message_path(:to=>@message.receiver.id) if @message.receiver!=current_user%>

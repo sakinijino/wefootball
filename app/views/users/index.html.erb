@@ -2,11 +2,6 @@
   <h1><%=@team.shortname%>的队员列表</h1>
 </div>
 
-<%@users.each do |user| %>
-  <div>
-    <%=link_to user.nickname, user_path(user.id)%>
-  </div>
-<%end%>
-
+<%= render(:partial => 'shared/user_icon', :collection => @users)%>
 
 

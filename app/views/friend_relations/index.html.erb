@@ -2,11 +2,7 @@
   <h1>好友列表</h1>
 </div>
 
-<%@friendsList.each do |friend| %>
-  <div>
-    <%=link_to friend.nickname, user_path(friend.id)%>
-  </div>
-<%end%>
+<%= render(:partial => 'shared/user_icon', :collection => @friendsList)%>
 
 
 

@@ -27,11 +27,14 @@ class TeamJoinsController < ApplicationController
       fake_params_redirect
       return
     end
-    @tjs.destroy
-    @tu = UserTeam.new
-    @tu.team = @team
-    @tu.user = @user
-    @tu.save
+    
+    UserTeam.transaction do
+      @tjs.destroy
+      @tu = UserTeam.new
+      @tu.team = @team
+      @tu.user = @user
+      @tu.save
+    end
     redirect_back
   end
   

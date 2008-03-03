@@ -12,6 +12,11 @@
 </p>
 
 <p>
+  <label>喜欢的球队</label>
+  <%= @user.favorite_team%>
+</p>
+
+<p>
     <label>个人简介</label>
     <p><%=simple_format auto_link(@user.summary, :urls, :target => '_blank')%></p>
 </p>
@@ -67,35 +72,10 @@
 <%end%>
 
 <h1><%=h @user.nickname%>的朋友</h1>
-<%@friends.each do |user| %>
-  <dl>
-    <dt><%=link_to  user_image_tag(user), user_view_path(user.id) %></dt>
-    <dd><%=link_to user.nickname, user_view_path(user.id)%></dd>
-  </dl>
-<%end%>
+<%= render(:partial => 'shared/user_icon', :collection => @friends)%>
 
 <h1><%=h @user.nickname%>加入的球队</h1>
-<%@teams.each do |team| %>
-  <dl>
-    <dt><%=link_to  team_image_tag(team), team_view_path(team.id) %></dt>
-    <dd><%=link_to team.shortname, team_view_path(team.id)%></dd>
-  </dl>
-<%end%>
+<%= render(:partial => 'shared/team_icon', :collection => @teams)%>
 
 <h1><%=h @user.nickname%>最近的训练</h1>
-<table>
-  <tr>
-    <th>日期</th>
-    <th>时间</th>
-    <th>地点</th>
-    <th></th>
-  </tr>
-  <%@trainings.each do |t|%>
-    <tr>
-      <td><%= t.start_time.strftime('%Y-%m-%d')%></td>
-      <td><%= t.start_time.strftime('%H:%M')%>-<%= t.end_time.strftime('%H:%M')%></td>
-      <td><%=h t.location%></td>
-      <td><%=link_to '查看', training_view_path(t)%></td>
-    </tr>
-  <%end%>
-</table>
+<%= render(:partial => 'shared/training_list', :object => @trainings)%>
