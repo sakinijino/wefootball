@@ -38,31 +38,32 @@
     <%=(@user.positions.map {|p| position_text p.label}).join(', ')%>
   </p>
 <%end%>
-
-<%if @user.id != current_user.id%>
-  <%= link_to("发信", new_message_path(:to=>@user.id))%>
-  <%= link_to("邀请入队", new_user_team_join_invitation_path(@user))%>
-  <%if !current_user.is_my_friend?(@user)%>
-    <%= error_messages_for :friend_invitation %>
-    <% form_for :friend_invitation, :url => friend_invitations_path, :method=>"POST" do |f| %>
-      <%= f.hidden_field :host_id,  :value=>@user.id%>
-      <p>
-        <b>留言</b><br />
-        <%= f.text_area :message %>
-      </p>
-      <p>
-        <%= f.submit "邀请" %>
-      </p>
-    <% end %>
+<%if logged_in?%>
+  <%if @user.id != current_user.id%>
+    <%= link_to("发信", new_message_path(:to=>@user.id))%>
+    <%= link_to("邀请入队", new_user_team_join_invitation_path(@user))%>
+    <%if !current_user.is_my_friend?(@user)%>
+      <%= error_messages_for :friend_invitation %>
+      <% form_for :friend_invitation, :url => friend_invitations_path, :method=>"POST" do |f| %>
+        <%= f.hidden_field :host_id,  :value=>@user.id%>
+        <p>
+          <b>留言</b><br />
+          <%= f.text_area :message %>
+        </p>
+        <p>
+          <%= f.submit "邀请" %>
+        </p>
+      <% end %>
+    <%else%>
+      <%= link_to("不和他玩", friend_relation_path(0, :user_id=>@user.id),:method=>"delete")%>
+    <%end%>
   <%else%>
-    <%= link_to("不和他玩", friend_relation_path(0, :user_id=>@user.id),:method=>"delete")%>
+    <%= link_to("修改个人信息", edit_user_path(@user))%>
+    <%= link_to("收件箱", messages_path(:as=>'receiver'))%>
+    <%= link_to("朋友邀请", friend_invitations_path)%>
+    <%= link_to("队伍邀请", user_team_join_invitations_path(@user))%>
+    <%= link_to("队伍申请", user_team_join_requests_path(@user))%>
   <%end%>
-<%else%>
-  <%= link_to("修改个人信息", edit_user_path(@user))%>
-  <%= link_to("收件箱", messages_path(:as=>'receiver'))%>
-  <%= link_to("朋友邀请", friend_invitations_path)%>
-  <%= link_to("队伍邀请", user_team_join_invitations_path(@user))%>
-  <%= link_to("队伍申请", user_team_join_requests_path(@user))%>
 <%end%>
 
 <h1><%=h @user.nickname%>的朋友</h1>
