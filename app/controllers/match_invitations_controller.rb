@@ -1,111 +1,97 @@
 class MatchInvitationsController < ApplicationController
   before_filter :login_required
   
-  def new
-    @guest_team_id = params[:guest_team_id]
-  end  
+  def new   
+    @guest_team = Team.find(params[:guest_team_id])
+    if !current_user.can_invite_team?(@guest_team)
+      fake_params_redirect
+      return
+    end    
+    @host_teams = current_user.teams.admin - [@guest_team]
+  end
   
   def create
-    @team = Team.find(params[:training][:team_id])
-    if (!current_user.is_team_admin_of?(@team))
+    @guest_team_id = params[:match_invitation][:guest_team_id]
+    @host_team_id = params[:match_invitation][:host_team_id]
+    if !current_user.can_invite_team?(@guest_team_id)
       fake_params_redirect
       return
     end
-    @matchInvitation = MatchInvitation.new(params[:match_invitation])
-    @matchInvitation.host_team = @team
-    if @training.save
-      redirect_to training_view_path(@training)
+    @match_invitation = MatchInvitation.new(params[:match_invitation])
+    @match_invitation.guest_team_id = @guest_team_id
+    @match_invitation.host_team_id = @host_team_id
+    @match_invitation.host_team_message = params[:match_invitation][:host_team_message]
+    @match_invitation.edit_by_host_team = false
+    if @match_invitation.save
+      redirect_to team_view_path(@guest_team_id)
     else
+      @guest_team = Team.find(@guest_team_id)
+      @host_teams = current_user.teams.admin - [@guest_team]
       render :action=>"new"
     end
   end
-
-  def destroy
-    TrainingJoin.destroy_all(["user_id = ? and training_id = ?", current_user.id, params[:training_id]])
-    redirect_to training_view_path(params[:training_id])
-  end  
   
-  
-  
-  def index
-    @match_invitations = MatchInvitation.find(:all)
-
-    respond_to do |format|
-      format.html # index.html.erb
-      format.xml  { render :xml => @match_invitations }
+  def edit   
+    @match_invitation = MatchInvitation.find(params[:id],:include=>[:host_team,:guest_team])
+    if !current_user.can_edit_match_invitation?(@match_invitation)
+      fake_params_redirect
+      return
     end
+    @editing_by_host_team = @match_invitation.edit_by_host_team
   end
-
-  # GET /match_invitations/1
-  # GET /match_invitations/1.xml
-  def show
+  
+  def update   
+    #首先将模型中的new属性平移到非new属性
     @match_invitation = MatchInvitation.find(params[:id])
-
-    respond_to do |format|
-      format.html # show.html.erb
-      format.xml  { render :xml => @match_invitation }
+    @match_invitation.save_last_info!
+    @match_invitation.edit_by_host_team = !@match_invitation.edit_by_host_team
+    if !@match_invitation.edit_by_host_team
+      @match_invitation.host_team_message = params[:match_invitation][:host_team_message]        
+    else
+      @match_invitation.guest_team_message = params[:match_invitation][:guest_team_message]
     end
-  end
-
-  # GET /match_invitations/new
-  # GET /match_invitations/new.xml
-  def new
-    @match_invitation = MatchInvitation.new
-
-    respond_to do |format|
-      format.html # new.html.erb
-      format.xml  { render :xml => @match_invitation }
-    end
-  end
-
-  # GET /match_invitations/1/edit
-  def edit
-    @match_invitation = MatchInvitation.find(params[:id])
-  end
-
-  # POST /match_invitations
-  # POST /match_invitations.xml
-  def create
-    @match_invitation = MatchInvitation.new(params[:match_invitation])
-
-    respond_to do |format|
-      if @match_invitation.save
-        flash[:notice] = 'MatchInvitation was successfully created.'
-        format.html { redirect_to(@match_invitation) }
-        format.xml  { render :xml => @match_invitation, :status => :created, :location => @match_invitation }
+    if @match_invitation.update_attributes(params[:match_invitation])
+      if !@match_invitation.edit_by_host_team       
+        redirect_to team_view_path(@match_invitation.host_team_id)
       else
-        format.html { render :action => "new" }
-        format.xml  { render :xml => @match_invitation.errors, :status => :unprocessable_entity }
-      end
+        redirect_to team_view_path(@match_invitation.guest_team_id)
+      end   
+    else
+      render :action => "edit"
     end
-  end
+  end   
 
-  # PUT /match_invitations/1
-  # PUT /match_invitations/1.xml
-  def update
-    @match_invitation = MatchInvitation.find(params[:id])
-
-    respond_to do |format|
-      if @match_invitation.update_attributes(params[:match_invitation])
-        flash[:notice] = 'MatchInvitation was successfully updated.'
-        format.html { redirect_to(@match_invitation) }
-        format.xml  { head :ok }
-      else
-        format.html { render :action => "edit" }
-        format.xml  { render :xml => @match_invitation.errors, :status => :unprocessable_entity }
-      end
+  def accept
+    match_invitation_id = params[:id]
+    @match_invitation = MatchInvitation.find(match_invitation_id)
+    if !current_user.can_accpet_match_invitation?(@match_invitation)
+      fake_params_redirect
+      return      
     end
+    if @match_invitation.has_been_modified?(params[:match_invitation])#如果用户已经做过修改，则不能创建
+      render :action => "edit", :id=>match_invitation_id
+      return
+    end
+    Match.transaction do
+      @match = Match.new_by_invitation(@match_invitation)
+      @match.save!
+      FriendInvitation.delete(params[:request_id])
+    end
+    redirect_to match_path(@match)
   end
-
-  # DELETE /match_invitations/1
-  # DELETE /match_invitations/1.xml
+  
   def destroy
     @match_invitation = MatchInvitation.find(params[:id])
-    @match_invitation.destroy
-
-    respond_to do |format|
-      format.html { redirect_to(match_invitations_url) }
-      format.xml  { head :ok }
+    if !current_user.can_reject_match_invitation?(@match_invitation)
+      fake_params_redirect
+      return
+    end
+    MatchInvitation.destroy(@match_invitation)
+    if @match_invitation.edit_by_host_team == true
+      redirect_to team_view_path(@match_invitation.host_team_id)
+    else
+      redirect_to team_view_path(@match_invitation.guest_team_id)
     end
   end
+  
 end

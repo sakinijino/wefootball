@@ -50,6 +50,15 @@ class TeamJoinsController < ApplicationController
     params[:ut][:position] = nil if params[:ut][:position]==""
     params[:ut][:is_player] = false if !@user.is_playable
     params[:ut][:position] = nil if (@team.positions.size > 11)
+    if(params[:ut][:is_admin] != @user.is_admin)
+      if(
+         (params[:ut][:is_admin] && !(@ut.is_admin && @ut.can_promote_as_admin_by?(current_user)))||
+         (!params[:ut][:is_admin]  && !(@ut.is_admin && @ut.can_degree_as_common_user_by?(current_user)))
+        )
+      fake_params_redirect
+      return       
+      end      
+    end
     if @tj.update_attributes(params[:ut])
       redirect_to team_team_joins_path(@team)
     else

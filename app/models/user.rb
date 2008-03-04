@@ -207,6 +207,28 @@ class User < ActiveRecord::Base
     end    
     UserTeam.find_by_user_id_and_team_id(self.id, team_id) != nil
   end
+  
+  def can_invite_team?(team)
+    team_id = case team
+    when Team
+      team.id
+    else
+      team
+    end
+    !(self.teams.admin.empty?||(self.teams.admin.length == 1 && self.teams.admin[0].id == team_id))
+  end
+  
+  def can_edit_match_invitation?(match_invitation)
+    can_act_on_match_invitation?(match_invitation)
+  end
+  
+  def can_accpet_match_invitation?(match_invitation)
+    can_act_on_match_invitation?(match_invitation)
+  end  
+  
+  def can_reject_match_invitation?(match_invitation)
+    can_act_on_match_invitation?(match_invitation)
+  end
 
   protected
     # before filter 
@@ -220,4 +242,11 @@ class User < ActiveRecord::Base
       crypted_password.blank? || !password.blank?
     end
     
+    def can_act_on_match_invitation?(match_invitation)
+      if match_invitation.edit_by_host_team == true
+        return self.is_team_admin_of?(match_invitation.host_team_id)
+      else
+        return self.is_team_admin_of?(match_invitation.guest_team_id)
+      end
+    end
 end

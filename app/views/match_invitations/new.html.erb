@@ -5,71 +5,74 @@
 <%= error_messages_for :match_invitation %>
 
 <% form_for :match_invitation, :url => match_invitations_path, :method=>"POST" do |f| %>
-  <%= f.hidden_field :guest_team_id,  :value=>@guest_team_id%>
+  <%= f.hidden_field :guest_team_id,  :value=>@guest_team.id%>
 
   <p>
-    <b>本队负责人</b><br />
-    <%= f.text_field :host_team_leader_id %>
-  </p>
+    <b>球队</b><br />
+    <%= f.select :host_team_id, @host_teams.map{|t| [t.shortname,t.id]} %>
+  </p>  
   
   <p>
     <b>开始时间</b><br />
-    <%= f.datetime_select :start_time %>
+    <%= f.datetime_select :new_start_time %>
   </p>
 
   <p>
     <b>地点</b><br />
-    <%= f.text_field :location %>
-  </p>
-
-  <p>
-    <b>比赛类型</b><br />
-    <%= f.select :match_type, MatchInvitation::MATCH_TYPES.map {|t| [match_type_text(t), t]} %>
-  </p>
-
-  <p>
-    <b>参加人数</b><br />
-    <%= f.select :size, MatchInvitation::SIZES %>
-  </p>
-
-  <p>
-    <b>是否有裁判</b><br />
-    <%= f.check_box :has_judge %>
-  </p>
-
-  <p>
-    <b>是否有红黄牌</b><br />
-    <%= f.check_box :has_card %>
-  </p>
-
-  <p>
-    <b>是否有越位</b><br />
-    <%= f.check_box :has_offside %>
-  </p>
-
-  <p>
-    <b>上下半场各</b><br />
-    <%= f.text_field :half_match_length %>分钟
-  </p>
-
-  <p>
-    <b>中场休息</b><br />
-    <%= f.text_field :rest_length %>分钟
-  </p>  
-  
-  <p>
-    <b>决胜规则</b><br />
-    <%= f.select :win_rule, MatchInvitation::WIN_RULES.map {|r| [win_rule_text(r), r]} %>
+    <%= f.text_field :new_location %>
   </p>
 
   <p>
     <b>简要介绍</b><br />
     <%= f.text_area :new_description %>
+  </p>  
+  
+  <p>
+    <b>比赛类型</b><br />
+    <%= f.select :new_match_type, MatchInvitation::MATCH_TYPES.map {|t| [match_type_text(t), t]} %>
+  </p>
+
+  <p>
+    <b>参加人数</b><br />
+    <%= f.select :new_size, MatchInvitation::MATCH_SIZES %>
+  </p>
+
+  <p>
+    <b>有裁判</b><br />
+    <%= f.check_box :new_has_judge %>
+  </p>
+
+  <p>
+    <b>有红黄牌</b><br />
+    <%= f.check_box :new_has_card %>
+  </p>
+
+  <p>
+    <b>有越位</b><br />
+    <%= f.check_box :new_has_offside %>
+  </p>
+
+  <p>
+    <b>上下半场各</b><br />
+    <%= f.text_field :new_half_match_length %>分钟
+  </p>
+
+  <p>
+    <b>中场休息</b><br />
+    <%= f.text_field :new_rest_length %>分钟
+  </p>  
+  
+  <p>
+    <b>决胜规则</b><br />
+    <%= f.select :new_win_rule, MatchInvitation::WIN_RULES.map {|r| [win_rule_text(r), r]} %>
+  </p>
+
+  <p>
+    <b>留言</b><br />
+    <%= f.text_area :host_team_message %>
   </p>
 
   <p>
     <%= f.submit "创建邀请" %>
   </p>
 <% end %>
-
-<%= link_to 'Back', match_invitations_path %>

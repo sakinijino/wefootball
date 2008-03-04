@@ -1,0 +1,17 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  match_id: 1
+  user_id: 1
+  goal: 1
+  yellow_cards: 1
+  red_cards: 1
+  position: MyString
+
+two:
+  match_id: 1
+  user_id: 1
+  goal: 1
+  yellow_cards: 1
+  red_cards: 1
+  position: MyString

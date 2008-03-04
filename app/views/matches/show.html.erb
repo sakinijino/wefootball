@@ -1,0 +1,93 @@
+<p>
+  <b>Start time:</b>
+  <%=h @match.start_time %>
+</p>
+
+<p>
+  <b>Location:</b>
+  <%=h @match.location %>
+</p>
+
+<p>
+  <b>Match type:</b>
+  <%=h @match.match_type %>
+</p>
+
+<p>
+  <b>Size:</b>
+  <%=h @match.size %>
+</p>
+
+<p>
+  <b>Has judge:</b>
+  <%=h @match.has_judge %>
+</p>
+
+<p>
+  <b>Has card:</b>
+  <%=h @match.has_card %>
+</p>
+
+<p>
+  <b>Has offside:</b>
+  <%=h @match.has_offside %>
+</p>
+
+<p>
+  <b>Win rule:</b>
+  <%=h @match.win_rule %>
+</p>
+
+<p>
+  <b>Description:</b>
+  <%=h @match.description %>
+</p>
+
+<p>
+  <b>Half match length:</b>
+  <%=h @match.half_match_length %>
+</p>
+
+<p>
+  <b>Rest length:</b>
+  <%=h @match.rest_length %>
+</p>
+
+<p>
+  <b>Host team leader:</b>
+  <%=h @match.host_team_leader_id %>
+</p>
+
+<p>
+  <b>Guest team leader:</b>
+  <%=h @match.guest_team_leader_id %>
+</p>
+
+<p>
+  <b>Host team:</b>
+  <%=h @match.host_team_id %>
+</p>
+
+<p>
+  <b>Guest team:</b>
+  <%=h @match.guest_team_id %>
+</p>
+
+<p>
+  <b>Host team goal:</b>
+  <%=h @match.host_team_goal %>
+</p>
+
+<p>
+  <b>Guest team goal:</b>
+  <%=h @match.guest_team_goal %>
+</p>
+
+<p>
+  <b>Situation:</b>
+  <%=h @match.situation %>
+</p>
+
+
+<%= link_to 'Edit', edit_match_path(@match) %> |
+<%= link_to 'Back', matches_path %>

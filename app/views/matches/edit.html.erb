@@ -1,0 +1,102 @@
+<h1>Editing match</h1>
+
+<%= error_messages_for :match %>
+
+<% form_for(@match) do |f| %>
+  <p>
+    <b>Start time</b><br />
+    <%= f.datetime_select :start_time %>
+  </p>
+
+  <p>
+    <b>Location</b><br />
+    <%= f.text_field :location %>
+  </p>
+
+  <p>
+    <b>Match type</b><br />
+    <%= f.text_field :match_type %>
+  </p>
+
+  <p>
+    <b>Size</b><br />
+    <%= f.text_field :size %>
+  </p>
+
+  <p>
+    <b>Has judge</b><br />
+    <%= f.check_box :has_judge %>
+  </p>
+
+  <p>
+    <b>Has card</b><br />
+    <%= f.check_box :has_card %>
+  </p>
+
+  <p>
+    <b>Has offside</b><br />
+    <%= f.check_box :has_offside %>
+  </p>
+
+  <p>
+    <b>Win rule</b><br />
+    <%= f.text_field :win_rule %>
+  </p>
+
+  <p>
+    <b>Description</b><br />
+    <%= f.text_area :description %>
+  </p>
+
+  <p>
+    <b>Half match length</b><br />
+    <%= f.text_field :half_match_length %>
+  </p>
+
+  <p>
+    <b>Rest length</b><br />
+    <%= f.text_field :rest_length %>
+  </p>
+
+  <p>
+    <b>Host team leader</b><br />
+    <%= f.text_field :host_team_leader_id %>
+  </p>
+
+  <p>
+    <b>Guest team leader</b><br />
+    <%= f.text_field :guest_team_leader_id %>
+  </p>
+
+  <p>
+    <b>Host team</b><br />
+    <%= f.text_field :host_team_id %>
+  </p>
+
+  <p>
+    <b>Guest team</b><br />
+    <%= f.text_field :guest_team_id %>
+  </p>
+
+  <p>
+    <b>Host team goal</b><br />
+    <%= f.text_field :host_team_goal %>
+  </p>
+
+  <p>
+    <b>Guest team goal</b><br />
+    <%= f.text_field :guest_team_goal %>
+  </p>
+
+  <p>
+    <b>Situation</b><br />
+    <%= f.text_field :situation %>
+  </p>
+
+  <p>
+    <%= f.submit "Update" %>
+  </p>
+<% end %>
+
+<%= link_to 'Show', @match %> |
+<%= link_to 'Back', matches_path %>

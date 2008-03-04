@@ -1,0 +1,41 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  start_time: 2008-03-03 23:57:28
+  location: MyString
+  match_type: 1
+  size: 1
+  has_judge: false
+  has_card: false
+  has_offside: false
+  win_rule: 1
+  description: MyText
+  half_match_length: 1
+  rest_length: 1
+  host_team_leader_id: 1
+  guest_team_leader_id: 1
+  host_team_id: 1
+  guest_team_id: 1
+  host_team_goal: 1
+  guest_team_goal: 1
+  situation: 1
+
+two:
+  start_time: 2008-03-03 23:57:28
+  location: MyString
+  match_type: 1
+  size: 1
+  has_judge: false
+  has_card: false
+  has_offside: false
+  win_rule: 1
+  description: MyText
+  half_match_length: 1
+  rest_length: 1
+  host_team_leader_id: 1
+  guest_team_leader_id: 1
+  host_team_id: 1
+  guest_team_id: 1
+  host_team_goal: 1
+  guest_team_goal: 1
+  situation: 1
