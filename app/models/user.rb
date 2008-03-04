@@ -42,7 +42,7 @@ class User < ActiveRecord::Base
   validates_presence_of     :login, :nickname
   validates_format_of       :login, 
     :with=> /^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$/,
-    :message => ' should be an E-mail address'
+    :message => '需要用E-mail注册'
   validates_presence_of     :password,                   :if => :password_required?
   validates_presence_of     :password_confirmation,      :if => :password_required?
   validates_length_of       :password, :within => 4..40, :if => :password_required?
@@ -51,7 +51,7 @@ class User < ActiveRecord::Base
   validates_uniqueness_of   :login, :case_sensitive => false
   
   validates_length_of       :nickname, :maximum => 15
-  validates_length_of       :summary, :maximum => 1000, :allow_nil=>true
+  validates_length_of       :summary, :maximum => 3000, :allow_nil=>true
   validates_length_of       :favorite_star, :maximum => 100
   validates_length_of       :favorite_team, :maximum => 100
   
@@ -70,7 +70,7 @@ class User < ActiveRecord::Base
     self.nickname = (self.nickname.chars[0...15]).to_s if !self.nickname.nil? && self.nickname.chars.length > 15
     self.favorite_star = (self.favorite_star.chars[0...100]).to_s if !self.favorite_star.nil? && self.favorite_star.chars.length > 100
     self.favorite_team = (self.favorite_team.chars[0...100]).to_s if !self.favorite_team.nil? && self.favorite_team.chars.length > 100
-    self.summary = (self.summary.chars[0...1000]).to_s if !self.summary.nil? && self.summary.chars.length > 1000
+    self.summary = (self.summary.chars[0...3000]).to_s if !self.summary.nil? && self.summary.chars.length > 3000
     self.weight = nil if self.weight == ''
     self.height = nil if self.height == ''
   end

@@ -70,12 +70,11 @@ class PostsController < ApplicationController
   # DELETE /posts/1.xml
   def destroy
     @post = Post.find(params[:id])
-    team_id = @post.team_id
     if !@post.can_be_destroyed_by?(current_user)
       fake_params_redirect
     else
       @post.destroy
-      redirect_to team_posts_url(team_id)
+      redirect_to team_posts_url(@post.team_id)
     end
   end
 

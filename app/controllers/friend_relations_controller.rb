@@ -25,7 +25,7 @@ class FriendRelationsController < ApplicationController
       @friend_relation.user1_id = @req.applier_id
       @friend_relation.user2_id = @req.host_id
       @friend_relation.save
-      FriendInvitation.delete(params[:request_id])
+      @req.destroy
     end
     redirect_to friend_invitations_path
   end

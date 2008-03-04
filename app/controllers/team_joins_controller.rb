@@ -1,8 +1,7 @@
 class TeamJoinsController < ApplicationController
-  before_filter :login_required
+  before_filter :login_required, :except => [:index]
   
   def index
-    store_location
     if (params[:user_id]) # 显示用户参加的所有队伍
       @uts = UserTeam.find_all_by_user_id(params[:user_id],:include=>[:team])
       render :action=>"index_team"
@@ -20,7 +19,7 @@ class TeamJoinsController < ApplicationController
     @team = @tjs.team   
     
     if (@user.is_team_member_of?(@team)) #如果已经在球队中不能申请加入
-      fake_params_redirect
+      redirect_to team_view_path(@tjs.team_id)
       return
     end
     if !@tjs.can_accept_by?(self.current_user)
@@ -31,11 +30,11 @@ class TeamJoinsController < ApplicationController
     UserTeam.transaction do
       @tjs.destroy
       @tu = UserTeam.new
-      @tu.team = @team
-      @tu.user = @user
+      @tu.team_id = @tjs.team_id
+      @tu.user_id = @tjs.user_id
       @tu.save
     end
-    redirect_back
+    redirect_to team_view_path(@tjs.team_id)
   end
   
   # PUT team_joins/1
@@ -49,7 +48,7 @@ class TeamJoinsController < ApplicationController
     end
     params[:ut][:position] = nil if params[:ut][:position]==""
     params[:ut][:is_player] = false if !@user.is_playable
-    params[:ut][:position] = nil if (@team.positions.size > 11)
+    params[:ut][:position] = nil if (@team.formation.size > 11)
     if(params[:ut][:is_admin] != @user.is_admin)
       if(
          (params[:ut][:is_admin] && !(@ut.is_admin && @ut.can_promote_as_admin_by?(current_user)))||
@@ -71,9 +70,9 @@ class TeamJoinsController < ApplicationController
     @tj = UserTeam.find(params[:id])
     if (!@tj.can_destroy_by?(self.current_user))
       fake_params_redirect
-      return
+    else
+      @tj.destroy
+      redirect_to user_view_path(@tj.user_id)
     end
-    @tj.destroy
-    redirect_back
   end
 end

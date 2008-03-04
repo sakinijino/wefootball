@@ -10,7 +10,7 @@
     <th></th>   
   </tr>
   
-<% for req in @requests %>
+<% for req in @req %>
   <tr>
     <td><%=h req.apply_date %></td>
     <td><%= link_to req.user.nickname, user_path(req.user_id) %></td>

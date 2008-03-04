@@ -9,7 +9,7 @@ class AddPorpertiesToUser < ActiveRecord::Migration
     add_column :users, :height, :float
     add_column :users, :weight, :float
     add_column :users, :fitfoot, :string, :limit=>1
-    add_column :users, :premier_position, :string, :limit=>2
+    add_column :users, :premier_position, :integer, :limit=>2
   end
 
   def self.down

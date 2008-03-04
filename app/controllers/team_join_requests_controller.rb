@@ -1,16 +1,11 @@
 class TeamJoinRequestsController < ApplicationController
-  before_filter :login_required
-  
-  def new
-    @team_id = params[:team_id]
-  end  
+  before_filter :login_required, :except => [:index]
   
   def index
     if (params[:user_id]) # 显示所有邀请用户的队伍
         @requests = TeamJoinRequest.find_all_by_user_id_and_is_invitation(params[:user_id], false, :include=>[:team])
         render :action=>"index_team"
     else # 显示队伍所有邀请的用户
-        store_location
         @requests = TeamJoinRequest.find_all_by_team_id_and_is_invitation(params[:team_id], false, :include=>[:user])
         render :action=>"index_user"
     end
@@ -36,11 +31,11 @@ class TeamJoinRequestsController < ApplicationController
   
   def destroy
     @tjs = TeamJoinRequest.find(params[:id],:include=>[:team])
-    if (!@tjs.team.users.admin.include?(self.current_user)) # 管理员才可以删除
+    if (!@tjs.can_destroy_by?(self.current_user)) # 管理员才可以删除
       fake_params_redirect
-      return
+    else
+      @tjs.destroy
+      redirect_to team_team_join_requests_path(@tjs.team.id)
     end
-    @tjs.destroy
-    redirect_to team_join_requests_path(:team_id=>@tjs.team.id)
   end
 end

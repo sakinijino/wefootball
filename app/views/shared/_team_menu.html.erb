@@ -1,0 +1,14 @@
+<%if current_user.is_team_admin_of?(team)%>
+  <ul>
+  <li><%= link_to "编辑队伍信息", edit_team_path(team)%></li>
+  <li><%= link_to "创建训练", new_team_training_path(team)%></li>
+  <li><%= link_to "所有入队申请", team_team_join_requests_path(team)%></li>
+  <li><%= link_to "所有入队邀请", team_team_join_invitations_path(team)%></li>
+  <li><%= link_to "成员管理", team_team_joins_path(team)%></li>
+  <li><%= link_to "邀请朋友加入", new_team_team_join_invitation_path(team)%></li>
+  </ul>
+<%end%>
+
+<%#if current_user.can_invite_team?(@team)%>
+  <%#= link_to "邀请该队参加比赛", new_match_invitation_path(:guest_team_id=>@team)%>
+<%#end%>

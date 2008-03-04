@@ -106,24 +106,24 @@ class UserTest < Test::Unit::TestCase
     users(:saki).update_attributes({:nickname => 'nickname'*50, 
         :favorite_star => 'favorite_star'*50, 
         :favorite_team => 'favorite_team'*50, 
-        :summary => 'summary'*500,
+        :summary => 'summary'*1000,
         :height => '',
         :weight => '',})
     assert users(:saki).valid?
     assert_equal 15, users(:saki).nickname.length
     assert_equal 100, users(:saki).favorite_star.length
     assert_equal 100, users(:saki).favorite_team.length
-    assert_equal 1000, users(:saki).summary.length
+    assert_equal 3000, users(:saki).summary.length
     assert_nil users(:saki).height
     assert_nil users(:saki).weight
   end
   
   def test_set_is_playable
     assert_no_difference 'users(:saki).positions.length' do
-      users(:saki).update_attributes({:premier_position=>'SS'})
+      users(:saki).update_attributes({:premier_position=>11})
     end
-    users(:saki).update_attributes({:premier_position=>'GK'})
-    assert users(:saki).positions.map {|p| p.label}.include?('GK')
+    users(:saki).update_attributes({:premier_position=>0})
+    assert users(:saki).positions.map {|p| p.label}.include?(0)
     users(:saki).update_attributes({:is_playable=>false, :premier_position=>nil, :height=>nil})
     assert 0, users(:saki).positions.length
     assert_nil users(:saki).height
@@ -135,8 +135,8 @@ class UserTest < Test::Unit::TestCase
   end
   
   def test_positions_array
-    assert users(:saki).positions_array.include?('CB')
-    users(:saki).positions_array=['CB', 'GK', 'SW', 'SS', 'CF']
+    assert users(:saki).positions_array.include?(2)
+    users(:saki).positions_array=[1, 0, 2, 11, 10]
     users(:saki).save
     assert_equal 5, users(:saki).positions.length
     users(:saki).positions_array=nil

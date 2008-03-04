@@ -17,6 +17,23 @@
 <%end%>
 </div>
 
+<div>
+<%if logged_in? && @user.id != current_user.id%>
+  <%= link_to("发信", new_message_path(:to=>@user.id))%>
+  <%if !current_user.is_my_friend?(@user)%>
+    <%= link_to("邀请加为好友", 'javascript:void(0);')%>
+    <% form_for :friend_invitation, :url => friend_invitations_path, :method=>"POST" do |f| %>
+      <%= f.hidden_field :host_id,  :value=>@user.id%>
+      <span>留言</span><br />
+      <%= f.text_area :message %>
+      <%= f.submit "发送邀请" %>
+    <% end %>
+  <%else%>
+    <%= link_to("不和他玩", friend_relation_path(0, :user_id=>@user.id),:method=>"delete")%>
+  <%end%>
+<%end%>  
+</div>
+
 <%if @user.is_playable%>
   <div>
   <%= "<span>身高: #{@user.height}cm</span><br/>" unless @user.height.nil?%>

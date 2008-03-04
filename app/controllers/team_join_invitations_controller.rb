@@ -1,5 +1,5 @@
 class TeamJoinInvitationsController < ApplicationController
-  before_filter :login_required
+  before_filter :login_required, :except => [:index]
   
   def new
     if (params[:user_id] != nil)
@@ -16,13 +16,12 @@ class TeamJoinInvitationsController < ApplicationController
   end
   
   def index
-    store_location
     if (params[:user_id]) # 显示所有邀请用户的队伍
-        @requests = TeamJoinRequest.find_all_by_user_id_and_is_invitation(params[:user_id], true, :include=>[:team])
-        render :action=>"index_team"
+      @req = TeamJoinRequest.find_all_by_user_id_and_is_invitation(params[:user_id], true, :include=>[:team])
+      render :action=>"index_user"
     else # 显示队伍所有邀请的用户
-        @requests = TeamJoinRequest.find_all_by_team_id_and_is_invitation(params[:team_id], true, :include=>[:user])
-        render :action=>"index_user"
+      @req = TeamJoinRequest.find_all_by_team_id_and_is_invitation(params[:team_id], true, :include=>[:user])
+      render :action=>"index_team"
     end
   end
   
@@ -51,9 +50,9 @@ class TeamJoinInvitationsController < ApplicationController
     @tjs = TeamJoinRequest.find(params[:id])
     if !@tjs.can_destroy_by?(self.current_user)
       fake_params_redirect
-      return
+    else
+      @tjs.destroy
+      redirect_to user_team_join_invitations_path(current_user)
     end
-    @tjs.destroy
-    redirect_back
   end
 end

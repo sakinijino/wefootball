@@ -24,7 +24,7 @@
         </p>
         <% if @ut.is_player%>
           <p><label for="position">队内位置</label><br/>
-          <%= f.select :position, Position::POSITIONS.map {|p| [position_text(p), p]}, {:include_blank => "没有位置"} %></p>
+          <%= f.select :position, Team::FORMATION_POSITIONS.map {|p| [p, p]}, {:include_blank => "没有位置"} %></p>
         <%end%>
       <% end %>
       <p>

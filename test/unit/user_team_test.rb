@@ -27,15 +27,17 @@ class UserTeamTest < ActiveSupport::TestCase
   end
   
   def test_team_positions
-    assert 2, UserTeam.team_positions(teams(:inter))
+    assert 2, UserTeam.team_formation(teams(:inter))
   end
   
   def test_before_save
-    user_teams(:saki_inter).position = 'SW'
+    user_teams(:saki_inter).position = 3
     user_teams(:saki_inter).save
     assert_nil user_teams(:quentin_inter).position
     user_teams(:saki_inter).is_player = false
     user_teams(:saki_inter).save
     assert_nil user_teams(:saki_inter).position
+    user_teams(:saki_inter).position = 26
+    assert !user_teams(:saki_inter).valid?
   end
 end

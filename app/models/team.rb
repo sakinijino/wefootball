@@ -1,4 +1,10 @@
 class Team < ActiveRecord::Base
+#  FORMATION_POSTIONS = ['GK', 'LB', 'LCB', 'CB', 'RCB', 'RB',
+#    'LWB', 'LDM', 'DM', 'RDM', 'RWB',
+#    'LM', 'LCM', 'CM', 'RCM', 'RM',
+#    'ALM', 'LAM', 'AM', 'RAM', 'ARM',
+#    'LWF', 'LCF', 'CF', 'RCF', 'RWF']
+  FORMATION_POSITIONS =  (0...26).to_a
   DEFAULT_IMAGE = "/images/default_team.jpg"
           
   has_one :team_image,
@@ -33,7 +39,7 @@ class Team < ActiveRecord::Base
   validates_presence_of     :name, :shortname
   validates_length_of        :name,    :maximum => 50
   validates_length_of        :shortname,    :maximum => 15
-  validates_length_of        :summary,    :maximum => 1000, :allow_nil=>true
+  validates_length_of        :summary,    :maximum => 3000, :allow_nil=>true
   validates_length_of        :style,    :maximum => 50
   validates_associated :team_image, :allow_nil => true
   
@@ -42,7 +48,7 @@ class Team < ActiveRecord::Base
   def before_validation
     self.name = (self.name.chars[0...50]).to_s if !self.name.nil? && self.name.chars.length > 50
     self.shortname = (self.shortname.chars[0...15]).to_s if !self.shortname.nil? && self.shortname.chars.length > 15
-    self.summary = (self.summary.chars[0...1000]).to_s if !self.summary.nil? && self.summary.chars.length > 1000
+    self.summary = (self.summary.chars[0...3000]).to_s if !self.summary.nil? && self.summary.chars.length > 3000
     self.style = (self.style.chars[0...50]).to_s if !self.style.nil? && self.style.chars.length > 50
   end
   
@@ -65,7 +71,7 @@ class Team < ActiveRecord::Base
     DEFAULT_IMAGE
   end
   
-  def positions
-    UserTeam.team_positions(self)
+  def formation
+    UserTeam.team_formation(self)
   end
 end

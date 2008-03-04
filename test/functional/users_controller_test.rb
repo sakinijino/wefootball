@@ -59,15 +59,15 @@ class UsersControllerTest < Test::Unit::TestCase
   
   def test_update_success
     login_as :saki
-    put :update, :id=>3, :user=>{:summary=>'Yada!!', :is_playable=>"1", :premier_position => 'CB'}, :positions=>['CB', 'DM']
+    put :update, :id=>3, :user=>{:summary=>'Yada!!', :is_playable=>"1", :premier_position => 1}, :positions=>[1, 5]
     assert_equal 'Yada!!', assigns(:user).summary
     assert_equal 2, assigns(:user).positions.length
     assert_redirected_to edit_user_url(assigns(:user))
     put :update, :id=>3, :user=>{:is_playable=>"1"}
     assert_equal 1, assigns(:user).positions.length
-    assert_equal 'CB', assigns(:user).premier_position
+    assert_equal 1, assigns(:user).premier_position
     assert_redirected_to edit_user_url(assigns(:user))
-    put :update, :id=>3, :user=>{:is_playable=>"0"}, :positions=>['SW', 'LB']
+    put :update, :id=>3, :user=>{:is_playable=>"0"}, :positions=>[2, 3]
     assert_equal 0, assigns(:user).positions.length
     assert_redirected_to edit_user_url(assigns(:user))
   end

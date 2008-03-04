@@ -6,12 +6,9 @@ class RepliesController < ApplicationController
       fake_params_redirect
       return
     end
-    @reply = Reply.new(params[:reply])
-    @reply.user = current_user
-    @post.replies<<@reply
-    
+    @reply = @post.replies.build(params[:reply])
+    @reply.user = current_user    
     if @post.save
-      flash[:notice] = 'Reply was successfully created.'
       redirect_to(@post)
     else
       @post.replies.reload
@@ -22,12 +19,11 @@ class RepliesController < ApplicationController
   # DELETE posts/1/replies/1
   def destroy
     @reply = Reply.find(params[:id])
-    @post = @reply.post
     if (!@reply.can_be_destroyed_by?(current_user))
       fake_params_redirect
-    else
-      @post.replies.delete(@reply)
-      redirect_to @post
+    else      
+      @post.replies.delete(@reply, :dependent => :destroy)
+      redirect_to @reply.post
     end
   end
 end

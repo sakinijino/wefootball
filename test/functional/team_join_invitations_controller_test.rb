@@ -1,63 +1,49 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
 class TeamJoinInvitationsControllerTest < ActionController::TestCase
-  # Replace this with your real tests.
   include AuthenticatedTestHelper
   
-  fixtures :users, :teams
-  
-  def setup
-    @request    = ActionController::TestRequest.new
-    @request.env["HTTP_ACCEPT"] = "application/xml"
-    @response   = ActionController::TestResponse.new
-  end
-  
   def test_index_user_invitations
-    login_as :mike1
     get :index, :user_id=>users(:saki).id
-    assert_response 200
-    assert_select 'message', 'Hello'
-    assert_select 'apply_date', team_join_requests(:saki_inter).apply_date.to_s(:flex)
-    assert_select 'team>id', teams(:inter).id.to_s
+    assert_template 'index_user'
+    assert_equal 1, assigns(:req).length
   end
   
   def test_index_team_invitations
-    login_as :mike1
     get :index, :team_id=>teams(:inter).id
-    assert_response 200
-    assert_select 'message', 'Hello'
-    assert_select 'apply_date', team_join_requests(:mike1_inter).apply_date.to_s(:flex)
-    assert_select 'user>id', users(:saki).id.to_s
+    assert_template 'index_team'
+    assert_equal 3, assigns(:req).length
   end
   
   def test_create_invitation
     assert_difference('TeamJoinRequest.count') do
-      assert_difference('TeamJoinRequest.count :conditions=>["user_id = ?", users(:mike1).id]') do
+      assert_difference('TeamJoinRequest.count :conditions=>["user_id = ? and is_invitation = true", users(:mike3).id]') do
         login_as :saki
         post :create, :team_join_request => { 
-          :user_id => users(:mike1).id, 
+          :user_id => users(:mike3).id, 
           :team_id => teams(:inter).id,
           :message => 'hello'
         }
-        assert_response 200
-        assert_select 'message', 'hello'
+        assert_equal 'hello', assigns(:tjs).message
       end
     end
   end
   
-  def test_create_request_should_be_admin
+  def test_create_invitation_should_be_admin
     assert_no_difference('TeamJoinRequest.count') do
       login_as :mike1
       post :create, :team_join_request => { 
-        :user_id => users(:mike1).id, 
+        :user_id => users(:mike3).id, 
         :team_id => teams(:inter).id,
         :message => 'hello'
       }
-      assert_response 401
+      assert_redirected_to '/'
     end
   end
   
-  def test_create_request_should_not_in_team
+  def test_create_invitation_should_not_in_team
+    TeamJoinRequest.destroy_all
+    assert_equal 0, TeamJoinRequest.count
     assert_no_difference('TeamJoinRequest.count') do
       login_as :saki
       post :create, :team_join_request => { 
@@ -65,11 +51,11 @@ class TeamJoinInvitationsControllerTest < ActionController::TestCase
         :team_id => teams(:inter).id,
         :message => 'hello'
       }
-      assert_response 400
+      assert_redirected_to '/'
     end
   end
   
-  def test_long_message_error
+  def test_create_invitation_twice_with_long_message
     assert_no_difference('TeamJoinRequest.count') do
       login_as :saki
       post :create, :team_join_request => { 
@@ -77,8 +63,7 @@ class TeamJoinInvitationsControllerTest < ActionController::TestCase
         :team_id => teams(:inter).id,
         :message => 'hello'*1000
       }
-      assert_response 200
-      assert_not_nil find_tag(:tag=>"error", :attributes=>{:field=>"message"})
+      assert_equal 150, assigns(:tjs).message.length
     end
   end
   
@@ -86,7 +71,7 @@ class TeamJoinInvitationsControllerTest < ActionController::TestCase
     login_as :mike2
     assert_no_difference('TeamJoinRequest.count') do
       delete :destroy, :id => 5
-      assert_response 401
+      assert_redirected_to '/'
     end
   end
   
@@ -95,7 +80,7 @@ class TeamJoinInvitationsControllerTest < ActionController::TestCase
     c1 = TeamJoinRequest.count
     c2 = TeamJoinRequest.count :conditions=>["user_id = ?", users(:mike1).id]
     delete :destroy, :id => 5
-    assert_response 200
+    assert_redirected_to user_team_join_invitations_path(users(:mike1).id)
     assert_equal c1-1, TeamJoinRequest.count
     assert_equal c2-1, (TeamJoinRequest.count :conditions=>["user_id = ?", users(:mike1).id])
   end

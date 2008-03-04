@@ -5,7 +5,7 @@ class CreateUserTeams < ActiveRecord::Migration
       t.integer :team_id
       t.boolean :is_admin, :default=>false
       t.boolean :is_player, :default=>false
-      t.string :position, :limit=>4
+      t.integer :position, :limit=>2
     end
   end
 

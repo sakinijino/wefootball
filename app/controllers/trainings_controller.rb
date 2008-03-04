@@ -1,5 +1,5 @@
 class TrainingsController < ApplicationController
-  before_filter :login_required
+  before_filter :login_required, :except => [:index]
 
   # GET /users/:user_id/trainings
   # GET /teams/:team_id/trainings
@@ -56,13 +56,12 @@ class TrainingsController < ApplicationController
 
   # DELETE /trainings/1
   def destroy
-    @training = Training.find(params[:id], :include=>[:team])
-    @team = @training.team
+    @training = Training.find(params[:id], :include=>[:team]) 
     if (!current_user.is_team_admin_of?(@training.team))
       fake_params_redirect
     else
       @training.destroy
-      redirect_to team_view_path(@team)
+      redirect_to team_view_path(@training.team)
     end
   end
 end

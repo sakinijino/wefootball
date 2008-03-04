@@ -2,12 +2,12 @@
 
 one:
   user_id: 3
-  label: CB
+  label: 2
 
 two:
   user_id: 3
-  label: SS
+  label: 11
 
 three:
   user_id: 3
-  label: DM
+  label: 5

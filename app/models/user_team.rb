@@ -4,7 +4,7 @@ class UserTeam < ActiveRecord::Base
   
   attr_protected :user_id, :team_id
   
-  validates_inclusion_of   :position, :in => Position::POSITIONS, :allow_nil => true
+  validates_inclusion_of   :position, :in => Team::FORMATION_POSITIONS, :allow_nil => true
   
   def before_save
     self.position=nil if !self.is_player
@@ -14,7 +14,7 @@ class UserTeam < ActiveRecord::Base
     end
   end
   
-  def self.team_positions(team)
+  def self.team_formation(team)
     team_id = case team
     when Team
       team.id

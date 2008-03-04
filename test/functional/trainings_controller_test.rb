@@ -2,27 +2,22 @@ require File.dirname(__FILE__) + '/../test_helper'
 
 class TrainingsControllerTest < ActionController::TestCase
   def test_should_get_team_index
-    login_as :saki
     get :index, :team_id => teams(:inter)
-    assert_response :success
-    assert_select 'training', :count => 2
-    assert_select 'start_time', :count => 2
+    assert_template "index_team"
+    assert_equal 2, assigns(:trainings).length
   end
   
   def test_should_get_user_index
-    login_as :saki
     get :index, :user_id => users(:saki)
-    assert_response :success
-    assert_select 'training', :count => 2
-    assert_select 'start_time', :count => 2
+    assert_template "index_user"
+    assert_equal 2, assigns(:trainings).length
   end
 
   def test_should_create_training
     login_as :saki
     assert_difference('Training.count') do
       post :create, :training => { :team_id => teams(:inter).id }
-      assert_response :success
-      assert_select 'training', :count => 1
+      assert_redirected_to training_view_path(assigns(:training))
     end
   end
   
@@ -30,52 +25,38 @@ class TrainingsControllerTest < ActionController::TestCase
     login_as :mike1
     assert_no_difference('Training.count') do
       post :create, :training => { :team_id => teams(:inter).id }
-      assert_response 401
+      assert_redirected_to '/'
     end
-  end
-
-  def test_should_show_training
-    login_as :saki
-    get :show, :id => trainings(:training1).id
-    assert_response :success
   end
   
   def test_should_update_training
     login_as :saki
-    t = DateTime.now
+    t = Time.now
     put :update, :id => trainings(:training1).id, :training => { :start_time=> t}
-    assert_response :success
-    assert_select "start_time", t.to_s(:flex)
+    assert_redirected_to training_view_path(assigns(:training))
+    assert_equal t.to_s, Training.find(trainings(:training1).id).start_time.to_s
   end
   
   def test_should_be_admin_before_update_training
     login_as :mike1
     t = Time.now
     put :update, :id => trainings(:training1).id, :training => { :start_time=> t}
-    assert_response 401
-  end
-  
-  def test_should_not_modify_teamid_when_update_training
-    login_as :saki
-    t = Time.now
-    put :update, :id => trainings(:training1).id, :training => { :team_id=>teams(:milan).id, :start_time=> t}
-    assert_response 200
-    assert_select "team_id", teams(:inter).id.to_s
+    assert_redirected_to '/'
   end
 
   def test_should_destroy_training
     login_as :saki
     assert_difference('Training.count', -1) do
       delete :destroy, :id => trainings(:training1).id
-      assert_response :success
+      assert_redirected_to team_view_path(assigns(:training).team)
     end
   end
   
   def test_should_be_admin_before_destroy_training
     login_as :mike1
-    assert_no_difference('Training.count', -1) do
+    assert_no_difference('Training.count') do
       delete :destroy, :id => trainings(:training1).id
-      assert_response 401
+      assert_redirected_to '/'
     end
   end
 end

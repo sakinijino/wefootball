@@ -10,13 +10,13 @@ class UserTest < Test::Unit::TestCase
   def test_new_position
     assert_difference 'Position.count' do
       saki = users(:saki)
-      saki.positions<< Position.new({:label=> 'CF'})
+      saki.positions<< Position.new({:label=> 10})
       saki.save
     end
     
     assert_no_difference 'Position.count' do
       saki = users(:saki)
-      saki.positions<< Position.new({:label=> '123'})
+      saki.positions<< Position.new({:label=> 123})
       saki.save
     end
   end
