@@ -7,7 +7,7 @@
 来自<%=link_to h(post.user.nickname), user_view_path(post.user.id) %>
 <p>
   <b>Content:</b>
-  <%=simple_format auto_link(post.content, :urls, :target => '_blank') %>
+  <%=simple_format auto_link(post.content, :urls) %>
 </p>
 
 <%if post.is_a?(Post)%>

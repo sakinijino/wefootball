@@ -19,7 +19,7 @@
 
 <p>
   <label>球队简介</label>
-  <%=simple_format auto_link(@team.summary, :urls, :target => '_blank')%>
+  <%=simple_format auto_link(@team.summary, :urls)%>
 </p>
 
 <%if logged_in?%>

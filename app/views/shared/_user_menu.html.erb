@@ -1,0 +1,25 @@
+<%if user.id != current_user.id%>
+  <ul>
+    <li><%= link_to("发信", new_message_path(:to=>user.id))%></li>
+    <li><%= link_to("邀请入队", new_user_team_join_invitation_path(user))%></li>
+    <%if !current_user.is_my_friend?(user)%>
+      <li><%= link_to("邀请加为好友", 'javascript:void(0);')%></li>
+      <% form_for :friend_invitation, :url => friend_invitations_path, :method=>"POST" do |f| %>
+        <%= f.hidden_field :host_id,  :value=>user.id%>
+        <span>留言</span><br />
+        <%= f.text_area :message %>
+        <%= f.submit "发送邀请" %>
+      <% end %>
+    <%else%>
+      <li><%= link_to("不和他玩", friend_relation_path(0, :user_id=>user.id),:method=>"delete")%></li>
+    <%end%>
+  </ul>
+<%else%>
+  <ul>
+    <li><%= link_to("修改个人信息", edit_user_path(user))%></li>
+    <li><%= link_to("收件箱", messages_path(:as=>'receiver'))%></li>
+    <li><%= link_to("朋友邀请", friend_invitations_path)%></li>
+    <li><%= link_to("队伍邀请", user_team_join_invitations_path(user))%></li>
+    <li><%= link_to("队伍申请", user_team_join_requests_path(user))%></li>
+  </ul>
+<%end%>

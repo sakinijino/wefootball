@@ -3,8 +3,7 @@ class Reply < ActiveRecord::Base
   belongs_to :user
   belongs_to :post, :counter_cache => true
   
-  validates_presence_of     :content
-  validates_length_of :content, :minimum =>5
+  validates_length_of :content, :minimum =>5, :message => "内容太短了，最少要写5个字"
   
   attr_accessible :content
   

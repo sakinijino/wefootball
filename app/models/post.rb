@@ -5,11 +5,10 @@ class Post < ActiveRecord::Base
 
   has_many :replies, :dependent => :destroy
   
-  validates_presence_of     :title
-  validates_length_of :title, :maximum =>100
+  validates_presence_of     :title, :message => "标题不能为空"
+  validates_length_of :title, :maximum =>100, :message => "标题最长为100个字"
   
-  validates_presence_of     :content
-  validates_length_of :content, :minimum =>5
+  validates_length_of :content, :minimum =>5, :message => "内容太短了，最少要写5个字"
   
   attr_accessible :title, :content, :is_private
   

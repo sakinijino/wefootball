@@ -20,7 +20,7 @@ class SessionsControllerTest < Test::Unit::TestCase
     post :create, :login => 'sakinijino0725@163.com', :password => 'test'
     assert session[:user_id]
     assert 'sakinijino0725@163.com', assigns["user"].login
-    assert_redirected_to "/"
+    assert_redirected_to user_view_path(assigns["user"])
   end
 
   def test_should_fail_login_and_not_redirect

@@ -70,9 +70,9 @@ class User < ActiveRecord::Base
     self.nickname = (self.nickname.chars[0...15]).to_s if !self.nickname.nil? && self.nickname.chars.length > 15
     self.favorite_star = (self.favorite_star.chars[0...100]).to_s if !self.favorite_star.nil? && self.favorite_star.chars.length > 100
     self.favorite_team = (self.favorite_team.chars[0...100]).to_s if !self.favorite_team.nil? && self.favorite_team.chars.length > 100
-    self.summary = (self.summary.chars[0...15]).to_s if !self.summary.nil? && self.summary.chars.length > 15
-    self.weight = nil if self.weight = ''
-    self.height = nil if self.height = ''
+    self.summary = (self.summary.chars[0...1000]).to_s if !self.summary.nil? && self.summary.chars.length > 1000
+    self.weight = nil if self.weight == ''
+    self.height = nil if self.height == ''
   end
   
   def before_save

@@ -110,10 +110,10 @@ class UserTest < Test::Unit::TestCase
         :height => '',
         :weight => '',})
     assert users(:saki).valid?
-    assert 15, users(:saki).nickname
-    assert 100, users(:saki).favorite_star
-    assert 100, users(:saki).favorite_team
-    assert 1000, users(:saki).summary
+    assert_equal 15, users(:saki).nickname.length
+    assert_equal 100, users(:saki).favorite_star.length
+    assert_equal 100, users(:saki).favorite_team.length
+    assert_equal 1000, users(:saki).summary.length
     assert_nil users(:saki).height
     assert_nil users(:saki).weight
   end

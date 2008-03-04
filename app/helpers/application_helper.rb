@@ -1,5 +1,37 @@
 # Methods added to this helper will be available to all templates in the application.
-module ApplicationHelper
+module ApplicationHelper  
+  def user_image_tag(user)
+    image_tag(user.image, :width=>UserImage::WIDTH, :height=>UserImage::HEIGHT)
+  end
+  
+  def user_image_link(user)
+    link_to user_image_tag(user), user_view_path(user.id)
+  end
+  
+  def small_user_image_tag(user)
+    image_tag(user.image(:small), :width=>UserImage::SMALL_WIDTH, :height=>UserImage::SMALL_HEIGHT)
+  end
+  
+  def small_user_image_link(user)
+    link_to small_user_image_tag(user), user_view_path(user.id)
+  end
+  
+  def team_image_tag(team)
+    image_tag(team.image, :width=>TeamImage::WIDTH, :height=>TeamImage::HEIGHT)
+  end
+  
+  def team_image_link(team)
+    link_to team_image_tag(team), team_view_path(team.id)
+  end
+  
+  def small_team_image_tag(team)
+    image_tag(team.image(:small), :width=>TeamImage::SMALL_WIDTH, :height=>TeamImage::SMALL_HEIGHT)
+  end
+  
+  def small_team_image_link(team)
+    link_to small_team_image_tag(team), team_view_path(team.id)
+  end
+  
   def distance_of_time_in_words(from_time, to_time = 0, include_seconds = false)
     from_time = from_time.to_time if from_time.respond_to?(:to_time)
     to_time = to_time.to_time if to_time.respond_to?(:to_time)
@@ -32,35 +64,37 @@ module ApplicationHelper
     end
   end
   
-  def user_image_tag(user)
-    image_tag(user.image, :width=>UserImage::WIDTH, :height=>UserImage::HEIGHT)
-  end
-  
-  def user_image_link(user)
-    link_to user_image_tag(user), user_view_path(user.id)
-  end
-  
-  def small_user_image_tag(user)
-    image_tag(user.image(:small), :width=>UserImage::SMALL_WIDTH, :height=>UserImage::SMALL_HEIGHT)
-  end
-  
-  def small_user_image_link(user)
-    link_to small_user_image_tag(user), user_view_path(user.id)
-  end
-  
-  def team_image_tag(team)
-    image_tag(team.image, :width=>TeamImage::WIDTH, :height=>TeamImage::HEIGHT)
-  end
-  
-  def team_image_link(team)
-    link_to team_image_tag(team), team_view_path(team.id)
-  end
-  
-  def small_team_image_tag(team)
-    image_tag(team.image(:small), :width=>TeamImage::SMALL_WIDTH, :height=>TeamImage::SMALL_HEIGHT)
-  end
-  
-  def small_team_image_link(team)
-    link_to small_team_image_tag(team), team_view_path(team.id)
+  def error_messages_for(*params)
+    options = params.extract_options!.symbolize_keys
+    if object = options.delete(:object)
+      objects = [object].flatten
+    else
+      objects = params.collect {|object_name| instance_variable_get("@#{object_name}") }.compact
+    end
+    count   = objects.inject(0) {|sum, object| sum + object.errors.count }
+    unless count.zero?
+      html = {}
+      [:id, :class].each do |key|
+        if options.include?(key)
+          value = options[key]
+          html[key] = value unless value.blank?
+        else
+          html[key] = 'errorExplanation'
+        end
+      end
+      options[:object_name] ||= params.first
+      options[:header_message] = '' unless options.include?(:header_message) #"#{pluralize(count, 'error')} prohibited this #{options[:object_name].to_s.gsub('_', ' ')} from being saved" 
+      options[:message] ||= '' unless options.include?(:message) #'There were problems with the following fields:' 
+      error_messages = objects.map {|object| object.errors.full_messages.map {|msg| content_tag(:li, msg) } }
+      
+      contents = ''
+      contents << content_tag(options[:header_tag] || :h2, options[:header_message]) unless options[:header_message].blank?
+      contents << content_tag(:p, options[:message]) unless options[:message].blank?
+      contents << content_tag(:ul, error_messages)
+      
+      content_tag(:div, contents, html)
+    else
+      ''
+    end
   end
 end

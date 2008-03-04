@@ -15,7 +15,7 @@ class SessionsController < ApplicationController
           :expires => self.current_user.remember_token_expires_at }
       end
       @user = self.current_user
-      redirect_back_or_default('/')
+      redirect_back_or_default(user_view_path(@user))
       flash[:notice] = "Logged in successfully"
     else
       render :action => 'new'

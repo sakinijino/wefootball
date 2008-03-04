@@ -1,74 +1,30 @@
+<div>
+<%if logged_in?%>
+  <%= render(:partial => 'shared/user_menu', :locals => {:user => @user})%>
+<%end%>
+</div>
+
 <h1><%= h @user.nickname %></h1>
 <%= user_image_tag @user %>
 
-<p>
-  <label>生日</label>
-  <%= @user.birthday%>
-</p>
-
-<p>
-  <label>喜欢的球星</label>
-  <%= @user.favorite_star%>
-</p>
-
-<p>
-  <label>喜欢的球队</label>
-  <%= @user.favorite_team%>
-</p>
-
-<p>
-    <label>个人简介</label>
-    <p><%=simple_format auto_link(@user.summary, :urls, :target => '_blank')%></p>
-</p>
+<div>
+<%= "<span>生日: #{@user.birthday}</span><br/>" unless @user.birthday.nil?%>
+<%= "<span>喜欢的球星: #{@user.favorite_star}</span><br/>" unless @user.favorite_star.blank?%>
+<%= "<span>喜欢的球队: #{@user.favorite_team}</span><br/>" unless @user.favorite_team.blank?%>
+<%if !@user.summary.nil? && !@user.summary.blank?%>
+    <label>自我介绍：</label>
+    <p><%=simple_format auto_link(@user.summary, :urls)%></p>
+<%end%>
+</div>
 
 <%if @user.is_playable%>
-  <p>
-    <label>身高</label>
-    <%= @user.height%>cm
-  </p>
-  <p>
-    <label>体重</label>
-    <%= @user.weight%>kg
-  </p>
-  <p>
-    <label>惯用脚</label>
-    <%=fitfoot_text @user.fitfoot%>
-  </p>
-  <p>
-    <label>首选位置</label>
-    <%=position_text @user.premier_position%>
-  </p>
-  <p>
-    <label>可以踢的位置</label>
-    <%=(@user.positions.map {|p| position_text p.label}).join(', ')%>
-  </p>
-<%end%>
-<%if logged_in?%>
-  <%if @user.id != current_user.id%>
-    <%= link_to("发信", new_message_path(:to=>@user.id))%>
-    <%= link_to("邀请入队", new_user_team_join_invitation_path(@user))%>
-    <%if !current_user.is_my_friend?(@user)%>
-      <%= error_messages_for :friend_invitation %>
-      <% form_for :friend_invitation, :url => friend_invitations_path, :method=>"POST" do |f| %>
-        <%= f.hidden_field :host_id,  :value=>@user.id%>
-        <p>
-          <b>留言</b><br />
-          <%= f.text_area :message %>
-        </p>
-        <p>
-          <%= f.submit "邀请" %>
-        </p>
-      <% end %>
-    <%else%>
-      <%= link_to("不和他玩", friend_relation_path(0, :user_id=>@user.id),:method=>"delete")%>
-    <%end%>
-  <%else%>
-    <%= link_to("修改个人信息", edit_user_path(@user))%>
-    <%= link_to("收件箱", messages_path(:as=>'receiver'))%>
-    <%= link_to("朋友邀请", friend_invitations_path)%>
-    <%= link_to("队伍邀请", user_team_join_invitations_path(@user))%>
-    <%= link_to("队伍申请", user_team_join_requests_path(@user))%>
-  <%end%>
+  <div>
+  <%= "<span>身高: #{@user.height}cm</span><br/>" unless @user.height.nil?%>
+  <%= "<span>体重: #{@user.weight}kg</span><br/>" unless @user.weight.nil?%>
+  <%= "<span>惯用脚: #{fitfoot_text @user.fitfoot}</span><br/>" unless @user.fitfoot.nil?%>
+  <%= "<span>首选位置: #{position_text @user.premier_position}</span><br/>" unless @user.premier_position.nil?%>
+  <%= "<span>可以踢的位置: #{@user.positions.map {|p| position_text p.label}.join(', ')}</span><br/>" %>
+  </div>
 <%end%>
 
 <h1><%=h @user.nickname%>的朋友</h1>

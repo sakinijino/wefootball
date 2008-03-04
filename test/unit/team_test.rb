@@ -18,10 +18,10 @@ class TeamTest < ActiveSupport::TestCase
         :style => 'favorite_team'*50, 
         :summary => 'summary'*500 })
     assert teams(:inter).valid?
-    assert 50, teams(:inter).name
-    assert 15, teams(:inter).shortname
-    assert 50, teams(:inter).style
-    assert 1000, teams(:inter).summary
+    assert_equal 50, teams(:inter).name.length
+    assert_equal 15, teams(:inter).shortname.length
+    assert_equal 50, teams(:inter).style.length
+    assert_equal 1000, teams(:inter).summary.length
   end
   
   def test_recent_trainings

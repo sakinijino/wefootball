@@ -37,7 +37,7 @@ Rails::Initializer.run do |config|
   # Make sure the secret is at least 30 characters and all random, 
   # no regular words or you'll be exposed to dictionary attacks.
   config.action_controller.session = {
-    :session_key => '_wf-development_session',
+    :session_key => '_wefootball_session',
     :secret      => '48bcdcc8a2668121ebddc74fee24b0d3fad2508d9eb4caafeb2d425a645b1e7a0e407048eb8481ab2652ffdff642f833124dfa3ed33738024cf3e91854d5d310'
   }
 
@@ -56,4 +56,20 @@ Rails::Initializer.run do |config|
 
   # Make Active Record use UTC-base instead of local time
   # config.active_record.default_timezone = :utc
+end
+
+module ActiveRecord
+  class Errors
+    def full_messages
+      full_messages = []
+      
+      @errors.each_key do |attr|
+        @errors[attr].each do |msg|
+          next if msg.nil?
+          full_messages << msg
+        end
+      end
+      full_messages
+    end
+  end
 end
