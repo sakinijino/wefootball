@@ -89,14 +89,14 @@ class TeamJoinsControllerTest < ActionController::TestCase
   def test_destroy_unauth
     login_as :mike2
     delete :destroy, :id => UserTeam.find_by_user_id_and_team_id(users(:aaron).id, teams(:milan).id).id
-    assert_redirected_to '/'
+    assert_redirected_to team_view_path(teams(:milan))
   end
   
   def test_destroy
     login_as :saki
-    c = UserTeam.count
-    delete :destroy, :id => UserTeam.find_by_user_id_and_team_id(users(:aaron).id, teams(:milan).id).id
-    assert_redirected_to user_view_path(assigns(:tj).user_id)
-    assert_equal c-1, UserTeam.count
+    assert_difference "UserTeam.count", -1 do
+      delete :destroy, :id => UserTeam.find_by_user_id_and_team_id(users(:aaron).id, teams(:milan).id).id, :back_uri => '/public'
+      assert_redirected_to '/public'
+    end
   end
 end

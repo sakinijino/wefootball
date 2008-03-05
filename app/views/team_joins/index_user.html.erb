@@ -31,7 +31,7 @@
         <%= f.submit "更新" %>
       </p>
     <%end%>
-    <%=button_to("逐出球队",team_join_path(@ut),:method=>:delete) if @ut.can_destroy_by?(current_user)%>
+    <%=button_to("逐出球队",team_join_path(@ut, :back_uri => request.request_uri),:method=>:delete) if @ut.can_destroy_by?(current_user)%>
     <% end %>
   </div>
 <%end%>

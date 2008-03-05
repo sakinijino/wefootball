@@ -1,4 +1,6 @@
 class Training < ActiveRecord::Base
+  include ModelHelper
+  
   belongs_to :team
   
   has_many :training_joins,
@@ -12,9 +14,13 @@ class Training < ActiveRecord::Base
   end
   
   validates_length_of        :location,    :maximum => 300
-  validates_length_of        :summary,    :maximum => 700, :allow_nil=>true
+  validates_length_of        :summary,    :maximum => 1000, :allow_nil=>true
   
   attr_protected :team_id
+  
+  def before_validation
+    attribute_slice(:summary, 1000)
+  end
   
   def before_create
     self.start_time = DateTime.now if self.start_time==nil

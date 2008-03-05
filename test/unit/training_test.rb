@@ -21,6 +21,12 @@ class TrainingTest < ActiveSupport::TestCase
     assert !trainings(:training1).can_be_joined_by?(users(:mike1))
   end
   
+  def test_summary_length
+    t = trainings(:training1)
+    t.update_attributes({:summary=>'s'*2000})
+    assert_equal 1000, t.summary.length
+  end
+  
   def test_public_posts
     t = Training.find(1)
     assert_equal 3, t.posts.length

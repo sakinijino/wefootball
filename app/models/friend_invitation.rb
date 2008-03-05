@@ -1,4 +1,6 @@
 class FriendInvitation < ActiveRecord::Base
+  include ModelHelper
+  
   belongs_to :applier, :class_name=>"User", :foreign_key=>"applier_id"
   belongs_to :host, :class_name=>"User", :foreign_key=>"host_id"
 
@@ -7,7 +9,7 @@ class FriendInvitation < ActiveRecord::Base
   attr_protected :applier_id, :host_id
   
   def before_validation
-    self.message = (self.message.chars[0...150]).to_s if !self.message.nil? && self.message.chars.length > 150
+    attribute_slice(:message, 150)
   end
   
   def before_create

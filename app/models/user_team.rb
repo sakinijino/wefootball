@@ -10,7 +10,7 @@ class UserTeam < ActiveRecord::Base
     self.position=nil if !self.is_player
     if self.position != nil
       ut = UserTeam.find :first, :conditions => ['team_id = ? and position = ?', self.team_id, self.position]
-      ut.update_attributes(:position => nil) if ut != nil
+      ut.update_attributes!(:position => nil) if ut != nil
     end
   end
   

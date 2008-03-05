@@ -1,4 +1,4 @@
-class ProvinceCity
+module ProvinceCity
   CITY_VALUE_RANGE = (0..726).to_a
   CITY_VALUE_RANGE.delete(24)
   LIST = {

@@ -1,7 +1,8 @@
 require 'digest/sha1'
 class User < ActiveRecord::Base
-  FITFOOT = %w{R L B}
+  include ModelHelper
   
+  FITFOOT = %w{R L B}
   DEFAULT_IMAGE = "/images/default_user.jpg"
   
   attr_accessor :password
@@ -28,13 +29,7 @@ class User < ActiveRecord::Base
   
   has_many :training_joins,
             :dependent => :destroy
-  has_many :trainings, :through=>:training_joins do
-    def recent(limit=nil, timeline=Time.now)
-      find :all, :conditions => ['start_time > ?', timeline], 
-        :order=>'start_time', 
-        :limit=>limit
-    end
-  end
+  has_many :trainings, :through=>:training_joins, :extend => ActivityCalendar
   
   has_many :posts, :dependent => :destroy
 
@@ -72,10 +67,10 @@ class User < ActiveRecord::Base
   
   def before_validation
     self.nickname = self.login.split('@')[0] if self.login!=nil && (self.nickname==nil || self.nickname == "")
-    self.nickname = (self.nickname.chars[0...15]).to_s if !self.nickname.nil? && self.nickname.chars.length > 15
-    self.favorite_star = (self.favorite_star.chars[0...200]).to_s if !self.favorite_star.nil? && self.favorite_star.chars.length > 200
-    self.favorite_team = (self.favorite_team.chars[0...200]).to_s if !self.favorite_team.nil? && self.favorite_team.chars.length > 200
-    self.summary = (self.summary.chars[0...3000]).to_s if !self.summary.nil? && self.summary.chars.length > 3000
+    attribute_slice(:nickname, 15)
+    attribute_slice(:favorite_star, 200)
+    attribute_slice(:favorite_team, 200)
+    attribute_slice(:summary, 3000)
     self.weight = nil if self.weight == ''
     self.height = nil if self.height == ''
   end

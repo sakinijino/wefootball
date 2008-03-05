@@ -1,4 +1,6 @@
 class TeamJoinRequest < ActiveRecord::Base
+  include ModelHelper
+  
   belongs_to :user
   belongs_to :team
   
@@ -7,7 +9,7 @@ class TeamJoinRequest < ActiveRecord::Base
   validates_length_of  :message, :maximum => 150, :allow_nil=>true
 
   def before_validation
-    self.message = (self.message.chars[0...150]).to_s if !self.message.nil? && self.message.chars.length > 150
+    attribute_slice(:message, 150)
   end
   
   def before_create

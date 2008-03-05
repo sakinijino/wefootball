@@ -1,4 +1,5 @@
 class Team < ActiveRecord::Base
+  include ModelHelper
 #  FORMATION_POSTIONS = ['GK', 'LB', 'LCB', 'CB', 'RCB', 'RB',
 #    'LWB', 'LDM', 'DM', 'RDM', 'RWB',
 #    'LM', 'LCM', 'CM', 'RCM', 'RM',
@@ -10,14 +11,7 @@ class Team < ActiveRecord::Base
   has_one :team_image,
             :dependent => :destroy
   
-  has_many :trainings,
-            :dependent => :destroy do
-    def recent(limit=nil, timeline=Time.now)
-      find :all, :conditions => ['start_time > ?', timeline], 
-        :order=>'start_time', 
-        :limit=>limit
-    end
-  end
+  has_many :trainings, :dependent => :destroy, :extend => ActivityCalendar
   
   has_many :user_teams,
             :dependent => :destroy
@@ -46,10 +40,10 @@ class Team < ActiveRecord::Base
   attr_protected :uploaded_data
   
   def before_validation
-    self.name = (self.name.chars[0...50]).to_s if !self.name.nil? && self.name.chars.length > 50
-    self.shortname = (self.shortname.chars[0...15]).to_s if !self.shortname.nil? && self.shortname.chars.length > 15
-    self.summary = (self.summary.chars[0...3000]).to_s if !self.summary.nil? && self.summary.chars.length > 3000
-    self.style = (self.style.chars[0...50]).to_s if !self.style.nil? && self.style.chars.length > 50
+    attribute_slice(:name, 50)
+    attribute_slice(:shortname, 15)
+    attribute_slice(:summary, 3000)
+    attribute_slice(:style, 50)
   end
   
 #  GENERIC_ANALYSIS_REGEX = /([a-zA-Z]|[\xc0-\xdf][\x80-\xbf])+|[0-9]+|[\xe0-\xef][\x80-\xbf][\x80-\xbf]/

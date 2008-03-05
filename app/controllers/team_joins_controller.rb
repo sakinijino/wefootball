@@ -64,10 +64,10 @@ class TeamJoinsController < ApplicationController
   def destroy
     @tj = UserTeam.find(params[:id])
     if (!@tj.can_destroy_by?(self.current_user))
-      fake_params_redirect
+      redirect_with_back_uri_or_default team_view_path(@tj.team_id)
     else
       @tj.destroy
-      redirect_to user_view_path(@tj.user_id)
+      redirect_with_back_uri_or_default team_view_path(@tj.team_id)
     end
   end
 end
