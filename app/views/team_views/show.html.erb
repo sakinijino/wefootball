@@ -8,6 +8,7 @@
 <%= team_image_tag @team%>
 
 <div>
+<%= "<span>所在地: #{@team.city_text}</span><br/>" unless @team.city_text.nil?%>
 <%= "<span>建队时间: #{@team.found_time}</span><br/>" unless @team.found_time.nil?%>
 <%= "<span>球队全名: #{@team.name}</span><br/>" unless @team.name.blank?%>
 <%= "<span>球队风格: #{@team.style}</span><br/>" unless @team.style.blank?%>

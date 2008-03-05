@@ -6,9 +6,10 @@ class RepliesController < ApplicationController
       fake_params_redirect
       return
     end
-    @reply = @post.replies.build(params[:reply])
-    @reply.user = current_user    
-    if @post.save
+    @reply = Reply.new(params[:reply])
+    @reply.user = current_user
+    @post.replies << @reply
+    if @reply.save
       redirect_to(@post)
     else
       @post.replies.reload
@@ -22,7 +23,7 @@ class RepliesController < ApplicationController
     if (!@reply.can_be_destroyed_by?(current_user))
       fake_params_redirect
     else      
-      @post.replies.delete(@reply, :dependent => :destroy)
+      @post.replies.delete(@reply)
       redirect_to @reply.post
     end
   end

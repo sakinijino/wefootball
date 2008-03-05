@@ -9,8 +9,8 @@ class TeamJoinsControllerTest < ActionController::TestCase
     assert_difference('TeamJoinRequest.count', -1) do
     assert_difference('UserTeam.count') do
       assert_difference('User.find(users(:mike1).id).teams.length') do
-        post :create, :id=>5
-        assert_redirected_to team_view_path(assigns(:tjs).team_id)
+        post :create, :id=>5, :back_uri => '/public'
+        assert_redirected_to '/public'#team_view_path(assigns(:tjs).team_id)
       end
     end
     end
@@ -52,6 +52,14 @@ class TeamJoinsControllerTest < ActionController::TestCase
     login_as :saki
     assert_difference('Team.find(teams(:milan)).users.admin.length') do
       put :update, :id=>UserTeam.find_by_user_id_and_team_id(users(:aaron).id, teams(:milan).id).id, :ut=>{:is_admin => true}
+      assert_redirected_to team_team_joins_path(assigns(:team))
+    end
+  end
+  
+  def test_degree_as_common_user_fail
+    login_as :saki
+    assert_no_difference('Team.find(teams(:milan)).users.admin.length') do
+      put :update, :id=>UserTeam.find_by_user_id_and_team_id(users(:saki).id, teams(:milan).id).id, :ut=>{:is_admin => false}
       assert_redirected_to team_team_joins_path(assigns(:team))
     end
   end

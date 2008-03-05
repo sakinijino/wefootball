@@ -10,6 +10,9 @@
 <p><label for="found_time">建队日期</label><br/>
 <%= f.date_select :found_time, :start_year=>1900, :end_year=>Date.today.year %></p>
 
+<p><label for="city">所在地</label><br/>
+<%= f.province_city_select :city %>
+
 <p><label for="style">球队风格</label><br/>
 <%= f.text_field :style %></p>
 

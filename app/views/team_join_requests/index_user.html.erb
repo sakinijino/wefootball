@@ -1,28 +1,14 @@
-<div>
-  <h1>提出申请的用户列表</h1>
-</div>
-<table>
-  <tr>
-    <th>时间</th>
-    <th>用户</th>
-    <th>留言</th>
-    <th></th>
-    <th></th>   
-  </tr>
-  
+<h1>申请加入<%=h @team.shortname%>的用户</h1>
+
 <% for req in @requests %>
-  <tr>
-    <td><%=h req.apply_date %></td>
-    <td><%= link_to req.user.nickname, user_path(req.user_id) %></td>
-    <td><%=h req.message %></td>
-    <td><%= link_to '接受', team_joins_path(:id=>req.id), :method => :post %></td>
-    <td><%= link_to '拒绝', team_join_request_path(req.id), :method => :delete %></td>
-  </tr>
+  <div>
+    <%= render :partial => "shared/user_icon", :object => req.user%>
+    <span>申请日期: <%= req.apply_date.to_s(:db) %></span><br/>
+    <%if !req.message.nil? && !req.message.blank?%>
+      <span>留言: </span>
+      <p><%=simple_format req.message%></p>
+    <%end%>
+    <%= link_to '接受', team_joins_path(:id=>req.id, :back_uri => request.request_uri), :method => :post %>
+    <%= link_to '拒绝', team_join_request_path(req.id), :method => :delete %>
+  </div>
 <% end %>
-</table>
-
-<%#= link_to 'Previous page', admin_user_url({ :page => @user_pages.current.previous }) if @user_pages.current.previous %>
-<%#= link_to 'Next page', admin_user_url({ :page => @user_pages.current.next }) if @user_pages.current.next %> 
-
-
-

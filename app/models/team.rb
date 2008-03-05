@@ -66,6 +66,11 @@ class Team < ActiveRecord::Base
     Team.find :all, :conditions => ["name like ? or shortname like ?", q, q]
   end
   
+  def city_text
+    return nil if self.city == 0
+    ProvinceCity::LIST[self.city]
+  end
+  
   def image(thumbnail = nil)
     return self.team_image.public_filename(thumbnail) if self.team_image != nil
     DEFAULT_IMAGE

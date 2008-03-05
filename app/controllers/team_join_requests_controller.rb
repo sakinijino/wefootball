@@ -1,13 +1,22 @@
 class TeamJoinRequestsController < ApplicationController
-  before_filter :login_required, :except => [:index]
+  before_filter :login_required
   
   def index
-    if (params[:user_id]) # 显示所有邀请用户的队伍
-        @requests = TeamJoinRequest.find_all_by_user_id_and_is_invitation(params[:user_id], false, :include=>[:team])
-        render :action=>"index_team"
-    else # 显示队伍所有邀请的用户
+    if (params[:team_id]) # 显示所有请求加入队伍的用户
+      @team = Team.find(params[:team_id])
+      if (current_user.is_team_admin_of?(params[:team_id]))
         @requests = TeamJoinRequest.find_all_by_team_id_and_is_invitation(params[:team_id], false, :include=>[:user])
         render :action=>"index_user"
+      else
+        fake_params_redirect
+      end
+    else # 显示所有用户请求加入队伍
+      if (!logged_in?)
+         fake_params_redirect
+      else
+        @requests = TeamJoinRequest.find_all_by_user_id_and_is_invitation(self.current_user, false, :include=>[:team])
+        render :action=>"index_team"
+      end
     end
   end
   
@@ -19,7 +28,7 @@ class TeamJoinRequestsController < ApplicationController
       return
     end
     params[:team_join_request][:is_invitation] = false;
-    @tjs = TeamJoinRequest.find_or_initialize_by_team_id_and_user_id(@team.id,@user.id)    
+    @tjs = TeamJoinRequest.find_or_initialize_by_team_id_and_user_id_and_is_invitation(@team.id,@user.id, false)    
     @tjs.team = @team
     @tjs.user = @user
     if @tjs.update_attributes(params[:team_join_request])
@@ -35,7 +44,7 @@ class TeamJoinRequestsController < ApplicationController
       fake_params_redirect
     else
       @tjs.destroy
-      redirect_to team_team_join_requests_path(@tjs.team.id)
+      redirect_with_back_uri_or_default team_team_join_requests_path(@tjs.team.id)
     end
   end
 end

@@ -3,6 +3,7 @@ class CreateTeams < ActiveRecord::Migration
     create_table :teams do |t|
       t.string :name, :limit => 50
       t.string :shortname, :limit => 15
+      t.integer :city, :limit=>3, :default=>0
       t.text :summary
       t.date :found_time
       t.string :style, :limit=>50, :default=>''

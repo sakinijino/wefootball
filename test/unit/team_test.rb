@@ -1,6 +1,15 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
 class TeamTest < ActiveSupport::TestCase
+  
+  def test_city_text
+    u = teams(:inter)
+    u.city = 0
+    assert_nil u.city_text
+    u.city = 1
+    assert_equal ProvinceCity::LIST[1], u.city_text
+  end
+  
   def test_image_path
     assert_equal "/images/teams/t00000001.jpg", teams(:inter).image
     assert_equal "/images/default_team.jpg", teams(:milan).image

@@ -1,13 +1,13 @@
 <%if user.id != current_user.id%>
   <ul>
-    <li><%= link_to("邀请入队", new_user_team_join_invitation_path(user))%></li>
+    <li><%= link_to("邀请入队", new_team_join_invitation_path(:user_id => user.id))%></li>
   </ul>
 <%else%>
   <ul>
     <li><%= link_to("修改个人信息", edit_user_path(user))%></li>
     <li><%= link_to("收件箱", messages_path(:as=>'receiver'))%></li>
-    <li><%= link_to("朋友邀请", friend_invitations_path)%></li>
-    <li><%= link_to("队伍邀请", user_team_join_invitations_path(user))%></li>
-    <li><%= link_to("队伍申请", user_team_join_requests_path(user))%></li>
+    <li><%= link_to("希望和我成为朋友的用户", friend_invitations_path)%></li>
+    <li><%= link_to("邀请我加入的球队", team_join_invitations_path)%></li>
+    <li><%= link_to("我申请加入的球队", team_join_requests_path)%></li>
   </ul>
 <%end%>

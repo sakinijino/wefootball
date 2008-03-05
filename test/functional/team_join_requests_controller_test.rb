@@ -4,13 +4,20 @@ class TeamJoinRequestsControllerTest < ActionController::TestCase
   # Replace this with your real tests.
   include AuthenticatedTestHelper
 
+  def test_index_unlogin
+    get :index, :team_id=>teams(:inter).id
+    assert_redirected_to new_session_path
+  end
+  
   def test_index_team_requests
+    login_as :saki
     get :index, :team_id=>teams(:inter).id
     assert_template 'index_user'
     assert_equal 1, assigns(:requests).length
   end
   
   def test_index_user_requests
+    login_as :mike2
     get :index, :user_id=>users(:mike2)
     assert_template 'index_team'
     assert_equal 1, assigns(:requests).length
@@ -18,10 +25,10 @@ class TeamJoinRequestsControllerTest < ActionController::TestCase
   
   def test_create_request
     assert_difference('TeamJoinRequest.count') do
-      assert_difference('TeamJoinRequest.count :conditions=>["user_id = ?", users(:mike3).id]') do
-        login_as :mike3
+      assert_difference('TeamJoinRequest.count :conditions=>["user_id = ?", users(:mike1).id]') do
+        login_as :mike1
         post :create, :team_join_request => { 
-          :user_id => users(:mike3).id, 
+          :user_id => users(:mike1).id, 
           :team_id => teams(:inter).id,
           :message => 'hello'
         }
@@ -80,8 +87,8 @@ class TeamJoinRequestsControllerTest < ActionController::TestCase
     login_as :saki
     c1 = TeamJoinRequest.count
     c2 = TeamJoinRequest.count :conditions=>["user_id = ?", users(:mike2).id]
-    delete :destroy, :id => 6
-    assert_redirected_to team_team_join_requests_path(assigns(:tjs).team.id)
+    delete :destroy, :id => 6, :back_uri => '/public'
+    assert_redirected_to '/public'#team_team_join_requests_path(assigns(:tjs).team.id)
     assert_equal c1-1, TeamJoinRequest.count
     assert_equal c2-1, (TeamJoinRequest.count :conditions=>["user_id = ?", users(:mike2).id])
   end

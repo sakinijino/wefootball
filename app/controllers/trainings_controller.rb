@@ -37,14 +37,14 @@ class TrainingsController < ApplicationController
   end
   
   def edit
-    @training = Training.find(params[:id], :include=>[:team])
+    @training = Training.find(params[:id])
     @team = @training.team
     fake_params_redirect if (!current_user.is_team_admin_of?(@training.team))
   end
   
   # PUT /trainings/1
   def update
-    @training = Training.find(params[:id], :include=>[:team])
+    @training = Training.find(params[:id])
     if (!current_user.is_team_admin_of?(@training.team))
       fake_params_redirect
     elsif @training.update_attributes(params[:training])
@@ -56,12 +56,12 @@ class TrainingsController < ApplicationController
 
   # DELETE /trainings/1
   def destroy
-    @training = Training.find(params[:id], :include=>[:team]) 
+    @training = Training.find(params[:id]) 
     if (!current_user.is_team_admin_of?(@training.team))
       fake_params_redirect
     else
       @training.destroy
-      redirect_to team_view_path(@training.team)
+      redirect_to team_view_path(@training.team_id)
     end
   end
 end

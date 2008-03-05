@@ -22,6 +22,7 @@ saki:
   created_at: <%= 1.days.ago.to_s :db %>
   is_playable: true
   premier_position: 2
+  city: 1
   weight: 62
   height: 172
   nickname: saki

@@ -17,19 +17,11 @@ class TrainingJoinsControllerTest < ActionController::TestCase
     end
   end
   
-  def test_should_join_by_self
-    login_as :saki
-    assert_no_difference('TrainingJoin.count') do
-      post :create, :user_id=>users(:quentin).id, :training_id=>trainings(:training1).id
-      assert_redirected_to '/'
-    end
-  end
-  
   def test_should_not_join_twice
     login_as :saki
     assert_no_difference('TrainingJoin.count') do
       post :create, :user_id=>users(:saki).id, :training_id=>trainings(:training1).id
-      assert_redirected_to '/'
+      assert_redirected_to training_view_path(assigns(:training).id)
     end
   end
 

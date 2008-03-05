@@ -57,19 +57,3 @@ Rails::Initializer.run do |config|
   # Make Active Record use UTC-base instead of local time
   # config.active_record.default_timezone = :utc
 end
-
-module ActiveRecord
-  class Errors
-    def full_messages
-      full_messages = []
-      
-      @errors.each_key do |attr|
-        @errors[attr].each do |msg|
-          next if msg.nil?
-          full_messages << msg
-        end
-      end
-      full_messages
-    end
-  end
-end

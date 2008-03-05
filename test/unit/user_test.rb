@@ -111,8 +111,8 @@ class UserTest < Test::Unit::TestCase
         :weight => '',})
     assert users(:saki).valid?
     assert_equal 15, users(:saki).nickname.length
-    assert_equal 100, users(:saki).favorite_star.length
-    assert_equal 100, users(:saki).favorite_team.length
+    assert_equal 200, users(:saki).favorite_star.length
+    assert_equal 200, users(:saki).favorite_team.length
     assert_equal 3000, users(:saki).summary.length
     assert_nil users(:saki).height
     assert_nil users(:saki).weight
@@ -142,6 +142,30 @@ class UserTest < Test::Unit::TestCase
     users(:saki).positions_array=nil
     users(:saki).save
     assert_equal 1, users(:saki).positions.length #equal to 1, because premier_position
+  end
+  
+  def test_city_text
+    u = users(:saki)
+    u.city = 0
+    assert_nil u.city_text
+    u.city = 1
+    assert_equal ProvinceCity::LIST[1], u.city_text
+  end
+  
+  def test_birthday_type
+    u = users(:saki)
+    u.birthday_display_type = 0
+    assert_nil u.birthday_text
+    assert_nil u.age
+    u.birthday_display_type = 1
+    assert_equal u.birthday.strftime("%Y年%m月%d日"), u.birthday_text
+    assert_equal Date.today.year - u.birthday.year, u.age
+    u.birthday_display_type = 2
+    assert_equal u.birthday.strftime("%m月%d日"), u.birthday_text
+    assert_nil u.age
+    u.birthday_display_type = 3
+    assert_equal u.birthday.strftime("%Y年"), u.birthday_text
+    assert_equal Date.today.year - u.birthday.year, u.age
   end
   
   def test_image_path

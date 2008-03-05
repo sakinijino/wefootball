@@ -1,7 +1,8 @@
 class TeamsController < ApplicationController
-  before_filter :login_required, :only=>[:create, :update]
+  before_filter :login_required, :except => [:search]
   
   def new
+    @team = Team.new
   end
 
   def edit

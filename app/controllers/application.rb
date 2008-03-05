@@ -14,8 +14,30 @@ class ApplicationController < ActionController::Base
     redirect_to '/'
   end
   
-#  def redirect_back
-#    redirect_to(session[:return_to])
-#    session[:return_to] = nil
-#  end
+  def redirect_with_back_uri_or_default(uri='/')
+    params[:back_uri]!=nil ? redirect_to(params[:back_uri]) : redirect_to(uri)
+  end
+end
+
+class ActionView::Helpers::FormBuilder
+  def province_city_select(field)
+    select field, ProvinceCity::CITY_VALUE_RANGE.map {|v| [ProvinceCity::LIST[v], v]}
+  end
+end
+
+
+module ActiveRecord
+  class Errors
+    def full_messages
+      full_messages = []
+      
+      @errors.each_key do |attr|
+        @errors[attr].each do |msg|
+          next if msg.nil?
+          full_messages << msg
+        end
+      end
+      full_messages
+    end
+  end
 end

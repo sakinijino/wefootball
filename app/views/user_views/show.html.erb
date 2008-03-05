@@ -8,7 +8,9 @@
 <%= user_image_tag @user %>
 
 <div>
-<%= "<span>生日: #{@user.birthday}</span><br/>" unless @user.birthday.nil?%>
+<%= "<span>所在地: #{@user.city_text}</span><br/>" unless @user.city_text.nil?%>
+<%= "<span>生日: #{@user.birthday_text}</span><br/>" unless @user.birthday_text.nil?%>
+<%= "<span>年龄: #{@user.age}</span><br/>" unless @user.age.nil?%>
 <%= "<span>喜欢的球星: #{@user.favorite_star}</span><br/>" unless @user.favorite_star.blank?%>
 <%= "<span>喜欢的球队: #{@user.favorite_team}</span><br/>" unless @user.favorite_team.blank?%>
 <%if !@user.summary.nil? && !@user.summary.blank?%>

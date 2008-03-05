@@ -1,6 +1,5 @@
 require 'digest/sha1'
 class User < ActiveRecord::Base
-  # Virtual attribute for the unencrypted password
   FITFOOT = %w{R L B}
   
   DEFAULT_IMAGE = "/images/default_user.jpg"
@@ -51,9 +50,15 @@ class User < ActiveRecord::Base
   validates_uniqueness_of   :login, :case_sensitive => false
   
   validates_length_of       :nickname, :maximum => 15
+  validates_inclusion_of    :birthday_display_type, :in => [0, #不显示生日
+    1, #显示年月日
+    2, #显示月日
+    3 #显示年
+  ], :allow_nil=>true
+  validates_inclusion_of   :city, :in => ProvinceCity::CITY_VALUE_RANGE
   validates_length_of       :summary, :maximum => 3000, :allow_nil=>true
-  validates_length_of       :favorite_star, :maximum => 100
-  validates_length_of       :favorite_team, :maximum => 100
+  validates_length_of       :favorite_star, :maximum => 200
+  validates_length_of       :favorite_team, :maximum => 200
   
   validates_numericality_of :weight, :height, :if=>:is_playable, :allow_nil=>true
   validates_inclusion_of    :weight, :in => 0..400, :if=>:is_playable,
@@ -63,13 +68,13 @@ class User < ActiveRecord::Base
   validates_inclusion_of    :fitfoot, :in => FITFOOT, :if=>:is_playable
   validates_inclusion_of   :premier_position, :in => Position::POSITIONS, :if=>:is_playable
   
-  validates_associated :user_image, :allow_nil => true
+  validates_associated :user_image, :allow_nil => true, :message => '上传的必须是一张图片，而且大小不能超过2M'
   
   def before_validation
     self.nickname = self.login.split('@')[0] if self.login!=nil && (self.nickname==nil || self.nickname == "")
     self.nickname = (self.nickname.chars[0...15]).to_s if !self.nickname.nil? && self.nickname.chars.length > 15
-    self.favorite_star = (self.favorite_star.chars[0...100]).to_s if !self.favorite_star.nil? && self.favorite_star.chars.length > 100
-    self.favorite_team = (self.favorite_team.chars[0...100]).to_s if !self.favorite_team.nil? && self.favorite_team.chars.length > 100
+    self.favorite_star = (self.favorite_star.chars[0...200]).to_s if !self.favorite_star.nil? && self.favorite_star.chars.length > 200
+    self.favorite_team = (self.favorite_team.chars[0...200]).to_s if !self.favorite_team.nil? && self.favorite_team.chars.length > 200
     self.summary = (self.summary.chars[0...3000]).to_s if !self.summary.nil? && self.summary.chars.length > 3000
     self.weight = nil if self.weight == ''
     self.height = nil if self.height == ''
@@ -92,7 +97,7 @@ class User < ActiveRecord::Base
   # prevents a user from submitting a crafted form that bypasses activation
   # anything else you want your user to change should be added here.
   attr_accessible :password, :password_confirmation
-  attr_accessible :nickname, :summary, :birthday, :favorite_star, :favorite_team
+  attr_accessible :nickname, :summary, :birthday, :birthday_display_type, :city, :favorite_star, :favorite_team
   attr_accessible :is_playable, :weight, :height, :fitfoot, :premier_position
   
 #  GENERIC_ANALYSIS_REGEX = /([a-zA-Z]|[\xc0-\xdf][\x80-\xbf])+|[0-9]+|[\xe0-\xef][\x80-\xbf][\x80-\xbf]/
@@ -228,6 +233,39 @@ class User < ActiveRecord::Base
   
   def can_reject_match_invitation?(match_invitation)
     can_act_on_match_invitation?(match_invitation)
+  end
+  
+  def city_text
+    return nil if self.city == 0
+    ProvinceCity::LIST[self.city]
+  end
+  
+  def birthday_text
+    return nil if self.birthday.nil?
+    case self.birthday_display_type
+    when 0
+      nil
+    when 1
+      self.birthday.strftime("%Y年%m月%d日")
+    when 2
+      self.birthday.strftime("%m月%d日")
+    when 3
+      self.birthday.strftime("%Y年")
+    else
+      nil
+    end
+  end
+  
+  def age
+    return nil if self.birthday.nil?
+    case self.birthday_display_type
+    when 1
+      Date.today.year - self.birthday.year
+    when 3
+      Date.today.year - self.birthday.year
+    else
+      nil
+    end
   end
 
   protected

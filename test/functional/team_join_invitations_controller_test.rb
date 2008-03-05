@@ -3,24 +3,31 @@ require File.dirname(__FILE__) + '/../test_helper'
 class TeamJoinInvitationsControllerTest < ActionController::TestCase
   include AuthenticatedTestHelper
   
+  def test_index_unlogin
+    get :index, :team_id=>teams(:inter).id
+    assert_redirected_to new_session_path
+  end
+  
   def test_index_user_invitations
-    get :index, :user_id=>users(:saki).id
-    assert_template 'index_user'
-    assert_equal 1, assigns(:req).length
+    login_as :saki
+    get :index
+    assert_template 'index_team'
+    assert_equal 1, assigns(:requests).length
   end
   
   def test_index_team_invitations
+    login_as :saki
     get :index, :team_id=>teams(:inter).id
-    assert_template 'index_team'
-    assert_equal 3, assigns(:req).length
+    assert_template 'index_user'
+    assert_equal 3, assigns(:requests).length
   end
   
   def test_create_invitation
     assert_difference('TeamJoinRequest.count') do
-      assert_difference('TeamJoinRequest.count :conditions=>["user_id = ? and is_invitation = true", users(:mike3).id]') do
+      assert_difference('TeamJoinRequest.count :conditions=>["user_id = ? and is_invitation = true", users(:mike2).id]') do
         login_as :saki
         post :create, :team_join_request => { 
-          :user_id => users(:mike3).id, 
+          :user_id => users(:mike2).id, 
           :team_id => teams(:inter).id,
           :message => 'hello'
         }
@@ -79,8 +86,8 @@ class TeamJoinInvitationsControllerTest < ActionController::TestCase
     login_as :mike1
     c1 = TeamJoinRequest.count
     c2 = TeamJoinRequest.count :conditions=>["user_id = ?", users(:mike1).id]
-    delete :destroy, :id => 5
-    assert_redirected_to user_team_join_invitations_path(users(:mike1).id)
+    delete :destroy, :id => 5, :back_uri => '/public'
+    assert_redirected_to '/public'#team_join_invitations_path
     assert_equal c1-1, TeamJoinRequest.count
     assert_equal c2-1, (TeamJoinRequest.count :conditions=>["user_id = ?", users(:mike1).id])
   end
