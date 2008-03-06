@@ -1,7 +1,7 @@
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
 
 saki_image:
-  filename: u00000003.jpg
+  filename: u00000003.not_image
   content_type: image/pjpeg
   size: 79683
   user_id: 3

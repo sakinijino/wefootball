@@ -30,6 +30,12 @@ class UserTeamTest < ActiveSupport::TestCase
     assert 2, UserTeam.team_formation(teams(:inter))
   end
   
+  def test_before_validation
+    ut = UserTeam.new(:is_player=>true, :position => '')
+    ut.valid?
+    assert_nil ut.position
+  end
+  
   def test_before_save
     user_teams(:saki_inter).position = 3
     user_teams(:saki_inter).save
@@ -37,7 +43,24 @@ class UserTeamTest < ActiveSupport::TestCase
     user_teams(:saki_inter).is_player = false
     user_teams(:saki_inter).save
     assert_nil user_teams(:saki_inter).position
+    user_teams(:saki_inter).is_player = true
     user_teams(:saki_inter).position = 26
     assert !user_teams(:saki_inter).valid?
+    
+    UserTeam.destroy_all
+    assert_equal 0, UserTeam.count
+    (1..11).each do |i|
+      ut = UserTeam.new(:is_player => true, :position => i)
+      ut.user_id = i
+      ut.team_id = 1
+      ut.save
+    end
+    assert_equal UserTeam::FORMATION_MAX_LENGTH, UserTeam.team_formation(1).size
+    ut = UserTeam.new(:is_player => true, :position => 12)
+    ut.user_id = 12
+    ut.team_id = 1
+    ut.save
+    assert_nil ut.position
+    assert_equal UserTeam::FORMATION_MAX_LENGTH, UserTeam.team_formation(1).size
   end
 end

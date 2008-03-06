@@ -29,7 +29,7 @@ module ActivityCalendar
   private
   def find_in_duration(start, endd)
     find :all, 
-      :conditions => ['start_time >= ? and start_time < ?', start, endd], 
+      :conditions => ['end_time > ? and start_time < ?', start, endd], 
       :order=>'start_time'
   end
 end

@@ -45,9 +45,7 @@ class TeamJoinsController < ApplicationController
     end    
     @user =@tj.user
     @team = @tj.team
-    params[:ut][:position] = nil if params[:ut][:position]==""
     params[:ut][:is_player] = false if !@user.is_playable
-    params[:ut][:position] = nil if (@team.formation.size > 11)
     tmp = UserTeam.new(:is_admin => params[:ut][:is_admin])
     params[:ut][:is_admin] = @tj.is_admin if(
       tmp.is_admin && !@tj.can_promote_as_admin_by?(current_user)||

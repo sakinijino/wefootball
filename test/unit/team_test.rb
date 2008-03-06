@@ -11,7 +11,7 @@ class TeamTest < ActiveSupport::TestCase
   end
   
   def test_image_path
-    assert_equal "/images/teams/t00000001.jpg", teams(:inter).image
+    assert_equal "/images/teams/t00000001.not_image", teams(:inter).image
     assert_equal "/images/default_team.jpg", teams(:milan).image
   end
   
@@ -43,18 +43,25 @@ class TeamTest < ActiveSupport::TestCase
     assert_equal 0, Training.count
     td = Time.now.next_month.next_month.monday.tomorrow.tomorrow
     create_training(td, 1)
-    create_training(td.at_midnight, 1)
-    create_training(td.monday, 1)
-    create_training(td.at_beginning_of_month, 1)
+    
+    create_training(td.at_midnight.ago(7200).since(1), 1)
+    create_training(td.monday.ago(7200).since(1), 1)
+    create_training(td.at_beginning_of_month.ago(7200).since(1), 1)
+    
     create_training(td.at_midnight.tomorrow.ago(1), 1)
     create_training(td.monday.next_week.ago(1), 1)
     create_training(td.at_beginning_of_month.next_month.ago(1), 1)
+    
+    create_training(td.at_midnight.ago(7200), 1)
+    create_training(td.monday.ago(7200), 1)
+    create_training(td.at_beginning_of_month.ago(7200), 1)
+    
     create_training(td.at_midnight.tomorrow, 1)
     create_training(td.monday.next_week, 1)
     create_training(td.at_beginning_of_month.next_month, 1)
     assert_equal 3, t.trainings.in_a_day(td).length
-    assert_equal 6, t.trainings.in_a_week(td).length
-    assert_equal 9, t.trainings.in_a_month(td).length
+    assert_equal 7, t.trainings.in_a_week(td).length
+    assert_equal 11, t.trainings.in_a_month(td).length
   end
   
   def test_users

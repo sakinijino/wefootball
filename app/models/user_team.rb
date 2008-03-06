@@ -1,4 +1,6 @@
 class UserTeam < ActiveRecord::Base
+  FORMATION_MAX_LENGTH = 11
+  
   belongs_to :user
   belongs_to :team
   
@@ -6,11 +8,21 @@ class UserTeam < ActiveRecord::Base
   
   validates_inclusion_of   :position, :in => Team::FORMATION_POSITIONS, :allow_nil => true
   
-  def before_save
+  def before_validation
     self.position=nil if !self.is_player
+    self.position = nil if self.position==""
+  end
+  
+  def before_save
     if self.position != nil
-      ut = UserTeam.find :first, :conditions => ['team_id = ? and position = ?', self.team_id, self.position]
-      ut.update_attributes!(:position => nil) if ut != nil
+      uts = UserTeam.team_formation(self.team_id)
+      if (uts.size >= FORMATION_MAX_LENGTH)
+        self.position = nil
+      else
+        uts.each do |ut| 
+          ut.update_attributes!(:position => nil) if ut.position == self.position
+        end
+      end
     end
   end
   

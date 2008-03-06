@@ -169,7 +169,7 @@ class UserTest < Test::Unit::TestCase
   end
   
   def test_image_path
-    assert_equal "/images/users/u00000003.jpg", users(:saki).image
+    assert_equal "/images/users/u00000003.not_image", users(:saki).image
     assert_equal "/images/default_user.jpg", users(:aaron).image
   end
   

@@ -1,0 +1,17 @@
+<p><label for="name">球队名称</label><br/>
+<%= f.text_field :name %></p>
+
+<p><label for="shortname">球队简称</label><br/>
+<%= f.text_field :shortname %></p>
+
+<p><label for="found_time">建队日期</label><br/>
+<%= f.date_select :found_time, :start_year=>1900, :end_year=>Date.today.year, :use_month_numbers => true %></p>
+
+<p><label for="city">所在地</label><br/>
+<%= f.province_city_select :city %>
+
+<p><label for="style">球队风格</label><br/>
+<%= f.text_field :style %></p>
+
+<p><label for="summary">球队简介</label><br/>
+<%= f.text_area :summary %></p>
