@@ -42,8 +42,7 @@ class TeamJoinsController < ApplicationController
     if (!current_user.is_team_admin_of?(@tj.team_id))
       fake_params_redirect
       return
-    end
-    
+    end    
     @user =@tj.user
     @team = @tj.team
     params[:ut][:position] = nil if params[:ut][:position]==""

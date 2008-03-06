@@ -27,6 +27,21 @@ class TrainingTest < ActiveSupport::TestCase
     assert_equal 1000, t.summary.length
   end
   
+  def test_validate_time
+    t = Training.new(:start_time => Time.now.ago(7200), :end_time => Time.now.since(7200), :location => 'Beijing')
+    assert !t.valid?
+    assert t.errors.on(:start_time)
+    t = Training.new(:start_time => Time.now.since(3600), :end_time => Time.now.since(60), :location => 'Beijing')
+    assert !t.valid?
+    assert t.errors.on(:end_time)
+    t = Training.new(:start_time => Time.now.since(3600), :end_time => Time.now.since(3660), :location => 'Beijing')
+    assert !t.valid?
+    assert t.errors.on(:end_time)
+    t = Training.new(:start_time => Time.now.since(3600), :end_time => Time.now.tomorrow.since(3660), :location => 'Beijing')
+    assert !t.valid?
+    assert t.errors.on(:end_time)
+  end
+  
   def test_public_posts
     t = Training.find(1)
     assert_equal 3, t.posts.length

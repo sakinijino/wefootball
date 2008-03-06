@@ -19,12 +19,23 @@ class ApplicationController < ActionController::Base
   end
 end
 
+class DateTime
+  def self.today
+    DateTime.now.at_midnight
+  end
+end
+
+class Time
+  def self.today
+    Time.now.at_midnight
+  end
+end
+
 class ActionView::Helpers::FormBuilder
   def province_city_select(field)
     select field, ProvinceCity::CITY_VALUE_RANGE.map {|v| [ProvinceCity::LIST[v], v]}
   end
 end
-
 
 module ActiveRecord
   class Errors

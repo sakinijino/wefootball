@@ -2,10 +2,10 @@
 <% form_for @training do |f| %>
 
 <p><label for="start_time">开始时间</label><br/>
-<%= f.datetime_select :start_time, :minute_step=>5 %></p>
+<%= f.datetime_select :start_time, :minute_step=>15 %></p>
 
 <p><label for="end_time">结束时间</label><br/>
-<%= f.datetime_select :end_time, :minute_step=>5 %></p>
+<%= f.datetime_select :end_time, :minute_step=>15 %></p>
 
 <p><label for="location">地点</label><br/>
 <%= f.text_field :location %></p>

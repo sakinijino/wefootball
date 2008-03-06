@@ -31,8 +31,8 @@ class TrainingsControllerTest < ActionController::TestCase
   
   def test_should_update_training
     login_as :saki
-    t = Time.now
-    put :update, :id => trainings(:training1).id, :training => { :start_time=> t}
+    t = Time.now.since(3600)
+    put :update, :id => trainings(:training1).id, :training => { :start_time=> t, :end_time=> t.since(7200)}
     assert_redirected_to training_view_path(assigns(:training))
     assert_equal t.to_s, Training.find(trainings(:training1).id).start_time.to_s
   end
