@@ -1,0 +1,43 @@
+<p>
+  <b>名称</b>
+  <%=h @football_ground.name %>
+</p>
+
+<p>
+  <b>所在地</b>
+  <%=h @football_ground.city_text %>
+</p>
+
+<p>
+  <b>球场类型</b>
+  <%=h ground_type_text(@football_ground.ground_type) %>
+</p>
+
+<%if@football_ground.status == 2 %>
+<p>
+  <%=h "停用"%>
+</p>
+<%end%>
+
+<p>
+  <b>描述</b>
+  <%=simple_format auto_link(@football_ground.description, :urls) %>
+</p>
+
+<%= link_to '编辑', edit_football_ground_path(@football_ground) if @is_editor %>
+
+<h1>未来24小时在这个球场安排的训练</h1>
+<table>
+  <tr>
+    <th>队伍</th>
+    <th>时间</th>
+    <th></th>
+  </tr>
+  <%@football_ground.trainings.in_later_hours(24).each do |t|%>
+    <tr>
+      <td><%= link_to h(t.team.shortname), team_view_path(t.team.id)%></td>
+      <td><%= t.start_time.strftime('%m-%d')%> <%= t.start_time.strftime('%H:%M')%>-<%= t.end_time.strftime('%H:%M')%></td>
+      <td><%=link_to '查看', training_view_path(t)%></td>
+    </tr>
+  <%end%>
+</table>

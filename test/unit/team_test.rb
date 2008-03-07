@@ -17,7 +17,7 @@ class TeamTest < ActiveSupport::TestCase
   
   def test_public_posts
     t = Team.find(1)
-    assert_equal 3, t.posts.length
+    assert_equal 4, t.posts.length
     assert_equal 2, t.posts.public.length
   end
   
@@ -59,6 +59,8 @@ class TeamTest < ActiveSupport::TestCase
     create_training(td.at_midnight.tomorrow, 1)
     create_training(td.monday.next_week, 1)
     create_training(td.at_beginning_of_month.next_month, 1)
+    
+    assert_equal 3, t.trainings.in_later_hours(24, td.at_midnight.ago(7200)).length
     assert_equal 3, t.trainings.in_a_day(td).length
     assert_equal 7, t.trainings.in_a_week(td).length
     assert_equal 11, t.trainings.in_a_month(td).length
@@ -76,7 +78,7 @@ class TeamTest < ActiveSupport::TestCase
     assert_difference 'Training.count', -2 do
     assert_difference 'UserTeam.count', -2 do
     assert_difference 'TeamJoinRequest.count', -4 do
-    assert_difference 'Post.count', -3 do
+    assert_difference 'Post.count', -4 do
       inter = teams(:inter)
       inter.destroy
     end

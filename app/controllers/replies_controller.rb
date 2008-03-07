@@ -23,7 +23,7 @@ class RepliesController < ApplicationController
     if (!@reply.can_be_destroyed_by?(current_user))
       fake_params_redirect
     else      
-      @post.replies.delete(@reply)
+      @reply.post.replies.delete(@reply)
       redirect_to @reply.post
     end
   end

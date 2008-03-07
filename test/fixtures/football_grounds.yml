@@ -1,0 +1,33 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+yiti:
+  id: 1
+  name: 北大第一体育场
+  city: 3
+  ground_type: 2
+  status: 1
+  user_id: 1
+
+wusi:
+  id: 2
+  name: 北大五四小场
+  city: 3
+  ground_type: 3
+  status: 1
+  user_id: 1
+
+daishenhe1:
+  id: 3
+  name: 北大五四小场
+  city: 3
+  ground_type: 3
+  status: 0
+  user_id: 1
+
+daishenhe2:
+  id: 4
+  name: 北大五四小场
+  city: 3
+  ground_type: 3
+  status: 0
+  user_id: 1

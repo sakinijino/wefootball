@@ -10,7 +10,11 @@
 
 <p>
   <label>地点</label>
-  <%=h @training.location%>
+  <%if @training.football_ground_id != nil%>
+    <%=link_to h(@training.football_ground.name), football_ground_path(@training.football_ground_id)%>
+  <%else%>
+    <%=h @training.location%>
+  <%end%>
 </p>
 
 <p>

@@ -6,6 +6,7 @@ class CreateTrainings < ActiveRecord::Migration
       t.string :location, :limit=>300, :default=>''
       t.text :summary
       t.integer :team_id
+      t.integer :football_ground_id
     end
   end
 

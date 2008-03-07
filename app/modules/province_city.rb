@@ -766,4 +766,8 @@ module ProvinceCity
     485 => (486..726).to_a
   }
   TOP_LIST[20].delete(24)
+  REVERSE_TOP_LIST = {}
+  TOP_LIST.each do |province, cities|
+    cities.each {|city| REVERSE_TOP_LIST[city] = province}
+  end
 end

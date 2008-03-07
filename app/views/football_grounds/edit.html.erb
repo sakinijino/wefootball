@@ -1,0 +1,21 @@
+<h1>编辑球场资料</h1>
+
+<%= error_messages_for :football_ground %>
+
+<% form_for(@football_ground) do |f| %>
+  
+<p>
+  <b>状态</b><br />
+  <%(@football_ground.status == 0 ? [["待审核", 0], ["正常", 1], ["停用", 2]] : [["正常", 1], ["停用", 2]]).each do |v| %>
+    <%= f.radio_button :status, v[1] %><%=v[0]%>
+  <%end%>
+</p>
+  
+  <%= render :partial => "form", :locals=>{:f=> f}%>
+
+  <p>
+    <%= f.submit "更新" %>
+  </p>
+<% end %>
+
+<%= (button_to '删除', @football_ground, :confirm => 'Are you sure?', :method => :delete) if @football_ground.status == 0 %>

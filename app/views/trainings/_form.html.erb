@@ -9,7 +9,12 @@
 <%= select_hour @training.end_time.nil? ? nil : @training.end_time.hour, :prefix => "end_time" %>
 <%= select_minute @training.end_time.nil? ? nil : @training.end_time.min, :prefix => "end_time", :minute_step=>15 %></p>
 
-<p><label for="location">地点</label><br/>
+<p><label for="football_ground_id">选择球场</label><br/>
+<%= f.football_ground_select :football_ground_id, :include_blank => true %></p>
+
+<%= link_to "添加一个球场", new_football_ground_path%>
+
+<p><label for="location">其他地点</label><br/>
 <%= f.text_field :location %></p>
   
 <p><label for="summary">说明</label><br/>

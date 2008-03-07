@@ -1,4 +1,5 @@
 class PostsController < ApplicationController
+  before_filter :login_required, :except => [:index, :show]
   before_filter :before_post, :only=>[:new, :create]
   before_filter :before_modify, :only=>[:edit, :update]
   
@@ -7,14 +8,14 @@ class PostsController < ApplicationController
   def index
     if (params[:team_id])
       @team = Team.find(params[:team_id])
-      if (current_user.is_team_member_of?(@team))
+      if (logged_in? && current_user.is_team_member_of?(@team))
         @posts = @team.posts
       else
         @posts = @team.posts.public
       end
     elsif (params[:training_id])
       @training = Training.find(params[:training_id])
-      if (current_user.is_team_member_of?(@training.team_id))
+      if (logged_in? && current_user.is_team_member_of?(@training.team_id))
         @posts = @training.posts
       else
         @posts = @training.posts.public
@@ -27,6 +28,7 @@ class PostsController < ApplicationController
   # GET /posts/1
   def show
     @post = Post.find(params[:id])
+    fake_params_redirect if !@post.is_visible_to?(current_user)
   end
 
   # GET teams/1/posts/new
@@ -43,11 +45,8 @@ class PostsController < ApplicationController
   # POST trainings/1/posts
   def create
     @post = Post.new(params[:post])
-    @post.team = @team if @team
-    if @training
-      @post.training = @training
-      @post.team_id = @training.team_id
-    end
+    @post.team_id = @tid
+    @post.training = @training if @training
     @post.user = current_user
     if @post.save
       redirect_to(@post)
@@ -82,12 +81,12 @@ protected
   def before_post
     if (params[:team_id])
       @team = Team.find(params[:team_id])
-      tid = @team.id
+      @tid = @team.id
     elsif (params[:training_id])
       @training = Training.find(params[:training_id])
-      tid = @training.team_id
+      @tid = @training.team_id
     end
-    fake_params_redirect if !current_user.is_team_member_of?(tid)
+    fake_params_redirect if !current_user.is_team_member_of?(@tid)
   end
   
   def before_modify

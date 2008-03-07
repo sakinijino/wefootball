@@ -2,6 +2,7 @@ class Training < ActiveRecord::Base
   include ModelHelper
   
   belongs_to :team
+  belongs_to :football_ground
   
   has_many :training_joins,
             :dependent => :destroy
@@ -30,6 +31,10 @@ class Training < ActiveRecord::Base
     attribute_slice(:summary, 1000)
     self.start_time = DateTime.now.tomorrow if self.start_time==nil
     self.end_time = self.start_time.since(3600) if self.end_time==nil
+  end
+  
+  def before_save
+    self.location = self.football_ground.name if self.football_ground!=nil
   end
   
   def can_be_joined_by?(user)

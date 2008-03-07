@@ -211,7 +211,7 @@ class UserTest < Test::Unit::TestCase
     assert_difference 'TrainingJoin.count', -2 do
     assert_difference 'UserTeam.count', -2 do
     assert_difference 'TeamJoinRequest.count', -2 do
-    assert_difference 'Post.count', -3 do
+    assert_difference 'Post.count', -4 do
       users(:saki).destroy
     end
     end

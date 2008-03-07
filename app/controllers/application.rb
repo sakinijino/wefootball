@@ -17,6 +17,10 @@ class ApplicationController < ActionController::Base
   def redirect_with_back_uri_or_default(uri='/')
     params[:back_uri]!=nil ? redirect_to(params[:back_uri]) : redirect_to(uri)
   end
+  
+  def current_user_is_football_ground_editor?
+    FootballGroundEditor::LIST.include?(current_user.login)
+  end
 end
 
 class DateTime
@@ -34,6 +38,9 @@ end
 class ActionView::Helpers::FormBuilder
   def province_city_select(field)
     select field, ProvinceCity::CITY_VALUE_RANGE.map {|v| [ProvinceCity::LIST[v], v]}
+  end
+  def football_ground_select(field, options)
+    select field, FootballGround.find_all_by_status(1).map {|fg| [fg.name, fg.id]}, options
   end
 end
 

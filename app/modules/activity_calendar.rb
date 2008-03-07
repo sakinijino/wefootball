@@ -26,6 +26,12 @@ module ActivityCalendar
     find_in_duration(start_time, end_time)
   end
   
+  def in_later_hours(hours = 24, date = Time.now)
+    start_time = date
+    end_time = start_time.since(hours*3600)
+    find_in_duration(start_time, end_time)
+  end
+  
   private
   def find_in_duration(start, endd)
     find :all, 
