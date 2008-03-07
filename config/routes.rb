@@ -1,5 +1,4 @@
 ActionController::Routing::Routes.draw do |map|
-  map.resources :matches
 
   # The priority is based upon order of creation: first created -> highest priority.
   
@@ -43,6 +42,7 @@ ActionController::Routing::Routes.draw do |map|
     teams.resources :team_join_invitations
     teams.resources :trainings
     teams.resources :posts
+    teams.resources :matches    
   end
   map.resources :team_views
   
@@ -61,7 +61,8 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :friend_relations
   map.resources :friend_invitations
   map.resources :messages
-  map.resources :match_invitations, :member => { :accept => :post }
+  map.resources :match_invitations
+  map.resources :matches
   
   map.resources :posts do |posts|
     posts.resources :replies

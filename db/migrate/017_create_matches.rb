@@ -14,10 +14,13 @@ class CreateMatches < ActiveRecord::Migration
       t.integer :rest_length
       t.integer :host_team_id
       t.integer :guest_team_id
-      t.integer :host_team_goal
-      t.integer :guest_team_goal
-      t.integer :situation
-
+      t.integer :host_team_goal_by_host
+      t.integer :guest_team_goal_by_host
+      t.integer :host_team_goal_by_guest
+      t.integer :guest_team_goal_by_guest
+      t.integer :situation_by_host
+      t.integer :situation_by_guest
+      t.boolean :has_conflict
       t.timestamps
     end
   end

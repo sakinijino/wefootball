@@ -40,8 +40,7 @@ class MatchInvitationsController < ApplicationController
     @editing_by_host_team = @match_invitation.edit_by_host_team
   end
   
-  def update   
-    #首先将模型中的new属性平移到非new属性
+  def update
     @match_invitation = MatchInvitation.find(params[:id])
     @match_invitation.save_last_info!
     @match_invitation.edit_by_host_team = !@match_invitation.edit_by_host_team
@@ -57,27 +56,9 @@ class MatchInvitationsController < ApplicationController
         redirect_to team_view_path(@match_invitation.guest_team_id)
       end   
     else
+      @editing_by_host_team = @match_invitation.edit_by_host_team      
       render :action => "edit"
     end
-  end   
-
-  def accept
-    match_invitation_id = params[:id]
-    @match_invitation = MatchInvitation.find(match_invitation_id)
-    if !current_user.can_accpet_match_invitation?(@match_invitation)
-      fake_params_redirect
-      return      
-    end
-    if @match_invitation.has_been_modified?(params[:match_invitation])#如果用户已经做过修改，则不能创建
-      render :action => "edit", :id=>match_invitation_id
-      return
-    end
-    Match.transaction do
-      @match = Match.new_by_invitation(@match_invitation)
-      @match.save!
-      FriendInvitation.delete(params[:request_id])
-    end
-    redirect_to match_path(@match)
   end
   
   def destroy

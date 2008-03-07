@@ -230,6 +230,10 @@ class User < ActiveRecord::Base
     can_act_on_match_invitation?(match_invitation)
   end
   
+  def can_edit_match?(team,match)
+    can_act_on_match?(team,match)
+  end  
+  
   def city_text
     return nil if self.city == 0
     ProvinceCity::LIST[self.city]
@@ -282,4 +286,8 @@ class User < ActiveRecord::Base
         return self.is_team_admin_of?(match_invitation.guest_team_id)
       end
     end
+    
+    def can_act_on_match?(team, match)      
+      return self.is_team_admin_of?(team) && ((team==match.host_team_id.to_s)||(team==match.guest_team_id.to_s))      
+    end    
 end

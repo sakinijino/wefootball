@@ -1,102 +1,105 @@
-<h1>Editing match</h1>
+<div>
+  <h1>比赛结果</h1>
+</div>
 
 <%= error_messages_for :match %>
 
-<% form_for(@match) do |f| %>
-  <p>
-    <b>Start time</b><br />
-    <%= f.datetime_select :start_time %>
-  </p>
+<% form_for @match do |f| %>
+    <%= f.hidden_field :team_id,  :value=>@team_id%>  
 
-  <p>
-    <b>Location</b><br />
-    <%= f.text_field :location %>
-  </p>
+      <%if @editing_by_host_team%>
+    <p>
+      <b><%=@match.host_team.shortname%></b>
+      <%= f.text_field :host_team_goal_by_host %>
+      :
+      <%= f.text_field :guest_team_goal_by_host %>
+      <b><%=@match.guest_team.shortname%></b>      
+    </p>
+    <%if !@match.host_team_goal_by_guest.nil? || !@match.guest_team_goal_by_guest.nil?%>
+      <p>
+        (对方填写的结果：
+        <b><%=@match.host_team.shortname%></b>
+        <%if !@match.host_team_goal_by_guest.nil?%>
+              <%=@match.host_team_goal_by_guest%>
+        <%end%>
+        :
+        <%if !@match.guest_team_goal_by_guest.nil?%>
+              <%=@match.guest_team_goal_by_guest%>
+        <%end%>
+        <b><%=@match.guest_team.shortname%></b> )
+      </p>
+      <p>
+        <%=link_to "我看行", match_path(@match,
+              :match=>{
+                 :host_team_goal_by_host=>@match.host_team_goal_by_guest,
+                 :guest_team_goal_by_host=>@match.guest_team_goal_by_guest
+              }), :method=>"put"%>
+      </p>
+    <%end%>
+    <p>
+      <b>赛况</b><br />
+      <%= f.radio_button(:situation_by_host,Match::SITUATIONS[0],{:checked=>true})%><%=situation_text(Match::SITUATIONS[0])%><br />
+      <%for s in Match::SITUATIONS[1..-1]%>
+          <%= f.radio_button(:situation_by_host,s)%><%=situation_text(s)%>
+          <%end%>
+        </p>
+        <%if !@match.situation_by_guest.nil?%>
+          <p>
+            (对方填写的结果：
+            <%=situation_text @match.situation_by_guest%>)
+          </p>       
+          <%=link_to "我看行", match_path(@match,
+                {:situation_by_host=>@match.situation_by_guest
+                }),:method=>"put"%>
+        <%end%>
+      <%else%>
+        <p>
+          <b><%=@match.host_team.shortname%></b>
+          <%= f.text_field :host_team_goal_by_guest %>
+          :
+          <%= f.text_field :guest_team_goal_by_guest %>
+          <b><%=@match.guest_team.shortname%></b>      
+        </p>
+        <%if !@match.host_team_goal_by_host.nil? || !@match.guest_team_goal_by_host.nil?%>
+          <p>
+            (对方填写的结果：
+            <b><%=@match.host_team.shortname%></b>
+            <%if !@match.host_team_goal_by_host.nil?%>
+                  <%=@match.host_team_goal_by_host%>
+            <%end%>
+            :
+            <%if !@match.guest_team_goal_by_host.nil?%>
+                  <%=@match.guest_team_goal_by_host%>
+            <%end%>
+            <b><%=@match.guest_team.shortname%></b> )
+          </p>
+          <p>
+            <%=link_to "我看行", match_path(@match,
+                  :match=>{
+                     :host_team_goal_by_guest => @match.host_team_goal_by_host,
+                     :guest_team_goal_by_guest => @match.guest_team_goal_by_host,
+                  }), :method=>"put"%>        
+          </p>
+        <%end%>
+        <p>
+          <b>赛况</b><br />
+          <%= f.radio_button(:situation_by_guest,Match::SITUATIONS[0],{:checked=>true})%><%=situation_text(Match::SITUATIONS[0])%><br />
+          <%for s in Match::SITUATIONS[1..-1]%>
+              <%= f.radio_button(:situation_by_guest,s)%><%=situation_text(s)%>
+          <%end%>
+            </p>
+            <%if !@match.situation_by_host.nil?%>
+              <p>
+                (对方填写的结果：
+                <%=situation_text @match.situation_by_host%>)
+              </p>       
+              <%=link_to "我看行", match_path(@match,
+                    {:situation_by_guest=>@match.situation_by_host
+                    }), :method=>"put"%>
+            <%end%>    
+          <%end%>
 
-  <p>
-    <b>Match type</b><br />
-    <%= f.text_field :match_type %>
-  </p>
-
-  <p>
-    <b>Size</b><br />
-    <%= f.text_field :size %>
-  </p>
-
-  <p>
-    <b>Has judge</b><br />
-    <%= f.check_box :has_judge %>
-  </p>
-
-  <p>
-    <b>Has card</b><br />
-    <%= f.check_box :has_card %>
-  </p>
-
-  <p>
-    <b>Has offside</b><br />
-    <%= f.check_box :has_offside %>
-  </p>
-
-  <p>
-    <b>Win rule</b><br />
-    <%= f.text_field :win_rule %>
-  </p>
-
-  <p>
-    <b>Description</b><br />
-    <%= f.text_area :description %>
-  </p>
-
-  <p>
-    <b>Half match length</b><br />
-    <%= f.text_field :half_match_length %>
-  </p>
-
-  <p>
-    <b>Rest length</b><br />
-    <%= f.text_field :rest_length %>
-  </p>
-
-  <p>
-    <b>Host team leader</b><br />
-    <%= f.text_field :host_team_leader_id %>
-  </p>
-
-  <p>
-    <b>Guest team leader</b><br />
-    <%= f.text_field :guest_team_leader_id %>
-  </p>
-
-  <p>
-    <b>Host team</b><br />
-    <%= f.text_field :host_team_id %>
-  </p>
-
-  <p>
-    <b>Guest team</b><br />
-    <%= f.text_field :guest_team_id %>
-  </p>
-
-  <p>
-    <b>Host team goal</b><br />
-    <%= f.text_field :host_team_goal %>
-  </p>
-
-  <p>
-    <b>Guest team goal</b><br />
-    <%= f.text_field :guest_team_goal %>
-  </p>
-
-  <p>
-    <b>Situation</b><br />
-    <%= f.text_field :situation %>
-  </p>
-
-  <p>
-    <%= f.submit "Update" %>
-  </p>
-<% end %>
-
-<%= link_to 'Show', @match %> |
-<%= link_to 'Back', matches_path %>
+          <p>
+            <%= f.submit "提交比赛结果" %>
+          </p>
+        <% end %>

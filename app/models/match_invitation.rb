@@ -1,4 +1,8 @@
 class MatchInvitation < ActiveRecord::Base
+  
+  MAX_DESCRIPTION_LENGTH = 3
+  MAX_TEAM_MESSAGE_LENGTH = 300
+  
   belongs_to :host_team, :class_name=>"Team", :foreign_key=>"host_team_id"
   belongs_to :guest_team, :class_name=>"Team", :foreign_key=>"guest_team_id"  
   
@@ -13,6 +17,31 @@ class MatchInvitation < ActiveRecord::Base
   validates_inclusion_of :new_match_type, :in => MATCH_TYPES
   validates_inclusion_of :new_size, :in => MATCH_SIZES
   validates_inclusion_of :new_win_rule, :in => WIN_RULES
+
+  validates_length_of :new_description, :maximum =>MAX_DESCRIPTION_LENGTH
+  validates_length_of :host_team_message, :maximum =>MAX_TEAM_MESSAGE_LENGTH
+  validates_length_of :guest_team_message, :maximum =>MAX_TEAM_MESSAGE_LENGTH  
+
+  def before_validation
+    if self.host_team_message.nil?
+      self.host_team_message = ""
+    end
+    if self.guest_team_message.nil?
+      self.guest_team_message = ""      
+    end
+    if self.new_description.nil?
+      self.new_description = ""      
+    end 
+    if self.new_description.chars.length > MAX_DESCRIPTION_LENGTH      
+      self.new_description = (self.new_description.chars[0...MAX_DESCRIPTION_LENGTH]).to_s
+    end
+    if self.host_team_message.chars.length > MAX_TEAM_MESSAGE_LENGTH      
+      self.host_team_message = (self.host_team_message.chars[0...MAX_TEAM_MESSAGE_LENGTH]).to_s
+    end
+    if self.guest_team_message.chars.length > MAX_TEAM_MESSAGE_LENGTH      
+      self.guest_team_message = (self.guest_team_message.chars[0...MAX_TEAM_MESSAGE_LENGTH]).to_s
+    end     
+  end  
 
   def save_last_info!
     self.attributes.each do |a|
