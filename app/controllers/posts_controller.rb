@@ -29,6 +29,7 @@ class PostsController < ApplicationController
   def show
     @post = Post.find(params[:id])
     fake_params_redirect if !@post.is_visible_to?(current_user)
+    @can_reply = @post.can_be_replied_by?(current_user)
   end
 
   # GET teams/1/posts/new

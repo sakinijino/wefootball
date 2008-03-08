@@ -29,13 +29,13 @@ ActionController::Routing::Routes.draw do |map|
   # See how all your routes lay out with "rake routes"
   
   # Install the default routes as the lowest priority.
-  map.resources :users, :collection => { :search => :get } do |users|
+  map.resources :users, :collection => { :search => :get }, :member => {:update_image => :put} do |users|
     users.resources :team_joins
     users.resources :trainings
   end 
   map.resources :user_views
   
-  map.resources :teams, :collection => { :search => :get } do |teams|
+  map.resources :teams, :collection => { :search => :get }, :member => {:update_image => :put} do |teams|
     teams.resources :team_joins
     teams.resources :team_join_requests
     teams.resources :team_join_invitations
@@ -67,7 +67,7 @@ ActionController::Routing::Routes.draw do |map|
     posts.resources :replies
   end
   
-  map.resources :football_grounds, :collection => { :index_unauthorize => :get }
+  map.resources :football_grounds, :collection => { :unauthorize => :get }
   
   map.connect ':controller/:action/:id'
   map.connect ':controller/:action/:id.:format'

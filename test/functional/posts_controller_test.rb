@@ -27,6 +27,18 @@ class PostsControllerTest < ActionController::TestCase
     assert_equal 3, assigns(:posts).length
   end
   
+  def test_get_show_can_reply
+    login_as :quentin
+    get :show, :id => posts(:saki_1).id
+    assert_select "form[action=#{post_replies_path(assigns(:post))}]"
+  end
+  
+  def test_get_show_can_not_reply
+    login_as :aaron
+    get :show, :id => posts(:saki_1).id
+    assert_select "form", 0
+  end
+  
   def test_get_show_noauth
     login_as :aaron
     get :show, :id => posts(:saki_3).id

@@ -11,6 +11,12 @@ class PostTest < ActiveSupport::TestCase
     assert !posts(:quentin_2).is_visible_to?(users(:mike1))
   end
   
+  def test_can_reply
+    assert posts(:saki_1).can_be_replied_by?(users(:saki))
+    assert posts(:saki_1).can_be_replied_by?(users(:quentin))
+    assert !posts(:saki_1).can_be_replied_by?(users(:aaron))
+  end
+  
   def test_modify
     assert posts(:saki_1).can_be_modified_by?(users(:saki))
     assert !posts(:saki_1).can_be_modified_by?(users(:quentin))

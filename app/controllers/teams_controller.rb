@@ -1,15 +1,11 @@
 class TeamsController < ApplicationController
   before_filter :login_required, :except => [:search]
+  before_filter :require_current_user_is_a_team_admin, :only => [:edit, :update, :update_image]
   
   def new
     @team = Team.new
   end
 
-  def edit
-    fake_params_redirect if (!self.current_user.is_team_admin_of?(params[:id]))
-    @team = Team.find(params[:id], :include=>[:team_image])
-  end
-  
   # GET /teams/search.xml?query
   def search
     @teams = Team.find_by_contents(params[:q])
@@ -28,26 +24,34 @@ class TeamsController < ApplicationController
     end
   end
 
+  def edit
+    @team = Team.find(params[:id])
+  end
+  
  # PUT /teams/1.xml
   def update
-    @team = Team.find(params[:id], :include=>[:team_image])
-    if (!self.current_user.is_team_admin_of?(@team))
-      fake_params_redirect
-      return
-    end
-    update_image if (params[:team][:uploaded_data]!=nil)
+    @team = Team.find(params[:id])
     if @team.update_attributes(params[:team])
-      @team.team_image.save if params[:team][:uploaded_data]!=nil && @team.team_image!=nil
       redirect_to edit_team_path(params[:id])
     else
-      @team.team_image.reload if @team.team_image!=nil
       render :action=>"edit"
     end
   end
   
-protected
   def update_image
-    @team.team_image = TeamImage.find_or_initialize_by_team_id(@team.id)
-    @team.team_image.uploaded_data = params[:team][:uploaded_data]
+    @team = Team.find(params[:id])
+    team_image = TeamImage.find_or_initialize_by_team_id(@team.id)
+    team_image.uploaded_data = params[:team][:uploaded_data]
+    if team_image.save
+      redirect_to edit_team_path(@team)
+    else
+      @team.errors.add_to_base('上传的必须是一张图片，而且大小不能超过2M') if !team_image.errors.empty?
+      render :action => "edit" 
+    end
+  end
+  
+protected
+  def require_current_user_is_a_team_admin
+    fake_params_redirect if (!self.current_user.is_team_admin_of?(params[:id]))
   end
 end

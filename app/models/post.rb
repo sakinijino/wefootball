@@ -17,6 +17,10 @@ class Post < ActiveRecord::Base
       UserTeam.find_by_user_id_and_team_id(get_user_id(user), self.team_id) != nil
   end
   
+  def can_be_replied_by?(user)
+    user.is_team_member_of?(self.team_id)
+  end
+  
   def can_be_modified_by?(user)
     self.user_id == get_user_id(user)
   end

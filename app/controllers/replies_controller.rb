@@ -2,7 +2,7 @@ class RepliesController < ApplicationController
   # POST posts/1/replies
   def create
     @post = Post.find(params[:post_id])
-    if (!current_user.is_team_member_of?(@post.team_id))
+    if (!@post.can_be_replied_by?(current_user))
       fake_params_redirect
       return
     end

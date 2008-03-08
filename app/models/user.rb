@@ -63,8 +63,6 @@ class User < ActiveRecord::Base
   validates_inclusion_of    :fitfoot, :in => FITFOOT, :if=>:is_playable
   validates_inclusion_of   :premier_position, :in => Position::POSITIONS, :if=>:is_playable
   
-  validates_associated :user_image, :allow_nil => true, :message => '上传的必须是一张图片，而且大小不能超过2M'
-  
   def before_validation
     self.nickname = self.login.split('@')[0] if self.login!=nil && (self.nickname==nil || self.nickname == "")
     attribute_slice(:nickname, 15)
@@ -232,11 +230,6 @@ class User < ActiveRecord::Base
   
   def can_edit_match?(team,match)
     can_act_on_match?(team,match)
-  end  
-  
-  def city_text
-    return nil if self.city == 0
-    ProvinceCity::LIST[self.city]
   end
   
   def birthday_text

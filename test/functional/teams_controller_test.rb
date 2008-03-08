@@ -32,9 +32,21 @@ class TeamsControllerTest < ActionController::TestCase
     assert_redirected_to edit_team_path(teams(:inter).id)
   end
   
+  def test_should_not_get_edit_if_user_is_not_admin
+    login_as :aaron
+    get :edit, :id => teams(:inter).id
+    assert_redirected_to '/'
+  end
+  
   def test_should_not_update_team_if_user_is_not_admin
     login_as :aaron
     put :update, :id => teams(:inter).id, :team => {:name => "Inter"}
+    assert_redirected_to '/'
+  end
+  
+  def test_should_not_update_image_if_user_is_not_admin
+    login_as :aaron
+    put :update_image, :id => teams(:inter).id, :team => {}
     assert_redirected_to '/'
   end
 end

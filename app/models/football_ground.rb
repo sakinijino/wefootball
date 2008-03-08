@@ -19,6 +19,12 @@ class FootballGround < ActiveRecord::Base
   
   validates_length_of        :description,    :maximum => 5000, :allow_nil => true
   
+  def merge_to_and_delete(fg)
+    Training.update_all(["location = ?", fg.name], ["football_ground_id = ?", self.id])
+    Training.update_all(["football_ground_id = ?", fg.id], ["football_ground_id = ?", self.id])
+    FootballGround.delete(self.id)
+  end
+  
   def before_destroy
     Training.update_all(["location = ?", self.name], ["football_ground_id = ?", self.id])
     Training.update_all("football_ground_id = NULL", ["football_ground_id = ?", self.id])
@@ -30,9 +36,4 @@ class FootballGround < ActiveRecord::Base
   end
   
   attr_protected :status, :user_id
-  
-  def city_text
-    return "不详" if self.city == 0
-    "#{ProvinceCity::LIST[ProvinceCity::REVERSE_TOP_LIST[self.city]]} #{ProvinceCity::LIST[self.city]}"
-  end
 end

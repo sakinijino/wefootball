@@ -2,7 +2,7 @@ class FootballGroundsController < ApplicationController
   before_filter :login_required
   before_filter :require_editor, :except => [:show, :new, :create]
   
-  def index_unauthorize
+  def unauthorize
     @football_grounds = FootballGround.find_all_by_status(0, :include => 'user')
     render :action => "index"
   end
@@ -54,7 +54,7 @@ class FootballGroundsController < ApplicationController
     @football_ground = FootballGround.find(params[:id])
     if @football_ground.status ==0
       @football_ground.destroy
-      redirect_to :action => "index_unauthorize"
+      redirect_to unauthorize_football_grounds_path
     else
       fake_params_redirect
     end

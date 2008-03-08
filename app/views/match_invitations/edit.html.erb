@@ -151,7 +151,7 @@
 
   <p>
     <%=link_to '接受邀请', matches_path(:id=>@match_invitation.id), :onclick=>"var f = document.getElementById('match_invitation_form');f.method = 'POST'; f.action = this.href;f.submit();return false;"%>
-    <%=link_to '协商邀请', match_invitation_path(@match_invitation), :onclick=>"var f = document.getElementById('match_invitation_form');f.method = 'POST'; f.action = this.href;f.submit();var m = document.createElement('input'); m.setAttribute('type', 'hidden'); m.setAttribute('name', '_method'); m.setAttribute('value', 'put'); f.appendChild(m);f.submit();return false;"%>
+    <%=link_to '协商邀请', match_invitation_path(@match_invitation), :onclick=>"var f = document.getElementById('match_invitation_form');f.method = 'POST'; f.action = this.href;var m = document.createElement('input'); m.setAttribute('type', 'hidden'); m.setAttribute('name', '_method'); m.setAttribute('value', 'put'); f.appendChild(m);f.submit();return false;"%>
     <%=link_to "拒绝邀请", match_invitation_path(@match_invitation),:method=>"delete"%>
   </p>
 <% end %>

@@ -56,7 +56,7 @@
   </p>
 <% end %>
 
-<% form_for(@user, :html => { :multipart => true }) do |f| %>
+<% form_for(:user, :url => update_image_user_path(@user),:html => { :method=>:put, :multipart => true }) do |f| %>
   <%= user_image_tag @user %>
   <p>
     <label>更改头像</label><br/>

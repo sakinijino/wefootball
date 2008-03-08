@@ -35,7 +35,6 @@ class Team < ActiveRecord::Base
   validates_length_of        :shortname,    :maximum => 15
   validates_length_of        :summary,    :maximum => 3000, :allow_nil=>true
   validates_length_of        :style,    :maximum => 50
-  validates_associated :team_image, :allow_nil => true
   
   attr_protected :uploaded_data
   
@@ -58,11 +57,6 @@ class Team < ActiveRecord::Base
 
   def self.find_by_contents(q)
     Team.find :all, :conditions => ["name like ? or shortname like ?", q, q]
-  end
-  
-  def city_text
-    return nil if self.city == 0
-    ProvinceCity::LIST[self.city]
   end
   
   def image(thumbnail = nil)

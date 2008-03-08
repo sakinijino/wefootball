@@ -10,14 +10,14 @@ class FootballGroundsControllerTest < ActionController::TestCase
   
   def test_should_get_index_unauthorize
     login_as :saki
-    get :index_unauthorize
+    get :unauthorize
     assert_template "index"
     assert_equal 2, assigns(:football_grounds).length
   end
   
   def test_get_index_unauthorize_with_not_editor
     login_as :mike1
-    get :index_unauthorize
+    get :unauthorize
     assert_redirected_to '/'
   end
 
@@ -60,7 +60,7 @@ class FootballGroundsControllerTest < ActionController::TestCase
     assert_difference('FootballGround.count', -1) do
       delete :destroy, :id => football_grounds(:daishenhe1).id
     end
-    assert_redirected_to :action => 'index_unauthorize'
+    assert_redirected_to unauthorize_football_grounds_path
     assert_no_difference('FootballGround.count') do
       delete :destroy, :id => football_grounds(:yiti).id
     end
