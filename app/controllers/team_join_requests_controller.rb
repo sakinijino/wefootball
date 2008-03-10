@@ -11,12 +11,9 @@ class TeamJoinRequestsController < ApplicationController
         fake_params_redirect
       end
     else # 显示所有用户请求加入队伍
-      if (!logged_in?)
-         fake_params_redirect
-      else
-        @requests = TeamJoinRequest.find_all_by_user_id_and_is_invitation(self.current_user, false, :include=>[:team])
-        render :action=>"index_team"
-      end
+      @requests = TeamJoinRequest.find_all_by_user_id_and_is_invitation(self.current_user, false, :include=>[:team])
+      @user = current_user
+      render :action=>"index_team", :layout => "user_layout"
     end
   end
   

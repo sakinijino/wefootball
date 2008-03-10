@@ -1,4 +1,6 @@
 class UserViewsController < ApplicationController
+  layout "user_layout"
+  
   FRIEND_LIST_LENGTH = 5
   TEAM_LIST_LENGTH = 5
   TRAINING_LIST_LENGTH = 5

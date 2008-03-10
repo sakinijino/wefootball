@@ -1,9 +1,12 @@
 class MessagesController < ApplicationController
+  layout "user_layout"
+  
   before_filter :login_required
   before_filter :receiver_can_not_be_current_user, :only=>[:new, :create]
   
   # GET /messages
   def index
+    @user = current_user
     @messages = params[:as]=='sender' ? 
       Message.find_all_by_sender_id_and_is_delete_by_sender(current_user.id, false, :include=>[:sender, :receiver]) :
       Message.find_all_by_receiver_id_and_is_delete_by_receiver(current_user.id, false, :include=>[:sender, :receiver])
@@ -11,6 +14,7 @@ class MessagesController < ApplicationController
 
   # GET /messages/1
   def show
+    @user = current_user
     @message = Message.find(params[:id], :include=>[:sender, :receiver])
     if (!@message.can_read_by(self.current_user))
       fake_params_redirect
@@ -23,6 +27,7 @@ class MessagesController < ApplicationController
   end
   
   def new
+    @user = current_user
     @receiver = User.find(params[:to])
   end
 
@@ -34,6 +39,7 @@ class MessagesController < ApplicationController
     if @message.save
       redirect_to messages_path(:as=>"sender")
     else
+      @user = current_user
       render :action=>"new"
     end
   end

@@ -1,16 +1,14 @@
 class FriendInvitationsController < ApplicationController
+  layout "user_layout"
+  
   before_filter :login_required
   # GET /friend_invitations
   # GET /friend_invitations.xml
   def index
     #only return the quests for current user
+    @user = current_user
     @friend_invitations = FriendInvitation.find_all_by_host_id(current_user.id,:include=>[:applier])
   end
-  
-  # render new.rhtml
-  def new
-    @host_id = params[:host_id]
-  end 
 
   # POST /friend_invitations
   # POST /friend_invitations.xml
@@ -46,6 +44,7 @@ class FriendInvitationsController < ApplicationController
       return
     end
     @friend_invitation.destroy
+    @user = current_user
     redirect_to friend_invitations_path
   end
 end

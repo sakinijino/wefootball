@@ -1,19 +1,31 @@
-<table>
-<tr>
-  <th>发件人</th>
-  <th>收件人</th>
-  <th>主题</th>
-  <th></th>
-</tr>
+<div>
+    <%= link_to_if(params[:as]=='sender', '收件箱', messages_path) { link_to '发件箱', messages_path(:as => 'sender') } %>
+</div>
 
-  <%@messages.each do |m|%>
-    <tr>
-      <td><%=h m.sender.nickname%></td>
-      <td><%=h m.receiver.nickname%></td>
-      <td><%=link_to m.subject, message_path(m.id)%></td>
-      <td><%=link_to "删除", message_path(m.id), :method=>"delete"%></td>
-    </tr>
-  <%end%>
-</table>
+<div>
+  <table>
+  <tr>
+    <%if params[:as]!='sender' %>
+        <th>发件人</th>
+    <%else%>
+        <th>收件人</th>
+    <%end%>
+    <th>主题</th>
+    <th>发件时间</th>
+    <th></th>
+  </tr>
 
-<%= link_to_if(params[:as]=='sender', '收件箱', messages_path) { link_to '发件箱', messages_path(:as => 'sender') } %>
+    <%@messages.each do |m|%>
+      <tr>
+         <%if params[:as]!='sender' %>
+            <td><%=link_to h(m.sender.nickname), user_view_path(m.sender)%></td>
+        <%else%>
+            <td><%=link_to h(m.receiver.nickname), user_view_path(m.receiver)%></td>
+        <%end%>
+        <td><%=link_to m.subject, message_path(m.id)%></td>
+        <td><%=h m.created_at.to_s(:db)%></td>
+        <td><%=link_to "删除", message_path(m.id), :method=>"delete"%></td>
+      </tr>
+    <%end%>
+  </table>
+</div>

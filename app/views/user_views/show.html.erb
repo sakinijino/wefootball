@@ -1,9 +1,3 @@
-<div>
-<%if logged_in?%>
-  <%= render(:partial => 'shared/user_menu', :locals => {:user => @user})%>
-<%end%>
-</div>
-
 <h1><%= h @user.nickname %></h1>
 <%= user_image_tag @user %>
 
@@ -14,43 +8,32 @@
 <%= "<span>喜欢的球星: #{@user.favorite_star}</span><br/>" unless @user.favorite_star.blank?%>
 <%= "<span>喜欢的球队: #{@user.favorite_team}</span><br/>" unless @user.favorite_team.blank?%>
 <%if !@user.summary.nil? && !@user.summary.blank?%>
-    <label>自我介绍：</label>
+    <span>自我介绍：</span>
     <p><%=simple_format auto_link(@user.summary, :urls)%></p>
 <%end%>
 </div>
 
-<div>
-<%if logged_in? && @user.id != current_user.id%>
-  <%= link_to("发信", new_message_path(:to=>@user.id))%>
-  <%if !current_user.is_my_friend?(@user)%>
-    <%= link_to("邀请加为好友", 'javascript:void(0);')%>
-    <% form_for :friend_invitation, :url => friend_invitations_path, :method=>"POST" do |f| %>
-      <%= f.hidden_field :host_id,  :value=>@user.id%>
-      <span>留言</span><br />
-      <%= f.text_area :message %>
-      <%= f.submit "发送邀请" %>
-    <% end %>
-  <%else%>
-    <%= link_to("不和他玩", friend_relation_path(0, :user_id=>@user.id),:method=>"delete")%>
-  <%end%>
-<%end%>  
-</div>
-
 <%if @user.is_playable%>
-  <div>
+<div>
   <%= "<span>身高: #{@user.height}cm</span><br/>" unless @user.height.nil?%>
   <%= "<span>体重: #{@user.weight}kg</span><br/>" unless @user.weight.nil?%>
   <%= "<span>惯用脚: #{fitfoot_text @user.fitfoot}</span><br/>" unless @user.fitfoot.nil?%>
   <%= "<span>首选位置: #{position_text @user.premier_position}</span><br/>" unless @user.premier_position.nil?%>
   <%= "<span>可以踢的位置: #{@user.positions.map {|p| position_text p.label}.join(', ')}</span><br/>" %>
-  </div>
+</div>
 <%end%>
 
-<h1><%=h @user.nickname%>的朋友</h1>
-<%= render(:partial => 'shared/user_icon', :collection => @friends)%>
+<div>
+  <h1><%=h @user.nickname%>的朋友</h1>
+  <%= render(:partial => 'shared/user_icon', :collection => @friends)%>
+</div>
 
-<h1><%=h @user.nickname%>加入的球队</h1>
-<%= render(:partial => 'shared/team_icon', :collection => @teams)%>
+<div>
+  <h1><%=h @user.nickname%>加入的球队</h1>
+  <%= render(:partial => 'shared/team_icon', :collection => @teams)%>
+</div>
 
-<h1><%=h @user.nickname%>最近的训练</h1>
-<%= render(:partial => 'shared/training_list', :object => @trainings)%>
+<div>
+  <h1><%=h @user.nickname%>最近的训练</h1>
+  <%= render(:partial => 'shared/training_list', :object => @trainings)%>
+</div>

@@ -5,7 +5,7 @@ class TeamJoinInvitationsController < ApplicationController
     if (params[:user_id] != nil)
       @user = User.find(params[:user_id])
       @teams = (current_user.teams.admin - @user.teams)
-      render :action => 'new_by_user_id'
+      render :action => 'new_by_user_id', :layout => "user_layout"
     elsif (params[:team_id] != nil)
       @team = Team.find(params[:team_id])
       if (!current_user.is_team_admin_of?(@team))
@@ -29,12 +29,9 @@ class TeamJoinInvitationsController < ApplicationController
         fake_params_redirect
       end
     else  # 显示所有邀请用户的队伍
-      if (!logged_in?)
-         fake_params_redirect
-      else
-        @requests = TeamJoinRequest.find_all_by_user_id_and_is_invitation(self.current_user, true, :include=>[:team])
-        render :action=>"index_team"
-      end
+      @requests = TeamJoinRequest.find_all_by_user_id_and_is_invitation(self.current_user, true, :include=>[:team])
+      @user = current_user
+      render :action=>"index_team", :layout => "user_layout"
     end
   end
   

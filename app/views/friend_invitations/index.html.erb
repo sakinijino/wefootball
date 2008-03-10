@@ -1,28 +1,18 @@
 <div>
-  <h1>好友邀请列表</h1>
+  <h1>希望和我成为朋友的用户</h1>
 </div>
-<table>
-  <tr>
-    <th>时间</th>
-    <th>申请人</th>
-    <th>留言</th>
-    <th></th>
-    <th></th>   
-  </tr>
-  
+
+<div>
 <% for friend_inv in @friend_invitations %>
-  <tr>
-    <td><%=h friend_inv.apply_date %></td>
-    <td><%=h friend_inv.applier.nickname %></td>
-    <td><%=h friend_inv.message %></td>
-    <td><%= link_to '接受', friend_relations_path(:request_id=>friend_inv.id), :method => :post %></td>
-    <td><%= link_to '拒绝', friend_invitation_path(friend_inv), :method => :delete %></td>
-  </tr>
+  <div>
+    <%= render(:partial => 'shared/user_icon', :object => friend_inv.applier)%>
+    <span>申请时间: <%=friend_inv.apply_date.to_s(:db) %></span><br/>
+    <%if !friend_inv.message.nil? && !friend_inv.message.blank?%>
+      <span>留言: </span>
+      <%=simple_format friend_inv.message %>
+    <%end%>
+    <%= link_to '接受', friend_relations_path(:request_id=>friend_inv.id), :method => :post %>
+    <%= link_to '拒绝', friend_invitation_path(friend_inv), :method => :delete %>
+  </div>
 <% end %>
-</table>
-
-<%#= link_to 'Previous page', admin_user_url({ :page => @user_pages.current.previous }) if @user_pages.current.previous %>
-<%#= link_to 'Next page', admin_user_url({ :page => @user_pages.current.next }) if @user_pages.current.next %> 
-
-
-
+</div>

@@ -33,6 +33,7 @@ class UsersController < ApplicationController
   def edit
     @user = User.find(params[:id], :include=>[:positions, :user_image])
     @positions = @user.positions_array
+    render :layout => "user_layout"
   end
   
   def update
@@ -42,7 +43,7 @@ class UsersController < ApplicationController
       redirect_to edit_user_path(@user)
     else
       @positions = @user.positions_array
-      render :action => "edit" 
+      render :action => "edit", :layout => "user_layout"
     end
   end
   
@@ -55,7 +56,7 @@ class UsersController < ApplicationController
     else
       @positions = @user.positions_array
       @user.errors.add_to_base('上传的必须是一张图片，而且大小不能超过2M') if !user_image.errors.empty?
-      render :action => "edit" 
+      render :action => "edit", :layout => "user_layout"
     end
   end
   
