@@ -1,0 +1,12 @@
+<li class="level_1_menu_item">
+  <span><%=h name%></span>
+  <div class="level_2_menu">
+    <ul>
+      <% links.each do |link|%>
+        <%if link!=nil%>
+          <li><%= link%></li>
+        <%end%>
+      <%end%>
+    </ul>
+  </div>
+</li>

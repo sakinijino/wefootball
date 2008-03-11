@@ -3,14 +3,23 @@ class TeamJoinsController < ApplicationController
   
   def index
     if (params[:user_id]) # 显示用户参加的所有队伍
+      @user = User.find(params[:user_id])
       @uts = UserTeam.find_all_by_user_id(params[:user_id],:include=>[:team])
-      render :action=>"index_team"
+      @title = "#{@user.nickname}参加的球队"
+      render :action=>"index_team", :layout => 'user_layout'
     else # 显示队伍的所有成员
       @uts = UserTeam.find_all_by_team_id(params[:team_id],:include=>[:user])
       @team_id = params[:team_id]
       render :action=>"index_user"
     end
-  end  
+  end
+  
+  def admin
+    @user = User.find(params[:user_id])
+    @uts = UserTeam.find_all_by_user_id_and_is_admin(params[:user_id], true, :include=>[:team])
+    @title = "#{@user.nickname}管理的球队"
+    render :action=>"index_team", :layout => 'user_layout'
+  end
   
   # POST /team_joins.xml
   def create

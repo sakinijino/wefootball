@@ -4,10 +4,21 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
   <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
-  <title><%= h @user.nickname%></title>
+  <title><%= @title ? @title : h(@user.nickname)%></title>
+  <%= javascript_include_tag "jquery-1.2.3.min.js" %>
+  <%= javascript_include_tag "jquery.dimensions.js" %>
+  <%= javascript_include_tag "ui.mouse.js" %>
+  <%= javascript_include_tag "ui.dialog.js" %>
+  <%= javascript_include_tag "application" %>
   <%#= stylesheet_link_tag 'scaffold' %>
 </head>
 <body>
+
+<div>
+  <%= link_to user_image_tag(@user), user_view_path(@user) %>
+  <h1><%= link_to h(@user.nickname), user_view_path(@user)  %></h1>
+</div>
+
 <%= render(:partial => 'shared/user_menu', :locals => {:user => @user})%>
 
 <%= yield  %>

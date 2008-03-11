@@ -3,7 +3,10 @@ class FriendRelationsController < ApplicationController
   # GET /friend_relations
   def index
     user_id = (params[:user_id]==nil) ? current_user.id : params[:user_id]
-    @friendsList = User.find(user_id).friends
+    @user = User.find(user_id)
+    @friendsList = @user.friends
+    @title = "#{@user.nickname}的朋友"
+    render :layout => 'user_layout'
   end
 
   # POST /friend_relations

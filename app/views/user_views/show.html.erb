@@ -1,5 +1,4 @@
-<h1><%= h @user.nickname %></h1>
-<%= user_image_tag @user %>
+<h1><%=h @title%></h1>
 
 <div>
 <%= "<span>所在地: #{@user.city_text}</span><br/>" unless @user.city_text.nil?%>
@@ -29,11 +28,18 @@
 </div>
 
 <div>
-  <h1><%=h @user.nickname%>加入的球队</h1>
+  <h1><%=h @user.nickname%>参加的球队</h1>
   <%= render(:partial => 'shared/team_icon', :collection => @teams)%>
 </div>
 
 <div>
   <h1><%=h @user.nickname%>最近的训练</h1>
   <%= render(:partial => 'shared/training_list', :object => @trainings)%>
+</div>
+
+<div>
+  <h1><%=h @user.nickname%>的日程</h1>
+  <h2><%= Date.today.strftime("%m月, %Y")%></h2>
+  <%= render(:partial => 'shared/calendar', 
+    :locals => {:year => Date.today.year, :month => Date.today.month, :trainings => @calendar_trainings_hash})%>
 </div>

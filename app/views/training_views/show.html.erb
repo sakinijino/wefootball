@@ -22,12 +22,14 @@
   <%=simple_format auto_link(@training.summary, :urls)%>
 </p>
 
+<%if logged_in? %>
 <%=link_to_if(@training.can_be_joined_by?(current_user), '加入', training_training_joins_path(@training), :method=>'post'){} %>
 <%=link_to_if(@training.has_member?(current_user), '退出', training_training_join_path(@training, 0), :method=>'delete'){} %>
 
 <%if current_user.is_team_admin_of?(@training.team)%>
   <%=link_to '修改', edit_training_path(@training)%>
   <%=link_to '删除', training_path(@training), :method=>'delete'%>
+<%end%>
 <%end%>
   
 <h1>要参加这次训练的人</h1>
