@@ -1,34 +1,55 @@
 <div>
 <%if logged_in? %>
-end
 <ul class="level_1_menu">
 <%if user.id == current_user.id%>
   <%= render(:partial=>"utils/menu_item", :locals => {:name => '朋友', 
-      :links=>[link_to("我的所有好友", user_friend_relations_path(user))]}) %>
+      :links=>[
+        link_to("我的好友", user_friend_relations_path(user))
+      ]}) %>
   <%= render(:partial=>"utils/menu_item", :locals => {:name => '球队', 
-      :links=>[link_to("我参加的球队", user_team_joins_path(user)), 
-        link_to("我管理的球队", admin_team_joins_path(:user_id => user))]}) %>
+      :links=>[
+        link_to("我参加的球队", user_team_joins_path(user)), 
+        link_to("我管理的球队", admin_team_joins_path(:user_id => user))
+      ]}) %>
+  <%= render(:partial=>"utils/menu_item", :locals => {:name => '训练', 
+      :links=>[
+        link_to("我的训练", user_trainings_path(user))
+      ]}) %>
   <%= render(:partial=>"utils/menu_item", :locals => {:name => '信件', 
-      :links=>[link_to("我的收件箱", messages_path(:as=>'receiver')), 
-          link_to("我的发件箱", messages_path(:as=>'sender'))]}) %>
+      :links=>[
+        link_to("我的收件箱", messages_path(:as=>'receiver')), 
+        link_to("我的发件箱", messages_path(:as=>'sender'))
+      ]}) %>
   <%= render(:partial=>"utils/menu_item", :locals => {:name => '邀请', 
-      :links=>[link_to("邀请我成为朋友的用户", friend_invitations_path), 
-          link_to("邀请我加入的球队", team_join_invitations_path),
-          link_to("我申请加入的球队", team_join_requests_path)]}) %>
-  <%= render(:partial=>"utils/menu_item", :locals => {:name => '设置', 
-      :links=>[link_to("修改我的信息", edit_user_path(user))]}) %>
+      :links=>[
+        link_to("邀请我成为朋友的用户", friend_invitations_path), 
+        link_to("邀请我加入的球队", team_join_invitations_path),
+        link_to("我申请加入的球队", team_join_requests_path)]
+    }) %>
 <%else%>
   <%= render(:partial=>"utils/menu_item", :locals => {:name => '朋友', 
-      :links=>[link_to("#{user.nickname}的所有好友", user_friend_relations_path(user)),
-      !current_user.is_my_friend?(user) ? nil : link_to("不和他玩", friend_relation_path(0, :user_id=>user.id),:method=>"delete")]}) %>
+      :links=>[
+        link_to("#{user.nickname}的好友", user_friend_relations_path(user)),
+        !current_user.is_my_friend?(user) ? nil : link_to("不和他玩", friend_relation_path(0, :user_id=>user.id),:method=>"delete")
+    ]}) %>
   <%= render(:partial=>"utils/menu_item", :locals => {:name => '球队', 
-      :links=>[link_to("#{user.nickname}参加的球队", user_team_joins_path(user)), 
-        link_to("#{user.nickname}管理的球队", admin_team_joins_path(:user_id => user))]}) %>
+      :links=>[
+        link_to("#{user.nickname}参加的球队", user_team_joins_path(user)), 
+        link_to("#{user.nickname}管理的球队", admin_team_joins_path(:user_id => user))
+      ]}) %>
+  <%= render(:partial=>"utils/menu_item", :locals => {:name => '训练', 
+      :links=>[
+        link_to("#{user.nickname}的训练", user_trainings_path(user))
+      ]}) %>
   <%= render(:partial=>"utils/menu_item", :locals => {:name => '信件', 
-      :links=>[link_to("给#{user.nickname}发信", new_message_path(:to=>user.id))]}) %>
+      :links=>[
+        link_to("给#{user.nickname}发信", new_message_path(:to=>user.id))
+      ]}) %>
   <%= render(:partial=>"utils/menu_item", :locals => {:name => '邀请', 
-      :links=>[current_user.is_my_friend?(user) ? nil : link_to("申请和#{user.nickname}成为好友", new_friend_invitation_path, :onclick=>'j("#senf_friend_invitation_div").dialog("open");return false'),
-        link_to("邀请#{user.nickname}加入球队", new_team_join_invitation_path(:user_id => user.id))]}) %>
+      :links=>[
+        current_user.is_my_friend?(user) ? nil : link_to("申请和#{user.nickname}成为好友", new_friend_invitation_path, :onclick=>'j("#senf_friend_invitation_div").dialog("open");return false'),
+        link_to("邀请#{user.nickname}加入球队", new_team_join_invitation_path(:user_id => user.id))
+      ]}) %>
 <%end%>
 </ul>
 <%end%>
@@ -39,7 +60,7 @@ end
   <% form_for :friend_invitation, :url => friend_invitations_path, :method=>"POST" do |f| %>
       <%= f.hidden_field :host_id,  :value=>user.id%>
       <span>留言</span><br />
-      <%= f.text_area :message %>
+      <%= f.text_area :message, :cols => 30, :rows => 2%>
       <%= f.submit "发送邀请" %>
   <% end %>  
 </div>

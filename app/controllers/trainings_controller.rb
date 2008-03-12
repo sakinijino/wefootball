@@ -7,12 +7,14 @@ class TrainingsController < ApplicationController
   def index
     if (params[:user_id]) #显示用户参与的训练
       @user = User.find(params[:user_id], :include=>:trainings)
-      @trainings = @user.trainings
-      render :action=>'index_user'
+      @trainings = @user.trainings.find(:all, :order => "start_time desc")
+      @title = "#{@user.nickname}的训练"
+      render :layout => "user_layout"
     else #显示队伍的所有训练
       @team = Team.find(params[:team_id], :include=>:trainings)
-      @trainings = @team.trainings
-      render :action=>'index_team'
+      @trainings = @team.trainings.find(:all, :order => "start_time desc")
+      @title = "#{@team.shortname}的训练"
+      render :layout => "team_layout"
     end
   end
   

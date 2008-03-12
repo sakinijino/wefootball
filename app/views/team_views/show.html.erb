@@ -1,11 +1,4 @@
-<div>
-<%if logged_in?%>
-  <%= render(:partial => 'shared/team_menu', :locals => {:team => @team})%>
-<%end%>
-</div>
-
-<h1><%=h @team.shortname%></h1>
-<%= team_image_tag @team%>
+<h1><%= @title%></h1>
 
 <div>
 <%= "<span>所在地: #{@team.city_text}</span><br/>" unless @team.city_text.nil?%>
@@ -23,22 +16,34 @@
 <%if current_user.is_team_member_of?(@team)%>
   <%= link_to("退出球队", team_join_path(@user_team.id),:method=>:delete)%>
 <%else%>
-  <%= link_to("申请加入球队", 'javascript:void(0);')%>
+  <%= link_to("申请加入球队", '#', :onclick=>'javascript:j("#send_team_join_request_div").dialog("open");return false;')%>
+<%end%>
+<%end%>
+</div>
+
+<%if logged_in? && !current_user.is_team_member_of?(@team)%>
+<div id="send_team_join_request_div" class="jdialog">
   <% form_for :team_join_request, :url => team_join_requests_path, :method=>"POST" do |f| %>
     <%= f.hidden_field :team_id,  :value=>@team.id%> 
     <span>留言</span><br />
     <%= f.text_area :message %>
     <%= f.submit "申请" %>
-  <% end %>
-<%end%>
-<%end%>
+  <% end %>  
 </div>
+<%end%>
       
 <h1><%=h @team.shortname%>的成员</h1>
 <%= render(:partial => 'shared/user_icon', :collection => @users)%>
 
 <h1><%=h @team.shortname%>最近的训练</h1>
 <%= render(:partial => 'shared/training_list', :object => @trainings)%>
+  
+<div>
+  <h1><%=h @team.shortname%>的日程</h1>
+  <h2><%= Date.today.strftime("%m月, %Y")%></h2>
+  <%= render(:partial => 'shared/calendar', 
+    :locals => {:year => Date.today.year, :month => Date.today.month, :trainings => @calendar_trainings_hash})%>
+</div>
 
 <h1><%=h @team.shortname%>下的讨论</h1>
 <%= render(:partial => 'shared/post_list', :object => @posts)%>

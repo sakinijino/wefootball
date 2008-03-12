@@ -1,26 +1,31 @@
 <h1><%=h @title%></h1>
 
-<div>
-<%= "<span>所在地: #{@user.city_text}</span><br/>" unless @user.city_text.nil?%>
-<%= "<span>生日: #{@user.birthday_text}</span><br/>" unless @user.birthday_text.nil?%>
-<%= "<span>年龄: #{@user.age}</span><br/>" unless @user.age.nil?%>
-<%= "<span>喜欢的球星: #{@user.favorite_star}</span><br/>" unless @user.favorite_star.blank?%>
-<%= "<span>喜欢的球队: #{@user.favorite_team}</span><br/>" unless @user.favorite_team.blank?%>
-<%if !@user.summary.nil? && !@user.summary.blank?%>
-    <span>自我介绍：</span>
-    <p><%=simple_format auto_link(@user.summary, :urls)%></p>
-<%end%>
+<div class="tab_container">
+  <a class="tab_link" href="#">基本信息</a>
+  <%if @user.is_playable%>
+  <a class="tab_link" href="#">球员信息</a>
+  <%end%>
+  <div class="tab">
+  <%= "<span>所在地: #{@user.city_text}</span><br/>" unless @user.city_text.nil?%>
+  <%= "<span>生日: #{@user.birthday_text}</span><br/>" unless @user.birthday_text.nil?%>
+  <%= "<span>年龄: #{@user.age}</span><br/>" unless @user.age.nil?%>
+  <%= "<span>喜欢的球星: #{@user.favorite_star}</span><br/>" unless @user.favorite_star.blank?%>
+  <%= "<span>喜欢的球队: #{@user.favorite_team}</span><br/>" unless @user.favorite_team.blank?%>
+  <%if !@user.summary.nil? && !@user.summary.blank?%>
+      <span>自我介绍：</span>
+      <p><%=simple_format auto_link(@user.summary, :urls)%></p>
+  <%end%>
+  </div>
+  <%if @user.is_playable%>
+  <div class="tab">
+    <%= "<span>身高: #{@user.height}cm</span><br/>" unless @user.height.nil?%>
+    <%= "<span>体重: #{@user.weight}kg</span><br/>" unless @user.weight.nil?%>
+    <%= "<span>惯用脚: #{fitfoot_text @user.fitfoot}</span><br/>" unless @user.fitfoot.nil?%>
+    <%= "<span>首选位置: #{position_text @user.premier_position}</span><br/>" unless @user.premier_position.nil?%>
+    <%= "<span>可以踢的位置: #{@user.positions.map {|p| position_text p.label}.join(', ')}</span><br/>" %>
+  </div>
+  <%end%>
 </div>
-
-<%if @user.is_playable%>
-<div>
-  <%= "<span>身高: #{@user.height}cm</span><br/>" unless @user.height.nil?%>
-  <%= "<span>体重: #{@user.weight}kg</span><br/>" unless @user.weight.nil?%>
-  <%= "<span>惯用脚: #{fitfoot_text @user.fitfoot}</span><br/>" unless @user.fitfoot.nil?%>
-  <%= "<span>首选位置: #{position_text @user.premier_position}</span><br/>" unless @user.premier_position.nil?%>
-  <%= "<span>可以踢的位置: #{@user.positions.map {|p| position_text p.label}.join(', ')}</span><br/>" %>
-</div>
-<%end%>
 
 <div>
   <h1><%=h @user.nickname%>的朋友</h1>

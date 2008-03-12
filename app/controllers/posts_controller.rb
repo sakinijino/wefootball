@@ -13,13 +13,16 @@ class PostsController < ApplicationController
       else
         @posts = @team.posts.public
       end
+      render :layout => "team_layout"
     elsif (params[:training_id])
       @training = Training.find(params[:training_id])
+      @team = @training.team
       if (logged_in? && current_user.is_team_member_of?(@training.team_id))
         @posts = @training.posts
       else
         @posts = @training.posts.public
       end
+      render :layout => "team_layout"
     else
       fake_params_redirect
     end
@@ -30,16 +33,21 @@ class PostsController < ApplicationController
     @post = Post.find(params[:id])
     fake_params_redirect if !@post.is_visible_to?(current_user)
     @can_reply = @post.can_be_replied_by?(current_user)
+    @team = @post.team
+    render :layout => "team_layout"
   end
 
   # GET teams/1/posts/new
   # GET trainings/1/posts/new
   def new
     @post = Post.new
+    render :layout => "team_layout"
   end
 
   # GET /posts/1/edit
   def edit
+    @team = @post.team
+    render :layout => "team_layout"
   end
 
   # POST teams/1/posts

@@ -13,7 +13,7 @@ class TeamJoinInvitationsController < ApplicationController
         return
       end
       @friends = (current_user.friends - @team.users)
-      render :action => 'new_by_team_id'
+      render :action => 'new_by_team_id', :layout => "team_layout"
     else
       fake_params_redirect
     end
@@ -24,7 +24,7 @@ class TeamJoinInvitationsController < ApplicationController
       @team = Team.find(params[:team_id])
       if (current_user.is_team_admin_of?(params[:team_id]))
         @requests = TeamJoinRequest.find_all_by_team_id_and_is_invitation(params[:team_id], true, :include=>[:user])
-        render :action=>"index_user"
+        render :action=>"index_user", :layout => "team_layout"
       else
         fake_params_redirect
       end

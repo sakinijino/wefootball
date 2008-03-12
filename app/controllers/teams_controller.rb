@@ -26,6 +26,7 @@ class TeamsController < ApplicationController
 
   def edit
     @team = Team.find(params[:id])
+    render :layout => "team_layout"
   end
   
  # PUT /teams/1.xml
@@ -34,7 +35,7 @@ class TeamsController < ApplicationController
     if @team.update_attributes(params[:team])
       redirect_to edit_team_path(params[:id])
     else
-      render :action=>"edit"
+      render :action=>"edit", :layout => "team_layout"
     end
   end
   
@@ -46,7 +47,7 @@ class TeamsController < ApplicationController
       redirect_to edit_team_path(@team)
     else
       @team.errors.add_to_base('上传的必须是一张图片，而且大小不能超过2M') if !team_image.errors.empty?
-      render :action => "edit" 
+      render :action => "edit", :layout => "team_layout"
     end
   end
   

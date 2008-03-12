@@ -1,0 +1,35 @@
+<h1><%= @title%></h1>
+
+<%@uts.each do |ut| %>
+  <%@ut = ut%>
+  <div>
+    <%=user_image_tag @ut.user%>
+    <%=link_to @ut.user.nickname, user_view_path(@ut.user.id)%>
+    
+    <%if current_user.is_team_admin_of?(@team_id)%>
+    <% form_for :ut, :url=>team_join_path(@ut), :html=>{:method=>:put} do |f| %>
+      <%if (!@ut.is_admin && @ut.can_promote_as_admin_by?(current_user)) || (@ut.is_admin && @ut.can_degree_as_common_user_by?(current_user))%>
+        <p>
+          <b>管理员</b>
+          <%= f.check_box :is_admin %>
+        </p>
+      <%end%>
+      
+      <%if @ut.user.is_playable%>
+        <p>
+          <b>队员</b>
+          <%= f.check_box :is_player %>
+        </p>
+        <% if @ut.is_player%>
+          <p><label for="position">队内位置</label><br/>
+          <%= f.select :position, Team::FORMATION_POSITIONS.map {|p| [p, p]}, {:include_blank => "没有位置"} %></p>
+        <%end%>
+      <% end %>
+      <p>
+        <%= f.submit "更新" %>
+      </p>
+    <%end%>
+    <%=button_to("逐出球队",team_join_path(@ut, :back_uri => request.request_uri),:method=>:delete) if @ut.can_destroy_by?(current_user)%>
+    <% end %>
+  </div>
+<%end%>

@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
   <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
-  <title><%= @title ? @title : h(@user.nickname)%></title>
+  <title><%= @title ? @title : h(@team.name)%></title>
   <%= javascript_include_tag "jquery-1.2.3.min.js" %>
   <%= javascript_include_tag "jquery.dimensions.js" %>
   <%= javascript_include_tag "ui.mouse.js" %>
@@ -15,8 +15,8 @@
 <body>
 
 <div>
-  <%= link_to user_image_tag(@user), user_view_path(@user) %>
-  <h1><%= link_to h(@user.nickname), user_view_path(@user)  %></h1>
+  <%= link_to team_image_tag(@team), team_view_path(@team) %>
+  <h1><%= link_to h(@team.shortname), team_view_path(@team)  %></h1>
 
   <%if logged_in?%>
     <%= link_to("我的设置", edit_user_path(current_user))%>
@@ -26,7 +26,7 @@
   <%end%>
 </div>
 
-<%= render(:partial => 'shared/user_menu', :locals => {:user => @user})%>
+<%= render(:partial => 'shared/team_menu', :locals => {:team => @team})%>
 
 <%= yield  %>
 

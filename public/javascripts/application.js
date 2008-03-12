@@ -14,7 +14,21 @@ j(function(){
 	
 	j("div.jdialog").each(function(i, item){
 		item = j(item)
-		item.dialog({draggable:false, resizable:false});
+		item.dialog({draggable:false, resizable:false, width:350});
 		item.dialog('close');
 	})
+         
+        j("div.tab_container").each(function(i, container){
+            var links = j(container).find(".tab_link")
+            var divs = j(container).find("div.tab")
+            links.each(function(i, link){
+                j(link).click(function(){
+                    divs.hide()
+                    if (divs[i]!=null) j(divs[i]).show();
+                    return false;
+                })
+            })
+            divs.hide()
+            if (divs[0]!=null) j(divs[0]).show()
+        })
 })

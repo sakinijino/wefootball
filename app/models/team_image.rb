@@ -1,13 +1,13 @@
 class TeamImage < ActiveRecord::Base
-  WIDTH = 96
-  HEIGHT = 96
+  WIDTH = 76
+  HEIGHT = 76
   SMALL_WIDTH = 48
   SMALL_HEIGHT = 48
   
   belongs_to :team
   has_attachment  :storage => :file_system, 
                   :content_type => :image, 
-                  :resize_to => '96x96!',
+                  :resize_to => '76x76!',
                   :thumbnails => { :small => "48x48!"},
                   :path_prefix => 'public/images/teams',
                   :max_size => 2.megabytes,
