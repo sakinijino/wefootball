@@ -1,0 +1,174 @@
+div.calendar{
+    line-height: normal
+}
+
+/*Fix ie6 float double margin bug*/
+div.calendar div.normalDateDiv,
+div.calendar div.monthAndYearDiv {
+    display: inline;
+    overflow: hidden;
+}
+
+.normalDateDiv {
+    width:105px; 
+    height:100px; 
+    margin-left:5px; 
+    margin-bottom:5px; 
+    border:solid 1px #3D681A; 
+    background-color:#FCFDFE; 
+    float:left;
+}
+
+.bigDateDiv {
+    width:217px;
+}
+
+.dateSaturdayDiv {
+    background-color:#ACBE33; 
+}
+
+.dateSundayDiv {
+    background-color:#F2F7AB; 
+}
+
+.monthAndYearDiv
+{
+    border:solid 1px White; 
+    padding-left:6px; 
+    font-family:Verdana; 
+    font-size:17px;
+}
+
+.monthAndYearDiv a {
+    color:#000;
+}
+
+.bigMonthDaySpan
+{
+    margin-left:3px;
+    color:#111111;
+    font-family:Arial Narrow;
+    font-size:22px;
+    font-weight:lighter;
+}
+
+.bigMonthDaySpan a{
+    color:#000;
+}
+
+.bigWeekDaySpan
+{
+    font-family:Verdana;
+    color:#333333;
+    font-size:11px;
+}
+
+.trainingContentSpan
+{
+    font-family:Arial;
+    font-size:14px;
+}
+
+/*------------------------------*/
+.monthCalendar {
+    width: 580px;
+    margin: 0 auto;
+}
+
+.monthCalendar .monthAndYear {
+    font-family:Segoe UI; 
+    font-size:24px;
+    font-weight: bold;
+    margin: 10px;
+    text-align: center;
+}
+
+.monthCalendar .monthAndYear img{
+    margin: 0 20px;
+}
+
+.weekDayDiv
+{
+    width:31px;
+    height:40px;
+    margin:25px;
+    text-align:center;
+    float:left;
+}
+
+.weekDaySpan
+{
+    font-family:Verdana;
+    font-size:14px;
+    font-weight:bold;
+    color:#3D681A;
+}
+
+.monthDayDiv
+{
+    width:75px;
+    height:75px;
+    margin:2px;
+    border:solid 1px #FCFDFE;
+    text-align:center;
+    float:left;
+}
+
+.currentDayDiv
+{
+    width:75px;
+    height:75px;
+    margin:2px;
+    background-color:#F2F7AB;
+    border:solid 1px #3D681A;
+    text-align:center;
+    float:left;
+}
+
+.monthDayTopDiv
+{
+    width:100%;
+    height:35%;
+}
+
+.monthDayBottomDiv
+{
+    width:100%;
+    height:65%;
+    text-align:left;
+}
+
+.monthDaySpan
+{
+    font-family:Verdana;
+    font-size:16px;
+    color:#333333;
+}
+
+.monthDaySpan a {
+    color: #333333;
+}
+
+.otherMonthDaySpan
+{
+    font-family:Verdana;
+    font-size:16px;
+    color:#999999;
+}
+
+.otherMonthDaySpan a {
+    color: #999999;
+}
+
+.monthDayArragementSpan
+{
+    font-family:Calibri;
+    font-size:12px;
+}
+
+.otherMonthDayArragementSpan
+{
+    font-family:Calibri;
+    font-size:12px;
+    color:#999999;
+}

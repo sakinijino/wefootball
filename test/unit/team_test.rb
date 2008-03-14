@@ -12,7 +12,7 @@ class TeamTest < ActiveSupport::TestCase
   
   def test_image_path
     assert_equal "/images/teams/t00000001.not_image", teams(:inter).image
-    assert_equal "/images/default_team.jpg", teams(:milan).image
+    assert_equal "/images/default_team.gif", teams(:milan).image
   end
   
   def test_public_posts
@@ -35,9 +35,9 @@ class TeamTest < ActiveSupport::TestCase
   
   def test_trainings_calendar
     t = Team.find(1)
-    assert_equal 2, t.trainings.recent(nil, DateTime.new(2008, 1, 19)).length
+    assert_equal 4, t.trainings.recent(nil, DateTime.new(2008, 1, 19)).length
     assert_equal 1, t.trainings.recent(1, DateTime.new(2008, 1, 19)).length
-    assert_equal 1, t.trainings.recent(nil, DateTime.new(2008, 1, 21)).length
+    assert_equal 3, t.trainings.recent(nil, DateTime.new(2008, 1, 21)).length
     
     Training.destroy_all
     assert_equal 0, Training.count
@@ -75,7 +75,7 @@ class TeamTest < ActiveSupport::TestCase
   
   def test_destroy
     assert_difference 'TeamImage.count', -1 do
-    assert_difference 'Training.count', -2 do
+    assert_difference 'Training.count', -4 do
     assert_difference 'UserTeam.count', -2 do
     assert_difference 'TeamJoinRequest.count', -4 do
     assert_difference 'Post.count', -4 do

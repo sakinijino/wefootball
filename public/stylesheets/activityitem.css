@@ -1,0 +1,51 @@
+div.activity {
+    padding:20px;
+    border-top:dashed 1px #3D681A;
+    line-height: normal;
+}
+
+div.activity div.activity_date {
+    width:78px;
+    height:78px;
+    text-align: center;
+    border:solid 1px #3D681A;
+    float: left;
+}
+
+div.activity div.activity_date div.day {
+    height:56%;
+    padding-top:14%;
+    color:White;
+    background-color:#3D681A;
+    font-family:Segoe UI;
+    font-size:24px;
+    font-weight:bold;
+}
+
+div.activity div.activity_date div.day a{
+    color:White;
+}
+
+div.activity div.activity_date div.week {
+    height:22%;
+    padding-top:7%;
+    font-size:12px;
+    background-color:#F2F7AB;
+    color:#333333;
+}
+
+div.activity div.activity_content {
+    padding-left:5%;
+    padding-right:5%;
+    padding-top:20px;
+    color:#222222;
+    font-family:Arial;
+    font-size:13px;
+    float:left;
+}
+
+div.activity div.activity_icon {
+    width:80px;
+    text-align:center;
+    float:right;
+}

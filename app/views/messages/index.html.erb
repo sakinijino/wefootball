@@ -1,9 +1,13 @@
-<div>
-    <%= link_to_if(params[:as]=='sender', '收件箱', messages_path) { link_to '发件箱', messages_path(:as => 'sender') } %>
+<h1><%=h @title%></h1>
+<div id="narrow_right_content">
+<div class="seperateLine"></div>
+<h2><%= link_to_if(params[:as]=='sender', '去收件箱', messages_path) { link_to '去发件箱', messages_path(:as => 'sender') } %></h2>
 </div>
 
+<div id="wide_left_content">
+<div class="seperateLine"></div>
 <div>
-  <table>
+  <table class="list">
   <tr>
     <%if params[:as]!='sender' %>
         <th>发件人</th>
@@ -29,3 +33,5 @@
     <%end%>
   </table>
 </div>
+</div>
+<div class="clearBoth"></div>

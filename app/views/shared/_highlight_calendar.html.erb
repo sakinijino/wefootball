@@ -1,0 +1,46 @@
+<div class="calendar">
+  <%3.times do |i|%>
+  <div class="normalDateDiv bigDateDiv <%= date.wday == 0 ? 'dateSundayDiv' : (date.wday == 6 ? 'dateSaturdayDiv' : '')%>">
+    <div style="width:100%; height:30px;">
+      <span class="bigMonthDaySpan"><%=month_day_link(date.day, date)%></span>
+      <span class="bigWeekDaySpan"><%=wday_text date.wday%></span>
+    </div>
+    <div style="width:100%; margin:5px;">
+      <% dts = trainings[date.strftime("%Y-%m-%d")] %>
+      <% if !dts.nil?%>
+      <% dts.each do |t| %>
+        <span class="trainingContentSpan">
+          <%= "#{t.start_time.strftime("%H:%M")}-#{t.end_time.strftime("%H:%M")}"%>
+          <%= link_to "训练", training_view_path(t)%>
+        </span>
+      <%end%>
+      <%end%>
+    </div>
+  </div>
+  <%if i==1%>
+    <div class="normalDateDiv monthAndYearDiv">
+      <%= month_calendar_link(date.strftime("%Y-%m"), date)%>
+    </div>
+  <%end%>
+  <% date = date.tomorrow %>
+  <%end%>
+  <%15.times do |i|%>
+    <div class="normalDateDiv <%= date.wday == 0 ? 'dateSundayDiv' : (date.wday == 6 ? 'dateSaturdayDiv' : '')%>">
+      <div style="width:100%; height:30px;">
+        <span class="bigMonthDaySpan"><%=month_day_link(date.day, date)%></span>
+        <span class="bigWeekDaySpan"><%=wday_text date.wday%></span>
+      </div>
+      <div style="width:100%; margin:5px;">
+        <% dts = trainings[date.strftime("%Y-%m-%d")] %>
+        <% if !dts.nil?%>
+        <% dts.each do |t| %>
+          <span class="trainingContentSpan">
+            <%= link_to "训练", training_view_path(t)%>
+          </span>
+        <%end%>
+        <%end%>
+      </div>
+    </div>
+    <% date = date.tomorrow %>
+  <%end%>
+</div>

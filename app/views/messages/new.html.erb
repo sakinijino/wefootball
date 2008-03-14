@@ -1,14 +1,36 @@
-写给:<%= render(:partial => 'shared/user_icon', :object => @receiver)%>
+<div id="narrow_right_content">
+<div class="seperateLine"></div>
+</div>
+
+<div id="wide_left_content">
+<div class="seperateLine"></div>
 
 <%= error_messages_for :message %>
 <% form_for :message, :url => messages_path do |f| %>
-  <p><label for="subject">标题</label><br/>
-  <%= f.text_field :subject %>
-
-  <p><label for="content">内容</label><br/>
-  <%= f.text_area :content %>
-  
-  <%= f.hidden_field :receiver_id,  :value=>@receiver.id%>
-  
-  <p><%= submit_tag '发送' %></p>
+  <table class="form">
+    <tr>
+      <td>写给:</td>
+      <td>
+        <%= h @receiver.nickname%>
+        <div style="float:right"><%= small_user_image_link @receiver %></div>
+     </td>
+    </tr>
+    <tr>
+      <td><label for="subject">标题: </label></td>
+      <td><%= f.text_field :subject %></td>
+    </tr>
+    <tr>
+      <td><label for="content">内容: </label></td>
+      <td><%= f.text_area :content %></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td>
+        <%= f.hidden_field :receiver_id,  :value=>@receiver.id%>
+        <%= submit_tag '发送' %>
+      </td>
+    </tr>
+  </table>
 <%end%>
+</div>
+<div class="clearBoth"></div>

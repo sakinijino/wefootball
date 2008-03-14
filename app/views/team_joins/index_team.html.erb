@@ -1,5 +1,13 @@
 <h1><%= h @title%></h1>
+<div class="seperateLine" style="margin-bottom:20px"></div>
 
-<%@uts.each do |ut| %>
-  <%= render(:partial => 'shared/team_icon', :object => ut.team)%>
+<%if @admin_teams.length > 0%>
+<h2><%= h "#{@user.nickname}管理的球队"%></h2>
+<%= render(:partial => 'shared/team_icon', :collection => @admin_teams)%>
+  
+<div class="seperateLine clearBoth"></div>
 <%end%>
+
+<h2><%= h "#{@user.nickname}参加的球队"%></h2>
+<%= render(:partial => 'shared/team_icon', :collection => @uts.map {|ut| ut.team})%>
+<div class="clearBoth"></div>

@@ -20,15 +20,18 @@ j(function(){
          
         j("div.tab_container").each(function(i, container){
             var links = j(container).find(".tab_link")
-            var divs = j(container).find("div.tab")
+            var divs = j(container).find(".tab")
             links.each(function(i, link){
-                j(link).click(function(){
-                    divs.hide()
-                    if (divs[i]!=null) j(divs[i]).show();
-                    return false;
-                })
+                if (divs[i]!=null)
+                    j(link).click(function(){
+                        links.removeClass('tabSelected')
+                        j(link).addClass('tabSelected')
+                        divs.hide()
+                        if (divs[i]!=null) j(divs[i]).show();
+                        return false;
+                    })
             })
             divs.hide()
-            if (divs[0]!=null) j(divs[0]).show()
+            if (links[0]!=null) j(links[0]).click()
         })
 })

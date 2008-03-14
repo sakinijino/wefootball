@@ -5,10 +5,23 @@ module ActivityCalendar
       :limit=>limit
   end
   
+  def in_a_duration(start_time, end_time)
+    find_in_duration(start_time, end_time)
+  end
+  
   def in_a_month(date = Time.today)
     date = date.to_datetime.at_midnight
     start_time = date.at_beginning_of_month
     end_time = start_time.next_month
+    find_in_duration(start_time, end_time)
+  end
+  
+  def in_an_extended_month(date = Time.today)
+    date = date.to_datetime.at_midnight
+    start_time = date.at_beginning_of_month
+    end_time = start_time.next_month
+    start_time = start_time.monday.yesterday if start_time.wday>0
+    end_time = end_time.monday.next_week.yesterday.yesterday if end_time.wday<6
     find_in_duration(start_time, end_time)
   end
   

@@ -1,6 +1,12 @@
 <%= error_messages_for :user %>
 
-<% form_for(@user) do |f| %>
+<div class="tab_container" style="margin:10px 0 20px 0">
+<span class="tab_link" style="margin-left: 10px;">修改个人信息</span>
+<span class="tab_link">修改球员信息</span>
+<span class="tab_link">修改头像</span>
+<span class="tab_link">修改密码</span>
+
+<% form_for(@user,:html => { :class=>"tab"}) do |f| %>
   <p><label for="nickname">昵称</label><br/>
   <%= f.text_field :nickname %></p>
   
@@ -20,14 +26,14 @@
   <%= f.text_field :favorite_team %></p>
   
   <p><label for="summary">自我介绍</label><br/>
-  <%= f.text_area :summary %></p>
+  <%= f.text_area :summary, :cols=>40, :rows=>15%></p>
   
   <p>
-    <%= f.submit "Update" %>
+    <%= f.submit "保存" %>
   </p>
 <% end %>
-  
-<% form_for(@user) do |f| %>
+
+<% form_for(@user,:html => { :class=>"tab"}) do |f| %>
   <p><%= f.check_box :is_playable %>
   <label for="is_playable">我踢球</label></p>
   
@@ -52,23 +58,23 @@
   </p>
 
   <p>
-    <%= f.submit "Update" %>
+    <%= f.submit "保存" %>
   </p>
 <% end %>
 
-<% form_for(:user, :url => update_image_user_path(@user),:html => { :method=>:put, :multipart => true }) do |f| %>
-  <%= user_image_tag @user %>
+<% form_for(:user, :url => update_image_user_path(@user),:html => { :method=>:put, :multipart => true, :class=>"tab" }) do |f| %>
+  <%= user_image_tag @user, {:style=>"margin:20px 0 0 0"} %>
   <p>
     <label>更改头像</label><br/>
     <%= f.file_field  :uploaded_data %>
   </p>
 
   <p>
-    <%= f.submit "Update" %>
+    <%= f.submit "保存" %>
   </p>
 <% end %>
 
-<% form_for(@user) do |f| %>
+<% form_for(@user,:html => { :class=>"tab" }) do |f| %>
   <p><label for="password">密码</label><br/>
   <%= f.password_field :password %></p>
 
@@ -76,7 +82,7 @@
   <%= f.password_field :password_confirmation %></p>
 
   <p>
-    <%= f.submit "Update" %>
+    <%= f.submit "保存" %>
   </p>
 <% end %>
-
+</div>

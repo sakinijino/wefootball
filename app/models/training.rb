@@ -14,6 +14,7 @@ class Training < ActiveRecord::Base
     end
   end
   
+  validates_presence_of     :location, :message => "请填写训练地点"
   validates_length_of        :location,    :maximum => 300
   validates_length_of        :summary,    :maximum => 1000, :allow_nil=>true
   
@@ -29,12 +30,9 @@ class Training < ActiveRecord::Base
   
   def before_validation
     attribute_slice(:summary, 1000)
+    self.location = self.football_ground.name if self.football_ground!=nil
     self.start_time = DateTime.now.tomorrow if self.start_time==nil
     self.end_time = self.start_time.since(3600) if self.end_time==nil
-  end
-  
-  def before_save
-    self.location = self.football_ground.name if self.football_ground!=nil
   end
   
   def can_be_joined_by?(user)

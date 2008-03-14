@@ -1,0 +1,10 @@
+<%content_for(:stylesheet) do%>
+  <%= stylesheet_link_tag 'calendar' %>
+<%end%>
+
+
+<h1><%= @title%></h1>
+<div class="seperateLine"></div>
+<%= render(:partial => 'shared/calendar', 
+    :locals => {:year => @date.year, :month => @date.month, :trainings => @calendar_trainings_hash})%>
+<div class="clearBoth"></div>

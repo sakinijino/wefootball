@@ -1,37 +1,5 @@
 # Methods added to this helper will be available to all templates in the application.
 module ApplicationHelper  
-  def user_image_tag(user)
-    image_tag(user.image, :width=>UserImage::WIDTH, :height=>UserImage::HEIGHT)
-  end
-  
-  def user_image_link(user)
-    link_to user_image_tag(user), user_view_path(user.id)
-  end
-  
-  def small_user_image_tag(user)
-    image_tag(user.image(:small), :width=>UserImage::SMALL_WIDTH, :height=>UserImage::SMALL_HEIGHT)
-  end
-  
-  def small_user_image_link(user)
-    link_to small_user_image_tag(user), user_view_path(user.id)
-  end
-  
-  def team_image_tag(team)
-    image_tag(team.image, :width=>TeamImage::WIDTH, :height=>TeamImage::HEIGHT)
-  end
-  
-  def team_image_link(team)
-    link_to team_image_tag(team), team_view_path(team.id)
-  end
-  
-  def small_team_image_tag(team)
-    image_tag(team.image(:small), :width=>TeamImage::SMALL_WIDTH, :height=>TeamImage::SMALL_HEIGHT)
-  end
-  
-  def small_team_image_link(team)
-    link_to small_team_image_tag(team), team_view_path(team.id)
-  end
-  
   def distance_of_time_in_words(from_time, to_time = 0, include_seconds = false)
     from_time = from_time.to_time if from_time.respond_to?(:to_time)
     to_time = to_time.to_time if to_time.respond_to?(:to_time)

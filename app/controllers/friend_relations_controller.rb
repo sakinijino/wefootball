@@ -1,9 +1,8 @@
 class FriendRelationsController < ApplicationController
-  before_filter :login_required
+  before_filter :login_required, :except => [:index]
   # GET /friend_relations
   def index
-    user_id = (params[:user_id]==nil) ? current_user.id : params[:user_id]
-    @user = User.find(user_id)
+    @user = User.find(params[:user_id])
     @friendsList = @user.friends
     @title = "#{@user.nickname}的朋友"
     render :layout => 'user_layout'

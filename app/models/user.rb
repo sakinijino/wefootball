@@ -3,7 +3,7 @@ class User < ActiveRecord::Base
   include ModelHelper
   
   FITFOOT = %w{R L B}
-  DEFAULT_IMAGE = "/images/default_user.jpg"
+  DEFAULT_IMAGE = "/images/default_user.gif"
   
   attr_accessor :password
   has_many :positions,
@@ -183,7 +183,11 @@ class User < ActiveRecord::Base
   
   def image(thumbnail = nil)
     return self.user_image.public_filename(thumbnail) if self.user_image != nil
-    DEFAULT_IMAGE
+    if thumbnail == nil
+      DEFAULT_IMAGE
+    else
+      DEFAULT_IMAGE.split('.').insert(1, "_#{thumbnail}.").join
+    end
   end
   
   def is_team_admin_of?(team)

@@ -170,7 +170,7 @@ class UserTest < Test::Unit::TestCase
   
   def test_image_path
     assert_equal "/images/users/u00000003.not_image", users(:saki).image
-    assert_equal "/images/default_user.jpg", users(:aaron).image
+    assert_equal "/images/default_user.gif", users(:aaron).image
   end
   
   def test_friends
@@ -199,16 +199,16 @@ class UserTest < Test::Unit::TestCase
   
   def test_recent_trainings
     t = users(:saki)
-    assert_equal 2, t.trainings.recent(nil, DateTime.new(2008, 1, 19)).length
+    assert_equal 4, t.trainings.recent(nil, DateTime.new(2008, 1, 19)).length
     assert_equal 1, t.trainings.recent(1, DateTime.new(2008, 1, 19)).length
-    assert_equal 1, t.trainings.recent(nil, DateTime.new(2008, 1, 21)).length
+    assert_equal 3, t.trainings.recent(nil, DateTime.new(2008, 1, 21)).length
   end
   
   def test_destroy
     assert_difference 'Position.count', -3 do
     assert_difference 'UserImage.count', -1 do
     assert_difference 'Message.count', -5 do
-    assert_difference 'TrainingJoin.count', -2 do
+    assert_difference 'TrainingJoin.count', -4 do
     assert_difference 'UserTeam.count', -2 do
     assert_difference 'TeamJoinRequest.count', -2 do
     assert_difference 'Post.count', -4 do

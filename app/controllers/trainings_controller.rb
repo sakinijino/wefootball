@@ -7,13 +7,14 @@ class TrainingsController < ApplicationController
   def index
     if (params[:user_id]) #显示用户参与的训练
       @user = User.find(params[:user_id], :include=>:trainings)
-      @trainings = @user.trainings.find(:all, :order => "start_time desc")
+      @trainings = @user.trainings.recent
       @title = "#{@user.nickname}的训练"
       render :layout => "user_layout"
     else #显示队伍的所有训练
       @team = Team.find(params[:team_id], :include=>:trainings)
-      @trainings = @team.trainings.find(:all, :order => "start_time desc")
+      @trainings = @team.trainings.recent
       @title = "#{@team.shortname}的训练"
+      @team_display = false;
       render :layout => "team_layout"
     end
   end
@@ -22,6 +23,7 @@ class TrainingsController < ApplicationController
     @team = Team.find(params[:team_id])
     fake_params_redirect if (!current_user.is_team_admin_of?(@team))
     @training = Training.new(:start_time => Time.now, :end_time => Time.now.since(3600))
+    render :layout => "team_layout"
   end
 
   # POST /trainings

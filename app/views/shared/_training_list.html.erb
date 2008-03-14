@@ -1,16 +1,7 @@
-<table>
-  <tr>
-    <th>日期</th>
-    <th>时间</th>
-    <th>地点</th>
-    <th></th>
-  </tr>
-  <%training_list.each do |t|%>
-    <tr>
-      <td><%= t.start_time.strftime('%Y-%m-%d')%></td>
-      <td><%= t.start_time.strftime('%H:%M')%>-<%= t.end_time.strftime('%H:%M')%></td>
-      <td><%=h t.location%></td>
-      <td><%=link_to '查看', training_view_path(t)%></td>
-    </tr>
-  <%end%>
-</table>
+<%display_team = display_team!=nil ? display_team : true%>
+<%training_list.each do |t|%>
+  <div class="activity">
+    <%= render :partial=>"shared/training_item", :locals => {:training => t, :display_team => display_team}%>
+    <div class="clearBoth"></div>
+  </div>
+<%end%>

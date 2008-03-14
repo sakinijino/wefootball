@@ -7,3 +7,11 @@ saki_training1:
 saki_training2:
   user_id: 3
   training_id: 2
+
+saki_training3:
+  user_id: 3
+  training_id: 3
+
+saki_training4:
+  user_id: 3
+  training_id: 4

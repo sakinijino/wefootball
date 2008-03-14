@@ -1,75 +1,11 @@
-<!--<style>
-  .weekDayDiv
-  {
-    width:31px;
-    height:40px;
-    margin:25px;
-    text-align:center;
-    float:left;
-  }
-  .weekDaySpan
-  {
-    font-family:Calibri;
-    font-size:22px;
-    color:#333333;
-  }
-  .monthDayDiv
-  {
-    width:75px;
-    height:138px;
-    margin:2px;
-    border:solid 1px #FCFDFE;
-    text-align:center;
-    float:left;
-  }
-  .currentDayDiv
-  {
-    width:75px;
-    height:138px;
-    margin:2px;
-    background-color:#F2F7AB;
-    border:solid 1px #3D681A;
-    text-align:center;
-    float:left;
-  }
-  .monthDayTopDiv
-  {
-    width:100%;
-    height:20%;
-  }
-  .monthDayBottomDiv
-  {
-    width:100%;
-    height:80%;
-    padding-top:5px;
-    text-align:left;
-  }
-  .monthDaySpan
-  {
-    font-family:Calibri;
-    font-size:22px;
-    color:#333333;
-  }  
-  .otherMonthDaySpan
-  {
-    font-family:Calibri;
-    font-size:22px;
-    color:#999999;
-  }
-  .monthDayArragementSpan
-  {
-    font-family:Calibri;
-    font-size:12px;
-  }
-  .otherMonthDayArragementSpan
-  {
-    font-family:Calibri;
-    font-size:12px;
-    color:#666666;
-  }
-</style>
-
-<div style="width:567px; height:100%; margin-left:10px;">-->
+<%start_date = Date.new(year, month)%>
+<div class="monthCalendar">
+<div class="monthAndYear">
+  <%= month_calendar_link image_tag('prev.jpg'), start_date.last_month%>
+  <span><%= start_date.strftime("%Y-%m")%></span>
+  <%= month_calendar_link image_tag('next.jpg'), start_date.next_month%>
+</div>
+<div class="clearBoth"></div>
 <div>
   <div class="weekDayDiv"><span class="weekDaySpan">日</span></div>
   <div class="weekDayDiv"><span class="weekDaySpan">一</span></div>
@@ -78,16 +14,15 @@
   <div class="weekDayDiv"><span class="weekDaySpan">四</span></div>
   <div class="weekDayDiv"><span class="weekDaySpan">五</span></div>
   <div class="weekDayDiv"><span class="weekDaySpan">六</span></div>
-  <%start_date = Date.new(year, month)%>
-  <%end_date = Date.new(year, month+1).yesterday%>
-  <%start_date = start_date.monday.yesterday if start_date.wday!=7%>
-  <%end_date = end_date.monday.next_week.yesterday.yesterday if end_date.wday!=6%>
+  <%end_date = start_date.next_month.yesterday%>
+  <%start_date = start_date.monday.yesterday if start_date.wday>0%>
+  <%end_date = end_date.monday.next_week.yesterday.yesterday if end_date.wday<6%>
   <%date = start_date%>
   <% while date<=end_date do %>
     <div class="<%= date == Date.today ? "currentDayDiv" : "monthDayDiv" %>">
       <div class="monthDayTopDiv">
         <span class="<%= date.month != month ? "otherMonthDaySpan" : "monthDaySpan" %>">
-          <%= date.day%>
+          <%= month_day_link(date.day, date)%>
         </span>
       </div>
       <div class="monthDayBottomDiv">
@@ -101,4 +36,5 @@
     </div>
   <% date = date.tomorrow %>
   <%end%>
+</div>
 </div>

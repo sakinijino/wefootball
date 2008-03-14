@@ -6,7 +6,7 @@ class Team < ActiveRecord::Base
 #    'ALM', 'LAM', 'AM', 'RAM', 'ARM',
 #    'LWF', 'LCF', 'CF', 'RCF', 'RWF']
   FORMATION_POSITIONS =  (0...26).to_a
-  DEFAULT_IMAGE = "/images/default_team.jpg"
+  DEFAULT_IMAGE = "/images/default_team.gif"
           
   has_one :team_image,
             :dependent => :destroy
@@ -61,7 +61,11 @@ class Team < ActiveRecord::Base
   
   def image(thumbnail = nil)
     return self.team_image.public_filename(thumbnail) if self.team_image != nil
-    DEFAULT_IMAGE
+    if thumbnail == nil
+      DEFAULT_IMAGE
+    else
+      DEFAULT_IMAGE.split('.').insert(1, "_#{thumbnail}.").join
+    end
   end
   
   def formation

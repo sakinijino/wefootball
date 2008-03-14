@@ -13,7 +13,7 @@ class RepliesController < ApplicationController
       redirect_to(@post)
     else
       @post.replies.reload
-      render :controller => "post", :action=>"show"
+      render :template => "posts/show"
     end
   end
 

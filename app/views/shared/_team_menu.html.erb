@@ -1,28 +1,20 @@
-<div>
-<%if logged_in? %>
+<div id="header_menu">
 <ul class="level_1_menu">
-  <% is_admin = current_user.is_team_admin_of?(team)%>
-  <% is_member = current_user.is_team_member_of?(team)%>
+  <% is_admin = (logged_in? && current_user.is_team_admin_of?(team))%>
   <%= render(:partial=>"utils/menu_item", :locals => {:name => '成员', 
       :links=>[
-        link_to("#{team.shortname}的成员", team_team_joins_path(team)),
-        (!is_admin ? nil : link_to("成员管理", admin_team_joins_path(:team_id => team)))
+        link_to("#{team.shortname}的成员", team_team_joins_path(team))
       ]}) %>
   <%= render(:partial=>"utils/menu_item", :locals => {:name => '训练', 
       :links=>[
         link_to("#{team.shortname}的训练", team_trainings_path(team)),
         (!is_admin ? nil : link_to("创建新训练", new_team_training_path(team)))
       ]}) %>
-  <%= render(:partial=>"utils/menu_item", :locals => {:name => '入队邀请', 
+  <%= render(:partial=>"utils/menu_item", :locals => {:name => '邀请', 
       :links=>[
         link_to("申请加入#{team.shortname}的用户", team_team_join_requests_path(team)),
         link_to("#{team.shortname}发出的邀请", team_team_join_invitations_path(team)),
-        (!is_admin ? nil : link_to("邀请朋友加入", new_team_team_join_invitation_path(team))),
-      ]}) %>
-  <%= render(:partial=>"utils/menu_item", :locals => {:name => '比赛邀请', 
-      :links=>[
-        link_to("#{team.shortname}的比赛邀请", '#'),
-        current_user.can_invite_team?(@team) ? nil : link_to("邀请该队参加比赛", new_match_invitation_path(:guest_team_id=>@team))
+        link_to("#{team.shortname}的比赛邀请", '#')
       ]}) %>
   <%if is_admin%>
   <%= render(:partial=>"utils/menu_item", :locals => {:name => '设置', 
@@ -31,5 +23,4 @@
       ]}) %>
   <%end%>
 </ul>
-<%end%>
 </div>

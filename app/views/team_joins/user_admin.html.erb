@@ -1,5 +1,9 @@
-<h1><%= @title%></h1>
+<div style="margin:10px 0 20px 0">
+<%= link_to("修改基本信息", edit_team_path(@team), :class=>"tab_link", :style=>"margin-left: 10px;")%>
+<%= link_to("修改队标", edit_team_path(@team), :class=>"tab_link")%>
+<span class="tab_link tabSelected">成员管理</span>
 
+<div class="tab">
 <%@uts.each do |ut| %>
   <%@ut = ut%>
   <div>
@@ -33,3 +37,5 @@
     <% end %>
   </div>
 <%end%>
+</div>
+</div>

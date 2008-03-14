@@ -1,8 +1,12 @@
-<h1><%=h @team.shortname%>的管理员</h1>
+<div class="seperateLine clearBoth"></div>
+<h2><%=h @team.shortname%>的管理员</h2>
 <%= render(:partial => 'shared/user_icon', :collection => @admin)%>
-  
-<h1><%=h @team.shortname%>的队员</h1>
+
+<div class="seperateLine clearBoth"></div>
+<h2><%=h @team.shortname%>的队员</h2>
 <%= render(:partial => 'shared/user_icon', :collection => @players)%>
   
-<h1><%=h @team.shortname%>的全部成员</h1>
+<div class="seperateLine clearBoth"></div>
+<h2><%=h @team.shortname%>的全部成员</h2>
 <%= render(:partial => 'shared/user_icon', :collection => @team.users)%>
+<div class="clearBoth"></div>

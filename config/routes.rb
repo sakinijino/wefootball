@@ -70,6 +70,15 @@ ActionController::Routing::Routes.draw do |map|
   
   map.resources :football_grounds, :collection => { :unauthorize => :get }
   
+  map.user_month_calendar "users/:user_id/calendar/:year/:month", :controller=>"calendar", :action => "show_a_month",
+      :requirements => {:year => /(19|20)\d\d/, :month => /[01]?\d/}
+  map.user_day_calendar "users/:user_id/calendar/:year/:month/:day", :controller=>"calendar", :action => "show_a_day",
+      :requirements => {:year => /(19|20)\d\d/, :month => /[01]?\d/, :day => /[0-3]?\d/}
+  map.team_month_calendar "teams/:team_id/calendar/:year/:month", :controller=>"calendar", :action => "show_a_month",
+      :requirements => {:year => /(19|20)\d\d/, :month => /[01]?\d/}
+  map.team_day_calendar "teams/:team_id/calendar/:year/:month/:day", :controller=>"calendar", :action => "show_a_day",
+      :requirements => {:year => /(19|20)\d\d/, :month => /[01]?\d/, :day => /[0-3]?\d/}
+  
   map.connect ':controller/:action/:id'
   map.connect ':controller/:action/:id.:format'
 end

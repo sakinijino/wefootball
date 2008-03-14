@@ -7,6 +7,7 @@ class MessagesController < ApplicationController
   # GET /messages
   def index
     @user = current_user
+    @title = params[:as]=='sender' ? "#{@user.nickname}的发件箱" : "#{@user.nickname}的收件箱"
     @messages = params[:as]=='sender' ? 
       Message.find_all_by_sender_id_and_is_delete_by_sender(current_user.id, false, :include=>[:sender, :receiver]) :
       Message.find_all_by_receiver_id_and_is_delete_by_receiver(current_user.id, false, :include=>[:sender, :receiver])

@@ -6,11 +6,12 @@ class TrainingTest < ActiveSupport::TestCase
 #    assert true
 #  end
   def test_create
-    t = Training.create({})
+    t = Training.create({:football_ground_id=>football_grounds(:yiti).id})
     assert_not_nil t.id
     assert_not_nil t.start_time
     assert_not_nil t.end_time
     assert_not_nil t.location
+    assert_equal football_grounds(:yiti).name, t.location
   end
   
   def test_can_join

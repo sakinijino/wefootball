@@ -1,0 +1,18 @@
+<%display_team = display_team!=nil ? display_team : true%>
+<div class="activity_date">
+  <div class="day">
+    <%= month_calendar_link(training.start_time.strftime('%m'), training.start_time)%>.<%= month_day_link(training.start_time.day, training.start_time)%></div>
+  <div class="week"><%= wday_text training.start_time.wday%></div>
+</div>
+<div class="activity_content">
+  <%= training.start_time.strftime('%H:%M')%>-<%= training.end_time.strftime('%H:%M')%>,
+  <%= h training.location%>,
+  <%= link_to_if(display_team, training.team.shortname, team_view_path(training.team.id)) {}%>训练
+  <br/><br/>
+  <%=link_to '详情', training_view_path(training)%>
+</div>
+<%if display_team%>
+<div class="activity_icon">
+  <%= team_image_link training.team, :class=>"icon" %>
+</div>
+<%end%>

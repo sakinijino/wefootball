@@ -1,15 +1,13 @@
-<div>
-<%if logged_in? %>
+<div id="header_menu">
 <ul class="level_1_menu">
-<%if user.id == current_user.id%>
+<%if logged_in? && user.id == current_user.id%>
   <%= render(:partial=>"utils/menu_item", :locals => {:name => '朋友', 
       :links=>[
         link_to("我的好友", user_friend_relations_path(user))
       ]}) %>
   <%= render(:partial=>"utils/menu_item", :locals => {:name => '球队', 
       :links=>[
-        link_to("我参加的球队", user_team_joins_path(user)), 
-        link_to("我管理的球队", admin_team_joins_path(:user_id => user))
+        link_to("我参加的球队", user_team_joins_path(user))
       ]}) %>
   <%= render(:partial=>"utils/menu_item", :locals => {:name => '训练', 
       :links=>[
@@ -29,39 +27,16 @@
 <%else%>
   <%= render(:partial=>"utils/menu_item", :locals => {:name => '朋友', 
       :links=>[
-        link_to("#{user.nickname}的好友", user_friend_relations_path(user)),
-        !current_user.is_my_friend?(user) ? nil : link_to("不和他玩", friend_relation_path(0, :user_id=>user.id),:method=>"delete")
+        link_to("#{user.nickname}的好友", user_friend_relations_path(user))
     ]}) %>
   <%= render(:partial=>"utils/menu_item", :locals => {:name => '球队', 
       :links=>[
-        link_to("#{user.nickname}参加的球队", user_team_joins_path(user)), 
-        link_to("#{user.nickname}管理的球队", admin_team_joins_path(:user_id => user))
+        link_to("#{user.nickname}参加的球队", user_team_joins_path(user))
       ]}) %>
   <%= render(:partial=>"utils/menu_item", :locals => {:name => '训练', 
       :links=>[
         link_to("#{user.nickname}的训练", user_trainings_path(user))
       ]}) %>
-  <%= render(:partial=>"utils/menu_item", :locals => {:name => '信件', 
-      :links=>[
-        link_to("给#{user.nickname}发信", new_message_path(:to=>user.id))
-      ]}) %>
-  <%= render(:partial=>"utils/menu_item", :locals => {:name => '邀请', 
-      :links=>[
-        current_user.is_my_friend?(user) ? nil : link_to("申请和#{user.nickname}成为好友", new_friend_invitation_path, :onclick=>'j("#senf_friend_invitation_div").dialog("open");return false'),
-        link_to("邀请#{user.nickname}加入球队", new_team_join_invitation_path(:user_id => user.id))
-      ]}) %>
 <%end%>
 </ul>
-<%end%>
 </div>
-
-<%if logged_in? && user.id != current_user.id && !current_user.is_my_friend?(user)%>
-<div id="senf_friend_invitation_div" class="jdialog">
-  <% form_for :friend_invitation, :url => friend_invitations_path, :method=>"POST" do |f| %>
-      <%= f.hidden_field :host_id,  :value=>user.id%>
-      <span>留言</span><br />
-      <%= f.text_area :message, :cols => 30, :rows => 2%>
-      <%= f.submit "发送邀请" %>
-  <% end %>  
-</div>
-<%end%>

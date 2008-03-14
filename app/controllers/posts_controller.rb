@@ -31,7 +31,10 @@ class PostsController < ApplicationController
   # GET /posts/1
   def show
     @post = Post.find(params[:id])
-    fake_params_redirect if !@post.is_visible_to?(current_user)
+    if !@post.is_visible_to?(current_user) 
+      fake_params_redirect
+      return
+    end
     @can_reply = @post.can_be_replied_by?(current_user)
     @team = @post.team
     render :layout => "team_layout"
@@ -93,6 +96,7 @@ protected
       @tid = @team.id
     elsif (params[:training_id])
       @training = Training.find(params[:training_id])
+      @team = @training.team
       @tid = @training.team_id
     end
     fake_params_redirect if !current_user.is_team_member_of?(@tid)
