@@ -6,7 +6,7 @@ class UserViewsController < ApplicationController
   TRAINING_LIST_LENGTH = 1
   
   def show
-    @user = User.find(params[:id], :include=>[:positions, :user_image])
+    @user = User.find(params[:id], :include=>[:positions])
     @friends = @user.friends(FRIEND_LIST_LENGTH)
     @teams = @user.teams.find(:all, :limit => TEAM_LIST_LENGTH)
     @trainings = @user.trainings.recent(TRAINING_LIST_LENGTH, Time.today)

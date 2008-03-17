@@ -1,4 +1,8 @@
-<p><label for="name">球队名称</label><br/>
+<%content_for(:javascript) do%>
+  <%= javascript_include_tag province_city_select_url %>
+<%end%>
+
+<p><label for="name">球队全称</label><br/>
 <%= f.text_field :name %></p>
 
 <p><label for="shortname">球队简称</label><br/>

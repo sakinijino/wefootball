@@ -11,8 +11,12 @@ class TeamTest < ActiveSupport::TestCase
   end
   
   def test_image_path
+    assert_equal Team::DEFAULT_IMAGE, teams(:inter).image
+    assert_equal Team::DEFAULT_IMAGE, teams(:milan).image
+    assert_equal "/images/teams/t00000001.not_image", teams(:inter).image(nil, :refresh)
+    assert_equal Team::DEFAULT_IMAGE, teams(:milan).image(nil, :refresh)
     assert_equal "/images/teams/t00000001.not_image", teams(:inter).image
-    assert_equal "/images/default_team.gif", teams(:milan).image
+    assert_equal Team::DEFAULT_IMAGE, teams(:milan).image
   end
   
   def test_public_posts

@@ -59,12 +59,24 @@ class Team < ActiveRecord::Base
     Team.find :all, :conditions => ["name like ? or shortname like ?", q, q]
   end
   
-  def image(thumbnail = nil)
-    return self.team_image.public_filename(thumbnail) if self.team_image != nil
-    if thumbnail == nil
-      DEFAULT_IMAGE
+  def image(thumbnail = nil, refresh = nil)
+    if refresh == :refresh && self.team_image != nil
+      self.image_path = self.team_image.public_filename
+      self.save
+      return self.team_image.public_filename(thumbnail) 
+    end
+    if self.image_path != nil
+      if thumbnail == nil
+        self.image_path
+      else
+        self.image_path.split('.').insert(1, "_#{thumbnail}.").join
+      end
     else
-      DEFAULT_IMAGE.split('.').insert(1, "_#{thumbnail}.").join
+      if thumbnail == nil
+        DEFAULT_IMAGE
+      else
+        DEFAULT_IMAGE.split('.').insert(1, "_#{thumbnail}.").join
+      end
     end
   end
   

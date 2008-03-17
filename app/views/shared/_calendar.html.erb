@@ -19,9 +19,9 @@
   <%end_date = end_date.monday.next_week.yesterday.yesterday if end_date.wday<6%>
   <%date = start_date%>
   <% while date<=end_date do %>
-    <div class="<%= date == Date.today ? "currentDayDiv" : "monthDayDiv" %>">
+    <div class="monthDayDiv <%= date == Date.today ? "currentDayDiv" : "" %>">
       <div class="monthDayTopDiv">
-        <span class="<%= date.month != month ? "otherMonthDaySpan" : "monthDaySpan" %>">
+        <span class="monthDaySpan <%= date.month != month ? "otherMonthDaySpan" : "" %>">
           <%= month_day_link(date.day, date)%>
         </span>
       </div>
@@ -29,7 +29,7 @@
         <% dts = trainings[date.strftime("%Y-%m-%d")] %>
         <% if !dts.nil?%>
         <% dts.each do |t| %>
-          <%= link_to "训练", training_view_path(t)%>
+          <%= link_to '训练', training_view_path(t)%>
         <%end%>
         <%end%>
       </div>

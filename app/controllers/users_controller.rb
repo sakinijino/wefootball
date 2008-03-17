@@ -31,7 +31,7 @@ class UsersController < ApplicationController
   
    # render edit.rhtml
   def edit
-    @user = User.find(params[:id], :include=>[:positions, :user_image])
+    @user = User.find(params[:id], :include=>[:positions])
     @positions = @user.positions_array
     render :layout => "user_layout"
   end

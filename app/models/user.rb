@@ -49,11 +49,16 @@ class User < ActiveRecord::Base
     1, #显示年月日
     2, #显示月日
     3 #显示年
-  ], :allow_nil=>true
+  ]
+  validates_inclusion_of    :gender, :in => [0, #未填
+    1, #男
+    2, #女
+  ]
   validates_inclusion_of   :city, :in => ProvinceCity::CITY_VALUE_RANGE
   validates_length_of       :summary, :maximum => 3000, :allow_nil=>true
   validates_length_of       :favorite_star, :maximum => 200
   validates_length_of       :favorite_team, :maximum => 200
+  validates_length_of       :blog, :maximum => 256
   
   validates_numericality_of :weight, :height, :if=>:is_playable, :allow_nil=>true
   validates_inclusion_of    :weight, :in => 0..400, :if=>:is_playable,
@@ -90,7 +95,7 @@ class User < ActiveRecord::Base
   # prevents a user from submitting a crafted form that bypasses activation
   # anything else you want your user to change should be added here.
   attr_accessible :password, :password_confirmation
-  attr_accessible :nickname, :summary, :birthday, :birthday_display_type, :city, :favorite_star, :favorite_team
+  attr_accessible :nickname, :summary, :birthday, :birthday_display_type, :city, :favorite_star, :favorite_team, :gender, :blog
   attr_accessible :is_playable, :weight, :height, :fitfoot, :premier_position
   
 #  GENERIC_ANALYSIS_REGEX = /([a-zA-Z]|[\xc0-\xdf][\x80-\xbf])+|[0-9]+|[\xe0-\xef][\x80-\xbf][\x80-\xbf]/
@@ -181,12 +186,24 @@ class User < ActiveRecord::Base
     friends_list.map{|fr|[fr.user1, fr.user2]}.flatten.reject {|u| u==self}
   end
   
-  def image(thumbnail = nil)
-    return self.user_image.public_filename(thumbnail) if self.user_image != nil
-    if thumbnail == nil
-      DEFAULT_IMAGE
+  def image(thumbnail = nil, refresh = nil)
+    if refresh == :refresh && self.user_image != nil
+      self.image_path = self.user_image.public_filename
+      self.save
+      return self.user_image.public_filename(thumbnail)
+    end
+    if self.image_path != nil
+      if thumbnail == nil
+        self.image_path
+      else
+        self.image_path.split('.').insert(1, "_#{thumbnail}.").join
+      end
     else
-      DEFAULT_IMAGE.split('.').insert(1, "_#{thumbnail}.").join
+      if thumbnail == nil
+        DEFAULT_IMAGE
+      else
+        DEFAULT_IMAGE.split('.').insert(1, "_#{thumbnail}.").join
+      end
     end
   end
   

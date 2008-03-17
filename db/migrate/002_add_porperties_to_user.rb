@@ -7,6 +7,9 @@ class AddPorpertiesToUser < ActiveRecord::Migration
     add_column :users, :summary, :text
     add_column :users, :favorite_star, :string, :limit=>200, :default=>''
     add_column :users, :favorite_team, :string, :limit=>200, :default=>''
+    add_column :users, :blog, :string, :default=>''
+    add_column :users, :gender, :integer, :limit=>1, :default=>0
+    add_column :users, :image_path, :string
     add_column :users, :is_playable, :boolean, :default=>false
     add_column :users, :height, :float
     add_column :users, :weight, :float
@@ -22,6 +25,9 @@ class AddPorpertiesToUser < ActiveRecord::Migration
     remove_column :users, :summary
     remove_column :users, :favorite_star
     remove_column :users, :favorite_team
+    remove_column :users, :blog
+    remove_column :users, :is_male
+    remove_column :users, :image_path
     remove_column :users, :is_playable
     remove_column :users, :height
     remove_column :users, :weight

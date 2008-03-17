@@ -2,7 +2,7 @@
 
 <div class="tab_container" style="margin:10px 0 20px 0">
 <span class="tab_link" style="margin-left: 10px;">修改基本信息</span>
-<span class="tab_link">修改队标</span>
+<span class="tab_link<%= " tabSelected" if params[:tab_index] == '1'%>">修改队标</span>
 <%= link_to "成员管理", admin_team_joins_path(:team_id => @team), :class=>"tab_link"%>
 
 <% form_for @team,:html => { :class=>"tab"} do |f| %>
@@ -11,6 +11,7 @@
 <% end %>
 
 <% form_for(:team, :url => update_image_team_path(@team),:html => { :method=>:put, :multipart => true, :class=>"tab" }) do |f| %>
+  <%= hidden_field_tag :tab_index, 1%>
   <%= team_image_tag @team, {:style=>"margin:20px 0 0 0"} %>
   <p>
     <label>更改队标</label><br/>

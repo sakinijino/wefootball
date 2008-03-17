@@ -13,8 +13,25 @@
 <div id="left_content">
 <div class="seperateLine"></div>
 
-<div class="tab_container" style="margin:10px 0 20px 0">
+<div class="tab_container" style="margin:10px 0 10px 0">
   <span class="tab_link" style="margin-left: 10px;">队伍信息</span>
+  
+  <span style="margin:70px;">
+  <%if logged_in? %>
+  <%if current_user.is_team_member_of?(@team)%>
+    <%= link_to(image_tag("quitFromTeam.gif", :title=>"退出球队", :class=>"shortcut_icon"), team_join_path(@user_team.id),:method=>:delete)%>
+  <%else%>
+    <%= link_to(image_tag("inviteIntoTeam.gif", :title=>"申请加入球队", :class=>"shortcut_icon"), '#', :onclick=>'javascript:j("#send_team_join_request_div").dialog("open");return false;')%>
+  <%end%>
+  <%end%>
+  <%if logged_in? && current_user.is_team_admin_of?(@team)%>
+    <%= link_to(image_tag("inviteIntoTeam.gif", :title=>"邀请朋友加入", :class=>"shortcut_icon"), new_team_team_join_invitation_path(@team))%>
+  <%end%>
+  <%if logged_in? && current_user.can_invite_team?(@team) %>
+    <%=link_to(image_tag("inviteMacth.gif", :title=>"邀请该队参加比赛", :class=>"shortcut_icon"), new_match_invitation_path(:guest_team_id=>@team))%>
+  <%end%>
+  </span>
+
   <div class="tab" style="margin-right:40px">
   <%= "<span>球队全名: #{@team.name}</span><br/>" unless @team.name.blank?%>
   <%= "<span>所在地: #{@team.city_text}</span><br/>" unless @team.city_text.nil?%>
@@ -25,22 +42,22 @@
       <p><%=simple_format auto_link(@team.summary, :urls)%></p>
   <%end%>
   </div>
-</div>
-
-<div>
-<%if logged_in? %>
-<%if current_user.is_team_member_of?(@team)%>
-  <%= link_to("退出球队", team_join_path(@user_team.id),:method=>:delete)%>
-<%else%>
-  <%= link_to("申请加入球队", '#', :onclick=>'javascript:j("#send_team_join_request_div").dialog("open");return false;')%>
-<%end%>
-<%end%>
-<%if logged_in? && current_user.is_team_admin_of?(@team)%>
-  <%= link_to("邀请朋友加入", new_team_team_join_invitation_path(@team))%>
-<%end%>
-<%if logged_in? && current_user.can_invite_team?(@team) %>
-  <%=link_to("邀请该队参加比赛", new_match_invitation_path(:guest_team_id=>@team))%>
-<%end%>
+  
+  <div style="margin: 10px 0 0 10px">
+    <%if logged_in? %>
+    <%if current_user.is_team_member_of?(@team)%>
+      <%= link_to("退出球队", team_join_path(@user_team.id),:method=>:delete)%>
+    <%else%>
+      <%= link_to("申请加入球队", '#', :onclick=>'javascript:j("#send_team_join_request_div").dialog("open");return false;')%>
+    <%end%>
+    <%end%>
+    <%if logged_in? && current_user.is_team_admin_of?(@team)%>
+      <%= link_to("邀请朋友加入", new_team_team_join_invitation_path(@team))%>
+    <%end%>
+    <%if logged_in? && current_user.can_invite_team?(@team) %>
+      <%=link_to("邀请该队进行比赛", new_match_invitation_path(:guest_team_id=>@team))%>
+    <%end%>
+  </div>
 </div>
 
 <%if logged_in? && !current_user.is_team_member_of?(@team)%>

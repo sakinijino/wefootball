@@ -1,7 +1,7 @@
 module UsersHelper
    FITFOOT_TEXT = {'L'=>'左脚', 'R'=>'右脚', 'B'=>'左右开弓'}
    POSITION_TEXT =[
-     '门将', '清道夫', '中后卫', '左后卫', '右后卫', '后腰', '中前卫', '左前卫', '右前卫', '前腰', '中锋', '二前锋', '左边锋', '右边锋'
+     '门将', '清道夫', '中后卫', '左后卫', '右后卫', '后腰', '中前卫', '左前卫', '右前卫', '前腰', '中锋', '左边锋', '右边锋', '二前锋'
     ]
   def fitfoot_text(label)
    UsersHelper::FITFOOT_TEXT[label]
@@ -26,5 +26,35 @@ module UsersHelper
   
   def small_user_image_link(user, options={})
     link_to small_user_image_tag(user, options), user_view_path(user.id)
+  end
+  
+  def small_position_icon_position(i)
+    return [75, 200] if i<=0
+    return [90, 40] if i>=13
+    left = case i%4
+    when 0
+      125
+    when 3
+      25
+    else
+      75
+    end
+    top = case i
+    when 1
+      180
+    when 2,3,4
+      163
+    when 5
+      135
+    when 6, 7,8
+      100
+    when 9
+      65
+    when 10
+      25
+    when 11, 12
+      35
+    end
+    [left, top]
   end
 end

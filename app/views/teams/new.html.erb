@@ -1,5 +1,5 @@
 <%= error_messages_for :team %>
-<% form_for :team, :url => teams_path do |f| -%>
+<% form_for @team do |f| -%>
 
 <%= render :partial => "form", :locals=>{:f=> f}%>
 

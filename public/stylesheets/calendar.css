@@ -87,6 +87,13 @@ div.calendar div.monthAndYearDiv {
     margin: 0 20px;
 }
 
+/*Fix ie6 float double margin bug*/
+.monthCalendar .weekDayDiv,
+.monthCalendar .monthDayDiv,
+.monthCalendar .currentDayDiv{
+    display: inline;
+}
+
 .weekDayDiv
 {
     width:31px;
@@ -104,8 +111,7 @@ div.calendar div.monthAndYearDiv {
     color:#3D681A;
 }
 
-.monthDayDiv
-{
+.monthDayDiv {
     width:75px;
     height:75px;
     margin:2px;
@@ -114,15 +120,9 @@ div.calendar div.monthAndYearDiv {
     float:left;
 }
 
-.currentDayDiv
-{
-    width:75px;
-    height:75px;
-    margin:2px;
+.currentDayDiv {
     background-color:#F2F7AB;
     border:solid 1px #3D681A;
-    text-align:center;
-    float:left;
 }
 
 .monthDayTopDiv
@@ -149,10 +149,13 @@ div.calendar div.monthAndYearDiv {
     color: #333333;
 }
 
-.otherMonthDaySpan
-{
-    font-family:Verdana;
-    font-size:16px;
+.monthDaySpan a:hover {
+    background-color:#3D681A;
+    color: #fff;
+    font-weight: bold;
+}
+
+.otherMonthDaySpan {
     color:#999999;
 }
 
@@ -166,9 +169,6 @@ div.calendar div.monthAndYearDiv {
     font-size:12px;
 }
 
-.otherMonthDayArragementSpan
-{
-    font-family:Calibri;
-    font-size:12px;
+.otherMonthDayArragementSpan {
     color:#999999;
 }

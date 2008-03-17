@@ -78,6 +78,9 @@ ActionController::Routing::Routes.draw do |map|
       :requirements => {:year => /(19|20)\d\d/, :month => /[01]?\d/}
   map.team_day_calendar "teams/:team_id/calendar/:year/:month/:day", :controller=>"calendar", :action => "show_a_day",
       :requirements => {:year => /(19|20)\d\d/, :month => /[01]?\d/, :day => /[0-3]?\d/}
+    
+  map.province_city_select "js/province_city_select.js", :controller=>"js", :action => "province_city_select"
+  map.football_ground_select "js/football_ground_select.js", :controller=>"js", :action => "football_ground_select"
   
   map.connect ':controller/:action/:id'
   map.connect ':controller/:action/:id.:format'

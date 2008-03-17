@@ -6,7 +6,7 @@ class TeamViewsController < ApplicationController
   POSTS_LENGTH = 10;
   
   def show
-    @team = Team.find(params[:id], :include=>[:team_image])
+    @team = Team.find(params[:id])
     @user_team = UserTeam.find_by_user_id_and_team_id(current_user, @team)
     @trainings = @team.trainings.recent(TRAINING_LIST_LENGTH, Time.today)
     @users = @team.users.find(:all, :limit => USER_LIST_LENGTH)

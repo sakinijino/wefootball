@@ -1,10 +1,14 @@
+<%content_for(:javascript) do%>
+  <%= javascript_include_tag province_city_select_url %>
+<%end%>
+
 <%= error_messages_for :user %>
 
 <div class="tab_container" style="margin:10px 0 20px 0">
 <span class="tab_link" style="margin-left: 10px;">修改个人信息</span>
-<span class="tab_link">修改球员信息</span>
-<span class="tab_link">修改头像</span>
-<span class="tab_link">修改密码</span>
+<span class="tab_link <%= "tabSelected" if params[:tab_index] == '1'%>">修改球员信息</span>
+<span class="tab_link <%= "tabSelected" if params[:tab_index] == '2'%>">修改头像</span>
+<span class="tab_link <%= "tabSelected" if params[:tab_index] == '3'%>">修改密码</span>
 
 <% form_for(@user,:html => { :class=>"tab"}) do |f| %>
   <p><label for="nickname">昵称</label><br/>
@@ -16,8 +20,14 @@
   <p><label for="birthday_display_type">生日显示方式</label><br/>
   <%= f.select :birthday_display_type, [["不显示", 0], ["显示年月日", 1], ["显示月日", 2], ["显示年", 3]] %>
   
+  <p><label for="gender">性别</label><br/>
+  <%= f.select :gender, [["----", 0], ["男", 1], ["女", 2]] %>
+  
   <p><label for="city">所在地</label><br/>
   <%= f.province_city_select :city %>
+  
+  <p><label for="blog">我的blog</label><br/>
+  http://<%= f.text_field :blog %></p>
   
   <p><label for="favorite_star">我喜欢球星</label><br/>
   <%= f.text_field :favorite_star %></p>
@@ -34,14 +44,15 @@
 <% end %>
 
 <% form_for(@user,:html => { :class=>"tab"}) do |f| %>
+  <%= hidden_field_tag :tab_index, 1%>
   <p><%= f.check_box :is_playable %>
   <label for="is_playable">我踢球</label></p>
   
   <p><label for="height">身高(cm)</label><br/>
-  <%= f.text_field :height %></p>
+  <%= f.text_field :height, :size=>5 %></p>
   
   <p><label for="weight">体重(kg)</label><br/>
-  <%= f.text_field :weight %></p>
+  <%= f.text_field :weight, :size=>5 %></p>
   
   <p><label for="fitfoot">惯用脚</label><br/>
   <%= f.select :fitfoot, User::FITFOOT.map {|ft| [fitfoot_text(ft), ft]} %></p>
@@ -63,6 +74,7 @@
 <% end %>
 
 <% form_for(:user, :url => update_image_user_path(@user),:html => { :method=>:put, :multipart => true, :class=>"tab" }) do |f| %>
+  <%= hidden_field_tag :tab_index, 2%>
   <%= user_image_tag @user, {:style=>"margin:20px 0 0 0"} %>
   <p>
     <label>更改头像</label><br/>
@@ -75,6 +87,7 @@
 <% end %>
 
 <% form_for(@user,:html => { :class=>"tab" }) do |f| %>
+  <%= hidden_field_tag :tab_index, 3%>
   <p><label for="password">密码</label><br/>
   <%= f.password_field :password %></p>
 

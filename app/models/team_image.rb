@@ -15,6 +15,13 @@ class TeamImage < ActiveRecord::Base
 
   validates_as_attachment # ok two lines if you want to do validation, and why wouldn't you?
   
+  def before_save
+    if (self.team != nil)
+      self.team.image_path = self.public_filename
+      self.team.save
+    end
+  end
+  
   def uploaded_data=(file_data)
     return nil if file_data.nil? || file_data.size == 0
     self.content_type = file_data.content_type

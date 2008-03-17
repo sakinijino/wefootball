@@ -11,7 +11,7 @@
       <% dts.each do |t| %>
         <span class="trainingContentSpan">
           <%= "#{t.start_time.strftime("%H:%M")}-#{t.end_time.strftime("%H:%M")}"%>
-          <%= link_to "训练", training_view_path(t)%>
+          <%= link_to '训练', training_view_path(t)%>
         </span>
       <%end%>
       <%end%>
@@ -35,7 +35,7 @@
         <% if !dts.nil?%>
         <% dts.each do |t| %>
           <span class="trainingContentSpan">
-            <%= link_to "训练", training_view_path(t)%>
+            <%= link_to '训练', training_view_path(t)%>
           </span>
         <%end%>
         <%end%>

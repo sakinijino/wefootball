@@ -3,7 +3,10 @@ class TeamsController < ApplicationController
   before_filter :require_current_user_is_a_team_admin, :only => [:edit, :update, :update_image]
   
   def new
+    @user = current_user
     @team = Team.new
+    @team.city = 0
+    render :layout => "user_layout"
   end
 
   # GET /teams/search.xml?query

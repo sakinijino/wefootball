@@ -6,7 +6,7 @@ module ModelHelper
   def city_text
     return nil if self.city == 0
     province_id = ProvinceCity::REVERSE_TOP_LIST[self.city]
-    if (province_id !=nil)
+    if (province_id != self.city)
       "#{ProvinceCity::LIST[province_id]} #{ProvinceCity::LIST[self.city]}"
     else
       ProvinceCity::LIST[self.city]

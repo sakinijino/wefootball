@@ -2,7 +2,7 @@ module ProvinceCity
   CITY_VALUE_RANGE = (0..726).to_a
   CITY_VALUE_RANGE.delete(24)
   LIST = {
-    0 => '',
+    0 => '------',
     1 => '北京',
     2 => '东城',
     3 => '西城',
@@ -768,6 +768,7 @@ module ProvinceCity
   TOP_LIST[20].delete(24)
   REVERSE_TOP_LIST = {}
   TOP_LIST.each do |province, cities|
+    REVERSE_TOP_LIST[province] = province
     cities.each {|city| REVERSE_TOP_LIST[city] = province}
   end
 end

@@ -6,6 +6,7 @@ class CreateTeams < ActiveRecord::Migration
       t.integer :city, :limit=>3, :default=>0
       t.text :summary
       t.date :found_time
+      t.string :image_path
       t.string :style, :limit=>50, :default=>''
     end
   end

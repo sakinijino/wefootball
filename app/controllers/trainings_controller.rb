@@ -47,17 +47,19 @@ class TrainingsController < ApplicationController
     @training = Training.find(params[:id])
     @team = @training.team
     fake_params_redirect if (!current_user.is_team_admin_of?(@training.team))
+    render :layout => "team_layout"
   end
   
   # PUT /trainings/1
   def update
     @training = Training.find(params[:id])
+    @team = @training.team
     if (!current_user.is_team_admin_of?(@training.team))
       fake_params_redirect
     elsif @training.update_attributes(params[:training])
       redirect_to training_view_path(params[:id])
     else
-      render :action=>'edit'
+      render :action=>'edit', :layout => "team_layout"
     end
   end
 

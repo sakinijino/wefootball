@@ -1,5 +1,5 @@
 body { 
-    background-color: #ffffff;
+    background-color: #fff;
     font-family: Arial,Helvetica,sans-serif;
     font-size: 12px;
     margin-top: 5px;
@@ -12,8 +12,7 @@ h2 {font-size:14px;font-weight:normal;margin-top:0}
 
 form { padding: 0; border: 0px; }
 textarea{ overflow:auto; }
-a:link { color: #226373; text-decoration: none; }
-a:visited { color: #226373; text-decoration: none; }
+a { color: #006666; text-decoration: none; }
 a img { border-width:0; }
 table {}
 
@@ -137,7 +136,7 @@ table.form td{
 }
 
 .tab {
-    padding: 20px 10px 20px 10px;
+    padding: 20px 10px 20px 20px;
     border:solid 1px #3D681A;
     background-color:#FCFDFE;
 }

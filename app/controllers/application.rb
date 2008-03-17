@@ -36,11 +36,15 @@ class Time
 end
 
 class ActionView::Helpers::FormBuilder
-  def province_city_select(field)
-    select field, ProvinceCity::CITY_VALUE_RANGE.map {|v| [ProvinceCity::LIST[v], v]}
+  def province_city_select(field, selectedCity = nil)
+    "<span id='#{@object_name}_province_city_selected_#{selectedCity ? selectedCity : @object[field]}' class='province_city_select'>#{
+       select field, ProvinceCity::TOP_LIST.keys.sort.map {|v| [ProvinceCity::LIST[v], v]}}&nbsp;&nbsp;#{
+       select field, []}</span>"
   end
-  def football_ground_select(field, options)
-    select field, FootballGround.find_all_by_status(1).map {|fg| [fg.name, fg.id]}, options
+  def football_ground_select(field, selectedFootballGround = nil, selectedCity = nil)
+    "<span id='#{@object_name}_football_ground_selected_#{selectedFootballGround ? selectedFootballGround : @object[field]}' class='football_ground_select'>#{
+      province_city_select(field, selectedCity ? selectedCity : '')}&nbsp;&nbsp;#{
+      select field, []}&nbsp;&nbsp;</span>"
   end
 end
 
