@@ -1,6 +1,6 @@
 class Team < ActiveRecord::Base
   include ModelHelper
-#  FORMATION_POSTIONS = ['GK', 'LB', 'LCB', 'CB', 'RCB', 'RB',
+#  FORMATION_POSITIONS = ['GK', 'LB', 'LCB', 'CB', 'RCB', 'RB',
 #    'LWB', 'LDM', 'DM', 'RDM', 'RWB',
 #    'LM', 'LCM', 'CM', 'RCM', 'RM',
 #    'ALM', 'LAM', 'AM', 'RAM', 'ARM',
@@ -19,11 +19,30 @@ class Team < ActiveRecord::Base
     def admin
       find :all, :conditions => ['is_admin = ?', true]
     end
+    def players
+      find :all, :conditions => ['is_playable = ?', true]
+    end
   end
   
   has_many :team_join_requests,
             :dependent => :destroy
           
+  has_many :match_joins,
+            :dependent => :destroy
+#  has_many :matches,
+#            :foreign_key=>"host_team_id",
+#            :extend => ActivityCalendar
+#            :join => "teams as t",  has_many :matches,
+#            :foreign_key=>"host_team_id",
+#            :extend => ActivityCalendar
+            #:conditions => ["host_team_id = ? or guest_team_id = ?",123,id]
+    #:finder_sql => "select * from matches m, teams t where m.host_team_id = t.id or m.guest_team_id = t.id"
+
+  has_many :host_matches,:foreign_key=>"host_team_id",:class_name=>"Match",
+            :extend => ActivityCalendar
+  has_many :guest_matches,:foreign_key=>"guest_team_id",:class_name=>"Match",
+            :extend => ActivityCalendar          
+  
   has_many :posts, :dependent => :destroy, :order => "updated_at desc" do
     def public
       find :all, :conditions => ['is_private = ?', false]
@@ -83,4 +102,19 @@ class Team < ActiveRecord::Base
   def formation
     UserTeam.team_formation(self)
   end
+  
+  def matches
+    MatchProxy.new(self)
+  end
+  
+  class MatchProxy
+    def initialize(match)
+      @object = match
+    end
+    
+    def method_missing(method_id, *args)
+      @object.host_matches.send(method_id, *args) + @object.guest_matches.send(method_id, *args)
+    end
+  end
+  
 end

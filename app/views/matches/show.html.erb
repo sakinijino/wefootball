@@ -1,64 +1,59 @@
+<h1>比赛基本信息</h1>
 <p>
-  <b>Start time:</b>
-  <%=h @match.start_time %>
+  <b>开始时间:</b>
+  <%=h @match.start_time.strftime('%Y-%m-%d %H:%M') %>
+  <b>半场时长:</b>
+  <%=h @match.half_match_length %>分钟
+  <b>中场休息:</b>
+  <%=h @match.rest_length %>分钟  
 </p>
 
 <p>
-  <b>Location:</b>
+  <b>地点:</b>
   <%=h @match.location %>
 </p>
 
 <p>
-  <b>Match type:</b>
-  <%=h @match.match_type %>
+  <b>比赛类型:</b>
+  <%=h match_type_text(@match.match_type) %>
 </p>
 
 <p>
-  <b>Size:</b>
+  <b>每方场上队员数:</b>
   <%=h @match.size %>
 </p>
 
 <p>
-  <b>Has judge:</b>
-  <%=h @match.has_judge %>
+  <b>比赛规则:</b>
+  <%= @match.has_judge ? "有裁判" : "无裁判" %>
+  <%= @match.has_card ? "有红黄牌" : "无红黄牌" %>
+  <%= @match.has_offside ? "有越位": "无越位" %> 
 </p>
 
 <p>
-  <b>Has card:</b>
-  <%=h @match.has_card %>
+  <b>胜负规则:</b>
+  <%=h win_rule_text(@match.win_rule) %>
 </p>
 
 <p>
-  <b>Has offside:</b>
-  <%=h @match.has_offside %>
-</p>
-
-<p>
-  <b>Win rule:</b>
-  <%=h @match.win_rule %>
-</p>
-
-<p>
-  <b>Description:</b>
+  <b>比赛介绍:</b>
   <%=h @match.description %>
 </p>
 
-<p>
-  <b>Half match length:</b>
-  <%=h @match.half_match_length %>
-</p>
+<hr />
 
-<p>
-  <b>Rest length:</b>
-  <%=h @match.rest_length %>
-</p>
+<%= render(:partial => 'shared/team_in_match', :locals => {:user_mjs => @host_team_user_mjs,
+                                                           :player_mjs => @host_team_player_mjs,
+                                                           :match => @match,
+                                                           :team => @match.host_team})%>
 
-<p>
-  <b>Host team:</b>
-  <%=h @match.host_team_id %>
-</p>
+<hr />  
 
-<p>
-  <b>Guest team:</b>
-  <%=h @match.guest_team_id %>
-</p>
+<%= render(:partial => 'shared/team_in_match', :locals => {:user_mjs => @guest_team_user_mjs,
+                                                           :player_mjs => @guest_team_player_mjs,
+                                                           :match => @match,
+                                                           :team => @match.guest_team})%>
+  
+<%#*<h1>关于本次比赛的讨论</h1>%>
+<%#= render(:partial => 'shared/post_list', :object => @posts)%>    
+

@@ -1,4 +1,6 @@
 ActionController::Routing::Routes.draw do |map|
+
+
   # The priority is based upon order of creation: first created -> highest priority.
   
   # Sample of regular route:
@@ -63,6 +65,7 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :messages
   map.resources :match_invitations
   map.resources :matches
+  map.resources :match_joins, :collection => { :update_all => :put }  
   
   map.resources :posts do |posts|
     posts.resources :replies

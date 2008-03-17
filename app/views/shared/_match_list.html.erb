@@ -1,0 +1,18 @@
+<table>
+  <tr>
+    <th>日期</th>
+    <th>时间</th>
+    <th>地点</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+  <%match_list.each do |m|%>
+    <tr>
+      <td><%= m.start_time.strftime('%Y-%m-%d')%></td>
+      <td><%= m.start_time.strftime('%H:%M')%>-<%= m.end_time.strftime('%H:%M')%></td>
+      <td><%=h m.location%></td>
+      <td><%=link_to '查看', match_path(m)%></td>
+    </tr>
+  <%end%>
+</table>

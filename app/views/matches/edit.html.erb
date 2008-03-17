@@ -5,7 +5,7 @@
 <%= error_messages_for :match %>
 
 <% form_for @match do |f| %>
-    <%= f.hidden_field :team_id,  :value=>@team_id%>  
+    <%= f.hidden_field :team_id,  :value=>@team.id%>  
 
       <%if @editing_by_host_team%>
     <p>
@@ -15,6 +15,7 @@
       <%= f.text_field :guest_team_goal_by_host %>
       <b><%=@match.guest_team.shortname%></b>      
     </p>
+
     <%if !@match.host_team_goal_by_guest.nil? || !@match.guest_team_goal_by_guest.nil?%>
       <p>
         (对方填写的结果：
@@ -87,19 +88,39 @@
           <%for s in Match::SITUATIONS[1..-1]%>
               <%= f.radio_button(:situation_by_guest,s)%><%=situation_text(s)%>
           <%end%>
-            </p>
-            <%if !@match.situation_by_host.nil?%>
-              <p>
-                (对方填写的结果：
-                <%=situation_text @match.situation_by_host%>)
-              </p>       
-              <%=link_to "我看行", match_path(@match,
-                    {:situation_by_guest=>@match.situation_by_host
-                    }), :method=>"put"%>
-            <%end%>    
-          <%end%>
-
+        </p>
+        <%if !@match.situation_by_host.nil?%>
           <p>
-            <%= f.submit "提交比赛结果" %>
-          </p>
-        <% end %>
+          (对方填写的结果：
+           <%=situation_text @match.situation_by_host%>)
+          </p>       
+          <%=link_to "我看行", match_path(@match,
+           {:situation_by_guest=>@match.situation_by_host}), :method=>"put"%>
+         <%end%>    
+      <%end%>
+
+<hr />
+      <table>
+        <th>球员</th>
+        <th>位置</th>
+        <th>入球</th>
+        <th>红/黄牌</th>
+        <th>点评</th>
+        
+        <%for mj in @player_mjs%>
+         <tr>
+            <td><%= render(:partial => 'shared/user_icon', :object => mj.user)%></td>
+            <td><%= mj.position == nil ? "?" : fomation_position_text(mj.position)%></td>
+            <td><%= text_field_tag "mj[#{mj.id}][goal]", mj.goal%></td>
+            <td>
+                <%= select_tag "mj[#{mj.id}][cards]", options_for_select(MatchJoin::CARDS.map {|c| [card_text(c), c]},mj.cards) %>
+            </td>
+            <td><%= text_field_tag "mj[#{mj.id}][comment]", mj.comment%></td>
+         </tr>
+        <%end%>
+      </table>
+
+      <p>
+       <%= f.submit "提交比赛结果" %>
+      </p>
+    <% end %>

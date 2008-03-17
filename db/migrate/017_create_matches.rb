@@ -2,6 +2,7 @@ class CreateMatches < ActiveRecord::Migration
   def self.up
     create_table :matches do |t|
       t.datetime :start_time
+      t.datetime :end_time
       t.string :location
       t.integer :match_type
       t.integer :size

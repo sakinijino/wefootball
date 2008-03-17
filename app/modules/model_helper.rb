@@ -12,4 +12,5 @@ module ModelHelper
       ProvinceCity::LIST[self.city]
     end
   end
+  
 end

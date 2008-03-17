@@ -117,6 +117,11 @@
   </div>
 <%end%>
 
+<div>        
+<h1><%=h @user.nickname%>最近的比赛</h1>
+<%= render(:partial => 'shared/match_list', :object => @matches)%>
+</div>
+
   <div class="seperateLine clearBoth"></div>
   <h2><%=h @user.nickname%>的日程</h2>
   <%= render(:partial => 'shared/highlight_calendar', 

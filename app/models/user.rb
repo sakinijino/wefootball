@@ -4,6 +4,7 @@ class User < ActiveRecord::Base
   
   FITFOOT = %w{R L B}
   DEFAULT_IMAGE = "/images/default_user.gif"
+  UNCHOSED_POSITION = -1
   
   attr_accessor :password
   has_many :positions,
@@ -30,6 +31,10 @@ class User < ActiveRecord::Base
   has_many :training_joins,
             :dependent => :destroy
   has_many :trainings, :through=>:training_joins, :extend => ActivityCalendar
+
+  has_many :match_joins,
+            :dependent => :destroy
+  has_many :matches, :through=>:match_joins, :extend => ActivityCalendar          
   
   has_many :posts, :dependent => :destroy
 
@@ -253,6 +258,10 @@ class User < ActiveRecord::Base
     can_act_on_match?(team,match)
   end
   
+  def match_join(match_id)
+    MatchJoin.find_by_user_id_and_match_id(self.id,match_id)
+  end
+  
   def birthday_text
     return nil if self.birthday.nil?
     case self.birthday_display_type
@@ -302,6 +311,6 @@ class User < ActiveRecord::Base
     end
     
     def can_act_on_match?(team, match)      
-      return self.is_team_admin_of?(team) && ((team==match.host_team_id.to_s)||(team==match.guest_team_id.to_s))      
+      return self.is_team_admin_of?(team) && ((team.id==match.host_team_id)||(team.id==match.guest_team_id))      
     end    
 end

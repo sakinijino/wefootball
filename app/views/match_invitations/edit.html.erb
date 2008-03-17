@@ -10,7 +10,7 @@
     <%if @editing_by_host_team == true%>
         <%=link_to(@match_invitation.guest_team.shortname, team_view_path(@match_invitation.guest_team.id))%>
     <%else%>
-        <%=link_to(@match_invitation.host_team.shortname, team_view_path(@match_invitation.guest_team.id))%>
+        <%=link_to(@match_invitation.host_team.shortname, team_view_path(@match_invitation.host_team.id))%>
     <%end%>
   </p>  
       

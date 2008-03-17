@@ -1,0 +1,19 @@
+<%form_tag :action=>:update_all do%>
+  <input name="_method" type="hidden" value="put" />
+  <input name="match_id" type="hidden" value=<%=@match_id%> />
+  <input name="team_id" type="hidden" value=<%=@team_id%> />
+  <table>
+    <th>队员</th>
+    <th>位置</th>
+  
+    <%for mj in @player_mjs%>
+     <tr>
+        <td><%= render(:partial => 'shared/user_icon', :object => mj.user)%></td>
+        <td><%= select_tag "mj[#{mj.id}][position]",
+            options_for_select(Team::FORMATION_POSITIONS.map {|p| [fomation_position_text(p), p]},mj.position)%>        
+        </td>
+      </tr>
+    <%end%>    
+  </table>
+<%=submit_tag "保存修改"%>
+<%end%>

@@ -82,6 +82,9 @@
 </div>
 <%end%>
 
+<h1><%=h @team.shortname%>最近的比赛</h1>
+<%= render(:partial => 'shared/match_list', :object => @matches, :locals=>{:current_team_id=>@team.id})%>                      
+
 <div class="seperateLine clearBoth"></div>
 <div style="margin-bottom:20px">        
 <h2><%=h @team.shortname%>的成员</h2>

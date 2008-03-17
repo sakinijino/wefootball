@@ -11,7 +11,7 @@ class TeamJoinsController < ApplicationController
     else # 显示队伍的所有成员
       @team = Team.find(params[:team_id])
       @admin = @team.users.admin
-      @players = []#@team.users.players
+      @players = @team.users.players
       @title = "#{@team.shortname}的成员"
       render :action=>"index_user", :layout => "team_layout"
     end

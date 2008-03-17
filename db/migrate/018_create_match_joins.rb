@@ -3,12 +3,15 @@ class CreateMatchJoins < ActiveRecord::Migration
     create_table :match_joins do |t|
       t.integer :match_id
       t.integer :user_id
-      t.boolean :play_for_host_team
+      t.integer :team_id
       t.integer :goal
-      t.integer :yellow_cards
-      t.integer :red_cards
+      t.integer :yellow_card
+      t.integer :red_card
       t.integer :position
       t.integer :status
+      t.text :comment
+
+      t.timestamps
     end
   end
 
