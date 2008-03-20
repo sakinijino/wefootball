@@ -30,23 +30,25 @@ class UserTeamTest < ActiveSupport::TestCase
     assert 2, UserTeam.team_formation(teams(:inter))
   end
   
-  def test_before_validation
+  def test_validation
     ut = UserTeam.new(:is_player=>true, :position => '')
-    ut.valid?
+    assert ut.valid?
     assert_nil ut.position
+    user_teams(:quentin_inter).is_player = false
+    user_teams(:quentin_inter).save
+    assert_nil user_teams(:quentin_inter).position
+    user_teams(:quentin_inter).is_player = true
+    user_teams(:quentin_inter).position = 26
+    assert !user_teams(:quentin_inter).valid?
   end
   
-  def test_before_save
+  def test_after_save
     user_teams(:saki_inter).position = 3
     user_teams(:saki_inter).save
     assert_nil user_teams(:quentin_inter).position
-    user_teams(:saki_inter).is_player = false
-    user_teams(:saki_inter).save
-    assert_nil user_teams(:saki_inter).position
-    user_teams(:saki_inter).is_player = true
-    user_teams(:saki_inter).position = 26
-    assert !user_teams(:saki_inter).valid?
-    
+  end
+  
+  def test_before_save
     UserTeam.destroy_all
     assert_equal 0, UserTeam.count
     (1..11).each do |i|

@@ -18,6 +18,10 @@ class TeamJoinsController < ApplicationController
   end
   
   def admin
+    if (!current_user.is_team_admin_of?(params[:team_id]))
+      fake_params_redirect
+      return
+    end
     @team = Team.find(params[:team_id])
     @uts = UserTeam.find_all_by_team_id(params[:team_id],:include=>[:user])
     @team_id = params[:team_id]

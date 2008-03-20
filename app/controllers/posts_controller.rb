@@ -13,6 +13,7 @@ class PostsController < ApplicationController
       else
         @posts = @team.posts.public
       end
+      @title = "#{@team.name}下的讨论"
       render :layout => "team_layout"
     elsif (params[:training_id])
       @training = Training.find(params[:training_id])
@@ -22,7 +23,7 @@ class PostsController < ApplicationController
       else
         @posts = @training.posts.public
       end
-      render :layout => "team_layout"
+      render :layout => "training_layout"
     else
       fake_params_redirect
     end
@@ -37,19 +38,31 @@ class PostsController < ApplicationController
     end
     @can_reply = @post.can_be_replied_by?(current_user)
     @team = @post.team
-    render :layout => "team_layout"
+    @training = @post.training
+    if @training
+      render :layout => "training_layout" 
+    elsif @team
+      render :layout => "team_layout" 
+    end
   end
 
   # GET teams/1/posts/new
   # GET trainings/1/posts/new
   def new
     @post = Post.new
-    render :layout => "team_layout"
+    @title = "在#{@team.shortname}的讨论区中发言" if @team
+    @title = "讨论#{@team.shortname}在#{@training.start_time.strftime('%m月%d日')}的训练" if @training
+    if @training
+      render :layout => "training_layout" 
+    elsif @team
+      render :layout => "team_layout" 
+    end
   end
 
   # GET /posts/1/edit
   def edit
     @team = @post.team
+    @title = "修改发言"
     render :layout => "team_layout"
   end
 
@@ -63,7 +76,11 @@ class PostsController < ApplicationController
     if @post.save
       redirect_to(@post)
     else
-      render :action => "new"
+      if @training
+        render :action => "new", :layout => "training_layout" 
+      elsif @team
+        render :action => "new", :layout => "team_layout" 
+      end
     end
   end
 
@@ -73,7 +90,7 @@ class PostsController < ApplicationController
     if @post.update_attributes(params[:post])
       redirect_to(@post)
     else
-      render :action => "edit"
+      render :action => "edit", :layout => "team_layout"
     end
   end
 

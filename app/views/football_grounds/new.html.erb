@@ -1,8 +1,10 @@
-<h1>提交新的球场资料</h1>
+<h1><%= h @title%></h1>
+<div class="seperateLine"></div>
 
 <%= error_messages_for :football_ground %>
 
 <% form_for(@football_ground) do |f| %>
+  <%= hidden_field_tag :back_uri, params[:back_uri] if params[:back_uri]!=nil%>
   
   <%= render :partial => "form", :locals=>{:f=> f}%>
 

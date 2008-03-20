@@ -9,11 +9,13 @@ class RepliesController < ApplicationController
     @reply = Reply.new(params[:reply])
     @reply.user = current_user
     @post.replies << @reply
-    if @reply.save
+    if @post.save
       redirect_to(@post)
     else
       @post.replies.reload
-      render :template => "posts/show"
+      @team = @post.team
+      @can_reply = @post.can_be_replied_by?(current_user)
+      render :template => "posts/show", :layout=>'team_layout'
     end
   end
 

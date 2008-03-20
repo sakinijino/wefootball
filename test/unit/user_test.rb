@@ -102,6 +102,21 @@ class UserTest < Test::Unit::TestCase
     assert users(:quentin).remember_token_expires_at.between?(before, after)
   end
   
+  def test_blog_validation
+    u = users(:saki)
+    u.blog = "sakinijino.blogbus.com"
+    assert u.valid?
+    u.blog = "www.google.com/search?hl=en&q=ruby+url+regexp"
+    assert u.valid?
+    u.blog = "http://sakinijino.blogbus.com"
+    assert !u.valid?
+    assert_not_nil u.errors.on(:full_blog_uri)
+    u.blog = "sakinijino.blogbus.com'>sakinijino.blogbus.com</a><script></script>"
+    assert !u.valid?
+    assert_not_nil u.errors.on(:full_blog_uri)
+    
+  end
+  
   def test_before_validation
     users(:saki).update_attributes({:nickname => 'nickname'*50, 
         :favorite_star => 'favorite_star'*50, 

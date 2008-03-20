@@ -9,19 +9,20 @@ class UserTeam < ActiveRecord::Base
   validates_inclusion_of   :position, :in => Team::FORMATION_POSITIONS, :allow_nil => true
   
   def before_validation
-    self.position=nil if !self.is_player
+    self.position = nil if !self.is_player
     self.position = nil if self.position==""
   end
   
   def before_save
     if self.position != nil
-      uts = UserTeam.team_formation(self.team_id)
-      if (uts.size >= FORMATION_MAX_LENGTH)
-        self.position = nil
-      else
-        uts.each do |ut| 
-          ut.update_attributes!(:position => nil) if ut.position == self.position
-        end
+      self.position = nil if (UserTeam.team_formation(self.team_id).size >= FORMATION_MAX_LENGTH)
+    end
+  end
+  
+  def after_save
+    if self.position != nil
+      UserTeam.team_formation(self.team_id).each do |ut| 
+        ut.update_attributes!(:position => nil) if ut != self && ut.position == self.position
       end
     end
   end

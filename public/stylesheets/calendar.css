@@ -31,6 +31,14 @@ div.calendar div.monthAndYearDiv {
     background-color:#F2F7AB; 
 }
 
+.hasActivityDiv {
+    background-color:#F2F7AB; 
+}
+
+.hasManyActivitiesDiv {
+    background-color:#ACBE33;
+}
+
 .monthAndYearDiv
 {
     border:solid 1px White; 
@@ -41,6 +49,10 @@ div.calendar div.monthAndYearDiv {
 
 .monthAndYearDiv a {
     color:#000;
+}
+
+.bigMonthDayDiv {
+/*    width:100%; height:30px; background-color:#ACBE33;*/
 }
 
 .bigMonthDaySpan

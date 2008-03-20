@@ -57,7 +57,7 @@ j(function(){
                 if (e.target.value == 0) city_select.hide()
                 else city_select.show()
             })
-            var tmp = span.id.split('_')
+            var tmp = span.id.split('-')
             if (tmp.length < 5 || tmp[4] == '') return
             var si = tmp[4]
             province_select.get()[0].value = ProvinceCity_REVERSE_LIST[si]
@@ -87,7 +87,7 @@ j(function(){
                         new Option(FootballGround_LIST[fg_id], fg_id)
                 })
             })
-            var fi = span.id.split('_')[4]
+            var fi = span.id.split('-')[4]
             if (fi=='') province_select.change()
             else if (fi == 'city') city_select.change()
             else {

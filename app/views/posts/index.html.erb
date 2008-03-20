@@ -1,30 +1,17 @@
-<% if @team %>
-  <h1><%=h @team.name%>下的讨论</h1>
-<% elsif @training %>
-  <h1>关于<%=h @training.start_time.strftime('%m月%d日')%>训练的讨论</h1>
-<%end%>
-<table>
-  <tr>
-    <th>话题</th>
-    <th>作者</th>
-    <th>回复</th>
-    <th>最后回复</th>
-  </tr>
+<h1><%=h @title%></h1>
 
-<% for post in @posts %>
-  <tr>
-    <td><%=link_to h(post.title), post  %></td>
-    <td><%=h post.user.nickname %></td>
-    <td><%= post.replies.size %></td>
-    <td><%= post.updated_at.strftime('%Y-%m-%d %H:%M:%S') %></td>
-  </tr>
-<% end %>
-</table>
+<div id="wide_left_content">
+<div class="seperateLine"></div>
+<%=render :partial=>'shared/post_list', :object=>@posts%>
+</div>
 
-<br />
+<div id="narrow_right_content">
+<div class="seperateLine"></div>
 
 <% if @team %>
   <%= link_to '发言', new_team_post_path(@team) %>
 <% elsif @training %>
   <%= link_to '发言', new_training_post_path(@training) %>
 <%end%>
+</div>
+<div class="clearBoth"></div>

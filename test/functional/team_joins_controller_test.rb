@@ -4,6 +4,18 @@ class TeamJoinsControllerTest < ActionController::TestCase
   # Replace this with your real tests.
   include AuthenticatedTestHelper
   
+  def test_admin
+    login_as :saki
+    get :admin, :team_id => 1
+    assert_equal 2, assigns(:uts).length
+  end
+  
+  def test_admin_noauth
+    login_as :mike3
+    get :admin, :team_id => 1
+    assert_redirected_to '/'
+  end
+  
   def test_accept_invitation
     login_as :mike1
     assert_difference('TeamJoinRequest.count', -1) do

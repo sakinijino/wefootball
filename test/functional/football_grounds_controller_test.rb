@@ -1,11 +1,5 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
-class ApplicationController < ActionController::Base
-  def current_user_is_football_ground_editor?
-    current_user.login == "sakinijino0725@163.com"
-  end
-end
-
 class FootballGroundsControllerTest < ActionController::TestCase
   
   def test_should_get_index_unauthorize

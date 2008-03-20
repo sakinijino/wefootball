@@ -15,6 +15,7 @@ textarea{ overflow:auto; }
 a { color: #006666; text-decoration: none; }
 a img { border-width:0; }
 table {}
+table th{ text-align: left; }
 
 #main_content {
     width: 990px;
@@ -45,6 +46,12 @@ table {}
     position: absolute;
     left: 160px;
     top: 26px;
+}
+
+#header_name a{
+    color: #fff;
+    font-size: 20px;
+    font-weight: bold;
 }
 
 #header_setting {
@@ -128,7 +135,14 @@ img.icon {
 }
 
 table.list {
-    width:80%; text-align:center
+    width: 100%;
+}
+
+table.list th,
+table.list td{
+    border-bottom:dashed 1px #3D681A;
+    padding: 5px;
+    vertical-align: top;
 }
 
 table.form td{

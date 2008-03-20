@@ -64,6 +64,9 @@ class User < ActiveRecord::Base
   validates_length_of       :favorite_star, :maximum => 200
   validates_length_of       :favorite_team, :maximum => 200
   validates_length_of       :blog, :maximum => 256
+  validates_format_of       :full_blog_uri, :allow_nil => true,
+     :with => /(^$)|(^(http|https):\/\/[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$)/ix,
+     :if => Proc.new {|u| !u.blog.blank?}
   
   validates_numericality_of :weight, :height, :if=>:is_playable, :allow_nil=>true
   validates_inclusion_of    :weight, :in => 0..400, :if=>:is_playable,
@@ -260,6 +263,10 @@ class User < ActiveRecord::Base
   
   def match_join(match_id)
     MatchJoin.find_by_user_id_and_match_id(self.id,match_id)
+  end
+  
+  def full_blog_uri
+    "http://#{self.blog}"
   end
   
   def birthday_text

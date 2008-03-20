@@ -6,7 +6,7 @@
 </div>
 <div class="activity_content">
   <%= training.start_time.strftime('%H:%M')%>-<%= training.end_time.strftime('%H:%M')%>,
-  <%= h training.location%>,
+  <%= link_to_if !training.football_ground_id.nil?, h(training.location), football_ground_path(training.football_ground_id)%>,
   <%= link_to_if(display_team, training.team.shortname, team_view_path(training.team.id)) {}%>训练
   <br/><br/>
   <%=link_to '详情', training_view_path(training)%>

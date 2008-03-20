@@ -1,3 +1,7 @@
+<%content_for(:javascript) do%>
+  <%= javascript_include_tag province_city_select_url %>
+<%end%>
+
 <p>
   <b>名称</b><br />
   <%= f.text_field :name %>

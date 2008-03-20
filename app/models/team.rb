@@ -20,7 +20,7 @@ class Team < ActiveRecord::Base
       find :all, :conditions => ['is_admin = ?', true]
     end
     def players
-      find :all, :conditions => ['is_playable = ?', true]
+      find :all, :conditions => ['is_player = ?', true]
     end
   end
   

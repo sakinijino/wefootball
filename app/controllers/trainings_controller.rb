@@ -39,7 +39,7 @@ class TrainingsController < ApplicationController
     if @training.save
       redirect_to training_view_path(@training)
     else
-      render :action=>"new"
+      render :action=>"new", :layout => "team_layout"
     end
   end
   
@@ -47,7 +47,7 @@ class TrainingsController < ApplicationController
     @training = Training.find(params[:id])
     @team = @training.team
     fake_params_redirect if (!current_user.is_team_admin_of?(@training.team))
-    render :layout => "team_layout"
+    render :layout => "training_layout"
   end
   
   # PUT /trainings/1
@@ -59,7 +59,7 @@ class TrainingsController < ApplicationController
     elsif @training.update_attributes(params[:training])
       redirect_to training_view_path(params[:id])
     else
-      render :action=>'edit', :layout => "team_layout"
+      render :action=>'edit', :layout => "training_layout"
     end
   end
 

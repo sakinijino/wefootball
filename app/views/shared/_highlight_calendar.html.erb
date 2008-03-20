@@ -1,7 +1,11 @@
 <div class="calendar">
   <%3.times do |i|%>
-  <div class="normalDateDiv bigDateDiv <%= date.wday == 0 ? 'dateSundayDiv' : (date.wday == 6 ? 'dateSaturdayDiv' : '')%>">
-    <div style="width:100%; height:30px;">
+  <%tmp_length = 0 %>
+  <%if trainings[date.strftime("%Y-%m-%d")] != nil %>
+    <%tmp_length = trainings[date.strftime("%Y-%m-%d")].length%>
+  <%end%>
+  <div class="normalDateDiv bigDateDiv <%= tmp_length > 2 ? 'hasManyActivitiesDiv' : (tmp_length > 0 ? 'hasActivityDiv' : '')%>">
+    <div class="bigMonthDayDiv">
       <span class="bigMonthDaySpan"><%=month_day_link(date.day, date)%></span>
       <span class="bigWeekDaySpan"><%=wday_text date.wday%></span>
     </div>
@@ -25,8 +29,12 @@
   <% date = date.tomorrow %>
   <%end%>
   <%15.times do |i|%>
-    <div class="normalDateDiv <%= date.wday == 0 ? 'dateSundayDiv' : (date.wday == 6 ? 'dateSaturdayDiv' : '')%>">
-      <div style="width:100%; height:30px;">
+    <%tmp_length = 0 %>
+    <%if trainings[date.strftime("%Y-%m-%d")] != nil %>
+      <%tmp_length = trainings[date.strftime("%Y-%m-%d")].length%>
+    <%end%>
+    <div class="normalDateDiv <%= tmp_length > 3 ? 'hasManyActivitiesDiv' : (tmp_length > 0 ? 'hasActivityDiv' : '')%>">
+      <div class="bigMonthDayDiv">
         <span class="bigMonthDaySpan"><%=month_day_link(date.day, date)%></span>
         <span class="bigWeekDaySpan"><%=wday_text date.wday%></span>
       </div>

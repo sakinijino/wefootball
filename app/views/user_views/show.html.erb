@@ -35,9 +35,9 @@
   <%= "<span>生日: #{@user.birthday_text}</span><br/>" unless @user.birthday_text.nil?%>
   <%= "<span>年龄: #{@user.age}</span><br/>" unless @user.age.nil?%>
   <%= "<span>性别: #{@user.gender == 1 ? '男' : '女'}</span><br/>" unless @user.gender == 0%>
-  <%= "<span>喜欢的球星: #{@user.favorite_star}</span><br/>" unless @user.favorite_star.blank?%>
-  <%= "<span>喜欢的球队: #{@user.favorite_team}</span><br/>" unless @user.favorite_team.blank?%>
-  <%= "<span>blog地址: <a href='http://#{@user.blog}' target='_blank'>#{h(@user.blog)}</a></span><br/>" unless @user.blog.blank?%>
+  <%= "<span>喜欢的球星: #{h @user.favorite_star}</span><br/>" unless @user.favorite_star.blank?%>
+  <%= "<span>喜欢的球队: #{h @user.favorite_team}</span><br/>" unless @user.favorite_team.blank?%>
+  <%= "<span>blog地址: <a href='#{@user.full_blog_uri}' target='_blank'>#{h(@user.blog)}</a></span><br/>" unless @user.blog.blank?%>
   <%if !@user.summary.blank?%>
       <span>自我介绍：</span>
       <p><%=simple_format auto_link(@user.summary, :urls)%></p>

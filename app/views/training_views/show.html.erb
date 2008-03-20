@@ -1,42 +1,66 @@
-<p>
-  <label>队伍</label>
-  <%= link_to @training.team.name, team_view_path(@training.team)%>
-</p>
-
-<p>
-  <label>时间</label>
-  <%= @training.start_time.strftime('%Y-%m-%d')%> <%= @training.start_time.strftime('%H:%M')%>-<%= @training.end_time.strftime('%H:%M')%>
-</p>
-
-<p>
-  <label>地点</label>
-  <%if @training.football_ground_id != nil%>
-    <%=link_to h(@training.football_ground.name), football_ground_path(@training.football_ground_id)%>
-  <%else%>
-    <%=h @training.location%>
-  <%end%>
-</p>
-
-<p>
-  <label>说明</label>
-  <%=simple_format auto_link(@training.summary, :urls)%>
-</p>
-
-<%if logged_in? %>
-<%=link_to_if(@training.can_be_joined_by?(current_user), '加入', training_training_joins_path(@training), :method=>'post'){} %>
-<%=link_to_if(@training.has_member?(current_user), '退出', training_training_join_path(@training, 0), :method=>'delete'){} %>
-
-<%if current_user.is_team_admin_of?(@training.team)%>
-  <%=link_to '修改', edit_training_path(@training)%>
-  <%=link_to '删除', training_path(@training), :method=>'delete'%>
+<%content_for(:stylesheet) do%>
+  <%= stylesheet_link_tag 'calendar' %>
+  <%= stylesheet_link_tag 'activityitem' %>
 <%end%>
+
+<h1><%=h @title%></h1>
+<div id="wide_left_content">
+<div class="seperateLine"></div>
+<div style="margin-bottom:20px">
+<div class="activity" style="border:none; margin: 10px 40px 10px 0px;">
+  <div class="activity_date">
+    <div class="day">
+      <%= month_calendar_link(@training.start_time.strftime('%m'), @training.start_time)%>.<%= month_day_link(@training.start_time.day, @training.start_time)%></div>
+    <div class="week"><%= wday_text @training.start_time.wday%></div>
+  </div>
+  <div class="activity_content">
+    <%= @training.start_time.strftime('%H:%M')%>-<%= @training.end_time.strftime('%H:%M')%>,
+    <%= link_to_if !@training.football_ground_id.nil?, h(@training.location), football_ground_path(@training.football_ground_id)%>,
+    <%= link_to(@training.team.shortname, team_view_path(@training.team.id))%>训练
+    <br/><br/>
+    <%if logged_in? %>
+      <%=link_to_if(@training.can_be_joined_by?(current_user), '我去', training_training_joins_path(@training), :method=>'post'){} %>
+      <%=link_to_if(@training.has_member?(current_user), '我不去', training_training_join_path(@training, 0), :method=>'delete'){} %>
+    <%end%>
+    <%if logged_in? && current_user.is_team_admin_of?(@training.team)%>
+      <%=link_to '修改', edit_training_path(@training)%>
+      <%=link_to '删除', training_path(@training), :method=>'delete'%>
+    <%end%>
+  </div>
+  <div class="activity_icon">
+    <%= team_image_link @training.team, :class=>"icon" %>
+  </div>
+  <div class="clearBoth"></div>
+</div>
+<%if !@training.summary.blank?%>
+  <div class="tab_container" style="margin:10px 0 10px 0">
+  <span class="tab_link" style="margin-left: 10px;">本次训练说明</span>
+  <div class="tab">
+    <p><%=simple_format auto_link(@training.summary, :urls)%></p>
+  </div>
+  </div>
 <%end%>
-  
-<h1>要参加这次训练的人</h1>
+
+<div class="seperateLine clearBoth"></div>
+  <div style="margin-bottom:20px">
+    <h2>关于本次训练的讨论</h2>
+    <%= render(:partial => 'shared/post_list', :object => @posts)%>
+    <div style="margin: 10px 0  0 10px;">
+      <%if logged_in? && current_user.is_team_member_of?(@training.team)%>
+        <%= link_to '发言', new_training_post_path(@training) %>
+      <%end%>
+      <%= link_to '更多', training_posts_path(@training) %>
+    </div>
+  </div>
+</div>
+</div>
+
+<div id="narrow_right_content">
+<div class="seperateLine clearBoth"></div>
+<div style="margin-bottom:20px">
+<h2>要参加这次训练的人</h2>
 <%= render(:partial => 'shared/user_icon', :collection => @training.users)%>
+</div>
+</div>
 
-<h1>关于本次训练的讨论</h1>
-<%= render(:partial => 'shared/post_list', :object => @posts)%>
-
-<br />
-<%= link_to '发言', new_training_post_path(@training) %>
+<div class="clearBoth"></div>

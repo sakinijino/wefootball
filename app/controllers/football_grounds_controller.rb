@@ -1,25 +1,36 @@
 class FootballGroundsController < ApplicationController
-  before_filter :login_required
+  before_filter :login_required, :except => [:show]
   before_filter :require_editor, :except => [:show, :new, :create]
+  
+  cache_sweeper :football_ground_sweeper,
+                  :only =>  [:update]
+  
+  layout 'football_ground_layout'
   
   def unauthorize
     @football_grounds = FootballGround.find_all_by_status(0, :include => 'user')
+    @title = "待审核球场"
     render :action => "index"
   end
 
   # GET /football_grounds/1
   def show
     @football_ground = FootballGround.find(params[:id])
-    @is_editor = current_user_is_football_ground_editor?
+    @title = @football_ground.name
+    @trainings = @football_ground.trainings.in_later_hours(24)
+    @players = @trainings.map {|t| t.users}.flatten.uniq
+    @is_editor = logged_in? && current_user_is_football_ground_editor?
   end
 
   # GET /football_grounds/new
   def new
     @football_ground = FootballGround.new
+    @title = '提交新球场资料'
   end
 
   # GET /football_grounds/1/edit
   def edit
+    @title = "编辑球场资料"
     @football_ground = FootballGround.find(params[:id])
   end
 
@@ -62,6 +73,6 @@ class FootballGroundsController < ApplicationController
   
 private
   def require_editor
-    fake_params_redirect if !current_user_is_football_ground_editor?
+    fake_params_redirect if !FootballGroundEditor.is_a_editor?(current_user)
   end
 end

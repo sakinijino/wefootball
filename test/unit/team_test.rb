@@ -75,6 +75,8 @@ class TeamTest < ActiveSupport::TestCase
     assert_equal 2,  teams(:milan).users.length
     assert_equal 2,  teams(:inter).users.admin.length
     assert_equal 1,  teams(:milan).users.admin.length
+    assert_equal 2,  teams(:inter).users.players.length
+    assert_equal 0,  teams(:milan).users.players.length
   end
   
   def test_destroy

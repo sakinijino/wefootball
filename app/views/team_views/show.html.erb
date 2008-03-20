@@ -33,11 +33,11 @@
   </span>
 
   <div class="tab" style="margin-right:40px">
-  <%= "<span>球队全名: #{@team.name}</span><br/>" unless @team.name.blank?%>
+  <%= "<span>球队全名: #{h @team.name}</span><br/>" unless @team.name.blank?%>
   <%= "<span>所在地: #{@team.city_text}</span><br/>" unless @team.city_text.nil?%>
   <%= "<span>建队时间: #{@team.found_time}</span><br/>" unless @team.found_time.nil?%>
-  <%= "<span>球队风格: #{@team.style}</span><br/>" unless @team.style.blank?%>
-  <%if !@team.summary.nil? && !@team.summary.blank?%>
+  <%= "<span>球队风格: #{h @team.style}</span><br/>" unless @team.style.blank?%>
+  <%if !@team.summary.blank?%>
       <label>球队简介：</label>
       <p><%=simple_format auto_link(@team.summary, :urls)%></p>
   <%end%>
@@ -90,6 +90,30 @@
 <h2><%=h @team.shortname%>的成员</h2>
 <%= render(:partial => 'shared/user_icon', :collection => @users)%>
 </div>
+
+<div class="seperateLine clearBoth"></div>
+<div style="margin-bottom:20px">   
+  <h2><%=h @team.shortname%>下的讨论</h2>
+  <table class="list" style="width:90%">
+    <tr>
+      <th style="width:20%">作者</th>
+      <th style="width:80%">话题</th>
+    </tr>
+
+  <% for post in @posts %>
+    <tr>
+      <td><%=h post.user.nickname %></td>
+      <td><%=link_to h(post.title), post  %></td>
+    </tr>
+  <% end %>
+  </table>
+  <div style="margin: 10px 0  0 10px;">
+    <%if logged_in? && current_user.is_team_member_of?(@team)%>
+      <%= link_to '发言', new_team_post_path(@team) %>
+    <%end%>
+    <%= link_to '更多', team_posts_path(@team) %>
+  </div>
+</div>
 </div>
 
 <div id="right_content">
@@ -99,14 +123,6 @@
   <%= render(:partial => 'shared/highlight_calendar', 
     :locals => {:date => Date.today, :trainings => @calendar_trainings_hash})%>
   <div class="clearBoth"></div>
-</div>
-
-<div class="seperateLine clearBoth"></div>
-<div style="margin-bottom:20px">   
-  <h2><%=h @team.shortname%>下的讨论</h2>
-  <%= render(:partial => 'shared/post_list', :object => @posts)%>
-  <br />
-  <%= link_to '发言', new_team_post_path(@team) %>
 </div>
 </div>
 <div class="clearBoth"></div>

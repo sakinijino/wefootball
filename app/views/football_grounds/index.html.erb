@@ -1,4 +1,7 @@
-<table>
+<h1><%= h @title%></h1>
+<div class="seperateLine"></div>
+
+<table class="list">
   <tr>
     <th>名称</th>
     <th>所在地</th>
@@ -7,10 +10,10 @@
 
 <% for football_ground in @football_grounds %>
   <tr>
-    <td><%=h football_ground.name %></td>
-    <td><%=h football_ground.city_text %></td>
+    <td><%= link_to h(football_ground.name), football_ground_path(football_ground) %></td>
+    <td><%= h football_ground.city_text %></td>
     <td><%= link_to h(football_ground.user.nickname), user_view_path(football_ground.user.id) %></td>
-    <td><%= link_to 'Edit', edit_football_ground_path(football_ground) %></td>
+    <td><%= link_to '编辑', edit_football_ground_path(football_ground) %></td>
   </tr>
 <% end %>
 </table>

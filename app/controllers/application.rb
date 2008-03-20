@@ -17,10 +17,6 @@ class ApplicationController < ActionController::Base
   def redirect_with_back_uri_or_default(uri='/')
     params[:back_uri]!=nil ? redirect_to(params[:back_uri]) : redirect_to(uri)
   end
-  
-  def current_user_is_football_ground_editor?
-    FootballGroundEditor::LIST.include?(current_user.login)
-  end
 end
 
 class DateTime
@@ -37,12 +33,12 @@ end
 
 class ActionView::Helpers::FormBuilder
   def province_city_select(field, selectedCity = nil)
-    "<span id='#{@object_name}_province_city_selected_#{selectedCity ? selectedCity : @object[field]}' class='province_city_select'>#{
+    "<span id='#{@object_name}-province-city-selected-#{selectedCity ? selectedCity : @object[field]}' class='province_city_select'>#{
        select field, ProvinceCity::TOP_LIST.keys.sort.map {|v| [ProvinceCity::LIST[v], v]}}&nbsp;&nbsp;#{
        select field, []}</span>"
   end
   def football_ground_select(field, selectedFootballGround = nil, selectedCity = nil)
-    "<span id='#{@object_name}_football_ground_selected_#{selectedFootballGround ? selectedFootballGround : @object[field]}' class='football_ground_select'>#{
+    "<span id='#{@object_name}-football-ground-selected-#{selectedFootballGround ? selectedFootballGround : @object[field]}' class='football_ground_select'>#{
       province_city_select(field, selectedCity ? selectedCity : '')}&nbsp;&nbsp;#{
       select field, []}&nbsp;&nbsp;</span>"
   end
