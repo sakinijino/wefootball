@@ -19,3 +19,9 @@ mike2_to_aaron:
   host_id: 2
   message: Hi
   apply_date: 2008-02-20
+
+aaron_to_mike3:
+  applier_id: 2
+  host_id: 6
+  message: Hi
+  apply_date: 2008-02-20

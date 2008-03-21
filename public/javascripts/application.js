@@ -3,6 +3,11 @@
 
 var j = jQuery.noConflict();
 
+function checkAllInputs(value){
+    if (value == null) value = true;
+    j("input[type='checkbox']").attr('checked', value)
+}
+
 j(function(){
 	j("li.level_1_menu_item").each(function(i, item){
 		item = j(item)

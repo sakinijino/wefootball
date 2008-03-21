@@ -49,13 +49,13 @@ class UserTest < Test::Unit::TestCase
   end
 
   def test_should_reset_password
-    users(:quentin).update_attributes(:password => 'new password', :password_confirmation => 'new password')
+    users(:quentin).update_attributes!(:password => 'new password', :password_confirmation => 'new password')
     assert_equal users(:quentin), User.authenticate('quire@example.com', 'new password')
   end
 
   def test_should_not_rehash_password
     users(:quentin).login = 'quire2@example.com'
-    users(:quentin).save
+    users(:quentin).save!
     assert_equal users(:quentin), User.authenticate('quire2@example.com', 'test')
   end
 
@@ -113,12 +113,11 @@ class UserTest < Test::Unit::TestCase
     assert_not_nil u.errors.on(:full_blog_uri)
     u.blog = "sakinijino.blogbus.com'>sakinijino.blogbus.com</a><script></script>"
     assert !u.valid?
-    assert_not_nil u.errors.on(:full_blog_uri)
-    
+    assert_not_nil u.errors.on(:full_blog_uri)   
   end
   
   def test_before_validation
-    users(:saki).update_attributes({:nickname => 'nickname'*50, 
+    users(:saki).update_attributes!({:nickname => 'nickname'*50, 
         :favorite_star => 'favorite_star'*50, 
         :favorite_team => 'favorite_team'*50, 
         :summary => 'summary'*1000,
@@ -135,16 +134,18 @@ class UserTest < Test::Unit::TestCase
   
   def test_set_is_playable
     assert_no_difference 'users(:saki).positions.length' do
-      users(:saki).update_attributes({:premier_position=>11})
+      users(:saki).update_attributes!({:premier_position=>11})
     end
-    users(:saki).update_attributes({:premier_position=>0})
+    users(:saki).update_attributes!({:premier_position=>0})
     assert users(:saki).positions.map {|p| p.label}.include?(0)
-    users(:saki).update_attributes({:is_playable=>false, :premier_position=>nil, :height=>nil})
-    assert 0, users(:saki).positions.length
+    users(:saki).update_attributes!({:is_playable=>false, :premier_position=>nil, :height=>nil})
+    assert_equal 0, users(:saki).positions.length
     assert_nil users(:saki).height
     assert_nil users(:saki).weight
     assert_nil users(:saki).fitfoot
     assert_nil users(:saki).premier_position
+    assert_equal 0, UserTeam.find(:all, :conditions => ["user_id = ? and is_player = ?", users(:saki).id, true]).length
+    assert_equal 0, UserTeam.find(:all, :conditions => ["user_id = ? and position is not null", users(:saki).id]).length
     users(:saki).update_attributes({:is_playable=>true, :premier_position=>nil})
     assert users(:saki).errors.on(:premier_position)
   end
@@ -152,10 +153,10 @@ class UserTest < Test::Unit::TestCase
   def test_positions_array
     assert users(:saki).positions_array.include?(2)
     users(:saki).positions_array=[1, 0, 2, 11, 10]
-    users(:saki).save
+    users(:saki).save!
     assert_equal 5, users(:saki).positions.length
     users(:saki).positions_array=nil
-    users(:saki).save
+    users(:saki).save!
     assert_equal 1, users(:saki).positions.length #equal to 1, because premier_position
   end
   
@@ -208,7 +209,7 @@ class UserTest < Test::Unit::TestCase
   end
   
   def test_through
-    assert_equal 2,  users(:saki).teams.length
+    assert_equal 3,  users(:saki).teams.length
     assert_equal 2, users(:saki).teams.admin.length
     assert_equal 1,  users(:quentin).teams.length
     assert_equal 1,  users(:quentin).teams.admin.length
@@ -228,7 +229,7 @@ class UserTest < Test::Unit::TestCase
     assert_difference 'UserImage.count', -1 do
     assert_difference 'Message.count', -5 do
     assert_difference 'TrainingJoin.count', -4 do
-    assert_difference 'UserTeam.count', -2 do
+    assert_difference 'UserTeam.count', -3 do
     assert_difference 'TeamJoinRequest.count', -2 do
     assert_difference 'Post.count', -4 do
       users(:saki).destroy

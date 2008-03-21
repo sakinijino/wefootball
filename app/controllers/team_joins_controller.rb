@@ -48,7 +48,7 @@ class TeamJoinsController < ApplicationController
       @tu = UserTeam.new
       @tu.team_id = @tjs.team_id
       @tu.user_id = @tjs.user_id
-      @tu.save
+      @tu.save!
     end
     redirect_with_back_uri_or_default team_view_path(@tjs.team_id)
   end

@@ -73,10 +73,39 @@ class MessagesControllerTest < ActionController::TestCase
   end
   
   def test_both_destroy_message
-    login_as :saki
-    assert_no_difference('Message.count', -1) do
+    login_as :mike2
+    assert_difference('Message.count', -1) do
       delete :destroy, :id => messages(:mike2_saki_2).id
-      assert_redirected_to messages_path(:as=>"receiver")
+      assert_redirected_to messages_path(:as=>"sender")
     end
+  end
+  
+  def test_destroy_multi
+    login_as :mike2
+    assert_difference('Message.count', -1) do
+      delete :destroy_multi, 
+        :messages => [messages(:mike2_saki).id, messages(:mike2_saki_2).id], 
+        :back_uri => '/public'
+      assert Message.find(messages(:mike2_saki).id).is_delete_by_sender
+    end
+    assert_redirected_to '/public'
+  end
+  
+  def test_destroy_multi_with_a_not_my_message
+    login_as :mike2
+    assert_no_difference('Message.count') do
+      delete :destroy_multi, 
+        :messages => [messages(:saki_mike1).id], 
+        :back_uri => '/public'
+      assert !Message.find(messages(:saki_mike1).id).is_delete_by_receiver
+      assert !Message.find(messages(:saki_mike1).id).is_delete_by_sender
+    end
+    assert_redirected_to '/public'
+  end
+  
+  def test_destroy_multi_with_empty_request
+    login_as :mike2
+    delete :destroy_multi
+    assert_redirected_to messages_path
   end
 end

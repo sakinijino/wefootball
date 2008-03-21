@@ -15,3 +15,8 @@ milan:
   summary: Italy AC Milan
   found_time: 2008-01-21
   style: Defence
+
+juven:
+  id: 3
+  name: Juventus
+  shortname: Juv

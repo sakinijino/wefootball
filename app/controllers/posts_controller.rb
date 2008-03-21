@@ -36,7 +36,7 @@ class PostsController < ApplicationController
       fake_params_redirect
       return
     end
-    @can_reply = @post.can_be_replied_by?(current_user)
+    @can_reply = logged_in? && @post.can_be_replied_by?(current_user)
     @team = @post.team
     @training = @post.training
     if @training

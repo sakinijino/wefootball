@@ -29,7 +29,7 @@ class TeamJoinRequestTest < ActiveSupport::TestCase
     t = team_join_requests(:saki_inter)
     tid = t.team_id
     uid = t.user_id
-    t.update_attributes(:team_id=>10, :user_id=>10, :message=>'Modified')
+    t.update_attributes!(:team_id=>10, :user_id=>10, :message=>'Modified')
     assert_equal tid, t.team_id
     assert_equal uid, t.user_id
     assert_equal 'Modified', t.message
@@ -41,7 +41,7 @@ protected
     t.message = 's'*1000
     t.user = users(:aaron)
     t.team = teams(:inter)
-    t.save
+    t.save!
     return t
   end
 end

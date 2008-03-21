@@ -36,7 +36,7 @@
   <div class="tab_container" style="margin:10px 0 10px 0">
   <span class="tab_link" style="margin-left: 10px;">本次训练说明</span>
   <div class="tab">
-    <p><%=simple_format auto_link(@training.summary, :urls)%></p>
+    <p><%=simple_format auto_link(h(@training.summary), :urls)%></p>
   </div>
   </div>
 <%end%>

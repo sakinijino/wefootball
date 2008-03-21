@@ -26,10 +26,10 @@ class FriendRelationsController < ApplicationController
       @friend_relation = FriendRelation.new
       @friend_relation.user1_id = @req.applier_id
       @friend_relation.user2_id = @req.host_id
-      @friend_relation.save
+      @friend_relation.save!
       @req.destroy
     end
-    redirect_to friend_invitations_path
+    redirect_with_back_uri_or_default friend_invitations_path
   end
 
   # DELETE /friend_relations/1

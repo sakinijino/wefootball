@@ -121,10 +121,11 @@ div.clearBoth {
 
 div.icon {
     width:72px;
-    height:82px;
+    height:110px;
     text-align:center;
-    margin:3px 10px 33px 10px;
+    margin:3px 10px 3px 10px;
     float:left;
+    overflow: hidden;
 }
 
 img.icon {
@@ -136,6 +137,11 @@ img.icon {
 
 table.list {
     width: 100%;
+    margin-bottom: 10px;
+}
+
+table.list tr.highlight {
+    font-weight:bold
 }
 
 table.list th,
@@ -184,6 +190,33 @@ a.tab_link {
     background-color:#FCFDFE; 
 }
 
-img.shortcut_icon {
+div.tab_container span.shortcut {
+    float:right;
+    margin-right: 5px;
+}
+
+div.tab_container span.shortcut img {
     margin-left: 2px;
+}
+
+div.post {
+    padding:10px;
+    margin-bottom: 10px;
+}
+
+div.post img {
+    float:left; margin:0 10px 10px 0;
+}
+
+div.post .title {
+    background-color:#F2F7AB; 
+    padding: 2px 250px 2px 10px;
+}
+
+div.post .title .name{
+    margin-left:50px;
+}
+
+div.post .control {
+    float:right; margin-right:20px
 }

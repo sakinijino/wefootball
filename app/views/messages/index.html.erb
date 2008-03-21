@@ -6,6 +6,7 @@
 
 <div id="wide_left_content">
 <div class="seperateLine"></div>
+<% form_tag destroy_multi_messages_path(:back_uri => request.request_uri), :method=>:delete do%>
 <div>
   <table class="list">
   <tr>
@@ -16,11 +17,10 @@
     <%end%>
     <th>主题</th>
     <th>发件时间</th>
-    <th></th>
+    <th>删除</th>
   </tr>
-
     <%@messages.each do |m|%>
-      <tr>
+      <tr <%= "class='highlight'" if !m.is_receiver_read && params[:as]!='sender'%>>
          <%if params[:as]!='sender' %>
             <td><%=link_to h(m.sender.nickname), user_view_path(m.sender)%></td>
         <%else%>
@@ -28,10 +28,16 @@
         <%end%>
         <td><%=link_to m.subject, message_path(m.id)%></td>
         <td><%=h m.created_at.to_s(:db)%></td>
-        <td><%=link_to "删除", message_path(m.id), :method=>"delete"%></td>
+        <td><%=check_box_tag "messages[]", m.id %></td>
       </tr>
     <%end%>
   </table>
+  <div style="float:right;">
+    <%= submit_tag '删除'%>
+    <%= submit_tag '全选', :onclick => 'checkAllInputs();return false;'%>
+    <%= submit_tag '全清', :onclick => 'checkAllInputs(false);return false;'%>
+  </div>
 </div>
+<%end%>
 </div>
 <div class="clearBoth"></div>

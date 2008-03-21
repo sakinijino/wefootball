@@ -12,7 +12,7 @@ class ReplyTest < ActiveSupport::TestCase
     r = Reply.new(:content => "Test Reply")
     r.post = posts(:saki_1)
     r.user = users(:saki)
-    r.save
+    r.save!
     assert_equal posts(:saki_1).team, r.team
   end
   
@@ -22,7 +22,7 @@ class ReplyTest < ActiveSupport::TestCase
     r.user = users(:saki)
     assert_difference "posts(:saki_1).replies.size" do
       posts(:saki_1).replies << r
-      r.save
+      r.save!
     end
     
     assert_difference "Reply.count", -1 do

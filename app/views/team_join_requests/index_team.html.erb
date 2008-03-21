@@ -6,7 +6,7 @@
     <span>申请日期: <%= req.apply_date.to_s(:db) %></span><br/>
     <%if !req.message.nil? && !req.message.blank?%>
       <span>留言: </span>
-      <p><%=simple_format req.message%></p>
+      <p><%=simple_format h(req.message)%></p>
     <%end%>
     <%= link_to '撤销申请', team_join_request_path(req.id, :back_uri => request.request_uri), :method => :delete %>
   </div>

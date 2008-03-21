@@ -17,6 +17,12 @@ saki_milan:
   team_id: 2
   is_admin: true
 
+saki_juven:
+  user_id: 3
+  team_id: 3
+  is_player: true
+  position: 4
+
 quentin_inter:
   user_id: 1
   team_id: 1

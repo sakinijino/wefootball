@@ -26,7 +26,7 @@ class TeamTest < ActiveSupport::TestCase
   end
   
   def test_before_validation
-    teams(:inter).update_attributes({:name => 'nickname'*50, 
+    teams(:inter).update_attributes!({:name => 'nickname'*50, 
         :shortname => 'favorite_star'*50, 
         :style => 'favorite_team'*50, 
         :summary => 'summary'*1000 })
@@ -95,8 +95,8 @@ class TeamTest < ActiveSupport::TestCase
   end
   
   def test_search
-    Team.create({:name => 'Beijing Guo An', :shortname=>'BGA'})
-    Team.create({:name => 'Beijing Kuan Li', :shortname=>'BKL'})
+    Team.create!({:name => 'Beijing Guo An', :shortname=>'BGA'})
+    Team.create!({:name => 'Beijing Kuan Li', :shortname=>'BKL'})
     teams = Team.find_by_contents("BGA")
     assert 1, teams.length
     teams = Team.find_by_contents("Beijing")
@@ -107,6 +107,6 @@ class TeamTest < ActiveSupport::TestCase
   def create_training(start_time, team_id)
     t = Training.new(:start_time => start_time, :end_time => start_time.since(7200), :location => 'Beijing')
     t.team_id = team_id
-    t.save
+    t.save!
   end
 end

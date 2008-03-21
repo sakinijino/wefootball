@@ -1,5 +1,13 @@
 # Methods added to this helper will be available to all templates in the application.
-module ApplicationHelper  
+module ApplicationHelper
+  def word_wrap_with_wbr(str, interval = 5)
+    section = str.chars.length / interval + ((str.chars.length % interval) == 0 ? 0 : 1)
+    tmp = []
+    (0...section).each do |i|
+      tmp[i] = str.chars.slice(interval*i, interval)
+    end
+    return tmp.join('<wbr/>')
+  end
   def distance_of_time_in_words(from_time, to_time = 0, include_seconds = false)
     from_time = from_time.to_time if from_time.respond_to?(:to_time)
     to_time = to_time.to_time if to_time.respond_to?(:to_time)

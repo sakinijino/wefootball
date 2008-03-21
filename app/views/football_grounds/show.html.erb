@@ -17,7 +17,7 @@
       <%= "<span>已停用</span><br/>" if @football_ground.status == 2%>
       <%if !@football_ground.description.blank?%>
         <label>球队简介：</label>
-        <p><%=simple_format auto_link(@football_ground.description, :urls)%></p>
+        <p><%=simple_format auto_link(h(@football_ground.description), :urls)%></p>
       <%end%>
     </div>
 

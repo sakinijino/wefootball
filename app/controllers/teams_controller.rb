@@ -1,6 +1,7 @@
 class TeamsController < ApplicationController
   before_filter :login_required, :except => [:search]
   before_filter :require_current_user_is_a_team_admin, :only => [:edit, :update, :update_image]
+  before_filter :check_admins_limit, :only => [:new, :create]
   
   def new
     @user = current_user
@@ -57,5 +58,9 @@ class TeamsController < ApplicationController
 protected
   def require_current_user_is_a_team_admin
     fake_params_redirect if (!self.current_user.is_team_admin_of?(params[:id]))
+  end
+  
+  def check_admins_limit
+    redirect_to user_view_path(current_user) if current_user.teams.admin.size >= UserTeam::MAX_ADMIN_LENGTH
   end
 end

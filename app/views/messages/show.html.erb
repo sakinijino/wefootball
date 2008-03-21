@@ -23,7 +23,7 @@
 <div>时间: <%=h @message.created_at.to_s(:db)%></div>
 
 <div>
-<%=simple_format auto_link(@message.content, :urls, :target => '_blank')%>
+<%=simple_format auto_link(h(@message.content), :urls, :target => '_blank')%>
 </div>
 
 <%=link_to "回复", new_message_path(:to=>@message.sender.id) if @message.sender!=current_user%>

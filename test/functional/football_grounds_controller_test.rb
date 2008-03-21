@@ -2,6 +2,12 @@ require File.dirname(__FILE__) + '/../test_helper'
 
 class FootballGroundsControllerTest < ActionController::TestCase
   
+  def test_editor_show
+    login_as :saki
+    get :show, :id => football_grounds(:yiti).id
+    assert assigns(:is_editor)
+  end
+  
   def test_should_get_index_unauthorize
     login_as :saki
     get :unauthorize

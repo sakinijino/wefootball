@@ -6,7 +6,7 @@ class TrainingTest < ActiveSupport::TestCase
 #    assert true
 #  end
   def test_create
-    t = Training.create({:football_ground_id=>football_grounds(:yiti).id})
+    t = Training.create!({:football_ground_id=>football_grounds(:yiti).id})
     assert_not_nil t.id
     assert_not_nil t.start_time
     assert_not_nil t.end_time
@@ -24,7 +24,7 @@ class TrainingTest < ActiveSupport::TestCase
   
   def test_summary_length
     t = trainings(:training1)
-    t.update_attributes({:summary=>'s'*2000})
+    t.update_attributes!({:summary=>'s'*2000, :start_time => Time.now.since(3600), :end_time => Time.now.since(7200)})
     assert_equal 1000, t.summary.length
   end
   
@@ -52,7 +52,7 @@ class TrainingTest < ActiveSupport::TestCase
   def test_no_accessible
     t = trainings(:training1)
     tid = t.team_id
-    t.update_attributes(:team_id=>2, :location=>'Shanghai')
+    t.update_attributes!(:team_id=>2, :location=>'Shanghai', :start_time => Time.now.since(3600), :end_time => Time.now.since(7200))
     assert_equal tid, t.team_id
     assert_equal 'Shanghai', t.location
   end

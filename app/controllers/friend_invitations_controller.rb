@@ -28,11 +28,8 @@ class FriendInvitationsController < ApplicationController
       current_user.id, params[:friend_invitation][:host_id])
     @friend_invitation.host = @host
     @friend_invitation.applier = @applier
-    if @friend_invitation.update_attributes(params[:friend_invitation])
-      redirect_to user_view_path(@host.id)
-    else
-      fake_params_redirect
-    end
+    @friend_invitation.update_attributes!(params[:friend_invitation])
+    redirect_to user_view_path(@host.id)
   end
 
   # DELETE /friend_invitations/1

@@ -9,7 +9,7 @@
     <span>申请时间: <%=friend_inv.apply_date.to_s(:db) %></span><br/>
     <%if !friend_inv.message.nil? && !friend_inv.message.blank?%>
       <span>留言: </span>
-      <%=simple_format friend_inv.message %>
+      <%=simple_format h(friend_inv.message) %>
     <%end%>
     <%= link_to '接受', friend_relations_path(:request_id=>friend_inv.id), :method => :post %>
     <%= link_to '拒绝', friend_invitation_path(friend_inv), :method => :delete %>

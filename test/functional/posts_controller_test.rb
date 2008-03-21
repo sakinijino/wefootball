@@ -39,8 +39,18 @@ class PostsControllerTest < ActionController::TestCase
     assert_select "form", 0
   end
   
-  def test_get_show_noauth
+  def test_get_show_without_logged_in
+    get :show, :id => posts(:saki_1).id
+    assert_select "form", 0
+  end
+  
+  def test_get_show_private_noauth
     login_as :aaron
+    get :show, :id => posts(:saki_3).id
+    assert_redirected_to '/'
+  end
+  
+  def test_get_show_private_without_logged_in
     get :show, :id => posts(:saki_3).id
     assert_redirected_to '/'
   end

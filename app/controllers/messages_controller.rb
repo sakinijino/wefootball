@@ -9,15 +9,17 @@ class MessagesController < ApplicationController
     @user = current_user
     @title = params[:as]=='sender' ? "#{@user.nickname}的发件箱" : "#{@user.nickname}的收件箱"
     @messages = params[:as]=='sender' ? 
-      Message.find_all_by_sender_id_and_is_delete_by_sender(current_user.id, false, :include=>[:sender, :receiver]) :
-      Message.find_all_by_receiver_id_and_is_delete_by_receiver(current_user.id, false, :include=>[:sender, :receiver])
+      Message.find_all_by_sender_id_and_is_delete_by_sender(current_user.id, false, 
+        :include=>[:receiver], :order => 'messages.created_at desc') :
+      Message.find_all_by_receiver_id_and_is_delete_by_receiver(current_user.id, false, 
+        :include=>[:sender], :order => 'messages.created_at desc')
   end
 
   # GET /messages/1
   def show
     @user = current_user
     @message = Message.find(params[:id], :include=>[:sender, :receiver])
-    if (!@message.can_read_by(self.current_user))
+    if (!@message.can_read_by?(self.current_user))
       fake_params_redirect
       return
     end
@@ -30,12 +32,15 @@ class MessagesController < ApplicationController
   def new
     @user = current_user
     @receiver = User.find(params[:to])
+    @message = Message.new
+    @message.receiver = @receiver
   end
 
   # POST /messages
   def create
     @receiver = User.find(params[:message][:receiver_id])
     @message = Message.new(params[:message])
+    @message.receiver = @receiver
     @message.sender = self.current_user
     if @message.save
       redirect_to messages_path(:as=>"sender")
@@ -49,17 +54,25 @@ class MessagesController < ApplicationController
   # DELETE /messages/1.xml
   def destroy
     @message = Message.find(params[:id])
-    as = 'receiver'
-    if(@message.sender_id == current_user.id )
-        @message.is_delete_by_sender = true
-        as = 'sender'
-    elsif (@message.receiver_id == current_user.id)
-        @message.is_delete_by_receiver = true
+    if(@message.sender_id == self.current_user.id )
+      as = 'sender'
+    elsif (@message.receiver_id == self.current_user.id)
+      as = 'receiver'
     else
       fake_params_redirect
     end
-    (@message.is_delete_by_sender && @message.is_delete_by_receiver) ? @message.destroy : @message.save
+    @message.destroy_by!(current_user)
     redirect_to messages_path(:as=>as)
+  end
+  
+  def destroy_multi
+    if params[:messages] != nil
+      @messages = Message.find(params[:messages])
+      @messages.each do |m|
+        m.destroy_by!(current_user)
+      end
+    end
+    redirect_with_back_uri_or_default messages_path
   end
   
 protected

@@ -1,6 +1,6 @@
 module TeamsHelper
   def team_image_tag(team, options={})
-    image_tag(team.image, {:width=>TeamImage::WIDTH, :height=>TeamImage::HEIGHT, :title=>team.shortname}.merge(options))
+    image_tag(team.image, {:width=>TeamImage::WIDTH, :height=>TeamImage::HEIGHT, :title=>h(team.shortname)}.merge(options))
   end
   
   def team_image_link(team, options={})

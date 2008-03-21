@@ -13,22 +13,34 @@
 <div id="left_content">
 <div class="seperateLine"></div>
 
+<%if @firend_request != nil%>
+  <span>已邀请<%=h @user.nickname%>成为朋友, 等待确认</span>
+<%end%>
+
+<%if @firend_invitation != nil%>
+  <span><%=h @user.nickname%>希望和你成为朋友</span>
+  <%= link_to '接受', friend_relations_path(:request_id=>@firend_invitation.id, :back_uri => request.request_uri), :method => :post %>
+  <%= link_to '拒绝', friend_invitation_path(@firend_invitation), :method => :delete %>
+<%end%>
+
 <div class="tab_container" style="margin:10px 0 10px 0">
+
+  <%if logged_in? && @user.id != current_user.id %>
+    <span class="shortcut">
+    <%= link_to(image_tag("sendMail.gif", :title=>"给他发信"), 
+      new_message_path(:to=>@user.id))%>
+    <%= link_to(image_tag("breakUpFriendship.gif", :title=>"不和他玩"), 
+      friend_relation_path(0, :user_id=>@user.id),:method=>"delete") if @are_friends %>
+    <%= link_to(image_tag("inviteFriend.gif", :title=>"申请成为好友"), 
+      new_friend_invitation_path, :onclick=>'j("#send_friend_invitation_div").dialog("open");return false') if @can_send_invitation %>
+    <%= link_to(image_tag("inviteIntoTeam.gif", :title=>"邀请加入球队"),
+      new_team_join_invitation_path(:user_id => @user.id)) %>
+    </span>
+  <%end%>
+  
   <span class="tab_link" style="margin-left: 10px;">个人信息</span>
   <%if @user.is_playable%>
   <span class="tab_link">球员信息</span>
-  <%end%>
-  <%if logged_in? && @user.id != current_user.id %>
-    <span style="margin:30px;">
-    <%= link_to(image_tag("sendMail.gif", :title=>"给他发信", :class=>"shortcut_icon"), 
-      new_message_path(:to=>@user.id))%>
-    <%= link_to(image_tag("breakUpFriendship.gif", :title=>"不和他玩", :class=>"shortcut_icon"), 
-      friend_relation_path(0, :user_id=>@user.id),:method=>"delete") if current_user.is_my_friend?(@user) %>
-    <%= link_to(image_tag("inviteFriend.gif", :title=>"申请成为好友", :class=>"shortcut_icon"), 
-      new_friend_invitation_path, :onclick=>'j("#senf_friend_invitation_div").dialog("open");return false') if !current_user.is_my_friend?(@user) %>
-    <%= link_to(image_tag("inviteIntoTeam.gif", :title=>"邀请加入球队", :class=>"shortcut_icon"),
-      new_team_join_invitation_path(:user_id => @user.id)) %>
-    </span>
   <%end%>
   <div class="tab">
   <%= "<span>所在地: #{@user.city_text}</span><br/>" unless @user.city_text.nil?%>
@@ -37,10 +49,10 @@
   <%= "<span>性别: #{@user.gender == 1 ? '男' : '女'}</span><br/>" unless @user.gender == 0%>
   <%= "<span>喜欢的球星: #{h @user.favorite_star}</span><br/>" unless @user.favorite_star.blank?%>
   <%= "<span>喜欢的球队: #{h @user.favorite_team}</span><br/>" unless @user.favorite_team.blank?%>
-  <%= "<span>blog地址: <a href='#{@user.full_blog_uri}' target='_blank'>#{h(@user.blog)}</a></span><br/>" unless @user.blog.blank?%>
+  <%= "<span>blog地址: <a href='#{@user.full_blog_uri}' target='_blank'>#{word_wrap_with_wbr(h(@user.blog))}</a></span><br/>" unless @user.blog.blank?%>
   <%if !@user.summary.blank?%>
       <span>自我介绍：</span>
-      <p><%=simple_format auto_link(@user.summary, :urls)%></p>
+      <p><%=simple_format auto_link(h(@user.summary), :urls)%></p>
   <%end%>
   </div>
   <%if @user.is_playable%>
@@ -69,11 +81,11 @@
   <div style="margin: 10px 0 0 10px">
     <%if logged_in? && @user.id != current_user.id %>
     <%= link_to("给他写信", new_message_path(:to=>@user.id))%>
-    <%if current_user.is_my_friend?(@user)%>
+    <%if @are_friends%>
       <%= link_to("不和他玩", friend_relation_path(0, :user_id=>@user.id),:method=>"delete")  %>
-    <%else%>
+    <%elsif @can_send_invitation %>
       <%= link_to("申请成为朋友", new_friend_invitation_path, 
-        :onclick=>'j("#senf_friend_invitation_div").dialog("open");return false') %>
+        :onclick=>'j("#send_friend_invitation_div").dialog("open");return false') %>
     <%end%>
     <%= link_to("邀请加入球队", new_team_join_invitation_path(:user_id => @user.id)) %>
     <%end%>
@@ -81,8 +93,8 @@
 </div>
 
 
-<%if logged_in? && @user.id != current_user.id && !current_user.is_my_friend?(@user)%>
-<div id="senf_friend_invitation_div" class="jdialog">
+<%if @can_send_invitation%>
+<div id="send_friend_invitation_div" class="jdialog">
   <% form_for :friend_invitation, :url => friend_invitations_path, :method=>"POST" do |f| %>
       <%= f.hidden_field :host_id,  :value=>@user.id%>
       <span>留言</span><br />
@@ -108,7 +120,7 @@
 <div id="right_content">
 <%if @trainings.length > 0%>
   <div class="seperateLine clearBoth"></div>
-    <div style="margin-bottom:20px">
+  <div style="margin-bottom:20px">
     <h2><%=h @user.nickname%>最近一次训练</h2>
     <div class="activity" style="border:none; padding: 0px 20px 10px 20px;">
       <%= render :partial=>"shared/training_item", :locals => {:training => @trainings[0]}%>
@@ -117,10 +129,13 @@
   </div>
 <%end%>
 
-<div>        
-<h1><%=h @user.nickname%>最近的比赛</h1>
-<%= render(:partial => 'shared/match_list', :object => @matches)%>
-</div>
+<%if @matches.length > 0%>
+  <div class="seperateLine clearBoth"></div>
+  <div style="margin-bottom:20px">
+    <h2><%=h @user.nickname%>最近的比赛</h2>
+    <%= render(:partial => 'shared/match_list', :object => @matches)%>
+  </div>
+<%end%>
 
   <div class="seperateLine clearBoth"></div>
   <h2><%=h @user.nickname%>的日程</h2>

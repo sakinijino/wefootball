@@ -49,11 +49,8 @@ class TeamJoinInvitationsController < ApplicationController
     @tjs = TeamJoinRequest.find_or_initialize_by_team_id_and_user_id_and_is_invitation(@team.id,@user.id, true)    
     @tjs.team = @team
     @tjs.user = @user
-    if @tjs.update_attributes(params[:team_join_request])
-      redirect_to team_team_join_invitations_path(@team)
-    else
-      fake_params_redirect
-    end
+    @tjs.update_attributes!(params[:team_join_request])
+    redirect_to team_team_join_invitations_path(@team)
   end
   
   def destroy

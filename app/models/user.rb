@@ -98,6 +98,13 @@ class User < ActiveRecord::Base
     end
   end
   
+  def after_save
+    if (!self.is_playable)
+      ids = UserTeam.find_all_by_user_id_and_is_player(self.id, true).map {|ut| ut.id}
+      UserTeam.update(ids, [{:is_player => false}]*ids.length)
+    end
+  end
+  
   before_save :encrypt_password
   
   # prevents a user from submitting a crafted form that bypasses activation

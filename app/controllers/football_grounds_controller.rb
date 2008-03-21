@@ -19,7 +19,7 @@ class FootballGroundsController < ApplicationController
     @title = @football_ground.name
     @trainings = @football_ground.trainings.in_later_hours(24)
     @players = @trainings.map {|t| t.users}.flatten.uniq
-    @is_editor = logged_in? && current_user_is_football_ground_editor?
+    @is_editor = logged_in? && FootballGroundEditor.is_a_editor?(current_user)
   end
 
   # GET /football_grounds/new

@@ -12,7 +12,7 @@ module UsersHelper
   end
   
   def user_image_tag(user, options={})
-    image_tag(user.image, {:width=>UserImage::WIDTH, :height=>UserImage::HEIGHT, :title=>user.nickname}.merge(options))
+    image_tag(user.image, {:width=>UserImage::WIDTH, :height=>UserImage::HEIGHT, :title=>h(user.nickname)}.merge(options))
   end
   
   def user_image_link(user, options={})

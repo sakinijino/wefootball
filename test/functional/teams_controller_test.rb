@@ -3,6 +3,30 @@ require File.dirname(__FILE__) + '/../test_helper'
 class TeamsControllerTest < ActionController::TestCase
   include AuthenticatedTestHelper
   
+  def test_admin_limit_check
+    UserTeam.destroy_all
+    Team.destroy_all
+    teams_array = []
+    (1..21).each do |i|
+       teams_array << Team.create(:name => 'Test', :shortname => 'test')
+    end
+    assert_equal 0, UserTeam.count
+    assert_equal 21, Team.count
+    (0..19).each do |i|
+      ut = UserTeam.new(:is_admin => true)
+      ut.user_id = users(:saki).id
+      ut.team_id = teams_array[i].id
+      ut.save!
+    end
+    login_as :saki
+    get :new
+    assert_redirected_to user_view_path(users(:saki).id)
+    assert_no_difference('users(:saki).teams.admin.length') do
+      post :create, :team => { :name=>'Inter Milan', :shortname=>'inter'}
+      assert_redirected_to user_view_path(users(:saki).id)
+    end   
+  end
+  
   def test_create_team
     assert_difference('Team.count') do
       assert_difference('users(:saki).teams.admin.length') do
