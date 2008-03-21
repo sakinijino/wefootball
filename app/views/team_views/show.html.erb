@@ -20,7 +20,7 @@
 <%if @team_join_invitation != nil%>
   <span><%=h @team.shortname%>邀请你加入</span>
   <%= link_to '接受', team_joins_path(:id=>@team_join_invitation.id, :back_uri => request.request_uri), :method => :post %>
-    <%= link_to '拒绝', team_join_invitation_path(@team_join_invitation.id), :method => :delete %>
+    <%= link_to '拒绝', team_join_invitation_path(@team_join_invitation.id, :back_uri => request.request_uri), :method => :delete %>
 <%end%>
 
 <div class="tab_container" style="margin:10px 0 10px 0">
