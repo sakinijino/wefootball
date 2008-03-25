@@ -1,0 +1,43 @@
+<%content_for(:stylesheet) do%>
+  <%= stylesheet_link_tag 'calendar' %>
+  <%= stylesheet_link_tag 'activityitem' %>
+<%end%>
+
+<div id="wide_left_content">
+  <div class="sect">
+    <h2><%= h @title%></h2>
+    <div class="activity" style="border:none;">
+      <div class="activity_date">
+        <div class="day">
+          <%= month_calendar_link(@play.start_time.strftime('%m'), @play.start_time)%>.<%= month_day_link(@play.start_time.day, @play.start_time)%></div>
+        <div class="week"><%= wday_text @play.start_time.wday%></div>
+      </div>
+      <div class="activity_content">
+        时间: <%= @play.start_time.strftime('%H:%M')%>-<%= @play.end_time.strftime('%H:%M')%>
+        <br/><br/>
+        场地: <%= link_to_if !@play.football_ground_id.nil?, h(@play.location), football_ground_path(@play.football_ground_id)%>
+        <br/><br/>
+        状态：
+        <%if logged_in? %>
+          <%= play_status_with_logged_in(@play,current_user) %>
+          <%=link_to_if(@play.can_be_joined_by?(current_user),'我要去', play_play_joins_path(@play), :method=>'post') {}%>
+          <%=link_to_if(@play.can_be_unjoined_by?(current_user),'我又不去了', play_play_join_path(@play,0), :method=>'delete') {}%>
+        <%else%>
+          <%= play_status_with_unlogged_in(@play) %>
+        <%end%>
+      </div>
+      <div class="clearBoth"></div>
+    </div>
+  </div>
+</div>
+
+<div id="narrow_right_content">
+  <div class="sect">
+    <h2>一起去随便踢踢的有...</h2>
+    <%= render(:partial => 'shared/user_icon', :collection => @play.users)%>
+    <div class="clearBoth"></div>
+  </div>
+</div>
+
+<div class="clearBoth"></div>
+
