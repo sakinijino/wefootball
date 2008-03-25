@@ -250,6 +250,71 @@ class UserTest < Test::Unit::TestCase
     users = User.find_by_contents("gmail")
     assert 2, users.length
   end
+  
+  def test_can_invite_team
+    u = create_user({:login => 'sakinijinoo@gmail.com', :nickname=>'AiHaibara'})
+    t1 = Team.create!(:name=>"test1",:shortname=>"t1")
+    t2 = Team.create!(:name=>"test2",:shortname=>"t2")
+    
+    ut1 = UserTeam.new
+    ut1.user_id = u.id
+    ut1.team_id = t1.id
+    ut1.is_admin = false #如果不是管理员则肯定不能发起比赛邀请
+    ut1.save    
+    assert_equal false, u.can_invite_team?(t1)    
+    assert_equal false, u.can_invite_team?(t2)
+
+    ut1.is_admin = true#如果是管理员
+    ut1.save    
+    assert_equal false, u.can_invite_team?(t1)#不能邀请自己所管理的唯一球队
+    assert_equal true, u.can_invite_team?(t2)
+
+    t3 = Team.create!(:name=>"test3",:shortname=>"t3")
+    ut3 = UserTeam.new
+    ut3.user_id = u.id
+    ut3.team_id = t3.id
+    ut3.is_admin = true #在管理了一支以上球队的情况下
+    ut3.save
+    assert_equal true, u.can_invite_team?(t1)#可以邀请自己所管理多支球队中的一支
+  end
+  
+  def test_can_act_on_match_invitation #测试can_edit_match_invitation、can_reject_match_invitation和can_accept_match_invitation
+    u = create_user({:login => 'sakinijinoo@gmail.com', :nickname=>'AiHaibara'})
+    t1 = Team.create!(:name=>"test1",:shortname=>"t1")
+    t2 = Team.create!(:name=>"test2",:shortname=>"t2")
+    inv = MatchInvitation.new
+    inv.host_team_id = t1.id
+    inv.guest_team_id = t2.id
+    
+    inv.edit_by_host_team = true #如果当前是主队在编辑
+    inv.save
+    ut = UserTeam.new
+    ut.user_id = u.id
+    ut.team_id = t1.id
+    ut.is_admin = true
+    ut.save
+    assert_equal true, u.can_edit_match_invitation?(inv)  
+    assert_equal true, u.can_accpet_match_invitation?(inv)
+    assert_equal true, u.can_reject_match_invitation?(inv)
+    ut.is_admin = false #而且用户是主队的管理员
+    ut.save
+    assert_equal false, u.can_edit_match_invitation?(inv)  
+    assert_equal false, u.can_accpet_match_invitation?(inv)
+    assert_equal false, u.can_reject_match_invitation?(inv)
+
+    inv.edit_by_host_team = false #如果当前是客队在编辑
+    inv.save
+    ut.is_admin = true 
+    ut.save    
+    assert_equal false, u.can_edit_match_invitation?(inv)  
+    assert_equal false, u.can_accpet_match_invitation?(inv)
+    assert_equal false, u.can_reject_match_invitation?(inv)
+    ut.is_admin = false
+    ut.save
+    assert_equal false, u.can_edit_match_invitation?(inv)  
+    assert_equal false, u.can_accpet_match_invitation?(inv)
+    assert_equal false, u.can_reject_match_invitation?(inv)        
+  end
 
 protected
   def create_user(options = {})

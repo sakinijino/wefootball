@@ -1,5 +1,5 @@
 class RepliesController < ApplicationController
-  # POST posts/1/replies
+
   def create
     @post = Post.find(params[:post_id])
     if (!@post.can_be_replied_by?(current_user))
@@ -19,7 +19,6 @@ class RepliesController < ApplicationController
     end
   end
 
-  # DELETE posts/1/replies/1
   def destroy
     @reply = Reply.find(params[:id])
     if (!@reply.can_be_destroyed_by?(current_user))

@@ -1,10 +1,7 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
 class TrainingTest < ActiveSupport::TestCase
-  # Replace this with your real tests.
-#  def test_truth
-#    assert true
-#  end
+
   def test_create
     t = Training.create!({:football_ground_id=>football_grounds(:yiti).id})
     assert_not_nil t.id

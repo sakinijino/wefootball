@@ -10,12 +10,10 @@ class TeamsController < ApplicationController
     render :layout => "user_layout"
   end
 
-  # GET /teams/search.xml?query
   def search
     @teams = Team.find_by_contents(params[:q])
   end
 
-  # POST /teams.xml
   def create
     @team = Team.new(params[:team])
     if @team.save
@@ -33,7 +31,6 @@ class TeamsController < ApplicationController
     render :layout => "team_layout"
   end
   
- # PUT /teams/1.xml
   def update
     @team = Team.find(params[:id])
     if @team.update_attributes(params[:team])

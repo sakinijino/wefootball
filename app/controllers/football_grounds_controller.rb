@@ -13,7 +13,6 @@ class FootballGroundsController < ApplicationController
     render :action => "index"
   end
 
-  # GET /football_grounds/1
   def show
     @football_ground = FootballGround.find(params[:id])
     @title = @football_ground.name
@@ -22,19 +21,16 @@ class FootballGroundsController < ApplicationController
     @is_editor = logged_in? && FootballGroundEditor.is_a_editor?(current_user)
   end
 
-  # GET /football_grounds/new
   def new
     @football_ground = FootballGround.new
     @title = '提交新球场资料'
   end
 
-  # GET /football_grounds/1/edit
   def edit
     @title = "编辑球场资料"
     @football_ground = FootballGround.find(params[:id])
   end
 
-  # POST /football_grounds
   def create
     @football_ground = FootballGround.new(params[:football_ground])
     @football_ground.user = current_user
@@ -60,7 +56,6 @@ class FootballGroundsController < ApplicationController
     end
   end
 
-  # DELETE /football_grounds/1
   def destroy
     @football_ground = FootballGround.find(params[:id])
     if @football_ground.status ==0

@@ -3,8 +3,6 @@ class PostsController < ApplicationController
   before_filter :before_post, :only=>[:new, :create]
   before_filter :before_modify, :only=>[:edit, :update]
   
-  # GET teams/1/posts
-  # GET trainings/1/posts
   def index
     if (params[:team_id])
       @team = Team.find(params[:team_id])
@@ -29,7 +27,6 @@ class PostsController < ApplicationController
     end
   end
 
-  # GET /posts/1
   def show
     @post = Post.find(params[:id])
     if !@post.is_visible_to?(current_user) 
@@ -46,8 +43,6 @@ class PostsController < ApplicationController
     end
   end
 
-  # GET teams/1/posts/new
-  # GET trainings/1/posts/new
   def new
     @post = Post.new
     @title = "在#{@team.shortname}的讨论区中发言" if @team
@@ -59,15 +54,12 @@ class PostsController < ApplicationController
     end
   end
 
-  # GET /posts/1/edit
   def edit
     @team = @post.team
     @title = "修改发言"
     render :layout => "team_layout"
   end
 
-  # POST teams/1/posts
-  # POST trainings/1/posts
   def create
     @post = Post.new(params[:post])
     @post.team_id = @tid
@@ -84,8 +76,6 @@ class PostsController < ApplicationController
     end
   end
 
-  # PUT /posts/1
-  # PUT /posts/1.xml
   def update
     if @post.update_attributes(params[:post])
       redirect_to(@post)
@@ -94,8 +84,6 @@ class PostsController < ApplicationController
     end
   end
 
-  # DELETE /posts/1
-  # DELETE /posts/1.xml
   def destroy
     @post = Post.find(params[:id])
     if !@post.can_be_destroyed_by?(current_user)

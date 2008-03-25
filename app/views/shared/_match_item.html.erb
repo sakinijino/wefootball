@@ -1,0 +1,20 @@
+<div class="activity_date">
+  <div class="day">
+    <%= month_calendar_link(match.start_time.strftime('%m'), match.start_time)%>.<%= month_day_link(match.start_time.day, match.start_time)%></div>
+  <div class="week"><%= wday_text match.start_time.wday%></div>
+</div>
+<div class="activity_content">
+  <%= match.start_time.strftime('%H:%M')%>-<%= match.end_time.strftime('%H:%M')%>,
+  <%= h match.location%>,
+  <%= link_to(match.host_team.shortname, team_view_path(match.host_team_id))%>
+  对阵
+  <%= link_to(match.guest_team.shortname, team_view_path(match.guest_team_id))%>
+  <br/><br/>
+  <%=link_to '详情', match_view_path(match)%>
+</div>
+
+<div class="activity_icon">
+  <%= team_image_link match.host_team, :class=>"icon" %>
+  V.S.
+  <%= team_image_link match.guest_team, :class=>"icon" %>
+</div>

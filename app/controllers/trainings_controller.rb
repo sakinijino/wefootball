@@ -2,8 +2,6 @@ class TrainingsController < ApplicationController
   before_filter :login_required, :except => [:index]
   before_filter :parse_time, :only => [:create, :update]
   
-  # GET /users/:user_id/trainings
-  # GET /teams/:team_id/trainings
   def index
     if (params[:user_id]) #显示用户参与的训练
       @user = User.find(params[:user_id], :include=>:trainings)
@@ -26,7 +24,6 @@ class TrainingsController < ApplicationController
     render :layout => "team_layout"
   end
 
-  # POST /trainings
   def create
     @team = Team.find(params[:training][:team_id])
     if (!current_user.is_team_admin_of?(@team))
@@ -50,7 +47,6 @@ class TrainingsController < ApplicationController
     render :layout => "training_layout"
   end
   
-  # PUT /trainings/1
   def update
     @training = Training.find(params[:id])
     @team = @training.team
@@ -63,7 +59,6 @@ class TrainingsController < ApplicationController
     end
   end
 
-  # DELETE /trainings/1
   def destroy
     @training = Training.find(params[:id]) 
     if (!current_user.is_team_admin_of?(@training.team))

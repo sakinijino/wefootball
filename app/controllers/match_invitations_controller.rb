@@ -8,14 +8,15 @@ class MatchInvitationsController < ApplicationController
       return
     end    
     @host_teams = current_user.teams.admin - [@guest_team]
+    @match_invitation = MatchInvitation.new
   end
   
   def create
     @guest_team_id = params[:match_invitation][:guest_team_id]
     @host_team_id = params[:match_invitation][:host_team_id]
-    if !current_user.can_invite_team?(@guest_team_id)
+    if !((@host_team_id != @guest_team_id) && (current_user.is_team_admin_of?(@host_team_id)))
       fake_params_redirect
-      return
+      return      
     end
     @match_invitation = MatchInvitation.new(params[:match_invitation])
     @match_invitation.guest_team_id = @guest_team_id

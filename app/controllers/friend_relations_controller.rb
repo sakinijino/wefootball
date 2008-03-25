@@ -1,6 +1,6 @@
 class FriendRelationsController < ApplicationController
   before_filter :login_required, :except => [:index]
-  # GET /friend_relations
+
   def index
     @user = User.find(params[:user_id])
     @friendsList = @user.friends
@@ -8,7 +8,6 @@ class FriendRelationsController < ApplicationController
     render :layout => 'user_layout'
   end
 
-  # POST /friend_relations
   def create
     @req = FriendInvitation.find(params[:request_id],:include=>[:applier])
     if(@req.host_id != current_user.id)
@@ -32,8 +31,6 @@ class FriendRelationsController < ApplicationController
     redirect_with_back_uri_or_default friend_invitations_path
   end
 
-  # DELETE /friend_relations/1
-  # DELETE /friend_relations/1.xml
   def destroy
     FriendRelation.destroy_all(["(user1_id = ? and user2_id = ?) or (user1_id = ? and user2_id = ?)", 
       current_user.id, params[:user_id], params[:user_id], current_user.id] )

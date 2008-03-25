@@ -1,6 +1,7 @@
 class MatchInvitation < ActiveRecord::Base
+  include ModelHelper
   
-  MAX_DESCRIPTION_LENGTH = 3
+  MAX_DESCRIPTION_LENGTH = 300
   MAX_TEAM_MESSAGE_LENGTH = 300
   
   belongs_to :host_team, :class_name=>"Team", :foreign_key=>"host_team_id"
@@ -32,15 +33,10 @@ class MatchInvitation < ActiveRecord::Base
     if self.new_description.nil?
       self.new_description = ""      
     end 
-    if self.new_description.chars.length > MAX_DESCRIPTION_LENGTH      
-      self.new_description = (self.new_description.chars[0...MAX_DESCRIPTION_LENGTH]).to_s
-    end
-    if self.host_team_message.chars.length > MAX_TEAM_MESSAGE_LENGTH      
-      self.host_team_message = (self.host_team_message.chars[0...MAX_TEAM_MESSAGE_LENGTH]).to_s
-    end
-    if self.guest_team_message.chars.length > MAX_TEAM_MESSAGE_LENGTH      
-      self.guest_team_message = (self.guest_team_message.chars[0...MAX_TEAM_MESSAGE_LENGTH]).to_s
-    end     
+    
+    attribute_slice(:new_description, MAX_DESCRIPTION_LENGTH)
+    attribute_slice(:host_team_message, MAX_TEAM_MESSAGE_LENGTH)
+    attribute_slice(:guest_team_message, MAX_TEAM_MESSAGE_LENGTH)   
   end  
 
   def save_last_info!
@@ -55,11 +51,16 @@ class MatchInvitation < ActiveRecord::Base
     match_inv = MatchInvitation.new(params)
     self.attributes.each do |a|
       if a[0][0..3] == "new_"
-        if a[1] != match_inv[a[0].to_sym]
+        if (a[1] != match_inv[a[0].to_sym]) && (params[a[0].to_sym] != nil)
           return true
         end
       end
     end
     return false
-  end  
+  end
+
+  def has_attribute_been_modified?(attribute_name)
+    return (!self[attribute_name].nil?) &&
+           (self[attribute_name] != self[("new_"+attribute_name.to_s).to_sym])
+  end
 end

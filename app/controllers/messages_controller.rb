@@ -4,7 +4,6 @@ class MessagesController < ApplicationController
   before_filter :login_required
   before_filter :receiver_can_not_be_current_user, :only=>[:new, :create]
   
-  # GET /messages
   def index
     @user = current_user
     @title = params[:as]=='sender' ? "#{@user.nickname}的发件箱" : "#{@user.nickname}的收件箱"
@@ -15,7 +14,6 @@ class MessagesController < ApplicationController
         :include=>[:sender], :order => 'messages.created_at desc')
   end
 
-  # GET /messages/1
   def show
     @user = current_user
     @message = Message.find(params[:id], :include=>[:sender, :receiver])
@@ -36,7 +34,6 @@ class MessagesController < ApplicationController
     @message.receiver = @receiver
   end
 
-  # POST /messages
   def create
     @receiver = User.find(params[:message][:receiver_id])
     @message = Message.new(params[:message])
@@ -50,8 +47,6 @@ class MessagesController < ApplicationController
     end
   end
 
-  # DELETE /messages/1
-  # DELETE /messages/1.xml
   def destroy
     @message = Message.find(params[:id])
     if(@message.sender_id == self.current_user.id )

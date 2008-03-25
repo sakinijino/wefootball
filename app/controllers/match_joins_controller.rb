@@ -4,7 +4,7 @@ class MatchJoinsController < ApplicationController
   def edit
     @match_id = params[:match_id]
     @team_id = params[:team_id]
-    if !Match.find(@match_id).is_bofore_match_close? #只有比赛开始前才可以修改阵形
+    if !Match.find(@match_id).is_before_match_close? #只有比赛开始前才可以修改阵形
       fake_params_redirect      
       return
     end    
@@ -32,7 +32,7 @@ class MatchJoinsController < ApplicationController
   def update_all
     @match = Match.find(params[:match_id])
     @team_id = params[:team_id]
-    if !@match.is_bofore_match_close? #只有比赛关闭前才可以修改阵型
+    if !@match.is_before_match_close? #只有比赛关闭前才可以修改阵型
       fake_params_redirect
       return
     end     

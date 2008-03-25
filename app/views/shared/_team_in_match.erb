@@ -4,7 +4,7 @@
 
 <%if current_user.is_team_admin_of?(team.id) %>
   <%=link_to "编辑本队阵型", edit_match_join_path(0, :match_id=>match.id, :team_id=>team.id) %>
-  <%if match.is_after_match_and_bofore_match_close?%>
+  <%if match.is_after_match_and_before_match_close?%>
     <%=link_to "填写比赛结果", edit_match_path(match.id,:team_id=>team.id) %>
   <%end%> 
 <%end%>

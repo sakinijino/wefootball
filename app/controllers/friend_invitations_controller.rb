@@ -2,38 +2,33 @@ class FriendInvitationsController < ApplicationController
   layout "user_layout"
   
   before_filter :login_required
-  # GET /friend_invitations
-  # GET /friend_invitations.xml
   def index
-    #only return the quests for current user
+    #only return the invitations of current user
     @user = current_user
     @friend_invitations = FriendInvitation.find_all_by_host_id(current_user.id,:include=>[:applier])
   end
 
-  # POST /friend_invitations
-  # POST /friend_invitations.xml
   def create
-    @applier = current_user
-    @host = User.find(params[:friend_invitation][:host_id])
-    if (FriendRelation.are_friends?(current_user.id, params[:friend_invitation][:host_id]))
-      redirect_to user_view_path(@host.id)
-      return
-    end
     if(current_user.id.to_s == params[:friend_invitation][:host_id].to_s)
       fake_params_redirect
+      return
+    end    
+    
+    @applier = current_user
+    @host = User.find(params[:friend_invitation][:host_id])
+    if (FriendRelation.are_friends?(current_user.id, @host.id))
+      redirect_to user_view_path(@host.id)
       return
     end
 
     @friend_invitation = FriendInvitation.find_or_initialize_by_applier_id_and_host_id(
-      current_user.id, params[:friend_invitation][:host_id])
+      current_user.id, @host.id)
     @friend_invitation.host = @host
     @friend_invitation.applier = @applier
     @friend_invitation.update_attributes!(params[:friend_invitation])
     redirect_to user_view_path(@host.id)
   end
 
-  # DELETE /friend_invitations/1
-  # DELETE /friend_invitations/1.xml
   def destroy
     @friend_invitation = FriendInvitation.find(params[:id])
     if (@friend_invitation.host_id != current_user.id)

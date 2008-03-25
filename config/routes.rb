@@ -63,9 +63,11 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :friend_relations
   map.resources :friend_invitations
   map.resources :messages, :collection => { :destroy_multi => :delete }
+  
   map.resources :match_invitations
   map.resources :matches
   map.resources :match_joins, :collection => { :update_all => :put }  
+  map.resources :match_views
   
   map.resources :posts do |posts|
     posts.resources :replies

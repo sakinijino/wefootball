@@ -50,7 +50,7 @@ class MatchesController < ApplicationController
   def edit
     @team = Team.find(params[:team_id])
     @match = Match.find(params[:id],:include=>[:host_team,:guest_team])
-    if !@match.is_after_match_and_bofore_match_close? #只有比赛结束后才可以填写比赛结果和队员比赛信息
+    if !@match.is_after_match_and_before_match_close? #只有比赛结束后才可以填写比赛结果和队员比赛信息
       fake_params_redirect      
       return
     end     
@@ -67,7 +67,7 @@ class MatchesController < ApplicationController
   def update 
     @team = Team.find(params[:match][:team_id])
     @match = Match.find(params[:id])
-    if !@match.is_after_match_and_bofore_match_close? #只有比赛结束后才可以填写比赛结果和队员比赛信息
+    if !@match.is_after_match_and_before_match_close? #只有比赛结束后才可以填写比赛结果和队员比赛信息
       fake_params_redirect      
       return
     end    
@@ -82,7 +82,7 @@ class MatchesController < ApplicationController
       if(params[:match][:guest_team_goal_by_host].nil? && params[:match][:host_team_goal_by_host].nil?)
         @match.situation_by_host = params[:match][:situation_by_host]
       else
-        @match.situation_by_host = @match.calculate_situation(params[:match][:host_team_goal_by_host],params[:match][:guest_team_goal_by_host] )
+        @match.situation_by_host = Match.calculate_situation(params[:match][:host_team_goal_by_host],params[:match][:guest_team_goal_by_host] )
       end
     else
       @match.host_team_goal_by_guest = params[:match][:host_team_goal_by_guest]      
@@ -90,7 +90,7 @@ class MatchesController < ApplicationController
       if(params[:match][:guest_team_goal_by_guest].nil? && params[:match][:host_team_goal_by_guest].nil?)
         @match.situation_by_guest = params[:match][:situation_by_guest]
       else
-        @match.situation_by_guest = @match.calculate_situation(params[:match][:host_team_goal_by_guest] ,params[:match][:guest_team_goal_by_guest])
+        @match.situation_by_guest = Match.calculate_situation(params[:match][:host_team_goal_by_guest] ,params[:match][:guest_team_goal_by_guest])
       end     
     end
     

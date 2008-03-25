@@ -47,14 +47,8 @@ module ActivityCalendar
   
   private
   def find_in_duration(start, endd)
-#    if @reflection.klass == Match
-#      find :all, 
-#        :conditions => ['start_time > ? and start_time < ?', start.ago(60*@target.full_match_length), endd], 
-#        :order=>'start_time'      
-#    else
-      find :all, 
-        :conditions => ['end_time > ? and start_time < ?', start, endd], 
-        :order=>'start_time'
-    end
-#  end
+    find :all, 
+      :conditions => ['end_time > ? and start_time < ?', start, endd], 
+      :order=>'start_time'
+  end
 end

@@ -1,16 +1,19 @@
 class Match < ActiveRecord::Base
-
+  include ModelHelper
+  
   MAX_DESCRIPTION_LENGTH = 3000
   
   TIME_LENGTH_TO_CLOSE_MATCH = 7
   
   SITUATIONS = (1..8).to_a  
-
+  
+  attr_accessible
+  
   has_many :match_joins,
             :dependent => :destroy
   
   validates_presence_of     :start_time, :location
-  validates_length_of       :description, :maximum =>MAX_DESCRIPTION_LENGTH
+  validates_length_of       :description, :maximum =>MAX_DESCRIPTION_LENGTH, :allow_nil => true
   validates_inclusion_of   :situation_by_host, :situation_by_guest, :in => Position::POSITIONS, :allow_nil=>true  
   validates_numericality_of :host_team_goal_by_host, :guest_team_goal_by_host, :allow_nil=>true   
   validates_numericality_of :host_team_goal_by_guest, :guest_team_goal_by_guest, :allow_nil=>true 
@@ -19,6 +22,8 @@ class Match < ActiveRecord::Base
   belongs_to :guest_team, :class_name=>"Team", :foreign_key=>"guest_team_id"
   
   def before_save
+    self.half_match_length = 0 if self.half_match_length.nil?
+    self.rest_length = 0 if self.rest_length.nil?    
     self.end_time = self.start_time.since(60 * self.full_match_length)
   end
   
@@ -27,15 +32,13 @@ class Match < ActiveRecord::Base
   end
   
   def before_validation
-    if !self.description.nil? && self.description.chars.length > MAX_DESCRIPTION_LENGTH      
-      self.description = (self.description.chars[0...MAX_DESCRIPTION_LENGTH]).to_s
-    end
+    attribute_slice(:description, MAX_DESCRIPTION_LENGTH)    
   end
 
-  def calculate_situation(host_team_goal,guest_team_goal)
+  def self.calculate_situation(host_team_goal,guest_team_goal)
     if(host_team_goal.nil? || guest_team_goal.nil?)
       return 1
-    elsif(!guest_team_goal.nil? && !guest_team_goal.nil?)
+    elsif(!host_team_goal.nil? && !guest_team_goal.nil?)
       return calculate_situation_from_goal(host_team_goal,guest_team_goal)
     end
   end  
@@ -58,28 +61,23 @@ class Match < ActiveRecord::Base
     match.save!
     match
   end
-  
-  def remove_attributes_protected_from_mass_assignment(attributes)
-    super(attributes)
-  end
 
   def is_before_match?
     return Time.now < self.start_time
   end
   
-  def is_after_match_and_bofore_match_close?
+  def is_after_match_and_before_match_close?
     return ((Time.now > self.end_time) && (TIME_LENGTH_TO_CLOSE_MATCH.days.ago < self.end_time))
   end
   
-  def is_bofore_match_close?
+  def is_before_match_close?
     return TIME_LENGTH_TO_CLOSE_MATCH.days.ago < self.end_time   
   end
 
   protected
     
-    def calculate_situation_from_goal(host_team_goal, guest_team_goal)
+    def self.calculate_situation_from_goal(host_team_goal, guest_team_goal)
       distinct_goals = (host_team_goal.to_i - guest_team_goal.to_i)
-      p "distinct_goals:"+distinct_goals.to_s
       if distinct_goals > 4
         return 2
       elsif distinct_goals > 2

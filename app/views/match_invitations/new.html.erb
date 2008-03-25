@@ -4,7 +4,7 @@
 
 <%= error_messages_for :match_invitation %>
 
-<% form_for :match_invitation, :url => match_invitations_path, :method=>"POST" do |f| %>
+<% form_for @match_invitation do |f| %>
   <%= f.hidden_field :guest_team_id,  :value=>@guest_team.id%>
 
   <p>

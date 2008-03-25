@@ -4,12 +4,12 @@ class CreateMatchJoins < ActiveRecord::Migration
       t.integer :match_id
       t.integer :user_id
       t.integer :team_id
-      t.integer :goal
-      t.integer :yellow_card
-      t.integer :red_card
+      t.integer :goal, :default=>0
+      t.integer :yellow_card, :default=>0
+      t.integer :red_card, :default=>0
       t.integer :position
       t.integer :status
-      t.text :comment
+      t.text :comment, :default=>''
 
       t.timestamps
     end

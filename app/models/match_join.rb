@@ -27,7 +27,7 @@ class MatchJoin < ActiveRecord::Base
       mj.user_id = user.id
       mj.status = UNDETERMINED    
       mj.save!
-    end    
+    end
   end
   
   def self.players(match_id,team_id)
@@ -59,7 +59,9 @@ class MatchJoin < ActiveRecord::Base
     when 2
       return [1,1]
     when 3
-      return [2,1]      
+      return [2,1]
+    else #非法情况
+      return [0,0]
     end
   end
   

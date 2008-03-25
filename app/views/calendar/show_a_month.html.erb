@@ -6,5 +6,7 @@
 <h1><%=h @title%></h1>
 <div class="seperateLine"></div>
 <%= render(:partial => 'shared/calendar', 
-    :locals => {:year => @date.year, :month => @date.month, :trainings => @calendar_trainings_hash})%>
+    :locals => {:year => @date.year, :month => @date.month,
+    :trainings => @calendar_trainings_hash,
+    :matches => @calendar_matches_hash})%>
 <div class="clearBoth"></div>

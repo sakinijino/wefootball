@@ -29,7 +29,6 @@ class TeamJoinsController < ApplicationController
     render :action=>"user_admin", :layout => "team_layout"
   end
   
-  # POST /team_joins.xml
   def create
     @tjs = TeamJoinRequest.find(params[:id]) # 根据一个加入球队的请求来创建
     if !@tjs.can_accept_by?(self.current_user)
@@ -53,7 +52,6 @@ class TeamJoinsController < ApplicationController
     redirect_with_back_uri_or_default team_view_path(@tjs.team_id)
   end
   
-  # PUT team_joins/1
   def update
     @tj = UserTeam.find(params[:id])
     if (!current_user.is_team_admin_of?(@tj.team_id))
@@ -74,7 +72,6 @@ class TeamJoinsController < ApplicationController
     end
   end
   
-  # DELETE team_joins/1
   def destroy
     @tj = UserTeam.find(params[:id])
     if (!@tj.can_destroy_by?(self.current_user))

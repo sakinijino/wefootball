@@ -6,6 +6,7 @@
 <div id="wide_left_content">
 <div class="seperateLine" style="margin-bottom:20px"></div>
 <%= render(:partial => 'shared/training_list', :object => @trainings, :locals => {:display_team => @team_display})%>
+<%= render(:partial => 'shared/match_list', :object => @matches, :locals => {:display_team => @team_display})%>
 </div>
 
 <div class="clearBoth"></div>

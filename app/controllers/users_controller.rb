@@ -3,11 +3,9 @@ class UsersController < ApplicationController
   before_filter :login_required, :only=>[:update, :edit]
   before_filter :param_id_should_be_current_user, :only=>[:update, :update_image, :edit]
   
-  # render new.rhtml
   def new
   end
   
-  # GET /users/search.xml?query
   def search
     @users = User.find_by_contents(params[:q]) 
   end
@@ -29,7 +27,6 @@ class UsersController < ApplicationController
     end
   end
   
-   # render edit.rhtml
   def edit
     @user = User.find(params[:id], :include=>[:positions])
     @positions = @user.positions_array
