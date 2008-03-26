@@ -21,6 +21,7 @@ class PostsController < ApplicationController
       else
         @posts = @training.posts.public
       end
+      @title = "#{@training.team.shortname} #{@training.start_time.strftime('%m.%d')}训练的讨论"
       render :layout => "training_layout"
     else
       fake_params_redirect
@@ -37,8 +38,10 @@ class PostsController < ApplicationController
     @team = @post.team
     @training = @post.training
     if @training
+      @related_posts = @training.posts.find(:all, :limit => 20) - [@post]
       render :layout => "training_layout" 
     elsif @team
+      @related_posts = @team.posts.find(:all, :limit => 20) - [@post]
       render :layout => "team_layout" 
     end
   end
@@ -46,7 +49,7 @@ class PostsController < ApplicationController
   def new
     @post = Post.new
     @title = "在#{@team.shortname}的讨论区中发言" if @team
-    @title = "讨论#{@team.shortname}在#{@training.start_time.strftime('%m月%d日')}的训练" if @training
+    @title = "讨论#{@team.shortname} #{@training.start_time.strftime('%m.%d')}的训练" if @training
     if @training
       render :layout => "training_layout" 
     elsif @team

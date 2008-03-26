@@ -20,6 +20,13 @@ class UserViewsController < ApplicationController
     @are_friends = logged_in? && @user.is_my_friend?(current_user)    
     @can_send_invitation = (logged_in? && self.current_user.id != @user.id && @firend_invitation==nil && @firend_request==nil && !@are_friends)
     
+    @user_invitation_count = 0
+    @team_invitation_count = 0
+    if logged_in? && @user.id == self.current_user.id
+      @user_invitation_count = FriendInvitation.count(:conditions => ["host_id = ?", current_user])
+      @team_invitation_count = TeamJoinRequest.count(:conditions => ["user_id = ? and is_invitation = ?", current_user, true])
+    end
+    
     @title = "#{@user.nickname}的主页"
   end
 end

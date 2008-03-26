@@ -13,17 +13,27 @@
 <div id="left_content">
 <div class="seperateLine"></div>
 
-<%if @firend_request != nil%>
-  <span>已邀请<%=h @user.nickname%>成为朋友, 等待确认</span>
+<%if @firend_request != nil || @firend_invitation != nil || @user_invitation_count > 0 ||  @team_invitation_count > 0%>
+<div class="notification">
+  <%if @firend_request != nil%>
+    <span>等待<%=h @user.nickname%>确认朋友邀请</span>
+  <%end%>
+
+  <%if @firend_invitation != nil%>
+    <span><%=h @user.nickname%>希望和你成为朋友</span>
+    <%= link_to '接受', friend_relations_path(:request_id=>@firend_invitation.id, :back_uri => request.request_uri), :method => :post %>
+    <%= link_to '拒绝', friend_invitation_path(@firend_invitation, :back_uri => request.request_uri), :method => :delete %>
+  <%end%>
+  
+  <%if @user_invitation_count > 0 ||  @team_invitation_count > 0%>
+    你有<%= link_to "#{@user_invitation_count}个朋友邀请", friend_invitations_path if @user_invitation_count > 0 %>
+    <%= ', ' if @user_invitation_count > 0 &&  @team_invitation_count > 0 %>
+    <%= link_to "#{@team_invitation_count}个队伍邀请", team_join_invitations_path if @team_invitation_count > 0%>
+  <%end%>
+</div>
 <%end%>
 
-<%if @firend_invitation != nil%>
-  <span><%=h @user.nickname%>希望和你成为朋友</span>
-  <%= link_to '接受', friend_relations_path(:request_id=>@firend_invitation.id, :back_uri => request.request_uri), :method => :post %>
-  <%= link_to '拒绝', friend_invitation_path(@firend_invitation), :method => :delete %>
-<%end%>
-
-<div class="tab_container" style="margin:10px 0 10px 0">
+<div class="tab_container">
 
   <%if logged_in? && @user.id != current_user.id %>
     <span class="shortcut">
@@ -31,10 +41,10 @@
       new_message_path(:to=>@user.id))%>
     <%= link_to(image_tag("breakUpFriendship.gif", :title=>"不和他玩"), 
       friend_relation_path(0, :user_id=>@user.id),:method=>"delete") if @are_friends %>
-    <%= link_to(image_tag("inviteFriend.gif", :title=>"申请成为好友"), 
-      new_friend_invitation_path, :onclick=>'j("#send_friend_invitation_div").dialog("open");return false') if @can_send_invitation %>
+    <%= link_to(image_tag("inviteFriend.gif", :title=>"申请成为好友"), '#',
+      :onclick=>'openDialog(event, "#send_friend_invitation_div");return false') if @can_send_invitation %>
     <%= link_to(image_tag("inviteIntoTeam.gif", :title=>"邀请加入球队"),
-      new_team_join_invitation_path(:user_id => @user.id)) %>
+      new_user_team_join_invitation_path(@user)) %>
     </span>
   <%end%>
   
@@ -84,10 +94,10 @@
     <%if @are_friends%>
       <%= link_to("不和他玩", friend_relation_path(0, :user_id=>@user.id),:method=>"delete")  %>
     <%elsif @can_send_invitation %>
-      <%= link_to("申请成为朋友", new_friend_invitation_path, 
-        :onclick=>'j("#send_friend_invitation_div").dialog("open");return false') %>
+      <%= link_to("申请成为朋友", '#',
+        :onclick=>'openDialog(event, "#send_friend_invitation_div");return false') %>
     <%end%>
-    <%= link_to("邀请加入球队", new_team_join_invitation_path(:user_id => @user.id)) %>
+    <%= link_to("邀请加入球队", new_user_team_join_invitation_path(@user)) %>
     <%end%>
   </div>
 </div>
@@ -97,9 +107,10 @@
 <div id="send_friend_invitation_div" class="jdialog">
   <% form_for :friend_invitation, :url => friend_invitations_path, :method=>"POST" do |f| %>
       <%= f.hidden_field :host_id,  :value=>@user.id%>
-      <span>留言</span><br />
-      <%= f.text_area :message, :cols => 30, :rows => 2%>
-      <%= f.submit "发送邀请" %>
+      <span>给<%= @user.nickname%>留个言吧...</span><br />
+      <%= f.text_area :message, :cols => 30, :rows => 2%><br />
+      <%= f.submit "朋友邀请" %>
+      <%= f.submit "撤销", :onclick=>'j("#send_friend_invitation_div").dialog("close");return false;' %>
   <% end %>  
 </div>
 <%end%>
@@ -122,7 +133,7 @@
   <div class="seperateLine clearBoth"></div>
   <div style="margin-bottom:20px">
     <h2><%=h @user.nickname%>最近一次训练</h2>
-    <div class="activity" style="border:none; padding: 0px 20px 10px 20px;">
+    <div class="activity" style="border:none; padding-top: 0px; padding-bottom: 0px;">
       <%= render :partial=>"shared/training_item", :locals => {:training => @trainings[0]}%>
       <div class="clearBoth"></div>
     </div>

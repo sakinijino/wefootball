@@ -33,6 +33,7 @@ ActionController::Routing::Routes.draw do |map|
   # Install the default routes as the lowest priority.
   map.resources :users, :collection => { :search => :get }, :member => {:update_image => :put} do |users|
     users.resources :friend_relations
+    users.resources :team_join_invitations
     users.resources :team_joins
     users.resources :trainings
   end 

@@ -1,7 +1,11 @@
 <h1><%=h @title%></h1>
 <div id="narrow_right_content">
 <div class="seperateLine"></div>
-<h2><%= link_to_if(params[:as]=='sender', '去收件箱', messages_path) { link_to '去发件箱', messages_path(:as => 'sender') } %></h2>
+<ul class="sidebar_menu">
+  <li>
+  > <%= link_to_if(params[:as]=='sender', '去收件箱', messages_path) { link_to '去发件箱', messages_path(:as => 'sender') } %>
+  </li>
+</ul>
 </div>
 
 <div id="wide_left_content">

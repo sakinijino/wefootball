@@ -13,9 +13,16 @@ class RepliesController < ApplicationController
       redirect_to(@post)
     else
       @post.replies.reload
-      @team = @post.team
       @can_reply = @post.can_be_replied_by?(current_user)
-      render :template => "posts/show", :layout=>'team_layout'
+      @team = @post.team
+      @training = @post.training
+      if @training
+        @related_posts = @training.posts.find(:all, :limit => 20) - [@post]
+        render :template => "posts/show", :layout => "training_layout" 
+      elsif @team
+        @related_posts = @team.posts.find(:all, :limit => 20) - [@post]
+        render :template => "posts/show", :layout => "team_layout" 
+      end
     end
   end
 

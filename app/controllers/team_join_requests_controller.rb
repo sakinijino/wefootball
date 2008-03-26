@@ -6,6 +6,7 @@ class TeamJoinRequestsController < ApplicationController
       @team = Team.find(params[:team_id])
       if (current_user.is_team_admin_of?(params[:team_id]))
         @requests = TeamJoinRequest.find_all_by_team_id_and_is_invitation(params[:team_id], false, :include=>[:user])
+        @title = "申请加入#{@team.shortname}的用户"
         render :action=>"index_user", :layout => "team_layout"
       else
         fake_params_redirect
@@ -13,6 +14,7 @@ class TeamJoinRequestsController < ApplicationController
     else # 显示所有用户请求加入队伍
       @requests = TeamJoinRequest.find_all_by_user_id_and_is_invitation(self.current_user, false, :include=>[:team])
       @user = current_user
+      @title = "我申请加入的球队"
       render :action=>"index_team", :layout => "user_layout"
     end
   end

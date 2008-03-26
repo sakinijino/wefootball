@@ -13,23 +13,32 @@
 <div id="left_content">
 <div class="seperateLine"></div>
 
-<%if @team_join_request != nil%>
-  <span>已申请加入<%=h @team.shortname%>, 等待确认</span>
-<%end%>
+<%if @team_join_request != nil || @team_join_invitation != nil || @team_join_request_count > 0 %>
+<div class="notification">
+  <%if @team_join_request != nil%>
+    <span>等待确认<%=h @team.shortname%>加入申请</span>
+  <%end%>
 
-<%if @team_join_invitation != nil%>
-  <span><%=h @team.shortname%>邀请你加入</span>
-  <%= link_to '接受', team_joins_path(:id=>@team_join_invitation.id, :back_uri => request.request_uri), :method => :post %>
+  <%if @team_join_invitation != nil%>
+    <span><%=h @team.shortname%>邀请你加入</span>
+    <%= link_to '接受', team_joins_path(:id=>@team_join_invitation.id, :back_uri => request.request_uri), :method => :post %>
     <%= link_to '拒绝', team_join_invitation_path(@team_join_invitation.id, :back_uri => request.request_uri), :method => :delete %>
+  <%end%>
+  
+  <%if @team_join_request_count > 0%>
+    队伍有<%= link_to "#{@team_join_request_count}个加入申请", team_team_join_requests_path(@team) if @team_join_request_count > 0 %>
+  <%end%>
+</div>
 <%end%>
 
-<div class="tab_container" style="margin:10px 0 10px 0">
+<div class="tab_container">
   <%if logged_in? %>
     <span class="shortcut">
     <%if @can_quit%>
       <%= link_to(image_tag("quitFromTeam.gif", :title=>"退出球队"), team_join_path(@user_team.id),:method=>:delete)%>
     <%elsif @can_request%>
-      <%= link_to(image_tag("inviteIntoTeam.gif", :title=>"申请加入球队"), '#', :onclick=>'javascript:j("#send_team_join_request_div").dialog("open");return false;')%>
+      <%= link_to(image_tag("inviteIntoTeam.gif", :title=>"申请加入球队"), '#', 
+            :onclick=>'openDialog(event, "#send_team_join_request_div");return false;')%>
     <%end%>
     <%if current_user.is_team_admin_of?(@team)%>
       <%= link_to(image_tag("inviteIntoTeam.gif", :title=>"邀请朋友加入"), new_team_team_join_invitation_path(@team))%>
@@ -57,7 +66,8 @@
       <%if @can_quit%>
         <%= link_to("退出球队", team_join_path(@user_team.id),:method=>:delete)%>
       <%elsif @can_request%>
-        <%= link_to("申请加入球队", '#', :onclick=>'javascript:j("#send_team_join_request_div").dialog("open");return false;')%>
+        <%= link_to("申请加入球队", '#', 
+            :onclick=>'openDialog(event, "#send_team_join_request_div");;return false;')%>
       <%end%>
       <%if current_user.is_team_admin_of?(@team)%>
         <%= link_to("邀请朋友加入", new_team_team_join_invitation_path(@team))%>
@@ -73,9 +83,10 @@
 <div id="send_team_join_request_div" class="jdialog">
   <% form_for :team_join_request, :url => team_join_requests_path, :method=>"POST" do |f| %>
     <%= f.hidden_field :team_id,  :value=>@team.id%> 
-    <span>留言</span><br />
-    <%= f.text_area :message %>
-    <%= f.submit "申请" %>
+    <span>给球队管理员留个言吧...</span><br />
+    <%= f.text_area :message, :cols => 30, :rows => 2%><br />
+    <%= f.submit "入队申请" %>
+    <%= f.submit "撤销", :onclick=>'j("#send_team_join_request_div").dialog("close");return false;' %>
   <% end %>  
 </div>
 <%end%>
@@ -84,7 +95,7 @@
 <div class="seperateLine clearBoth"></div>
 <div style="margin-bottom:20px">
 <h2><%=h @team.shortname%>最近一次训练</h2>
-<div class="activity" style="border:none; padding: 0px;">
+<div class="activity narrow_activity" style="border:none; padding: 0px">
   <%= render :partial=>"shared/training_item", :locals => {:training => @trainings[0], :display_team => false}%>
   <div class="clearBoth"></div>
 </div>
@@ -106,9 +117,9 @@
 </div>
 
 <div class="seperateLine clearBoth"></div>
-<div style="margin-bottom:20px">   
+<div style="margin-bottom:20px;">   
   <h2><%=h @team.shortname%>下的讨论</h2>
-  <table class="list" style="width:90%">
+  <table class="list" style="width:100%">
     <tr>
       <th style="width:20%">作者</th>
       <th style="width:80%">话题</th>
@@ -121,11 +132,11 @@
     </tr>
   <% end %>
   </table>
-  <div style="margin: 10px 0  0 10px;">
+  <div style="margin: 10px 0  0 10px;float:right;">
     <%if logged_in? && current_user.is_team_member_of?(@team)%>
-      <%= link_to '发言', new_team_post_path(@team) %>
+      > <%= link_to '发言', new_team_post_path(@team) %>
     <%end%>
-    <%= link_to '更多', team_posts_path(@team) %>
+    > <%= link_to '更多', team_posts_path(@team) %>
   </div>
 </div>
 </div>

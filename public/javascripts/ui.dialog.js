@@ -119,11 +119,15 @@
 		// TODO: determine if this is necessary for modal dialogs
 		options.bgiframe && $.fn.bgiframe && uiDialog.bgiframe();
 		
-		this.open = function() {
+		this.open = function(pos) {
 			options.modal && overlay.show(self, options.overlay);
 			uiDialog.appendTo('body');
 			var wnd = $(window), doc = $(document), top = doc.scrollTop(), left = doc.scrollLeft();
-			if (options.position.constructor == Array) {
+                        if (pos) {
+                            top += pos.top - (uiDialog.height() / 2);
+                            left += pos.left  - (uiDialog.width() / 2);
+                        }
+			else if (options.position.constructor == Array) {
 				// [x, y]
 				top += options.position[1];
 				left += options.position[0];
@@ -156,8 +160,9 @@
 				}
 			}
 			top = top < doc.scrollTop() ? doc.scrollTop() : top;
+                        left = left < doc.scrollLeft() ? doc.scrollLeft() : left;
 			uiDialog.css({top: top, left: left});
-			uiDialog.show();
+			uiDialog.fadeIn();
 			self.activate();
 
 			// CALLBACK: open

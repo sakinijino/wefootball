@@ -15,7 +15,7 @@ div.calendar div.monthAndYearDiv {
     margin-left:5px; 
     margin-bottom:5px; 
     border:solid 1px #3D681A; 
-    background-color:#FCFDFE; 
+    background-color:#F3F4F5; 
     float:left;
 }
 
@@ -45,6 +45,7 @@ div.calendar div.monthAndYearDiv {
     padding-left:6px; 
     font-family:Verdana; 
     font-size:17px;
+    background-color:#FFFFFF; 
 }
 
 .monthAndYearDiv a {

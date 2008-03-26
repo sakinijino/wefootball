@@ -5,6 +5,7 @@ class FriendInvitationsController < ApplicationController
   def index
     #only return the invitations of current user
     @user = current_user
+    @title = "希望和我成为朋友的用户"
     @friend_invitations = FriendInvitation.find_all_by_host_id(current_user.id,:include=>[:applier])
   end
 
@@ -37,6 +38,6 @@ class FriendInvitationsController < ApplicationController
     end
     @friend_invitation.destroy
     @user = current_user
-    redirect_to friend_invitations_path
+    redirect_with_back_uri_or_default friend_invitations_path
   end
 end

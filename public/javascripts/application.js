@@ -8,6 +8,12 @@ function checkAllInputs(value){
     j("input[type='checkbox']").attr('checked', value)
 }
 
+function openDialog(event, id){
+    var item = j(id)
+    T = event
+    item.dialog("open", {top:event.clientY, left:event.clientX});
+}
+
 j(function(){
 	j("li.level_1_menu_item").each(function(i, item){
 		item = j(item)
@@ -19,7 +25,7 @@ j(function(){
 	
 	j("div.jdialog").each(function(i, item){
 		item = j(item)
-		item.dialog({draggable:false, resizable:false, width:350});
+		item.dialog({draggable:false, resizable:false, width:"auto", height:"auto"});
 		item.dialog('close');
 	})
          

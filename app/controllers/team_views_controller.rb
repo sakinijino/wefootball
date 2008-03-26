@@ -19,7 +19,13 @@ class TeamViewsController < ApplicationController
     @team_join_request = logged_in? ? TeamJoinRequest.find_by_user_id_and_team_id_and_is_invitation(current_user, @team, false) : nil
     @team_join_invitation = logged_in? ? TeamJoinRequest.find_by_user_id_and_team_id_and_is_invitation(current_user, @team, true) : nil
     @can_request = logged_in? && @user_team == nil && @team_join_request == nil && @team_join_invitation==nil
-    @can_quit = logged_in?  && @user_team != nil && @user_team.user_id == self.current_user.id && @user_team.can_destroy_by?(current_user)
+    @can_quit = logged_in?  && @user_team != nil && # 可以退队
+      @user_team.can_destroy_by?(current_user) # 处理唯一管理员的情况，唯一管理员不能退队
+    
+    @team_join_request_count = 0
+    if logged_in? && current_user.is_team_admin_of?(@team)
+      @team_join_request_count = TeamJoinRequest.count(:conditions => ["team_id = ? and is_invitation = ?", @team, false])
+    end
     
     @title = "#{@team.shortname}的首页"
   end

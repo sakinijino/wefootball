@@ -7,6 +7,8 @@ class UserViewsControllerTest < ActionController::TestCase
     assert_select "#send_friend_invitation_div", 0
     assert_select "img[src*=breakUpFriendship]", 0
     assert_select "img[src*=inviteFriend]", 0
+    assert_equal 0, assigns(:user_invitation_count)
+    assert_equal 0, assigns(:team_invitation_count)
   end
   
   def test_show
@@ -15,6 +17,8 @@ class UserViewsControllerTest < ActionController::TestCase
     assert_select "#send_friend_invitation_div", 0
     assert_select "img[src*=breakUpFriendship]", 0
     assert_select "img[src*=inviteFriend]", 0
+    assert_equal 2, assigns(:user_invitation_count)
+    assert_equal 1, assigns(:team_invitation_count)
     get :show, :id => users(:mike2).id # 有邀请的
     assert_select "#send_friend_invitation_div", 0
     assert_select "img[src*=breakUpFriendship]", 0

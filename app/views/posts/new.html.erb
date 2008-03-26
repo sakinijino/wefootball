@@ -1,4 +1,5 @@
 <h1><%=h @title%></h1>
+<div id="wide_left_content">
 <div class="seperateLine"></div>
 <%= error_messages_for :post%>
 
@@ -8,3 +9,19 @@
     <%= f.submit "发言" %>
   </p>
 <% end %>
+</div>
+
+<div id="narrow_right_content">
+<div class="seperateLine"></div>
+
+<ul class="sidebar_menu">
+  <li>
+    > <% if @training %>
+      <%= link_to '返回讨论区', training_posts_path(@training) %>
+    <% elsif @team %>
+      <%= link_to '返回讨论区', team_posts_path(@team) %>
+    <%end%>
+  </li>
+</ul>
+</div>
+<div class="clearBoth"></div>

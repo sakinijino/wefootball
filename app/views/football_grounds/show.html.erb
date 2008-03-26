@@ -10,7 +10,7 @@
   <div class="tab_container" style="margin:10px 0 10px 0">
     <span class="tab_link" style="margin-left: 10px;">球场信息</span>
 
-    <div class="tab" style="margin-right:40px">
+    <div class="tab">
       <%= "<span>球场名称: #{h @football_ground.name}</span><br/>" unless @football_ground.name.blank?%>
       <%= "<span>所在地: #{@football_ground.city_text}</span><br/>" unless @football_ground.city_text.nil?%>
       <%= "<span>球场类型: #{ground_type_text(@football_ground.ground_type)}</span><br/>" unless @football_ground.ground_type.nil?%>

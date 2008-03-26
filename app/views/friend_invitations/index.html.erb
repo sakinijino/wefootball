@@ -1,18 +1,46 @@
-<div>
-  <h1>希望和我成为朋友的用户</h1>
+<h1><%=h @title%></h1>
+<div id="wide_left_content">
+<div class="seperateLine"></div>
+
+<table class="list">
+  <tr>
+    <th style="width:70px">&nbsp;</th>
+    <th style="width:70px">申请时间</th>
+    <th style="width:300px">留言</th>
+    <th style="width:100px">&nbsp;</th>
+  </tr>
+  <% for friend_inv in @friend_invitations %>
+    <tr>
+      <td><%= small_user_image_link friend_inv.applier%></td>
+      <td><%=friend_inv.apply_date.to_s(:db) %></td>
+      <td>
+        <%= link_to h(friend_inv.applier.nickname), user_view_path(friend_inv.applier) %>希望和你成为朋友
+        <br/><br/>
+        <%if !friend_inv.message.blank?%>
+          <%= friend_inv.applier.gender == 2 ? '她' : '他'%>的留言:
+          <%= h(friend_inv.message) %>
+          <br/><br/>
+        <%end%>
+      </td>
+      <td>
+        <%= button_to '接收', friend_relations_path(:request_id=>friend_inv.id), :method => :post %>
+        <%= button_to '拒绝', friend_invitation_path(friend_inv), :method => :delete %>
+      </td>
+    </tr>
+  <% end %>
+</table>
+  
 </div>
 
-<div>
-<% for friend_inv in @friend_invitations %>
-  <div>
-    <%= render(:partial => 'shared/user_icon', :object => friend_inv.applier)%>
-    <span>申请时间: <%=friend_inv.apply_date.to_s(:db) %></span><br/>
-    <%if !friend_inv.message.nil? && !friend_inv.message.blank?%>
-      <span>留言: </span>
-      <%=simple_format h(friend_inv.message) %>
-    <%end%>
-    <%= link_to '接受', friend_relations_path(:request_id=>friend_inv.id), :method => :post %>
-    <%= link_to '拒绝', friend_invitation_path(friend_inv), :method => :delete %>
-  </div>
-<% end %>
+<div id="narrow_right_content">
+<div class="seperateLine"></div>
+<ul class="sidebar_menu">
+  <li>
+  > <%= link_to "邀请我加入的球队", team_join_invitations_path %>
+  </li>
+  <li>
+  > <%= link_to("我申请加入的球队", team_join_requests_path) %>
+  </li>
+</ul>
 </div>
+<div class="clearBoth"></div>

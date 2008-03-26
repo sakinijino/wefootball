@@ -34,18 +34,23 @@ div.activity div.activity_date div.week {
     color:#333333;
 }
 
-div.activity div.activity_content {
+div.activity div.activity_content{
     padding-left:5%;
     padding-right:5%;
-    padding-top:20px;
+    padding-top:5px;
     color:#222222;
     font-family:Arial;
     font-size:13px;
     float:left;
+    width: 320px;
+}
+
+div.narrow_activity div.activity_content{
+    width: 180px;
 }
 
 div.activity div.activity_icon {
     width:80px;
     text-align:center;
-    float:right;
+    float:left;
 }
