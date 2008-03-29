@@ -13,7 +13,7 @@ class MatchInvitationTest < ActiveSupport::TestCase
   def test_accessible_attr #测试attr_accessible，以description和new_description为例
     m = match_invitations(:inv1)
     assert_equal m.description,nil
-    assert_equal m.new_description,'test'   
+    assert_equal m.new_description,nil
     m.update_attributes(:description=>"test2",:new_description=>"test2")
     assert_equal m.description,nil
     assert_equal m.new_description,"test2"
