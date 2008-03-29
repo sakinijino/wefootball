@@ -3,7 +3,8 @@
   <% is_admin = (logged_in? && current_user.is_team_admin_of?(team))%>
   <%= render(:partial=>"utils/menu_item", :locals => {:name => '成员', 
       :links=>[
-        link_to("#{team.shortname}的成员", team_team_joins_path(team))
+        link_to("#{team.shortname}的成员", team_team_joins_path(team)),
+        link_to("#{team.shortname}的成员管理", admin_management_team_joins_path(:team_id => team))
       ]}) %>
   <%= render(:partial=>"utils/menu_item", :locals => {:name => '训练', 
       :links=>[

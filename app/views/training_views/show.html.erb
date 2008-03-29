@@ -23,12 +23,16 @@
     <br/><br/>
     <%if logged_in? %>
       <%=link_to_if(@training.can_be_joined_by?(current_user), '我去', training_training_joins_path(@training), :method=>'post'){} %>
-      <%=link_to_if(@training.has_member?(current_user), '我不去', training_training_join_path(@training, 0), :method=>'delete'){} %>
+      <%=link_to_if(@training.can_be_quited_by?(current_user), '我不去', training_training_join_path(@training, 0), :method=>'delete'){} %>
     <%end%>
-    <%if logged_in? && current_user.is_team_admin_of?(@training.team)%>
+    <%if logged_in?%> 
       <div style="float:right">
-        > <%=link_to '修改', edit_training_path(@training)%>&nbsp;&nbsp;|&nbsp;&nbsp;
-        > <%=link_to '删除', training_path(@training), :method=>'delete'%>
+        <%if @training.can_be_modified_by?(current_user)%>
+          > <%=link_to '修改', edit_training_path(@training) %>&nbsp;&nbsp;|&nbsp;&nbsp;
+        <%end%>
+        <% if @training.can_be_destroyed_by?(current_user) %>
+          > <%=link_to '删除', training_path(@training), :method=>'delete'%>
+        <%end%>
       </div>
     <%end%>
   </div>
@@ -50,7 +54,7 @@
 <div class="seperateLine clearBoth"></div>
   <div style="margin-bottom:20px">
     <h2>关于本次训练的讨论</h2>
-    <%= render(:partial => 'shared/post_list', :object => @posts)%>
+    <%= render(:partial => 'posts/post_list', :object => @posts)%>
     <div style="margin: 5px 10px  0 10px;float:right">
       <%if logged_in? && current_user.is_team_member_of?(@training.team)%>
         > <%= link_to '发言', new_training_post_path(@training) %>
@@ -62,11 +66,17 @@
 </div>
 
 <div id="narrow_right_content">
-<div class="seperateLine clearBoth"></div>
-<div style="margin-bottom:20px">
-<h2>要参加这次训练的人</h2>
-<%= render(:partial => 'shared/user_icon', :collection => @training.users)%>
-</div>
+  <div class="seperateLine clearBoth"></div>
+  <div style="margin-bottom:20px">
+    <h2>参加这次训练的人</h2>
+    <%= render(:partial => 'shared/user_icon', :collection => @training.users.joined)%>
+  </div>
+
+  <div class="seperateLine clearBoth"></div>
+  <div style="margin-bottom:20px">
+    <h2>尚未决定是否参加的人</h2>
+    <%= render(:partial => 'shared/user_icon', :collection => @training.users.undetermined)%>
+  </div>
 </div>
 
 <div class="clearBoth"></div>

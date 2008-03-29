@@ -2,9 +2,9 @@
 <div id="wide_left_content">
 <div class="seperateLine"></div>
 <div style="margin-bottom:30px">
-<%= render(:partial => 'shared/post', :object => @post)%>
+<%= render(:partial => 'posts/post', :object => @post)%>
 
-<%= render(:partial => 'shared/post', :collection => @post.replies, :locals => {:parent => @post})%>
+<%= render(:partial => 'posts/post', :collection => @post.replies, :locals => {:parent => @post})%>
 </div>
 
 <%if @can_reply%>

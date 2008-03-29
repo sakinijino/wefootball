@@ -58,7 +58,13 @@ ActionController::Routing::Routes.draw do |map|
   
   map.resources :team_join_requests
   map.resources :team_join_invitations
-  map.resources :team_joins, :collection => { :admin => :get }
+  map.resources :team_joins, 
+    :collection => { 
+      :admin_management => :get, 
+      :player_management => :get, 
+      :formation_management => :get,
+      :update_formation => :put
+    }
   
   map.resources :sessions
   map.resources :friend_relations

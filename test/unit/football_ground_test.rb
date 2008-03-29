@@ -11,7 +11,7 @@ class FootballGroundTest < ActiveSupport::TestCase
   end
   
   def test_before_destroy
-    t = Training.create!(:football_ground_id => football_grounds(:yiti))
+    t = Training.create!(:team_id=>teams(:inter), :football_ground_id => football_grounds(:yiti))
     assert_equal football_grounds(:yiti).name, t.location
     football_grounds(:yiti).name = "Modify"
     football_grounds(:yiti).save!
@@ -22,8 +22,8 @@ class FootballGroundTest < ActiveSupport::TestCase
   end
   
   def test_merge
-    t1 = Training.create!(:football_ground_id => football_grounds(:yiti))
-    t2 = Training.create!(:football_ground_id => football_grounds(:yiti))
+    t1 = Training.create!(:team_id=>teams(:inter), :football_ground_id => football_grounds(:yiti))
+    t2 = Training.create!(:team_id=>teams(:inter), :football_ground_id => football_grounds(:yiti))
     assert_difference("FootballGround.count", -1) do
     assert_difference("Training.count :conditions => ['football_ground_id = ?', football_grounds(:yiti).id]", -2) do
     assert_difference("Training.count :conditions => ['football_ground_id = ?', football_grounds(:wusi).id]", 2) do

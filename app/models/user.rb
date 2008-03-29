@@ -74,7 +74,7 @@ class User < ActiveRecord::Base
   validates_inclusion_of    :height, :in => 0..250, :if=>:is_playable,
     :message => '... Are you kidding me?', :allow_nil=>true
   validates_inclusion_of    :fitfoot, :in => FITFOOT, :if=>:is_playable
-  validates_inclusion_of   :premier_position, :in => Position::POSITIONS, :if=>:is_playable
+  validates_inclusion_of   :premier_position, :in => Position::POSITIONS, :if=>:is_playable, :message => '未知的位置'
   
   def before_validation
     self.nickname = self.login.split('@')[0] if self.login!=nil && (self.nickname==nil || self.nickname == "")

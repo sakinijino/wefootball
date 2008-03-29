@@ -6,7 +6,14 @@ class Training < ActiveRecord::Base
   
   has_many :training_joins,
             :dependent => :destroy
-  has_many :users, :through=>:training_joins
+  has_many :users, :through=>:training_joins do
+    def joined
+      find :all, :conditions => ['status = ?', TrainingJoin::JOIN]
+    end
+    def undetermined
+      find :all, :conditions => ['status = ?', TrainingJoin::UNDETERMINED]
+    end
+  end
   
   has_many :posts, :dependent => :destroy, :order => "updated_at desc" do
     def public
@@ -35,8 +42,36 @@ class Training < ActiveRecord::Base
     self.end_time = self.start_time.since(3600) if self.end_time==nil
   end
   
+  def after_create
+    TrainingJoin.create_joins(self)
+  end
+  
+  def started?
+    Time.now > self.start_time
+  end
+  
+  def finished?
+    Time.now > self.end_time
+  end
+  
+  def finished_before_3_days?
+    3.days.ago > self.end_time
+  end
+  
+  def can_be_modified_by?(user)
+    !started? && user.is_team_admin_of?(self.team_id)
+  end
+  
+  def can_be_destroyed_by?(user)
+    !started? && user.is_team_admin_of?(self.team_id)
+  end
+  
   def can_be_joined_by?(user)
-    user.is_team_member_of?(self.team) && !has_member?(user)
+    !finished_before_3_days? && user.is_team_member_of?(self.team_id) && !has_joined_member?(user)
+  end
+  
+  def can_be_quited_by?(user)
+    !started? && has_member?(user)
   end
   
   def has_member?(user)
@@ -47,6 +82,15 @@ class Training < ActiveRecord::Base
       user
     end
     (TrainingJoin.count :conditions => ['user_id = ? and training_id = ?', user_id, self.id]) > 0
-    #self.users.include?(user)
+  end
+  
+  def has_joined_member?(user)
+    user_id = case user
+    when User
+      user.id
+    else
+      user
+    end
+    (TrainingJoin.count :conditions => ['user_id = ? and training_id = ? and status = ?', user_id, self.id, TrainingJoin::JOIN]) > 0
   end
 end

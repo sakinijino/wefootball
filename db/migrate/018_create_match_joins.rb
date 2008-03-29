@@ -9,7 +9,7 @@ class CreateMatchJoins < ActiveRecord::Migration
       t.integer :red_card, :default=>0
       t.integer :position
       t.integer :status
-      t.text :comment, :default=>''
+      t.text :comment
 
       t.timestamps
     end

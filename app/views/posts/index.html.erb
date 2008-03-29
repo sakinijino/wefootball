@@ -2,23 +2,22 @@
 
 <div id="wide_left_content">
 <div class="seperateLine"></div>
-<%=render :partial=>'shared/post_list', :object=>@posts%>
+<%=render :partial=>'post_list', :object=>@posts%>
 </div>
 
 <div id="narrow_right_content">
-<div class="seperateLine"></div>
-
-<ul class="sidebar_menu">
-  <%if logged_in? && current_user.is_team_member_of?(@team)%>
-    <li>
-    >
-    <% if @training %>
-      <%= link_to '发言', new_training_post_path(@training) %>
-    <% elsif @team %>
-      <%= link_to '发言', new_team_post_path(@team) %>
+  <div class="seperateLine"></div>
+  <ul class="sidebar_menu">
+    <%if logged_in? && current_user.is_team_member_of?(@team)%>
+      <li>
+      >
+      <% if @training %>
+        <%= link_to '发言', new_training_post_path(@training) %>
+      <% elsif @team %>
+        <%= link_to '发言', new_team_post_path(@team) %>
+      <%end%>
+      </li>
     <%end%>
-    </li>
-  <%end%>
-</ul>
+  </ul>
 </div>
 <div class="clearBoth"></div>

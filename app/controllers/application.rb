@@ -10,6 +10,9 @@ class ApplicationController < ActionController::Base
   # in iteration 5.
   # protect_from_forgery
   # :secret => 'dd92c128b5358a710545b5e755694d57' 
+  class FakeParametersError < StandardError
+  end
+  
   def fake_params_redirect
     redirect_to '/'
   end

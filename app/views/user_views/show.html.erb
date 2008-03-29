@@ -42,7 +42,7 @@
     <%= link_to(image_tag("breakUpFriendship.gif", :title=>"不和他玩"), 
       friend_relation_path(0, :user_id=>@user.id),:method=>"delete") if @are_friends %>
     <%= link_to(image_tag("inviteFriend.gif", :title=>"申请成为好友"), '#',
-      :onclick=>'openDialog(event, "#send_friend_invitation_div");return false') if @can_send_invitation %>
+      :onclick=>'wefootball.openDialog(event, "#send_friend_invitation_div");return false') if @can_send_invitation %>
     <%= link_to(image_tag("inviteIntoTeam.gif", :title=>"邀请加入球队"),
       new_user_team_join_invitation_path(@user)) %>
     </span>
@@ -95,7 +95,7 @@
       <%= link_to("不和他玩", friend_relation_path(0, :user_id=>@user.id),:method=>"delete")  %>
     <%elsif @can_send_invitation %>
       <%= link_to("申请成为朋友", '#',
-        :onclick=>'openDialog(event, "#send_friend_invitation_div");return false') %>
+        :onclick=>'wefootball.openDialog(event, "#send_friend_invitation_div");return false') %>
     <%end%>
     <%= link_to("邀请加入球队", new_user_team_join_invitation_path(@user)) %>
     <%end%>

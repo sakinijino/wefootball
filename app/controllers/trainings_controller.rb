@@ -20,7 +20,7 @@ class TrainingsController < ApplicationController
   def new
     @team = Team.find(params[:team_id])
     fake_params_redirect if (!current_user.is_team_admin_of?(@team))
-    @training = Training.new(:start_time => Time.now, :end_time => Time.now.since(3600))
+    @training = Training.new(:start_time => Time.now.tomorrow, :end_time => Time.now.tomorrow.since(3600))
     render :layout => "team_layout"
   end
 
@@ -43,14 +43,14 @@ class TrainingsController < ApplicationController
   def edit
     @training = Training.find(params[:id])
     @team = @training.team
-    fake_params_redirect if (!current_user.is_team_admin_of?(@training.team))
+    fake_params_redirect if (!@training.can_be_modified_by?(current_user))
     render :layout => "training_layout"
   end
   
   def update
     @training = Training.find(params[:id])
     @team = @training.team
-    if (!current_user.is_team_admin_of?(@training.team))
+    if (!@training.can_be_modified_by?(current_user))
       fake_params_redirect
     elsif @training.update_attributes(params[:training])
       redirect_to training_view_path(params[:id])
@@ -61,7 +61,7 @@ class TrainingsController < ApplicationController
 
   def destroy
     @training = Training.find(params[:id]) 
-    if (!current_user.is_team_admin_of?(@training.team))
+    if (!@training.can_be_destroyed_by?(current_user))
       fake_params_redirect
     else
       @training.destroy

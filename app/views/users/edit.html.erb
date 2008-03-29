@@ -62,9 +62,13 @@
   
   <p>
     <label for="positions">可以踢的位置</label><br/>
-    <%Position::POSITIONS.each do |pos|%>
-      <%=check_box_tag 'positions[]', pos, @positions.index(pos)!=nil %>
-      <%=position_text pos%>
+    <!--Position::POSITIONS-->
+    <%[[0],(1..4),(5..9),(10..13)].each do |category|%>
+      <%category.each do |pos|%>
+        <%=check_box_tag 'positions[]', pos, @positions.index(pos)!=nil %>
+        <%= position_text(pos)%>
+      <%end%>
+      <br/>
     <%end%>
   </p>
 

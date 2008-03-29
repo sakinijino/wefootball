@@ -1,0 +1,53 @@
+h2{margin:2px 0}
+ul.sidebar_menu li {
+    float:left;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+div.icon {
+    width:69px;
+    height:70px;
+    margin:3px;
+    padding: 6px 2px 2px 2px;
+}
+div.selected_player {
+    background: #eeeeff;
+}
+div.icon, img.icon {
+    cursor: pointer;
+}
+#field_div {
+    width: 372px;
+    height: 520px;
+    background: #fff url(/images/middle_field.jpg) no-repeat;
+    position: relative;
+}
+#field_div div.icon {
+    display:none;
+    position:absolute;
+    padding: 10px 6px 2px 2px;
+    background: #eeeeff;
+    border:solid 2px #3D681A;
+}
+#field_div div.icon div.del{
+    color: #3D681A;
+    font-weight: bold;
+    position:absolute;
+    right: 2px;
+    top: -2px;
+    cursor: pointer;
+}
+#field_div .pos_elem {
+    width:40px;
+    height:40px;
+    padding: 2px;
+    border:1px solod #eeeeff;
+    position:absolute;
+    background: transparent;
+}
+#field_div .accept_elem {
+    background: #eeeeff;
+}   
+#field_div .over_accept_elem {
+    background: #F2F7AB;
+}

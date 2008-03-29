@@ -1,0 +1,42 @@
+<h1><%=h @title%></h1>
+
+<div id="narrow_right_content">
+<div class="seperateLine"></div>
+  <%=render :partial=>'sidebar_menu'%>
+</div>
+
+<div id="wide_left_content">
+  <div class="seperateLine" style="margin-bottom:10px"></div>
+  <h2>管理员</h2>
+  <%@admin_uts.each do |ut| %>
+    <div style="float:left">
+      <%= render(:partial => 'shared/user_icon', :object => ut.user)%>
+      <div>
+        <%if !ut.is_the_only_one_admin?%>
+          <%=link_to("不再担任管理员",team_join_path(ut, "ut[is_admin]" => false, 
+              :back_uri => request.request_uri),:method=>:put) if ut.can_degree_as_common_user_by?(current_user)%>
+          <br/><br/>
+          <%=link_to("逐出球队",team_join_path(ut, :back_uri => request.request_uri),:method=>:delete) if ut.can_destroy_by?(current_user)%>
+        <%end%>
+      </div>
+    </div>
+  <%end%>
+  <div class="clearBoth"></div>
+
+  <div class="seperateLine" style="margin-bottom:10px"></div>
+  <h2>其他成员</h2>
+  <%@other_uts.each do |ut| %>
+    <div style="float:left">
+      <%= render(:partial => 'shared/user_icon', :object => ut.user)%>
+      <div>
+        <%=link_to("提升为管理员",team_join_path(ut, "ut[is_admin]" => true, 
+            :back_uri => request.request_uri),:method=>:put) if ut.can_promote_as_admin_by?(current_user)%>
+        <br/><br/>
+        <%=link_to("逐出球队",team_join_path(ut, :back_uri => request.request_uri),:method=>:delete) if ut.can_destroy_by?(current_user)%>
+      </div>
+    </div>
+  <%end%>
+  <div class="clearBoth"></div>
+</div>
+
+<div class="clearBoth"></div>

@@ -1,12 +1,11 @@
 class UserTeam < ActiveRecord::Base
-  FORMATION_MAX_LENGTH = 11
-  
+  FORMATION_MAX_LENGTH = 11  
   MAX_ADMIN_LENGTH = 20
   
   belongs_to :user
   belongs_to :team
   
-  attr_protected :user_id, :team_id
+  attr_protected :user_id, :team_id, :position
   
   validates_inclusion_of   :position, :in => Team::FORMATION_POSITIONS, :allow_nil => true
   
@@ -17,15 +16,7 @@ class UserTeam < ActiveRecord::Base
   
   def before_save
     self.is_admin = false if self.is_admin && ((self.user.teams.admin - [self.team]).length >= MAX_ADMIN_LENGTH)
-    self.position = nil if self.position != nil && (UserTeam.team_formation(self.team_id).size >= FORMATION_MAX_LENGTH)
-  end
-  
-  def after_save
-    if self.position != nil
-      UserTeam.team_formation(self.team_id).each do |ut| 
-        ut.update_attributes!(:position => nil) if ut != self && ut.position == self.position
-      end
-    end
+    true
   end
   
   def self.team_formation(team)
@@ -50,7 +41,6 @@ class UserTeam < ActiveRecord::Base
     (self.is_admin) && (user.is_team_admin_of?(self.team_id)) && !is_the_only_one_admin?
   end
 
-private
   def is_the_only_one_admin?
     self.is_admin && (UserTeam.count(:conditions=>["team_id = :tid and is_admin = true",{:tid=>self.team_id}])==1)
   end

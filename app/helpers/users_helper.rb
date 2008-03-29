@@ -28,6 +28,15 @@ module UsersHelper
     link_to small_user_image_tag(user, options), user_view_path(user.id)
   end
   
+  def tiny_user_image_tag(user, options={})
+    image_tag(user.image(:tiny), {:width=>UserImage::TINY_WIDTH, :height=>UserImage::TINY_HEIGHT,
+      :class=>"icon", :title=>user.nickname}.merge(options))
+  end
+  
+  def tiny_user_image_link(user, options={})
+    link_to tiny_user_image_tag(user, options), user_view_path(user.id)
+  end
+  
   def small_position_icon_position(i)
     return [75, 200] if i<=0
     return [90, 40] if i>=13

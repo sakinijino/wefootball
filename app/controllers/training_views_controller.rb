@@ -6,5 +6,4 @@ class TrainingViewsController < ApplicationController
     @title = "#{@training.team.shortname} #{@training.start_time.strftime('%m.%d')}的训练"
     render :layout=>'training_layout'
   end
-  
 end

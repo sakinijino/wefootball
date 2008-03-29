@@ -1,14 +1,15 @@
 // Place your application-specific JavaScript functions and classes here
 // This file is automatically included by javascript_include_tag :defaults
 
-var j = jQuery.noConflict();
+if (!window['j']) j = jQuery.noConflict();
+if (!window['wefootball']) wefootball = {}
 
-function checkAllInputs(value){
+wefootball.checkAllInputs = function (value){
     if (value == null) value = true;
     j("input[type='checkbox']").attr('checked', value)
 }
 
-function openDialog(event, id){
+wefootball.openDialog = function (event, id){
     var item = j(id)
     T = event
     item.dialog("open", {top:event.clientY, left:event.clientX});
