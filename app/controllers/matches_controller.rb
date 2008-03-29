@@ -1,20 +1,22 @@
 class MatchesController < ApplicationController
   
-  before_filter :login_required, :only=>[:create,:edit,:update]
+  before_filter :login_required, :only=>[:create,:edit,:update,:destroy]
   
-  # GET /matches
-  # GET /matches.xml
   def index
-    @matches = Match.find(:all)
-
-    respond_to do |format|
-      format.html # index.html.erb
-      format.xml  { render :xml => @matches }
-    end
+    if (params[:user_id]) #显示用户参与的比赛
+      @user = User.find(params[:user_id], :include=>:matches)
+      @matches = @user.matches.recent
+      @title = "#{@user.nickname}的比赛"
+      render :layout => "user_layout"
+    else #显示队伍的所有比赛
+      @team = Team.find(params[:team_id])
+      @matches = @team.matches.recent
+      @title = "#{@team.shortname}的比赛"
+      @team_display = false;
+      render :layout => "team_layout"
+    end    
   end
 
-  # GET /matches/1
-  # GET /matches/1.xml
   def show
     @match = Match.find(params[:id])  
     @host_team_player_mjs = MatchJoin.find(:all,
@@ -35,7 +37,7 @@ class MatchesController < ApplicationController
       return      
     end
     if @match_invitation.has_been_modified?(params[:match_invitation])#如果用户已经做过修改，则不能创建
-      render :action => "edit", :id=>match_invitation_id
+      render :template => "match_invitations/edit", :id=>match_invitation_id
       return
     end
     Match.transaction do
@@ -46,7 +48,6 @@ class MatchesController < ApplicationController
     redirect_to match_path(@match)
   end
 
-  # GET /matches/1/edit
   def edit
     @team = Team.find(params[:team_id])
     @match = Match.find(params[:id],:include=>[:host_team,:guest_team])
@@ -62,11 +63,9 @@ class MatchesController < ApplicationController
     @player_mjs = MatchJoin.players(@match.id,@team.id) 
   end
 
-  # PUT /matches/1
-  # PUT /matches/1.xml
   def update 
-    @team = Team.find(params[:match][:team_id])
-    @match = Match.find(params[:id])
+    @match = Match.find(params[:id])    
+    @team = Team.find(params[:team_id])
     if !@match.is_after_match_and_before_match_close? #只有比赛结束后才可以填写比赛结果和队员比赛信息
       fake_params_redirect      
       return
@@ -110,7 +109,7 @@ class MatchesController < ApplicationController
       return
     end
     
-    if @match.save && MatchJoin.update(match_join_hash.keys,match_join_hash.values)
+    if @match.save! && MatchJoin.update(match_join_hash.keys,match_join_hash.values)
       if @editing_by_host_team
         redirect_to team_view_path(@match.host_team_id)
         return
@@ -125,15 +124,26 @@ class MatchesController < ApplicationController
     end
   end
 
-  # DELETE /matches/1
-  # DELETE /matches/1.xml
   def destroy
     @match = Match.find(params[:id])
+    
+    if !@match.is_before_match_close? #只有比赛结束后到关闭前才可以填写比赛结果和队员比赛信息
+      fake_params_redirect      
+      return
+    end    
+    if !current_user.can_destroy_match?(@match)#权限检查
+      fake_params_redirect
+      return      
+    end
+   
     @match.destroy
 
-    respond_to do |format|
-      format.html { redirect_to(matches_url) }
-      format.xml  { head :ok }
+    if current_user.is_team_admin_of?(@match.host_team)
+      redirect_to team_view_path(@match.host_team_id)
+      return
+    else
+      redirect_to team_view_path(@match.guest_team_id)
+      return
     end
   end
 end

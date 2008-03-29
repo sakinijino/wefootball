@@ -15,13 +15,13 @@ class MatchInvitation < ActiveRecord::Base
   attr_accessible :new_has_judge, :new_has_card, :new_has_offside, :new_win_rule
   attr_accessible :new_description, :new_half_match_length, :new_rest_length
   
-  validates_inclusion_of :new_match_type, :in => MATCH_TYPES
-  validates_inclusion_of :new_size, :in => MATCH_SIZES
-  validates_inclusion_of :new_win_rule, :in => WIN_RULES
+  validates_inclusion_of :new_match_type, :in => MATCH_TYPES, :allow_nil=>true
+  validates_inclusion_of :new_size, :in => MATCH_SIZES, :allow_nil=>true
+  validates_inclusion_of :new_win_rule, :in => WIN_RULES, :allow_nil=>true
 
   validates_length_of :new_description, :maximum =>MAX_DESCRIPTION_LENGTH
   validates_length_of :host_team_message, :maximum =>MAX_TEAM_MESSAGE_LENGTH
-  validates_length_of :guest_team_message, :maximum =>MAX_TEAM_MESSAGE_LENGTH  
+  validates_length_of :guest_team_message, :maximum =>MAX_TEAM_MESSAGE_LENGTH 
 
   def before_validation
     if self.host_team_message.nil?
@@ -37,8 +37,8 @@ class MatchInvitation < ActiveRecord::Base
     attribute_slice(:new_description, MAX_DESCRIPTION_LENGTH)
     attribute_slice(:host_team_message, MAX_TEAM_MESSAGE_LENGTH)
     attribute_slice(:guest_team_message, MAX_TEAM_MESSAGE_LENGTH)   
-  end  
-
+  end    
+  
   def save_last_info!
     self.attributes.each do |a|
       if a[0][0..3] == "new_"

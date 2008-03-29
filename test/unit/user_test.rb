@@ -315,6 +315,35 @@ class UserTest < Test::Unit::TestCase
     assert_equal false, u.can_accpet_match_invitation?(inv)
     assert_equal false, u.can_reject_match_invitation?(inv)        
   end
+  
+  def test_recent_match #测试user.matches.recent
+    u = create_user({:login => 'sakinijinoo@gmail.com', :nickname=>'AiHaibara'})
+    t1 = Team.create!(:name=>"test1",:shortname=>"t1")
+    t2 = Team.create!(:name=>"test2",:shortname=>"t2")
+    ut = UserTeam.new
+    ut.user_id = u.id
+    ut.team_id = t1.id
+    ut.save!
+    
+    m1 = Match.new
+    m1.host_team_id = t1.id
+    m1.guest_team_id = t2.id
+    m1.start_time = 7.days.ago
+    m1.location = 'Building 26'
+    m1.save!
+    m2 = Match.new
+    m2.host_team_id = t2.id
+    m2.guest_team_id = t1.id
+    m2.start_time = 7.days.since
+    m2.location = 'Building 45A'
+    m2.save!
+    
+    MatchJoin.create_joins(m1)
+    MatchJoin.create_joins(m2)
+    
+    assert_equal [m1,m2],u.matches.sort_by{|i| i.start_time}
+    assert_equal [m2],u.matches.recent        
+  end  
 
 protected
   def create_user(options = {})

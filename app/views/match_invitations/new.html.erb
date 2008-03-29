@@ -1,16 +1,12 @@
 <div>
-  <h1>比赛邀请</h1>
+  <h1><%=@host_team.shortname%> V.S. <%=@guest_team.shortname%></h1>
 </div>
 
 <%= error_messages_for :match_invitation %>
 
 <% form_for @match_invitation do |f| %>
   <%= f.hidden_field :guest_team_id,  :value=>@guest_team.id%>
-
-  <p>
-    <b>球队</b><br />
-    <%= f.select :host_team_id, @host_teams.map{|t| [t.shortname,t.id]} %>
-  </p>  
+  <%= f.hidden_field :host_team_id,  :value=>@host_team.id%>    
   
   <p>
     <b>开始时间</b><br />

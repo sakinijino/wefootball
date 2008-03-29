@@ -1,8 +1,8 @@
 <div>
 
 <h1><%=team.name%>的参赛信息</h1>
-
-<%if current_user.is_team_admin_of?(team.id) %>
+<%=debug current_user%>
+<%if logged_in? && current_user.is_team_admin_of?(team.id) %>
   <%=link_to "编辑本队阵型", edit_match_join_path(0, :match_id=>match.id, :team_id=>team.id) %>
   <%if match.is_after_match_and_before_match_close?%>
     <%=link_to "填写比赛结果", edit_match_path(match.id,:team_id=>team.id) %>
@@ -19,7 +19,7 @@
         <td><%= render(:partial => 'shared/user_icon', :object => mj.user)%></td>
         <td><%= status_text(mj.status)%></td>
 
-        <%if current_user.id == mj.user_id && mj.match.is_before_match?%>
+        <%if (current_user == mj.user) && mj.match.is_before_match?%>
           <%if mj.status == MatchJoin::UNDETERMINED %>
             <td><%=link_to "代表"+team.name+"参加本场比赛", match_join_path(mj,:match_join=>{:status=>MatchJoin::JOIN},:team_id=>team.id),:method=>'PUT'%></td>
             <td><%=link_to "不代表"+team.name+"参加本场比赛", match_join_path(mj),:method=>'DELETE'%></td>

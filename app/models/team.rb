@@ -1,10 +1,6 @@
 class Team < ActiveRecord::Base
   include ModelHelper
-#  FORMATION_POSITIONS = ['GK', 'LB', 'LCB', 'CB', 'RCB', 'RB',
-#    'LWB', 'LDM', 'DM', 'RDM', 'RWB',
-#    'LM', 'LCM', 'CM', 'RCM', 'RM',
-#    'ALM', 'LAM', 'AM', 'RAM', 'ARM',
-#    'LWF', 'LCF', 'CF', 'RCF', 'RWF']
+
   FORMATION_POSITIONS =  (0...26).to_a
   DEFAULT_IMAGE = "/images/default_team.gif"
           
@@ -29,14 +25,6 @@ class Team < ActiveRecord::Base
           
   has_many :match_joins,
             :dependent => :destroy
-#  has_many :matches,
-#            :foreign_key=>"host_team_id",
-#            :extend => ActivityCalendar
-#            :join => "teams as t",  has_many :matches,
-#            :foreign_key=>"host_team_id",
-#            :extend => ActivityCalendar
-            #:conditions => ["host_team_id = ? or guest_team_id = ?",123,id]
-    #:finder_sql => "select * from matches m, teams t where m.host_team_id = t.id or m.guest_team_id = t.id"
 
   has_many :host_matches,:foreign_key=>"host_team_id",:class_name=>"Match",
             :extend => ActivityCalendar
@@ -63,16 +51,6 @@ class Team < ActiveRecord::Base
     attribute_slice(:summary, 3000)
     attribute_slice(:style, 50)
   end
-  
-#  GENERIC_ANALYSIS_REGEX = /([a-zA-Z]|[\xc0-\xdf][\x80-\xbf])+|[0-9]+|[\xe0-\xef][\x80-\xbf][\x80-\xbf]/
-#  GENERIC_ANALYZER = Ferret::Analysis::RegExpAnalyzer.new(GENERIC_ANALYSIS_REGEX, true)  
-##  GENERIC_ANALYZER = MultilingualFerretTools::Analyzer.new
-##  GENERIC_ANALYZER = Ferret::Analysis::StandardAnalyzer.new
-#  acts_as_ferret({:fields => [
-#        :name,
-#        :shortname
-#      ]},
-#    { :analyzer => GENERIC_ANALYZER })
 
   def self.find_by_contents(q)
     Team.find :all, :conditions => ["name like ? or shortname like ?", q, q]
@@ -104,7 +82,15 @@ class Team < ActiveRecord::Base
   end
   
   def matches
-    MatchProxy.new(self)
+    m = self.host_matches + self.guest_matches
+    def m.team=(t)
+      @team = t
+    end
+    m.team = self
+    def m.method_missing(method_id, *args)
+      @team.host_matches.send(method_id, *args) + @team.guest_matches.send(method_id, *args)  
+    end
+    m
   end
   
   class MatchProxy

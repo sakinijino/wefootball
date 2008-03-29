@@ -8,8 +8,5 @@ inv1:
   new_has_card: false
   new_has_offside: true
   new_win_rule: 1
-  new_description: test
   new_half_match_length: 30
   new_rest_length: 10
-  host_team_id: 1
-  guest_team_id: 2

@@ -265,8 +265,12 @@ class User < ActiveRecord::Base
   end
   
   def can_edit_match?(team,match)
-    can_act_on_match?(team,match)
+    self.is_team_admin_of?(team) && is_admin_of_match_teams?(match)
   end
+  
+  def can_destroy_match?(match)
+    is_admin_of_match_teams?(match)
+  end  
   
   def match_join(match_id)
     MatchJoin.find_by_user_id_and_match_id(self.id,match_id)
@@ -324,7 +328,7 @@ class User < ActiveRecord::Base
       end
     end
     
-    def can_act_on_match?(team, match)      
-      return self.is_team_admin_of?(team) && ((team.id==match.host_team_id)||(team.id==match.guest_team_id))      
+    def is_admin_of_match_teams?(match)      
+      return self.is_team_admin_of?(match.host_team)|| self.is_team_admin_of?(match.guest_team)     
     end    
 end

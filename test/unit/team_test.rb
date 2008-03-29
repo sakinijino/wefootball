@@ -131,6 +131,27 @@ class TeamTest < ActiveSupport::TestCase
     assert 2, teams.length
   end
   
+  def test_recent_match #测试team.matches.recent
+    t1 = Team.create!(:name=>"test1",:shortname=>"t1")
+    t2 = Team.create!(:name=>"test2",:shortname=>"t2")
+    
+    m1 = Match.new
+    m1.host_team_id = t1.id
+    m1.guest_team_id = t2.id
+    m1.start_time = 7.days.ago
+    m1.location = 'Building 26'
+    m1.save!
+    m2 = Match.new
+    m2.host_team_id = t2.id
+    m2.guest_team_id = t1.id
+    m2.start_time = 7.days.since
+    m2.location = 'Building 45A'
+    m2.save!
+    
+    assert_equal [m1,m2],t1.matches.sort_by{|i| i.start_time}
+    assert_equal [m2],t1.matches.recent        
+  end  
+  
   private
   def create_training(start_time, team_id)
     t = Training.new(:start_time => start_time, :end_time => start_time.since(7200), :location => 'Beijing')

@@ -32,7 +32,7 @@ class MatchInvitationTest < ActiveSupport::TestCase
     m2 = match_invitations(:inv1)
     m2.update_attributes({:new_description =>'s'*2000})
     m2.host_team_message = 't'*2000
-    m2.save
+    m2.save!
     assert_equal m2.new_description.length,MatchInvitation::MAX_DESCRIPTION_LENGTH
     assert_equal m2.host_team_message.length,MatchInvitation::MAX_TEAM_MESSAGE_LENGTH 
   end  

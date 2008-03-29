@@ -20,7 +20,7 @@ class TeamsController < ApplicationController
       ut = UserTeam.new({:is_admin=>true});
       ut.user = current_user; ut.team = @team
       ut.save
-      redirect_to team_view_path(@team.id)
+      redirect_with_back_uri_or_default team_view_path(@team.id)
     else
       render :action=>"new"
     end

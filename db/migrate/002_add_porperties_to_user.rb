@@ -26,7 +26,7 @@ class AddPorpertiesToUser < ActiveRecord::Migration
     remove_column :users, :favorite_star
     remove_column :users, :favorite_team
     remove_column :users, :blog
-    remove_column :users, :is_male
+    remove_column :users, :gender
     remove_column :users, :image_path
     remove_column :users, :is_playable
     remove_column :users, :height

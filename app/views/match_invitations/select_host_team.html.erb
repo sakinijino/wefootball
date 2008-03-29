@@ -1,0 +1,14 @@
+<div>
+  <%if @host_teams.empty?%>
+    <h1>您目前没有管理的球队，所以无法邀请<%=@guest_team.shortname%>进行比赛</h1>
+    <%= link_to "创建我自己的球队",new_team_path(:back_uri=>new_match_invitation_path(:guest_team_id=>@guest_team.id))%>
+  <%else%>
+    <h1>请选择我方要出战的球队</h1>
+    <%for t in @host_teams%>
+      <div class="icon">
+        <%=link_to small_team_image_tag(t), new_match_invitation_path(:host_team_id=>t.id, :guest_team_id=>@guest_team.id)%>
+        <span><%=link_to h(t.shortname), new_match_invitation_path(:host_team_id=>t.id, :guest_team_id=>@guest_team.id)%></span>
+      </div>
+    <%end%>
+  <%end%>
+</div>

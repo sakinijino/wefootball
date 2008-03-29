@@ -5,7 +5,8 @@
 <%= error_messages_for :match %>
 
 <% form_for @match do |f| %>
-    <%= f.hidden_field :team_id,  :value=>@team.id%>  
+  
+<%= hidden_field_tag :team_id, @team.id%>  
 
       <%if @editing_by_host_team%>
     <p>
