@@ -1,12 +1,10 @@
-<h1><%=h @title%></h1>
-
-<div id="wide_left_content">
-<div class="seperateLine"></div>
-<%=render :partial=>'post_list', :object=>@posts%>
+<div id="wide_left_content" class="sect">
+  <h2><%=h @title%></h2>
+  <%=render :partial=>'post_list', :object=>@posts%>
 </div>
 
-<div id="narrow_right_content">
-  <div class="seperateLine"></div>
+<div id="narrow_right_content" class="sect">
+  <h2></h2>
   <ul class="sidebar_menu">
     <%if logged_in? && current_user.is_team_member_of?(@team)%>
       <li>

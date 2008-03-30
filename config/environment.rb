@@ -26,7 +26,7 @@ Rails::Initializer.run do |config|
   # config.plugins = [ :exception_notification, :ssl_requirement, :all ]
 
   # Add additional load paths for your own custom dirs
-   config.load_paths += %W( #{RAILS_ROOT}/app/modules #{RAILS_ROOT}/app/sweepers )
+   config.load_paths += %W( #{RAILS_ROOT}/app/modules #{RAILS_ROOT}/app/sweepers #{RAILS_ROOT}/app/observers)
 
   # Force all environments to use the same logger level
   # (by default production uses :info, the others :debug)
@@ -53,6 +53,7 @@ Rails::Initializer.run do |config|
 
   # Activate observers that should always be running
   # config.active_record.observers = :cacher, :garbage_collector
+  config.active_record.observers = :user_team_observer
 
   # Make Active Record use UTC-base instead of local time
   # config.active_record.default_timezone = :utc

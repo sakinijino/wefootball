@@ -42,7 +42,7 @@ wefootball.formation.prototype = {
                     activeClass: "accept_elem",
                     hoverClass: "over_accept_elem",
                     activate: function(){
-                        _this.adjustPositions(true)
+                        //_this.adjustPositions(true)
                     },
                     deactivate: function(e, ui){
                         ui.helper[0].player.tiny_img.mouseout()
@@ -97,6 +97,7 @@ wefootball.formation.prototype = {
         player.tiny_img.find('div.del').click(function(){
             _this.setPlayerToPosition(null, player)
         })
+        player.field = this;
     },
     submit: function() {
         var f = document.createElement('form');
@@ -129,7 +130,9 @@ wefootball.player = function(options){
     var _this = this
     var drag_options = {
         helper: function(){return _this.helper},
-        cursorAt: {left:20, top:20}
+        cursorAt: {left:20, top:20},
+        start: function(){_this.field.adjustPositions(true)},
+        stop: function(){_this.field.adjustPositions()}
     }
     this.small_img = j("<div><div class='del'>X</div>"+this.small_image_tag+"<span>"+this.nickname+"</span>"+"</div>")
         .addClass('icon')

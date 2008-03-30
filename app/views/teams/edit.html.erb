@@ -1,25 +1,27 @@
-<%= error_messages_for :team %>
+<div id="wide_left_content" class="sect">
+  <h2><%=h @title%></h2>
+  <%= error_messages_for :team %>
+  <div class="tab_container" style="margin:10px 0 20px 0">
+  <span class="tab_link" style="margin-left: 10px;">修改基本信息</span>
+  <span class="tab_link<%= " tabSelected" if params[:tab_index] == '1'%>">修改队标</span>
 
-<div class="tab_container" style="margin:10px 0 20px 0">
-<span class="tab_link" style="margin-left: 10px;">修改基本信息</span>
-<span class="tab_link<%= " tabSelected" if params[:tab_index] == '1'%>">修改队标</span>
+  <% form_for @team,:html => { :class=>"tab"} do |f| %>
+  <%= render :partial => "form", :locals=>{:f=> f}%>
+  <p><%= f.submit '保存' %></p>
+  <% end %>
 
-<% form_for @team,:html => { :class=>"tab"} do |f| %>
-<%= render :partial => "form", :locals=>{:f=> f}%>
-<p><%= f.submit '保存' %></p>
-<% end %>
+  <% form_for(:team, :url => update_image_team_path(@team),:html => { :method=>:put, :multipart => true, :class=>"tab" }) do |f| %>
+    <%= hidden_field_tag :tab_index, 1%>
+    <%= team_image_tag @team, {:style=>"margin:20px 0 0 0"} %>
+    <p>
+      <label>更改队标</label><br/>
+      <%= f.file_field  :uploaded_data %>
+    </p>
 
-<% form_for(:team, :url => update_image_team_path(@team),:html => { :method=>:put, :multipart => true, :class=>"tab" }) do |f| %>
-  <%= hidden_field_tag :tab_index, 1%>
-  <%= team_image_tag @team, {:style=>"margin:20px 0 0 0"} %>
-  <p>
-    <label>更改队标</label><br/>
-    <%= f.file_field  :uploaded_data %>
-  </p>
-
-  <p>
-    <%= f.submit "保存" %>
-  </p>
-<% end %>
+    <p>
+      <%= f.submit "保存" %>
+    </p>
+  <% end %>
+  </div>
 </div>
 

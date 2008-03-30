@@ -3,45 +3,42 @@
   <%= stylesheet_link_tag 'activityitem' %>
 <%end%>
 
-<h1><%=h @title%></h1>
 <div id="left_content">
-  <div class="seperateLine"></div>
+  <div class="sect">
+    <h2><%=h @title%></h2>
+    <div class="tab_container" style="margin:10px 0 10px 0">
+      <span class="tab_link" style="margin-left: 10px;">球场信息</span>
 
-  <div class="tab_container" style="margin:10px 0 10px 0">
-    <span class="tab_link" style="margin-left: 10px;">球场信息</span>
+      <div class="tab">
+        <%= "<span>球场名称: #{h @football_ground.name}</span><br/>" unless @football_ground.name.blank?%>
+        <%= "<span>所在地: #{@football_ground.city_text}</span><br/>" unless @football_ground.city_text.nil?%>
+        <%= "<span>球场类型: #{ground_type_text(@football_ground.ground_type)}</span><br/>" unless @football_ground.ground_type.nil?%>
+        <%= "<span>已停用</span><br/>" if @football_ground.status == 2%>
+        <%if !@football_ground.description.blank?%>
+          <label>球队简介：</label>
+          <p><%=simple_format auto_link(h(@football_ground.description), :urls)%></p>
+        <%end%>
+      </div>
 
-    <div class="tab">
-      <%= "<span>球场名称: #{h @football_ground.name}</span><br/>" unless @football_ground.name.blank?%>
-      <%= "<span>所在地: #{@football_ground.city_text}</span><br/>" unless @football_ground.city_text.nil?%>
-      <%= "<span>球场类型: #{ground_type_text(@football_ground.ground_type)}</span><br/>" unless @football_ground.ground_type.nil?%>
-      <%= "<span>已停用</span><br/>" if @football_ground.status == 2%>
-      <%if !@football_ground.description.blank?%>
-        <label>球队简介：</label>
-        <p><%=simple_format auto_link(h(@football_ground.description), :urls)%></p>
-      <%end%>
-    </div>
-
-    <div style="margin: 10px 0 0 10px">
-      <%= link_to '编辑', edit_football_ground_path(@football_ground) if @is_editor%>
+      <div style="margin: 10px 0 0 10px">
+        <%= link_to '编辑', edit_football_ground_path(@football_ground) if @is_editor%>
+      </div>
     </div>
   </div>
 
-  <div class="seperateLine clearBoth"></div>
-  <div style="margin-bottom:20px">
+  <div class="sect">
     <h2>未来24小时在这块场地踢的人</h2>
     <%= render(:partial => 'shared/user_icon', :collection => @players)%>
     <div class="clearBoth"></div>
   </div>
-
 </div>
 
 
 <div id="right_content">
   <%if @trainings.length > 0%>
-  <div class="seperateLine clearBoth"></div>
-  <div style="margin-bottom:20px">
-    <h2>未来24小时在这个球场安排的训练</h2>
-    <%= render(:partial => 'shared/training_list', :object => @trainings)%>
+  <div class="sect">
+      <h2>未来24小时在这个球场安排的训练</h2>
+      <%= render(:partial => 'shared/training_list', :object => @trainings)%>
   </div>
   <%end%>
 </div>

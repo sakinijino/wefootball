@@ -1,6 +1,5 @@
-<h1><%=h @title%></h1>
-<div id="narrow_right_content">
-<div class="seperateLine"></div>
+<div id="narrow_right_content" class="sect">
+<h2></h2>
 <ul class="sidebar_menu">
   <li>
   > <%= link_to_if(params[:as]=='sender', '去收件箱', messages_path) { link_to '去发件箱', messages_path(:as => 'sender') } %>
@@ -8,40 +7,40 @@
 </ul>
 </div>
 
-<div id="wide_left_content">
-<div class="seperateLine"></div>
-<% form_tag destroy_multi_messages_path(:back_uri => request.request_uri), :method=>:delete do%>
-<div>
-  <table class="list">
-  <tr>
-    <%if params[:as]!='sender' %>
-        <th>发件人</th>
-    <%else%>
-        <th>收件人</th>
-    <%end%>
-    <th>主题</th>
-    <th>发件时间</th>
-    <th>删除</th>
-  </tr>
-    <%@messages.each do |m|%>
-      <tr <%= "class='highlight'" if !m.is_receiver_read && params[:as]!='sender'%>>
-         <%if params[:as]!='sender' %>
-            <td><%=link_to h(m.sender.nickname), user_view_path(m.sender)%></td>
-        <%else%>
-            <td><%=link_to h(m.receiver.nickname), user_view_path(m.receiver)%></td>
-        <%end%>
-        <td><%=link_to m.subject, message_path(m.id)%></td>
-        <td><%=h m.created_at.to_s(:db)%></td>
-        <td><%=check_box_tag "messages[]", m.id %></td>
-      </tr>
-    <%end%>
-  </table>
-  <div style="float:right;">
-    <%= submit_tag '删除'%>
-    <%= submit_tag '全选', :onclick => 'wefootball.checkAllInputs();return false;'%>
-    <%= submit_tag '全清', :onclick => 'wefootball.checkAllInputs(false);return false;'%>
+<div id="wide_left_content" class="sect">
+  <h2><%=h @title%></h2>
+  <% form_tag destroy_multi_messages_path(:back_uri => request.request_uri), :method=>:delete do%>
+  <div>
+    <table class="list">
+    <tr>
+      <th>主题</th>
+      <%if params[:as]!='sender' %>
+          <th>发件人</th>
+      <%else%>
+          <th>收件人</th>
+      <%end%>
+      <th>发件时间</th>
+      <th>删除</th>
+    </tr>
+      <%@messages.each do |m|%>
+        <tr <%= "class='highlight'" if !m.is_receiver_read && params[:as]!='sender'%>>
+          <td><%=link_to m.subject, message_path(m.id)%></td>
+           <%if params[:as]!='sender' %>
+              <td><%=link_to h(m.sender.nickname), user_view_path(m.sender)%></td>
+          <%else%>
+              <td><%=link_to h(m.receiver.nickname), user_view_path(m.receiver)%></td>
+          <%end%>
+          <td><%=h m.created_at.to_s(:db)%></td>
+          <td><%=check_box_tag "messages[]", m.id %></td>
+        </tr>
+      <%end%>
+    </table>
+    <div style="float:right;">
+      <%= submit_tag '删除'%>
+      <%= submit_tag '全选', :onclick => 'wefootball.checkAllInputs();return false;'%>
+      <%= submit_tag '全清', :onclick => 'wefootball.checkAllInputs(false);return false;'%>
+    </div>
   </div>
-</div>
-<%end%>
+  <%end%>
 </div>
 <div class="clearBoth"></div>

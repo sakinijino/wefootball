@@ -1,37 +1,36 @@
-<div id="narrow_right_content">
-<div class="seperateLine"></div>
-<%=render :partial=>'sidebar_menu'%>
+<div id="narrow_right_content" class="sect">
+  <h2></h2>
+  <%=render :partial=>'sidebar_menu'%>
 </div>
 
-<div id="wide_left_content">
-<div class="seperateLine"></div>
-
-<%= error_messages_for :message %>
-<% form_for @message do |f| %>
-  <table class="form">
-    <tr>
-      <td>写给:</td>
-      <td>
-        <%= h @receiver.nickname%>
-        <div style="float:right"><%= small_user_image_link @receiver %></div>
-     </td>
-    </tr>
-    <tr>
-      <td><label for="subject">标题: </label></td>
-      <td><%= f.text_field :subject %></td>
-    </tr>
-    <tr>
-      <td><label for="content">内容: </label></td>
-      <td><%= f.text_area :content %></td>
-    </tr>
-    <tr>
-      <td></td>
-      <td>
-        <%= f.hidden_field :receiver_id %>
-        <%= submit_tag '发送' %>
-      </td>
-    </tr>
-  </table>
-<%end%>
+<div id="wide_left_content" class="sect">
+  <h2><%= h @title%></h2>
+  <%= error_messages_for :message %>
+  <% form_for @message do |f| %>
+    <table class="form">
+      <tr>
+        <td>写给:</td>
+        <td>
+          <%= h @receiver.nickname%>
+          <div style="float:right"><%= small_user_image_link @receiver %></div>
+       </td>
+      </tr>
+      <tr>
+        <td><label for="subject">标题: </label></td>
+        <td><%= f.text_field :subject %></td>
+      </tr>
+      <tr>
+        <td><label for="content">内容: </label></td>
+        <td><%= f.text_area :content %></td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          <%= f.hidden_field :receiver_id %>
+          <%= submit_tag '发送' %>
+        </td>
+      </tr>
+    </table>
+  <%end%>
 </div>
 <div class="clearBoth"></div>

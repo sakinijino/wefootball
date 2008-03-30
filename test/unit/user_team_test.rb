@@ -1,6 +1,41 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
 class UserTeamTest < ActiveSupport::TestCase
+  def test_depedency_observer #入队退队时的级联修改
+    assert trainings(:training1).has_joined_member?(users(:saki))
+    assert trainings(:training4).has_joined_member?(users(:saki))
+    
+    assert_difference("users(:saki).trainings.reload.size", -2) do
+      user_teams(:saki_inter).destroy
+    end
+    assert_equal 2, users(:saki).trainings.reload.size
+    assert trainings(:training1).has_member?(users(:saki))
+    assert !trainings(:training4).has_member?(users(:saki))
+    
+    assert_difference("users(:saki).trainings.reload.size", 2) do
+      ut = UserTeam.new
+      ut.user = users(:saki)
+      ut.team = teams(:inter)
+      ut.save!
+    end
+    assert_equal 4, users(:saki).trainings.reload.size
+    assert trainings(:training1).has_joined_member?(users(:saki))
+    assert trainings(:training4).has_member?(users(:saki))
+    assert !trainings(:training4).has_joined_member?(users(:saki))
+    
+    Training.destroy_all
+    assert_no_difference("users(:saki).trainings.reload.size") do
+      user_teams(:saki_inter).destroy
+    end
+    
+    assert_no_difference("users(:saki).trainings.reload.size") do
+      ut = UserTeam.new
+      ut.user = users(:saki)
+      ut.team = teams(:inter)
+      ut.save!
+    end
+  end
+  
   def test_admin_operation
     assert !user_teams(:saki_inter).is_the_only_one_admin?
     assert user_teams(:saki_milan).is_the_only_one_admin?

@@ -1,6 +1,5 @@
-<h1><%=h @title%></h1>
-<div class="seperateLine" style="margin-bottom:20px"></div>
-
+<div class="sect">
+<h2><%=h @title%></h2>
 <%if @teams.empty?%>
   <span>没有可以邀请加入的球队，可能这个用户已经加入了所有你管理的球队</span>
 <%else%>
@@ -19,5 +18,5 @@
     <%= f.text_area :message, :cols => 40, :rows => 3 %><br />
     <%= f.submit "邀请" %><br />
   <% end %>
-
 <%end%>
+</div>

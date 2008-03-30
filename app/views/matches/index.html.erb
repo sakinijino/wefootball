@@ -3,9 +3,8 @@
 <%end%>
 
 <h1><%=h @title%></h1>
-<div id="wide_left_content">
-<div class="seperateLine" style="margin-bottom:20px"></div>
-<%= render(:partial => 'shared/match_list', :object => @matches, :locals => {:display_team => @team_display})%>
+<div id="wide_left_content" class="sect">
+    <%= render(:partial => 'shared/match_list', :object => @matches, :locals => {:display_team => @team_display})%>
 </div>
 
 <div class="clearBoth"></div>

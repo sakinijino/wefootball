@@ -1,9 +1,12 @@
-<%= error_messages_for :training %>
-<% form_for @training do |f| %>
+<div id="wide_left_content" class="sect">
+  <h2><%=h @title%></h2>
+  <%= error_messages_for :training %>
+  <% form_for @training do |f| %>
 
-<%= render :partial => "form", :locals => {:f => f}%>
+  <%= render :partial => "form", :locals => {:f => f}%>
 
-<%= f.hidden_field :team_id, :value=>@team.id%>
+  <%= f.hidden_field :team_id, :value=>@team.id%>
 
-<p><%= submit_tag '创建' %></p>
-<% end %>
+  <p><%= submit_tag '创建' %></p>
+  <% end %>
+</div>

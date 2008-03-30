@@ -2,11 +2,25 @@
   <%= stylesheet_link_tag 'activityitem' %>
 <%end%>
 
-<h1><%=h @title%></h1>
-<div id="wide_left_content">
-<div class="seperateLine" style="margin-bottom:20px"></div>
-<%= render(:partial => 'shared/training_list', :object => @trainings, :locals => {:display_team => @team_display})%>
-<%= render(:partial => 'shared/match_list', :object => @matches, :locals => {:display_team => @team_display})%>
+<div id="wide_left_content" class="sect">
+  <h2></h2>
+  <%= render(:partial => 'shared/training_list', :object => @trainings, :locals => {:display_team => @team_display})%>
+  <%= render(:partial => 'shared/match_list', :object => @matches, :locals => {:display_team => @team_display})%>
+</div>
+
+<div id="narrow_right_content" class="sect">
+  <h2>查看日程安排</h2>
+  <ul class="sidebar_menu">
+    <li>
+      > <%= month_day_link "上一天的日程安排", @date.yesterday%>
+    </li>
+    <li>
+      > <%= month_day_link "下一天的日程安排", @date.tomorrow%>
+    </li>
+    <li style="border-top:dashed 1px #3D681A; padding-top:20px; width:80%">
+      > <%= month_calendar_link "本月的日程安排", @date%>
+    </li>
+  </ul>
 </div>
 
 <div class="clearBoth"></div>

@@ -1,58 +1,59 @@
-<h1><%=h @post.title %></h1>
 <div id="wide_left_content">
-<div class="seperateLine"></div>
-<div style="margin-bottom:30px">
-<%= render(:partial => 'posts/post', :object => @post)%>
-
-<%= render(:partial => 'posts/post', :collection => @post.replies, :locals => {:parent => @post})%>
-</div>
+  <div class="sect">
+  <h2><%=h @post.title %></h2>
+  <%= render(:partial => 'posts/post', :object => @post)%>
+  <%= render(:partial => 'posts/post', :collection => @post.replies, :locals => {:parent => @post})%>
+  </div>
 
 <%if @can_reply%>
-  <div class="seperateLine clearBoth"></div>
-  <h2>回复</h2>
-  <%= error_messages_for :reply %>
-  <% form_for :reply, :url => post_replies_path(@post) do |f| %>
-    <%= f.text_area :content, :rows=>10, :cols=>50 %>
-    <br/><br/>
-    <%= f.submit "提交" %>
-  <% end %>
+  <div class="sect clearBoth">
+    <h2>回复</h2>
+    <%= error_messages_for :reply %>
+    <% form_for :reply, :url => post_replies_path(@post) do |f| %>
+      <%= f.text_area :content, :rows=>10, :cols=>50 %>
+      <br/><br/>
+      <%= f.submit "提交" %>
+    <% end %>
+  </div>
 <%end%>
 </div>
 
 <div id="narrow_right_content">
-<div class="seperateLine"></div>
+  <div class="sect">
+    <h2></h2>
+    <ul class="sidebar_menu">
+      <li>
+        > <% if @training %>
+          <%= link_to '返回讨论区', training_posts_path(@training) %>
+        <% elsif @team %>
+          <%= link_to '返回讨论区', team_posts_path(@team) %>
+        <%end%>
+      </li>
+      <li>
+        > <% if @training %>
+          <%= link_to '发言', new_training_post_path(@training) %>
+        <% elsif @team %>
+          <%= link_to '发言', new_team_post_path(@team) %>
+        <%end%>
+      </li>
+    </ul>
+  </div>
 
-<ul class="sidebar_menu">
-  <li>
-    > <% if @training %>
-      <%= link_to '返回讨论区', training_posts_path(@training) %>
-    <% elsif @team %>
-      <%= link_to '返回讨论区', team_posts_path(@team) %>
-    <%end%>
-  </li>
-  <li>
-    > <% if @training %>
-      <%= link_to '发言', new_training_post_path(@training) %>
-    <% elsif @team %>
-      <%= link_to '发言', new_team_post_path(@team) %>
-    <%end%>
-  </li>
-</ul>
+  <div class="sect">
+  <h2>其他话题</h2>
+  <table class="list" style="width:90%">
+    <tr>
+      <th style="width:20%">作者</th>
+      <th style="width:80%">话题</th>
+    </tr>
 
-<div class="seperateLine"></div>
-<h2>其他话题</h2>
-<table class="list" style="width:90%">
-  <tr>
-    <th style="width:20%">作者</th>
-    <th style="width:80%">话题</th>
-  </tr>
-
-<% for post in @related_posts %>
-  <tr>
-    <td><%=h post.user.nickname %></td>
-    <td><%=link_to h(post.title), post  %></td>
-  </tr>
-<% end %>
-</table>
+  <% for post in @related_posts %>
+    <tr>
+      <td><%=h post.user.nickname %></td>
+      <td><%=link_to h(post.title), post  %></td>
+    </tr>
+  <% end %>
+  </table>
+  </div>
 </div>
 <div class="clearBoth"></div>

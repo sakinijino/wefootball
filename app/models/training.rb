@@ -81,16 +81,11 @@ class Training < ActiveRecord::Base
     else
       user
     end
-    (TrainingJoin.count :conditions => ['user_id = ? and training_id = ?', user_id, self.id]) > 0
+    TrainingJoin.find :first, :conditions => ['user_id = ? and training_id = ?', user_id, self.id]
   end
   
   def has_joined_member?(user)
-    user_id = case user
-    when User
-      user.id
-    else
-      user
-    end
-    (TrainingJoin.count :conditions => ['user_id = ? and training_id = ? and status = ?', user_id, self.id, TrainingJoin::JOIN]) > 0
+    tj = has_member?(user)
+    tj!=nil && tj.status == TrainingJoin::JOIN
   end
 end

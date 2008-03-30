@@ -2,11 +2,24 @@
   <%= stylesheet_link_tag 'calendar' %>
 <%end%>
 
+<div id="wide_left_content" class="sect">
+    <%= render(:partial => 'calendar', 
+        :locals => {:year => @date.year, :month => @date.month,
+        :trainings => @calendar_trainings_hash,
+        :matches => @calendar_matches_hash})%>
+</div>
 
-<h1><%=h @title%></h1>
-<div class="seperateLine"></div>
-<%= render(:partial => 'shared/calendar', 
-    :locals => {:year => @date.year, :month => @date.month,
-    :trainings => @calendar_trainings_hash,
-    :matches => @calendar_matches_hash})%>
+<div id="narrow_right_content" class="sect">
+  <h2>查看日程安排</h2>
+  <ul class="sidebar_menu">
+    <% tmp = 6.months.ago%>
+    <%(1..12).each do%>
+      <li>
+        > <%= month_calendar_link "#{tmp.strftime('%Y年%m月')}", tmp%>
+        <% tmp = tmp.next_month %>
+      </li>
+    <%end%>
+  </ul>
+</div>
+
 <div class="clearBoth"></div>

@@ -1,12 +1,17 @@
-<div class="seperateLine clearBoth"></div>
-<h2>管理员</h2>
-<%= render(:partial => 'shared/user_icon', :collection => @admin)%>
+<div class="sect">
+  <h2>管理员</h2>
+  <%= render(:partial => 'shared/user_icon', :collection => @admin)%>
+  <div class="clearBoth"></div>
+</div>
 
-<div class="seperateLine clearBoth"></div>
-<h2>队员</h2>
-<%= render(:partial => 'shared/user_icon', :collection => @players)%>
+<div class="sect">
+  <h2>队员</h2>
+  <%= render(:partial => 'shared/user_icon', :collection => @players)%>
+  <div class="clearBoth"></div>
+</div>
   
-<div class="seperateLine clearBoth"></div>
-<h2>其他成员</h2>
-<%= render(:partial => 'shared/user_icon', :collection => @others)%>
-<div class="clearBoth"></div>
+<div class="sect">
+  <h2>其他成员</h2>
+  <%= render(:partial => 'shared/user_icon', :collection => @others)%>
+  <div class="clearBoth"></div>
+</div>

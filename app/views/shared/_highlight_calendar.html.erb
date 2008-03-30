@@ -9,15 +9,17 @@
       <span class="bigMonthDaySpan"><%=month_day_link(date.day, date)%></span>
       <span class="bigWeekDaySpan"><%=wday_text date.wday%></span>
     </div>
-    <div style="width:100%; margin:5px;">
+    <div class="dateContent">
       <% dts = trainings[date.strftime("%Y-%m-%d")] %>
       <% if !dts.nil?%>
-      <% dts.each do |t| %>
-        <span class="trainingContentSpan">
+      <% dts.slice(0,3).each do |t| %>
+        <div class="trainingContentSpan">
+          <%= link_to image_tag('training_icon.gif'), training_view_path(t)%>
           <%= "#{t.start_time.strftime("%H:%M")}-#{t.end_time.strftime("%H:%M")}"%>
           <%= link_to '训练', training_view_path(t)%>
-        </span>
+        </div>
       <%end%>
+      <%= month_day_link(">> 更多", date, :class=>"more") if dts.length > 3%>
       <%end%>
     </div>
   </div>
@@ -38,14 +40,15 @@
         <span class="bigMonthDaySpan"><%=month_day_link(date.day, date)%></span>
         <span class="bigWeekDaySpan"><%=wday_text date.wday%></span>
       </div>
-      <div style="width:100%; margin:5px;">
+      <div class="dateContent">
         <% dts = trainings[date.strftime("%Y-%m-%d")] %>
         <% if !dts.nil?%>
-        <% dts.each do |t| %>
+        <% dts.slice(0..6).each do |t| %>
           <span class="trainingContentSpan">
-            <%= link_to '训练', training_view_path(t)%>
+            <%= link_to image_tag('training_icon.gif'), training_view_path(t)%>
           </span>
         <%end%>
+        <%= month_day_link(">> 更多", date, :class=>"more") if dts.length > 6%>
         <%end%>
       </div>
     </div>

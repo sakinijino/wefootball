@@ -1,35 +1,34 @@
-<div id="narrow_right_content">
-<div class="seperateLine"></div>
-<%=render :partial=>'sidebar_menu'%>
+<div id="narrow_right_content" class="sect">
+  <h2></h2>
+  <%=render :partial=>'sidebar_menu'%>
 </div>
 
-<div id="wide_left_content">
-<div class="seperateLine"></div>
+<div id="wide_left_content" class="sect">
+  <h2></h2>
+  <div style="float:left; margin:10px">
+  <%if @message.sender!=current_user%>
+    <%= small_user_image_link @message.sender %>
+  <%else%>
+    <%= small_user_image_link @message.receiver %>
+  <%end%>
+  </div>
 
-<div style="float:left; margin:10px">
-<%if @message.sender!=current_user%>
-  <%= small_user_image_link @message.sender %>
-<%else%>
-  <%= small_user_image_link @message.receiver %>
-<%end%>
-</div>
+  <div style="float:left; margin:10px">
+  <%if @message.sender!=current_user%>
+    <div>来自: <%=link_to h(@message.sender.nickname), user_view_path(@message.sender)%></div>
+  <%else%>
+    <div>送往: <%=link_to h(@message.receiver.nickname), user_view_path(@message.receiver)%></div>
+  <%end%>
+  <div>主题: <%=h @message.subject%></div>
+  <div>时间: <%=h @message.created_at.to_s(:db)%></div>
 
-<div style="float:left; margin:10px">
-<%if @message.sender!=current_user%>
-  <div>来自: <%=link_to h(@message.sender.nickname), user_view_path(@message.sender)%></div>
-<%else%>
-  <div>送往: <%=link_to h(@message.receiver.nickname), user_view_path(@message.receiver)%></div>
-<%end%>
-<div>主题: <%=h @message.subject%></div>
-<div>时间: <%=h @message.created_at.to_s(:db)%></div>
+  <div>
+  <%=simple_format auto_link(h(@message.content), :urls, :target => '_blank')%>
+  </div>
 
-<div>
-<%=simple_format auto_link(h(@message.content), :urls, :target => '_blank')%>
-</div>
-
-<%=link_to "回复", new_message_path(:to=>@message.sender.id) if @message.sender!=current_user%>
-<%=link_to "再写一封", new_message_path(:to=>@message.receiver.id) if @message.receiver!=current_user%>
-<%=link_to "删除", message_path(@message.id), :method=>"delete"%>
-</div>
+  <%=link_to "回复", new_message_path(:to=>@message.sender.id) if @message.sender!=current_user%>
+  <%=link_to "再写一封", new_message_path(:to=>@message.receiver.id) if @message.receiver!=current_user%>
+  <%=link_to "删除", message_path(@message.id), :method=>"delete"%>
+  </div>
 </div>
 <div class="clearBoth"></div>

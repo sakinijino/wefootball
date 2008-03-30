@@ -1,23 +1,20 @@
-<h1><%=h @title%></h1>
-<div id="wide_left_content">
-<div class="seperateLine"></div>
-<%= error_messages_for :post%>
-
-<% form_for(@post) do |f| %>
-  <%= render :partial=>'form', :locals => {:f=>f } %>
-  <p>
-    <%= f.submit "修改" %>
-  </p>
-<% end %>
+<div id="wide_left_content" class="sect">
+  <h2><%=h @title%></h2>
+  <%= error_messages_for :post%>
+  <% form_for(@post) do |f| %>
+    <%= render :partial=>'form', :locals => {:f=>f } %>
+    <p>
+      <%= f.submit "修改" %>
+    </p>
+  <% end %>
 </div>
 
-<div id="narrow_right_content">
-<div class="seperateLine"></div>
-
-<ul class="sidebar_menu">
-  <li>
-    > <%= link_to '返回帖子', post_path(@post) %>
-  </li>
-</ul>
+<div id="narrow_right_content" class="sect">
+  <h2></h2>
+  <ul class="sidebar_menu">
+    <li>
+      > <%= link_to '返回帖子', post_path(@post) %>
+    </li>
+  </ul>
 </div>
 <div class="clearBoth"></div>

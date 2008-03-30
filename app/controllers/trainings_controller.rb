@@ -21,6 +21,7 @@ class TrainingsController < ApplicationController
     @team = Team.find(params[:team_id])
     fake_params_redirect if (!current_user.is_team_admin_of?(@team))
     @training = Training.new(:start_time => Time.now.tomorrow, :end_time => Time.now.tomorrow.since(3600))
+    @title = "创建新训练"
     render :layout => "team_layout"
   end
 
@@ -44,6 +45,7 @@ class TrainingsController < ApplicationController
     @training = Training.find(params[:id])
     @team = @training.team
     fake_params_redirect if (!@training.can_be_modified_by?(current_user))
+    @title = "修改#{@training.start_time.strftime('%m月%d日')}训练的信息"
     render :layout => "training_layout"
   end
   

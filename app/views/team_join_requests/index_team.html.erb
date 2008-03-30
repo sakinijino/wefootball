@@ -1,45 +1,42 @@
-<h1><%=h @title%></h1>
-<div id="wide_left_content">
-<div class="seperateLine"></div>
-
-<table class="list">
-  <tr>
-    <th style="width:70px">&nbsp;</th>
-    <th style="width:70px">申请时间</th>
-    <th style="width:300px">留言</th>
-    <th style="width:100px">&nbsp;</th>
-  </tr>
-  <% for req in @requests %>
+<div id="wide_left_content" class="sect">
+  <h2><%=h @title%></h2>
+  <table class="list">
     <tr>
-      <td><%= small_team_image_link req.team%></td>
-      <td><%=req.apply_date.to_s(:db) %></td>
-      <td>
-        我申请加入<%= link_to h(req.team.shortname), team_view_path(req.team) %>
-        <br/><br/>
-        <%if !req.message.blank?%>
-          我的留言:
-          <%= h(req.message) %>
-          <br/><br/>
-        <%end%>
-      </td>
-      <td>
-        <%= button_to '撤销申请', team_join_request_path(req.id, :back_uri => request.request_uri), :method => :delete %>
-      </td>
+      <th style="width:70px">&nbsp;</th>
+      <th style="width:70px">申请时间</th>
+      <th style="width:300px">留言</th>
+      <th style="width:100px">&nbsp;</th>
     </tr>
-  <% end %>
-</table>
-  
+    <% for req in @requests %>
+      <tr>
+        <td><%= small_team_image_link req.team%></td>
+        <td><%=req.apply_date.to_s(:db) %></td>
+        <td>
+          我申请加入<%= link_to h(req.team.shortname), team_view_path(req.team) %>
+          <br/><br/>
+          <%if !req.message.blank?%>
+            我的留言:
+            <%= h(req.message) %>
+            <br/><br/>
+          <%end%>
+        </td>
+        <td>
+          <%= button_to '撤销申请', team_join_request_path(req.id, :back_uri => request.request_uri), :method => :delete %>
+        </td>
+      </tr>
+    <% end %>
+  </table>
 </div>
 
-<div id="narrow_right_content">
-<div class="seperateLine"></div>
-<ul class="sidebar_menu">
-  <li>
-  > <%= link_to("希望和我成为朋友的用户", friend_invitations_path) %>
-  </li>
-  <li>
-  > <%= link_to("邀请我加入的球队", team_join_invitations_path) %>
-  </li>
-</ul>
+<div id="narrow_right_content" class="sect">
+  <h2></h2>
+  <ul class="sidebar_menu">
+    <li>
+    > <%= link_to("希望和我成为朋友的用户", friend_invitations_path) %>
+    </li>
+    <li>
+    > <%= link_to("邀请我加入的球队", team_join_invitations_path) %>
+    </li>
+  </ul>
 </div>
 <div class="clearBoth"></div>

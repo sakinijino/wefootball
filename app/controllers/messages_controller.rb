@@ -32,6 +32,7 @@ class MessagesController < ApplicationController
     @receiver = User.find(params[:to])
     @message = Message.new
     @message.receiver = @receiver
+    @title = "给#{@receiver.nickname}写信"
   end
 
   def create

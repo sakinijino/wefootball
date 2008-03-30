@@ -11,10 +11,8 @@
   <%= stylesheet_link_tag 'formation_management' %>
 <%end%>
 
-<h1><%=h @title%></h1>
-
-<div style="float:left;width:372px">
-  <div class="seperateLine"></div>
+<div style="float:left;width:372px" class="sect">
+  <h2><%=h @title%></h2>
   <%=render :partial=>'sidebar_menu'%>
   <div class="clearBoth"></div>
   <div id="scroll_field">
@@ -23,8 +21,8 @@
   </div>
 </div>
 
-<div style="float:right;width:540px">
-  <div class="seperateLine" style="margin-bottom:10px"></div>
+<div style="float:right;width:540px" class="sect">
+  <h2></h2>
   <div class="notification">提示：将队员头像拖到球场上来安排阵型</div>
   <div class="tab_container">
     <% category = [['门将', [0]], ['后卫', (1..4)], ['中场', (5..9)], ['前锋', [13,10,11,12]]]%>

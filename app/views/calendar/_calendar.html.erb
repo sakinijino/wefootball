@@ -28,9 +28,10 @@
       <div class="monthDayBottomDiv">
         <% dts = trainings[date.strftime("%Y-%m-%d")] %>
         <% if !dts.nil?%>
-        <% dts.each do |t| %>
-          <%= link_to '训练', training_view_path(t)%>
+        <% dts.slice(0, 5).each do |t| %>
+          <%= link_to image_tag('training_icon.gif'), training_view_path(t)%>
         <%end%>
+        <%= month_day_link("更多", date, :class=>"more") if dts.length > 5%>
         <%end%>
       </div>
     </div>

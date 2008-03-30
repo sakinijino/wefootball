@@ -5,10 +5,18 @@
   <div class="week"><%= wday_text training.start_time.wday%></div>
 </div>
 <div class="activity_content">
-  <%= training.start_time.strftime('%H:%M')%>-<%= training.end_time.strftime('%H:%M')%>,
-  <%= link_to_if !training.football_ground_id.nil?, h(training.location), football_ground_path(training.football_ground_id)%>,
-  <%= link_to_if(display_team, training.team.shortname, team_view_path(training.team.id)) {}%>训练
-  <br/><br/>
+    <%if display_team%>
+      队伍: <%= link_to(training.team.shortname, team_view_path(training.team.id))%>
+      <br/><br/>
+    <%end%>
+    时间: <%= training.start_time.strftime('%H:%M')%>-<%= training.end_time.strftime('%H:%M')%>
+    <br/><br/>
+    场地: <%= link_to_if !training.football_ground_id.nil?, h(training.location), football_ground_path(training.football_ground_id)%>
+    <br/><br/>
+  <%if logged_in? %>
+    <%=link_to_if(training.can_be_joined_by?(current_user), '我去', training_training_joins_path(training), :method=>'post'){} %>
+    <%=link_to_if(training.can_be_quited_by?(current_user), '我不去', training_training_join_path(training, 0), :method=>'delete'){} %>
+  <%end%>
   <%=link_to '详情', training_view_path(training)%>
 </div>
 <%if display_team%>

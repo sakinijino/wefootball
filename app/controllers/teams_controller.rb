@@ -7,6 +7,7 @@ class TeamsController < ApplicationController
     @user = current_user
     @team = Team.new
     @team.city = 0
+    @title = "新建球队"
     render :layout => "user_layout"
   end
 
@@ -28,6 +29,7 @@ class TeamsController < ApplicationController
 
   def edit
     @team = Team.find(params[:id])
+    @title = "修改队伍信息"
     render :layout => "team_layout"
   end
   
