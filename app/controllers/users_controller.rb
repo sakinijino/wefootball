@@ -2,6 +2,50 @@ class UsersController < ApplicationController
   # Be sure to include AuthenticationSystem in Application Controller instead
   before_filter :login_required, :only=>[:update, :edit]
   before_filter :param_id_should_be_current_user, :only=>[:update, :update_image, :edit]
+
+  def activate
+    self.current_user = params[:activation_code].blank? ? false : User.find_by_activation_code(params[:activation_code])
+    if logged_in? && !current_user.active?
+      current_user.activate
+      flash[:notice] = "注册完毕！"
+    end
+    redirect_to edit_user_path(current_user.id)
+  end
+  
+  def forgot_password
+    if request.post?
+      user = User.find_by_login(params[:user][:login])
+      if user        
+        user.create_password_reset_code     
+        UserMailer.deliver_forgot_password(user)        
+        flash[:notice] = "密码重设通知已经发送到了#{user.login}，请查收"       
+      else      
+        flash[:notice] = "目前并无#{params[:user][:login]}所对应的帐户"  
+      end     
+      redirect_to(new_session_path) 
+    end 
+  end 
+  
+  def reset_password  
+    @user = User.find_by_password_reset_code(params[:password_reset_code]) unless params[:password_reset_code].nil? 
+    if @user.nil?
+      redirect_to(new_session_path)
+      return
+    end
+    if request.post?
+      @user.password = params[:user][:password]
+      @user.password_confirmation = params[:user][:password_confirmation]
+      if @user.save
+        self.current_user = @user    
+        @user.delete_password_reset_code
+        UserMailer.deliver_reset_password(@user)          
+        flash[:notice] = "帐户#{@user.login}的密码已经更改成功"    
+        redirect_to(new_session_path)   
+      else   
+        render :action => :reset_password   
+      end  
+    end 
+  end  
   
   def new
   end
@@ -16,12 +60,18 @@ class UsersController < ApplicationController
     # request forgery protection.
     # uncomment at your own risk
     # reset_session
-    @user = User.new(params[:user])
-    @user.login = params[:user][:login]
+    @user = User.find_by_login_and_activated_at(params[:user][:login],nil)
+    if @user
+      @user.password = params[:user][:password]
+      @user.password_confirmation = params[:user][:password_confirmation]       
+    else
+      @user = User.new(params[:user])
+      @user.login = params[:user][:login]
+    end
     if @user.save
-      self.current_user = @user
-      #redirect_back_or_default('/')
-      redirect_to user_view_path(@user)
+      UserMailer.deliver_signup_notification(@user)
+      flash[:notice] = "您的帐户已经注册成功，请登录您的注册邮箱（ #{@user.login}）激活帐户"    
+      redirect_to(new_session_path)      
     else
       render :action=>'new'
     end
@@ -58,7 +108,7 @@ class UsersController < ApplicationController
     end
   end
   
-protected
+  protected
   def param_id_should_be_current_user
     fake_params_redirect if self.current_user.id.to_s != params[:id].to_s
   end

@@ -94,6 +94,13 @@ ActionController::Routing::Routes.draw do |map|
   map.province_city_select "js/province_city_select.js", :controller=>"js", :action => "province_city_select"
   map.football_ground_select "js/football_ground_select.js", :controller=>"js", :action => "football_ground_select"
   
+  map.activate '/activate/:activation_code', :controller => 'users', :action=> 'activate', :activation_code => nil
+  map.signup '/signup', :controller => 'users', :action => 'new'
+  map.login '/login', :controller => 'sessions', :action => 'new'
+  map.logout '/logout', :controller => 'sessions', :action => 'destroy'
+  map.forgot_password '/forgot_password', :controller => 'users', :action => 'forgot_password'
+  map.reset_password '/reset_password/:password_reset_code', :controller => 'users', :action => 'reset_password', :password_reset_code => nil  
+  
   map.connect ':controller/:action/:id'
   map.connect ':controller/:action/:id.:format'
 end

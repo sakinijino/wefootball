@@ -106,6 +106,7 @@ class User < ActiveRecord::Base
   end
   
   before_save :encrypt_password
+  before_create :make_activation_code  
   
   # prevents a user from submitting a crafted form that bypasses activation
   # anything else you want your user to change should be added here.
@@ -127,9 +128,34 @@ class User < ActiveRecord::Base
     User.find :all, :conditions => ["login like ? or nickname like ?", q, q]
   end
 
+ # Activates the user in the database.
+  def activate
+    @activated = true
+    self.activated_at = Time.now.utc
+    self.activation_code = nil
+    save(false)
+    UserMailer.deliver_activation(self)
+  end
+
+  def active?
+    # the existence of an activation code means they have not activated yet
+    activation_code.nil?
+  end
+
+  def create_password_reset_code
+    self.password_reset_code = Digest::SHA1.hexdigest( Time.now.to_s.split(//).sort_by {rand}.join )    
+    save(false)
+  end
+  
+  def delete_password_reset_code
+    self.password_reset_code = nil
+    save(false)    
+  end  
+  
+  
   # Authenticates a user by their login name and unencrypted password.  Returns the user or nil.
   def self.authenticate(login, password)
-    u = find_by_login(login) # need to get the salt
+    u = find :first, :conditions => ['login = ? and activated_at IS NOT NULL', login] # need to get the salt
     u && u.authenticated?(password) ? u : nil
   end
 
@@ -171,7 +197,7 @@ class User < ActiveRecord::Base
     self.remember_token            = nil
     save(false)
   end
-  
+ 
   def positions_array
     self.positions.map {|p| p.label}
   end
@@ -319,6 +345,10 @@ class User < ActiveRecord::Base
     def password_required?
       crypted_password.blank? || !password.blank?
     end
+    
+    def make_activation_code
+      self.activation_code = Digest::SHA1.hexdigest( Time.now.to_s.split(//).sort_by {rand}.join )
+    end    
     
     def can_act_on_match_invitation?(match_invitation)
       if match_invitation.edit_by_host_team == true
