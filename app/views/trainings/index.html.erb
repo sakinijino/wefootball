@@ -1,9 +1,0 @@
-<%content_for(:stylesheet) do%>
-  <%= stylesheet_link_tag 'activityitem' %>
-<%end%>
-
-<div id="wide_left_content" class="sect">
-  <h2><%=h @title%></h2>
-  <%= render(:partial => 'shared/training_list', :object => @trainings, :locals => {:display_team => @team_display})%>
-</div>
-<div class="clearBoth"></div>

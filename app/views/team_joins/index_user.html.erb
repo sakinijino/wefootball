@@ -1,17 +1,26 @@
-<div class="sect">
-  <h2>管理员</h2>
-  <%= render(:partial => 'shared/user_icon', :collection => @admin)%>
-  <div class="clearBoth"></div>
+<div id="narrow_right_content" class="sect">
+  <h2></h2>
+  <%=render :partial=>'sidebar_menus/team_view_team_and_management'%>
 </div>
 
-<div class="sect">
-  <h2>队员</h2>
-  <%= render(:partial => 'shared/user_icon', :collection => @players)%>
-  <div class="clearBoth"></div>
+<div id="wide_left_content">
+  <div class="sect">
+    <h2>管理员</h2>
+    <%= render(:partial => 'shared/user_icon', :collection => @admin)%>
+    <div class="clearBoth"></div>
+  </div>
+
+  <div class="sect">
+    <h2>队员</h2>
+    <%= render(:partial => 'shared/user_icon', :collection => @players)%>
+    <div class="clearBoth"></div>
+  </div>
+
+  <div class="sect">
+    <h2>其他成员</h2>
+    <%= render(:partial => 'shared/user_icon', :collection => @others)%>
+    <div class="clearBoth"></div>
+  </div>
 </div>
-  
-<div class="sect">
-  <h2>其他成员</h2>
-  <%= render(:partial => 'shared/user_icon', :collection => @others)%>
-  <div class="clearBoth"></div>
-</div>
+
+<div class="clearBoth"></div>

@@ -1,4 +1,4 @@
-<div class="sect">
+<div id="wide_left_content" class="sect">
   <h2><%=h @title%></h2>
   <%if @friends.empty?%>
     <span>没有可以邀请加入的朋友，可能你的朋友都已经加入了这只球队</span>
@@ -20,3 +20,14 @@
     <% end %>
   <%end%>
 </div>
+
+<div id="narrow_right_content" class="sect">
+  <h2></h2>
+  <ul class="sidebar_menu">
+    <li>
+      > <%= link_to "返回队伍首页", user_view_path(@team) %>
+    </li>
+  </ul>
+</div>
+
+<div class="clearBoth"></div>

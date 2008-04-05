@@ -1,0 +1,26 @@
+<ul class="sidebar_menu"> 
+  <% if logged_in? && @training && current_user.is_team_member_of?(@training.team)%>%>
+    <li>
+      > <%= link_to '发言', new_training_post_path(@training) %>
+    </li>
+  <%end%>
+  <% if logged_in? && @team && current_user.is_team_member_of?(@team) %>
+    <li>
+      > <%= link_to '发言', new_team_post_path(@team) %>
+    </li>
+  <%end%>
+  <li>
+    > <% if @training %>
+      <%= link_to '讨论区', training_posts_path(@training) %>
+    <% elsif @team %>
+      <%= link_to '讨论区', team_posts_path(@team) %>
+    <%end%>
+  </li>
+  <li class="seperate">
+    > <% if @training %>
+      <%= link_to '返回训练首页', training_view_path(@training) %>
+    <% elsif @team %>
+      <%= link_to '返回队伍首页', team_view_path(@team) %>
+    <%end%>
+  </li>
+</ul>

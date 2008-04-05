@@ -1,0 +1,20 @@
+<ul class="sidebar_menu">
+  <li>
+  > <%= link_to '队伍成员', team_team_joins_path(@team) %>
+  </li>
+  <li>
+  > <%= link_to '查看阵型', formation_index_team_joins_path(:team_id => @team) %>
+  </li>
+  <%if logged_in? && current_user.is_team_admin_of?(@team)%>
+    <li class="seperate">
+    > <%= link_to '成员管理', admin_management_team_joins_path(:team_id => @team) %>
+    </li>
+    <li>
+    > <%= link_to '选拔队员', player_management_team_joins_path(:team_id => @team) %>
+    </li>
+    <li>
+    > <%= link_to '安排阵型', formation_management_team_joins_path(:team_id => @team) %>
+    </li>
+  <%end%>
+  <div class="clearBoth"></div>
+</ul>

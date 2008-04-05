@@ -5,17 +5,6 @@
 
 <div id="narrow_right_content" class="sect">
   <h2></h2>
-  <ul class="sidebar_menu">
-    <%if logged_in? && current_user.is_team_member_of?(@team)%>
-      <li>
-      >
-      <% if @training %>
-        <%= link_to '发言', new_training_post_path(@training) %>
-      <% elsif @team %>
-        <%= link_to '发言', new_team_post_path(@team) %>
-      <%end%>
-      </li>
-    <%end%>
-  </ul>
+  <%=render :partial=>'sidebar_menu'%>
 </div>
 <div class="clearBoth"></div>

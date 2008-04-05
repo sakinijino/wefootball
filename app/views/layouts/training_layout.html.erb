@@ -26,8 +26,9 @@
     <%= link_to h("#{@training.start_time.strftime('%m.%d')}的训练"), 
            training_view_path(@training), :style=>"font-size:smaller"%>
   </div>
-
-  <%= render(:partial => 'shared/header_setting')%>
+  <%= render(:partial => 'layouts/header_setting')%>
+  <%= render(:partial => 'layouts/training_menu', :locals => {:training => @training})%>
+  <%= render(:partial => 'layouts/search_panel', :locals => {:default => :team})%>
 </div>
 
 <div id="content">

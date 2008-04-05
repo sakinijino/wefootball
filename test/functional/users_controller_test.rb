@@ -20,8 +20,9 @@ class UsersControllerTest < Test::Unit::TestCase
   def test_should_allow_signup
     assert_difference 'User.count' do
       create_user
+      get :activate, :activation_code => assigns(:user).activation_code
       assert 'sakinijino@gmail.com', assigns["user"].login
-      assert_redirected_to user_view_path(assigns(:user))
+      assert_redirected_to edit_user_path(assigns(:user))
     end
   end
 
@@ -90,14 +91,6 @@ class UsersControllerTest < Test::Unit::TestCase
     assert_redirected_to "/"
   end
   
-  def test_should_require_email_on_signup
-    assert_no_difference 'User.count' do
-      create_user(:email => nil)
-      assert assigns(:user).errors.on(:email)
-      assert_response :success
-    end
-  end
-  
   def test_should_sign_up_user_with_activation_code
     create_user
     assigns(:user).reload
@@ -105,25 +98,21 @@ class UsersControllerTest < Test::Unit::TestCase
   end
 
   def test_should_activate_user
-    assert_nil User.authenticate('aaron', 'test')
-    get :activate, :activation_code => users(:aaron).activation_code
-    assert_redirected_to '/'
-    assert_not_nil flash[:notice]
-    assert_equal users(:aaron), User.authenticate('aaron', 'test')
+    create_user
+    assert_nil User.authenticate(assigns(:user).login, 'quire')
+    get :activate, :activation_code => assigns(:user).activation_code
+    assert_redirected_to edit_user_path(assigns(:user))
+    assert_equal assigns(:user), User.authenticate(assigns(:user).login, 'quire')
   end
   
   def test_should_not_activate_user_without_key
     get :activate
-    assert_nil flash[:notice]
-  rescue ActionController::RoutingError
-    # in the event your routes deny this, we'll just bow out gracefully.
+    assert_redirected_to "/"
   end
 
   def test_should_not_activate_user_with_blank_key
     get :activate, :activation_code => ''
-    assert_nil flash[:notice]
-  rescue ActionController::RoutingError
-    # well played, sir
+    assert_redirected_to "/"
   end  
   
   def test_should_not_update_image_of_other_user

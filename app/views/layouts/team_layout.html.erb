@@ -17,8 +17,10 @@
   <%= link_to team_image_tag(@team), team_view_path(@team), :id=>"header_icon" %>
   <%= link_to h(@team.shortname), team_view_path(@team), :id=>"header_name"%>
 
-  <%= render(:partial => 'shared/header_setting')%>
-  <%= render(:partial => 'shared/team_menu', :locals => {:team => @team})%>
+  <%= render(:partial => 'layouts/header_setting')%>
+  <%= render(:partial => 'layouts/team_menu', :locals => {:team => @team})%>
+  
+  <%= render(:partial => 'layouts/search_panel', :locals => {:default => :team})%>
 </div>
 
 <div id="content">

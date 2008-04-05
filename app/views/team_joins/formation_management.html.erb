@@ -11,18 +11,17 @@
   <%= stylesheet_link_tag 'formation_management' %>
 <%end%>
 
-<div style="float:left;width:372px" class="sect">
-  <h2><%=h @title%></h2>
-  <%=render :partial=>'sidebar_menu'%>
+<div style="float:right;width:392px" class="sect">
+  <%=render :partial=>'sidebar_menus/team_view_team_and_management'%>
   <div class="clearBoth"></div>
   <div id="scroll_field">
-    <div style="margin-bottom:5px;text-align:right;padding-right:5px"><%= submit_tag "保存修改", :onclick => 'formation.submit();'%></div>
+    <div style="margin-bottom:5px;"><%= submit_tag "保存修改", :onclick => 'formation.submit();'%></div>
     <div id="field_div"></div>
   </div>
 </div>
 
-<div style="float:right;width:540px" class="sect">
-  <h2></h2>
+<div style="float:left;width:530px" class="sect">
+  <h2><%=h @title%></h2>
   <div class="notification">提示：将队员头像拖到球场上来安排阵型</div>
   <div class="tab_container">
     <% category = [['门将', [0]], ['后卫', (1..4)], ['中场', (5..9)], ['前锋', [13,10,11,12]]]%>

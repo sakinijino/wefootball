@@ -1,18 +1,6 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
 class TrainingsControllerTest < ActionController::TestCase
-  def test_should_get_team_index
-    get :index, :team_id => teams(:inter)
-    assert_template "index"
-    assert_equal 2, assigns(:trainings).length
-  end
-  
-  def test_should_get_user_index
-    get :index, :user_id => users(:saki)
-    assert_template "index"
-    assert_equal 2, assigns(:trainings).length
-  end
-
   def test_should_create_training
     login_as :saki
     assert_difference('TrainingJoin.count', teams(:inter).users.size) do

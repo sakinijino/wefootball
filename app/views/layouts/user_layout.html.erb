@@ -17,8 +17,10 @@
   <%= link_to user_image_tag(@user), user_view_path(@user), :id=>"header_icon" %>
   <%= link_to h(@user.nickname), user_view_path(@user), :id=>"header_name"%>
 
-  <%= render(:partial => 'shared/header_setting')%>
-  <%= render(:partial => 'shared/user_menu', :locals => {:user => @user})%>
+  <%= render(:partial => 'layouts/header_setting')%>
+  <%= render(:partial => 'layouts/user_menu', :locals => {:user => @user})%>
+  
+  <%= render(:partial => 'layouts/search_panel', :locals => {:default => :user})%>
 </div>
 
 <div id="content">

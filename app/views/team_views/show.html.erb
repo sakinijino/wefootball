@@ -11,6 +11,8 @@
 
 <div id="left_content">
   <div class="sect">
+    <h2><%=h @team.shortname%>的信息</h2>
+
     <%if @team_join_request != nil || @team_join_invitation != nil || @team_join_request_count > 0 %>
     <div class="notification">
       <%if @team_join_request != nil%>
@@ -29,7 +31,6 @@
     </div>
     <%end%>
 
-    <h2><%=h @team.shortname%>的信息</h2>
     <div class="tab_container">
       <%if logged_in? %>
         <span class="shortcut">
@@ -49,15 +50,32 @@
       <%end%>
 
       <span class="tab_link" style="margin-left: 10px;">队伍信息</span>
+      <span class="tab_link">队伍阵型</span>
+      <% f_text = formation_text @formation_array%>
       <div class="tab">
       <%= "<span>球队全名: #{h @team.name}</span><br/>" unless @team.name.blank?%>
       <%= "<span>所在地: #{@team.city_text}</span><br/>" unless @team.city_text.nil?%>
-      <%= "<span>建队时间: #{@team.found_time}</span><br/>" unless @team.found_time.nil?%>
+      <%= "<span>惯用阵型: #{f_text}</span><br/>" unless f_text.blank?%>
       <%= "<span>球队风格: #{h @team.style}</span><br/>" unless @team.style.blank?%>
+      <%= "<span>建队时间: #{@team.found_time}</span><br/>" unless @team.found_time.nil?%>
       <%if !@team.summary.blank?%>
           <label>球队简介：</label>
           <p><%=simple_format auto_link(h(@team.summary), :urls)%></p>
       <%end%>
+      </div>
+      <div class="tab">
+        <%= "<span style='float:left;margin-left:5px;'>阵型: #{f_text}</span>" unless f_text.blank?%>
+        <%= link_to '查看详细', formation_index_team_joins_path(:team_id => @team), :style=>"float:right; margin-right:15px;"%>
+        <div class="clearBoth"></div>
+        <div style="position:relative">
+          <%= image_tag('team_small_field.jpg', :title=>"")%>
+          <%@formation_uts.each do |ut|%>
+            <% pos = team_field_position(ut.position, @formation_array) %>
+            <%= link_to small_user_image_tag(ut.user,
+              :style=>"left:#{pos[:left]}px;top:#{pos[:top]}px;",
+              :title=>ut.user.nickname), user_view_path(ut.user), :class=>"resize_small_icon" %>
+          <%end%>
+        </div>
       </div>
 
       <div style="margin: 10px 0 0 10px">
@@ -97,7 +115,7 @@
     <div class="activity narrow_activity" style="border:none; padding: 0px">
       <div class="activity_date">
         <div class="day">
-          <%= month_calendar_link(@trainings[0].start_time.strftime('%m'), @trainings[0].start_time)%>.<%= month_day_link(@trainings[0].start_time.day, @trainings[0].start_time)%></div>
+          <%= month_calendar_link(@trainings[0].start_time.strftime('%m'), @trainings[0].start_time, @team)%>.<%= day_calendar_link(@trainings[0].start_time.strftime('%d'), @trainings[0].start_time, @team)%></div>
         <div class="week"><%= wday_text @trainings[0].start_time.wday%></div>
       </div>
       <div class="activity_content">

@@ -10,15 +10,19 @@
 </div>
 
 <div id="narrow_right_content" class="sect">
-  <h2>查看日程安排</h2>
+  <h2>查看其它日程安排</h2>
   <ul class="sidebar_menu">
     <% tmp = 6.months.ago%>
     <%(1..12).each do%>
       <li>
-        > <%= month_calendar_link "#{tmp.strftime('%Y年%m月')}", tmp%>
+        > <%= month_calendar_link "#{tmp.strftime('%Y年%m月')}", tmp, @user || @team%>
         <% tmp = tmp.next_month %>
       </li>
     <%end%>
+    <li class="seperate">
+      > <%= link_to "返回个人首页", user_view_path(@user) if @user%>
+      <%= link_to "返回队伍首页", team_view_path(@team) if @team%>
+    </li>
   </ul>
 </div>
 

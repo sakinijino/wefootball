@@ -2,6 +2,15 @@
   <%= javascript_include_tag province_city_select_url %>
 <%end%>
 
+<div id="narrow_right_content" class="sect">
+  <h2></h2>
+  <ul class="sidebar_menu">
+    <li>
+      > <%= link_to "返回个人首页", user_view_path(@user) %>
+    </li>
+  </ul>
+</div>
+
 <div id="wide_left_content" class="sect">
   <h2><%=h @title%></h2>
   <%= error_messages_for :user %>
@@ -105,3 +114,5 @@
   <% end %>
   </div>
 </div>
+
+<div class="clearBoth"></div>

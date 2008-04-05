@@ -9,7 +9,7 @@
     <div class="activity" style="border:none;">
       <div class="activity_date">
         <div class="day">
-          <%= month_calendar_link(@training.start_time.strftime('%m'), @training.start_time)%>.<%= month_day_link(@training.start_time.day, @training.start_time)%></div>
+          <%= month_calendar_link(@training.start_time.strftime('%m'), @training.start_time, @team)%>.<%= day_calendar_link(@training.start_time.strftime('%d'), @training.start_time, @team)%></div>
         <div class="week"><%= wday_text @training.start_time.wday%></div>
       </div>
       <div class="activity_content">
@@ -29,7 +29,7 @@
               > <%=link_to '修改', edit_training_path(@training) %>&nbsp;&nbsp;|&nbsp;&nbsp;
             <%end%>
             <% if @training.can_be_destroyed_by?(current_user) %>
-              > <%=link_to '删除', training_path(@training), :method=>'delete'%>
+              > <%=link_to '取消', training_path(@training), :method=>'delete'%>
             <%end%>
           </div>
         <%end%>

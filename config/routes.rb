@@ -60,6 +60,7 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :team_join_invitations
   map.resources :team_joins, 
     :collection => { 
+      :formation_index => :get,
       :admin_management => :get, 
       :player_management => :get, 
       :formation_management => :get,

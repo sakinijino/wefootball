@@ -1,7 +1,7 @@
 <%display_team = display_team!=nil ? display_team : true%>
 <div class="activity_date">
   <div class="day">
-    <%= month_calendar_link(training.start_time.strftime('%m'), training.start_time)%>.<%= month_day_link(training.start_time.day, training.start_time)%></div>
+    <%= month_calendar_link(training.start_time.strftime('%m'), training.start_time, @user || @team)%>.<%= day_calendar_link(training.start_time.strftime('%d'), training.start_time, @user || @team)%></div>
   <div class="week"><%= wday_text training.start_time.wday%></div>
 </div>
 <div class="activity_content">

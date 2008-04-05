@@ -1,0 +1,48 @@
+<div id="header_menu">
+<%if logged_in? && user.id == current_user.id%>
+<div class="l1_menu">
+  <%= link_to("朋友", user_friend_relations_path(user))%>
+  <%= link_to("球队", user_team_joins_path(user))%>
+  <%= day_calendar_link('日程', Time.now, user)%>
+  <%= link_to("信箱", messages_path(:as=>'receiver'))%>
+  <%= link_to("设置",  edit_user_path(current_user))%>
+</div>
+
+<div class="l2_menu_list">
+  <ul>
+    <li><%= link_to("所有朋友", user_friend_relations_path(user))%></li>
+    <li><%= link_to("朋友邀请", friend_invitations_path)%></li>
+  </ul>
+  <ul>
+    <li><%= link_to("所有球队", user_team_joins_path(user))%></li>
+    <li><%= link_to("新建球队", new_team_path)%></li>
+    <li><%= link_to("球队邀请", team_join_invitations_path)%></li>
+    <li><%= link_to("球队申请", team_join_requests_path)%></li>
+  </ul>
+  <ul>
+    <li><%= day_calendar_link('今日日程', Time.now, user)%></li>
+    <li><%= month_calendar_link('本月日程', Time.now, user)%></li>
+  </ul>
+  <ul>
+    <li><%= link_to("收件箱", messages_path(:as=>'receiver'))%></li>
+    <li><%= link_to("发件箱", messages_path(:as=>'sender'))%></li>
+  </ul>
+  <ul></ul>
+</div>
+<%else%>
+<div class="l1_menu">
+  <%= link_to("朋友", user_friend_relations_path(user))%>
+  <%= link_to("球队", user_team_joins_path(user))%>
+  <%= day_calendar_link('日程', Time.now, user)%>
+</div>
+
+<div class="l2_menu_list">
+  <ul></ul>
+  <ul></ul>
+  <ul>
+    <li><%= day_calendar_link('今日日程', Time.now, user)%></li>
+    <li><%= month_calendar_link('本月日程', Time.now, user)%></li>
+  </ul>
+</div>
+<%end%>
+</div>

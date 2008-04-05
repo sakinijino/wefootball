@@ -125,7 +125,7 @@ class User < ActiveRecord::Base
 #    { :analyzer => GENERIC_ANALYZER })
 
   def self.find_by_contents(q)
-    User.find :all, :conditions => ["login like ? or nickname like ?", q, q]
+    User.find :all, :conditions => ["login like ? or nickname like ?", "%#{q}%", "%#{q}%"]
   end
 
  # Activates the user in the database.

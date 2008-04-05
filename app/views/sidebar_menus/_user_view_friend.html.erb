@@ -1,0 +1,13 @@
+<ul class="sidebar_menu">
+  <li>
+    > <%= link_to "所有朋友", user_friend_relations_path(@user) %>
+  </li>
+  <%if @user == current_user%>
+    <li >
+      > <%= link_to '朋友邀请', friend_invitations_path %>
+    </li>
+  <%end%>
+  <li <%= "class='seperate'" if @user == current_user%>>
+    > <%= link_to "返回个人首页", user_view_path(@user) %>
+  </li>
+</ul>

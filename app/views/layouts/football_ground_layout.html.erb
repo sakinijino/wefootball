@@ -14,7 +14,8 @@
 <body>
 <div id="main_content">
 <div id="header">
-  <%= render(:partial => 'shared/header_setting')%>
+  <%= render(:partial => 'layouts/header_setting')%>
+  <%= render(:partial => 'layouts/search_panel', :locals => {:default => :user})%>
 </div>
 
 <div id="content">

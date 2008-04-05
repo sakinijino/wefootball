@@ -1,21 +1,6 @@
 class TrainingsController < ApplicationController
-  before_filter :login_required, :except => [:index]
+  before_filter :login_required
   before_filter :parse_time, :only => [:create, :update]
-  
-  def index
-    if (params[:user_id]) #显示用户参与的训练
-      @user = User.find(params[:user_id], :include=>:trainings)
-      @trainings = @user.trainings.recent
-      @title = "#{@user.nickname}的训练"
-      render :layout => "user_layout"
-    else #显示队伍的所有训练
-      @team = Team.find(params[:team_id], :include=>:trainings)
-      @trainings = @team.trainings.recent
-      @title = "#{@team.shortname}的训练"
-      @team_display = false;
-      render :layout => "team_layout"
-    end
-  end
   
   def new
     @team = Team.find(params[:team_id])

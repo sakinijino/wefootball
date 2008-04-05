@@ -53,7 +53,7 @@ class Team < ActiveRecord::Base
   end
 
   def self.find_by_contents(q)
-    Team.find :all, :conditions => ["name like ? or shortname like ?", q, q]
+    Team.find :all, :conditions => ["name like ? or shortname like ?", "%#{q}%", "%#{q}%"]
   end
   
   def image(thumbnail = nil, refresh = nil)

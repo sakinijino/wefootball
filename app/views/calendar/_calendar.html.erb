@@ -1,9 +1,9 @@
 <%start_date = Date.new(year, month)%>
 <div class="monthCalendar">
 <div class="monthAndYear">
-  <%= month_calendar_link image_tag('prev.jpg'), start_date.last_month%>
+  <%= month_calendar_link image_tag('prev.jpg'), start_date.last_month, @user || @team%>
   <span><%= start_date.strftime("%Y-%m")%></span>
-  <%= month_calendar_link image_tag('next.jpg'), start_date.next_month%>
+  <%= month_calendar_link image_tag('next.jpg'), start_date.next_month, @user || @team%>
 </div>
 <div class="clearBoth"></div>
 <div>
@@ -22,7 +22,7 @@
     <div class="monthDayDiv <%= date == Date.today ? "currentDayDiv" : "" %>">
       <div class="monthDayTopDiv">
         <span class="monthDaySpan <%= date.month != month ? "otherMonthDaySpan" : "" %>">
-          <%= month_day_link(date.day, date)%>
+          <%= day_calendar_link(date.day, date, @user || @team)%>
         </span>
       </div>
       <div class="monthDayBottomDiv">
@@ -31,7 +31,7 @@
         <% dts.slice(0, 5).each do |t| %>
           <%= link_to image_tag('training_icon.gif'), training_view_path(t)%>
         <%end%>
-        <%= month_day_link("更多", date, :class=>"more") if dts.length > 5%>
+        <%= day_calendar_link("更多", date, @user || @team, :class=>"more") if dts.length > 5%>
         <%end%>
       </div>
     </div>

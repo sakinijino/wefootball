@@ -15,6 +15,9 @@ class TeamViewsController < ApplicationController
     @posts = @team.posts.find(:all, :limit=> POSTS_LENGTH)
     @calendar_trainings_hash = @team.trainings.in_a_duration(Time.today, Time.today.since(3600*24*18)).group_by{|t| t.start_time.strftime("%Y-%m-%d")}
     
+    @formation_uts = UserTeam.find_all_by_team_id(@team.id, :conditions => ["position is not null"], :include => [:user])
+    @formation_array = @formation_uts.map {|ut| ut.position}
+    
     @user_team = logged_in? ? UserTeam.find_by_user_id_and_team_id(current_user, @team) : nil
     @team_join_request = logged_in? ? TeamJoinRequest.find_by_user_id_and_team_id_and_is_invitation(current_user, @team, false) : nil
     @team_join_invitation = logged_in? ? TeamJoinRequest.find_by_user_id_and_team_id_and_is_invitation(current_user, @team, true) : nil

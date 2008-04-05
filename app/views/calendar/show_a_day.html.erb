@@ -3,22 +3,26 @@
 <%end%>
 
 <div id="wide_left_content" class="sect">
-  <h2></h2>
+  <h2><%= h @title%></h2>
   <%= render(:partial => 'shared/training_list', :object => @trainings, :locals => {:display_team => @team_display})%>
   <%= render(:partial => 'shared/match_list', :object => @matches, :locals => {:display_team => @team_display})%>
 </div>
 
 <div id="narrow_right_content" class="sect">
-  <h2>查看日程安排</h2>
+  <h2>查看其它日程安排</h2>
   <ul class="sidebar_menu">
     <li>
-      > <%= month_day_link "上一天的日程安排", @date.yesterday%>
+      > <%= day_calendar_link "上一天的日程安排", @date.yesterday, @user || @team%>
     </li>
     <li>
-      > <%= month_day_link "下一天的日程安排", @date.tomorrow%>
+      > <%= day_calendar_link "下一天的日程安排", @date.tomorrow, @user || @team%>
     </li>
-    <li style="border-top:dashed 1px #3D681A; padding-top:20px; width:80%">
-      > <%= month_calendar_link "本月的日程安排", @date%>
+    <li class="seperate">
+      > <%= month_calendar_link "本月的日程安排", @date, @user || @team%>
+    </li>
+    <li class="seperate">
+      > <%= link_to "返回个人首页", user_view_path(@user) if @user%>
+      <%= link_to "返回队伍首页", team_view_path(@team) if @team%>
     </li>
   </ul>
 </div>

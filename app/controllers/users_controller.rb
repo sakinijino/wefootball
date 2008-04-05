@@ -4,12 +4,14 @@ class UsersController < ApplicationController
   before_filter :param_id_should_be_current_user, :only=>[:update, :update_image, :edit]
 
   def activate
-    self.current_user = params[:activation_code].blank? ? false : User.find_by_activation_code(params[:activation_code])
+    self.current_user = params[:activation_code].blank? ? :false : User.find_by_activation_code(params[:activation_code])
     if logged_in? && !current_user.active?
       current_user.activate
       flash[:notice] = "注册完毕！"
+      redirect_to edit_user_path(current_user)
+    else
+      fake_params_redirect
     end
-    redirect_to edit_user_path(current_user.id)
   end
   
   def forgot_password
@@ -26,10 +28,11 @@ class UsersController < ApplicationController
     end 
   end 
   
-  def reset_password  
-    @user = User.find_by_password_reset_code(params[:password_reset_code]) unless params[:password_reset_code].nil? 
+  def reset_password
+    @user = nil
+    @user = User.find_by_password_reset_code(params[:password_reset_code]) unless params[:password_reset_code].blank? 
     if @user.nil?
-      redirect_to(new_session_path)
+      fake_params_redirect
       return
     end
     if request.post?

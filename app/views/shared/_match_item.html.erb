@@ -1,6 +1,6 @@
 <div class="activity_date">
   <div class="day">
-    <%= month_calendar_link(match.start_time.strftime('%m'), match.start_time)%>.<%= month_day_link(match.start_time.day, match.start_time)%></div>
+    <%= month_calendar_link(match.start_time.strftime('%m'), match.start_time, nil)%>.<%= day_calendar_link(match.start_time.day, match.start_time, nil)%></div>
   <div class="week"><%= wday_text match.start_time.wday%></div>
 </div>
 <div class="activity_content">

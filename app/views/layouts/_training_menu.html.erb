@@ -1,0 +1,19 @@
+<div id="header_menu">
+  <%can_modify = logged_in? && training.can_be_modified_by?(current_user)%>
+  <div class="l1_menu">
+    <%= link_to("成员", '#')%>
+    <%= link_to '讨论', training_posts_path(training)%>
+    <%if can_modify%>
+      <%=link_to '修改', edit_training_path(training) %>
+    <%end%>
+  </div>
+
+  <div class="l2_menu_list">
+    <ul>
+      <li><%= link_to("参加训练的成员", '#')%></li>
+      <li><%= link_to '尚未决定的成员', '#' %></li>
+    </ul>
+    <ul></ul>
+    <ul></ul>
+  </div>
+</div>

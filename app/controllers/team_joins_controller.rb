@@ -1,5 +1,5 @@
 class TeamJoinsController < ApplicationController
-  before_filter :login_required, :except => [:index]
+  before_filter :login_required, :except => [:index, :formation_index]
   
   def index
     if (params[:user_id]) # 显示用户参加的所有队伍
@@ -16,6 +16,16 @@ class TeamJoinsController < ApplicationController
       @title = "#{@team.shortname}的成员"
       render :action=>"index_user", :layout => "team_layout"
     end
+  end
+  
+  def formation_index
+    @team = Team.find(params[:team_id])
+    @player_uts = UserTeam.find_all_by_team_id_and_is_player(params[:team_id], true, :include=>[:user], :order => "position")
+    @starting_uts = @player_uts.reject {|ut| ut.position == nil}
+    @formation_array = @starting_uts.map {|ut| ut.position}
+    @subs_uts = @player_uts.reject {|ut| ut.position != nil}
+    @title = "#{@team.shortname}的阵型"
+    render :layout => "team_layout"
   end
   
   def admin_management

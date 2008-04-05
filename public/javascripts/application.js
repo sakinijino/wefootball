@@ -16,19 +16,38 @@ wefootball.openDialog = function (event, id){
 }
 
 j(function(){
-	j("li.level_1_menu_item").each(function(i, item){
+        var l2_menu_list = j("#header_menu div.l2_menu_list ul")
+	j("#header_menu div.l1_menu a").each(function(i, item){
 		item = j(item)
-		var menu = j(item.find("div.level_2_menu")[0])
-		menu.css('display', 'none')
-		item.mouseover(function(){menu.css('display', '')})
-		item.mouseout(function(){menu.css('display', 'none')})
+		item.mouseover(function(){
+                     l2_menu_list.hide();
+                     j(l2_menu_list[i]).show();
+                })
 	})
+         
+        j(".dropdown_container").each(function(i, item){
+            item = j(item)
+            var ul = item.find('ul.dropdown')
+            item.mouseover(function(){ul.show()})
+                .mouseout(function(){ul.hide()})
+        })
+        
+        j("#header_search .dropdown_container ul.dropdown li a").click(function(){
+            j('#header_search').attr('action', this.pathname)
+            j(this).parent().parent().hide();
+            return false;
+        })
 	
-	j("div.jdialog").each(function(i, item){
-		item = j(item)
-		item.dialog({draggable:false, resizable:false, width:"auto", height:"auto"});
-		item.dialog('close');
-	})
+	var dialogs = j("div.jdialog")
+        if (dialogs.length > 0) dialogs.dialog({draggable:false, resizable:false, width:"auto", height:"auto"}).dialog('close');
+         
+        j("a.resize_small_icon img").mouseover(function(){
+            j(this).css("z-index", "10")
+            j(this).animate({marginLeft:"-12px", marginTop:"-12px", width:"48px", height:"48px"}, 300)
+        }).mouseout(function(){
+            j(this).css("z-index", "0")
+            j(this).animate({marginLeft:"0px", marginTop:"0px", width:"22px", height:"22px"})
+        })
          
         j("div.tab_container").each(function(i, container){
             var index = 0;

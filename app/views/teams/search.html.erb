@@ -1,5 +1,1 @@
-<%@teams.each do |team| %>
-  <div>
-    <%=link_to team.shortname, team_path(team.id)%>
-  </div>
-<%end%>
+<%= render(:partial => 'shared/team_icon', :collection => @teams)%>

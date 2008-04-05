@@ -29,8 +29,35 @@ table th{ text-align: left; }
     height:131px;
     background-image:url(/images/head.gif);
     position: relative;
-    color: #fff;
     line-height: normal
+}
+
+#header .dropdown_container {
+    position:relative;
+}
+
+#header ul.dropdown {
+    border: 1px solid #3D681A;
+    margin: 0;
+    padding: 3px;
+    background: #fff;
+    display:none;
+    position:absolute;
+}
+
+#header ul.dropdown li{
+    list-style-type: none;
+}
+
+#header ul.dropdown li a{
+    display: block;
+    padding: 5px;
+    background: #fff;
+    color: #006666;
+}
+
+#header ul.dropdown li a:hover{
+    background: #F2F7AB;
 }
 
 #header_icon {
@@ -57,9 +84,10 @@ table th{ text-align: left; }
 #header_setting {
     color: #fff;
     float: left;
-    position: absolute;
+    position: relative;
     top: 100px;
-    left: 25px
+    width: 145px;
+    text-align:center;
 }
 
 #header_setting a {
@@ -67,22 +95,63 @@ table th{ text-align: left; }
 }
 
 #header_menu {
-    float: left;
     position: absolute;
     top: 80px;
-    left: 240px
+    left: 185px;
+    width: 502px;
+    text-align: center;
 }
 
-#header_menu ul.level_1_menu {
-    color: #000;
+#header_menu div.l1_menu{
     margin: 0;
     font-size: 14px;
 }
 
-#header_menu ul.level_1_menu li.level_1_menu_item{
-    float: left;
+#header_menu div.l1_menu a{
     margin: 0 15px;
+}
+
+#header_menu div.l2_menu_list {
+    margin: 0;
+    text-align: center
+}
+
+#header_menu div.l2_menu_list ul{
+    margin: 5px 0 0 0;
+    padding: 0;
+    display: none;
+}
+
+#header_menu div.l2_menu_list ul li{
+    font-size: 12px;
+    display: inline;
+    margin: 0 15px 0 15px;
     list-style-type: none;
+}
+
+#header_search {
+    margin: 0;
+    padding: 0;
+    position: relative;
+    top: 95px;
+    float:right;
+}
+
+#header_search table {
+    vertical-align: middle;
+}
+
+#header_search input {
+    margin: 0;
+    padding: 0;
+    border: none;
+    background: #fff;
+}
+
+#header_search input.submit {
+    background: transparent;
+    color: #fff;
+    cursor: pointer;
 }
 
 #content {
@@ -110,7 +179,7 @@ div.sect {
     margin-bottom: 20px;
 }
 
-div.sect h2{
+div.sect h2 {
     margin: 0 0 5px -5px;
     padding: 5px;
     height: 30px;
@@ -175,7 +244,7 @@ table.form td{
 div.notification {
     background: #F2F7AB;
     padding: 6px 10px;
-    margin: 5px 0px;
+    margin: 10px 0px 15px 0px;
 }
 
 div.tab_container {
@@ -227,6 +296,7 @@ a.tab_link {
 div.tab_container span.shortcut {
     float:right;
     margin-right: 5px;
+    height: 17px;
 }
 
 div.tab_container span.shortcut img {
@@ -272,6 +342,12 @@ ul.sidebar_menu li{
     margin: 5px 5px 20px 5px;
 }
 
+ul.sidebar_menu li.seperate{
+    border-top:dashed 1px #3D681A;
+    padding-top:20px;
+    width:80%;
+}
+
 ul.sidebar_menu li,
 ul.sidebar_menu li a{
     font-size: 14.8px;
@@ -301,4 +377,10 @@ div.ui-dialog div.ui-dialog-titlebar{
 div.ui-dialog form{
     padding: 0px;
     margin: 0px;
+}
+
+a.resize_small_icon img {
+    width: 22px;
+    height: 22px;
+    position: absolute;
 }

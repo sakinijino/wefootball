@@ -5,6 +5,7 @@ quentin:
   salt: 7e3041ebc2fc05a40c60028e2c4901a81035d3cd
   crypted_password: 00742970dc9e6319f8019fd54864d3ea740f04b1 # test
   created_at: <%= 5.days.ago.to_s :db %>
+  activated_at: <%= 5.days.ago.to_s :db %>
 
 aaron:
   id: 2
@@ -13,6 +14,7 @@ aaron:
   salt: 7e3041ebc2fc05a40c60028e2c4901a81035d3cd
   crypted_password: 00742970dc9e6319f8019fd54864d3ea740f04b1 # test
   created_at: <%= 1.days.ago.to_s :db %>
+  activated_at: <%= 5.days.ago.to_s :db %>
 
 saki:
   id: 3
@@ -20,6 +22,7 @@ saki:
   salt: 7e3041ebc2fc05a40c60028e2c4901a81035d3cd
   crypted_password: 00742970dc9e6319f8019fd54864d3ea740f04b1 # test
   created_at: <%= 1.days.ago.to_s :db %>
+  activated_at: <%= 5.days.ago.to_s :db %>
   is_playable: true
   premier_position: 2
   city: 1
@@ -37,6 +40,7 @@ mike1:
   salt: 7e3041ebc2fc05a40c60028e2c4901a81035d3cd
   crypted_password: 00742970dc9e6319f8019fd54864d3ea740f04b1 # test
   created_at: <%= 1.days.ago.to_s :db %>
+  activated_at: <%= 5.days.ago.to_s :db %>
 
 mike2:
   id: 5
@@ -45,6 +49,7 @@ mike2:
   salt: 7e3041ebc2fc05a40c60028e2c4901a81035d3cd
   crypted_password: 00742970dc9e6319f8019fd54864d3ea740f04b1 # test
   created_at: <%= 1.days.ago.to_s :db %>
+  activated_at: <%= 5.days.ago.to_s :db %>
 
 mike3:
   id: 6
@@ -53,3 +58,4 @@ mike3:
   salt: 7e3041ebc2fc05a40c60028e2c4901a81035d3cd
   crypted_password: 00742970dc9e6319f8019fd54864d3ea740f04b1 # test
   created_at: <%= 1.days.ago.to_s :db %>
+  activated_at: <%= 5.days.ago.to_s :db %>

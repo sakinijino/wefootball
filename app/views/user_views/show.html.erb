@@ -11,6 +11,8 @@
 
 <div id="left_content">
   <div class="sect">
+    <h2><%=h @user.nickname%>的信息</h2>
+
     <%if @firend_request != nil || @firend_invitation != nil || @user_invitation_count > 0 ||  @team_invitation_count > 0%>
     <div class="notification">
       <%if @firend_request != nil%>
@@ -30,8 +32,6 @@
       <%end%>
     </div>
     <%end%>
-
-    <h2><%=h @user.nickname%>的信息</h2>
     <div class="tab_container">
     <%if logged_in? && @user.id != current_user.id %>
       <span class="shortcut">
@@ -51,10 +51,14 @@
     <span class="tab_link">球员信息</span>
     <%end%>
     <div class="tab">
+    <span>昵称: <%= h @user.nickname%></span>
+    <%if @user.gender != 0%>
+      <span><%= @user.gender == 1 ? '♂' : '♀'%></span>
+    <%end%>
+    <br/>
     <%= "<span>所在地: #{@user.city_text}</span><br/>" unless @user.city_text.nil?%>
     <%= "<span>生日: #{@user.birthday_text}</span><br/>" unless @user.birthday_text.nil?%>
     <%= "<span>年龄: #{@user.age}</span><br/>" unless @user.age.nil?%>
-    <%= "<span>性别: #{@user.gender == 1 ? '男' : '女'}</span><br/>" unless @user.gender == 0%>
     <%= "<span>喜欢的球星: #{h @user.favorite_star}</span><br/>" unless @user.favorite_star.blank?%>
     <%= "<span>喜欢的球队: #{h @user.favorite_team}</span><br/>" unless @user.favorite_team.blank?%>
     <%= "<span>blog地址: <a href='#{@user.full_blog_uri}' target='_blank'>#{word_wrap_with_wbr(h(@user.blog))}</a></span><br/>" unless @user.blog.blank?%>
@@ -133,7 +137,7 @@
       <div class="activity" style="border:none; padding-top: 0px; padding-bottom: 0px;">
         <div class="activity_date">
           <div class="day">
-            <%= month_calendar_link(@trainings[0].start_time.strftime('%m'), @trainings[0].start_time)%>.<%= month_day_link(@trainings[0].start_time.day, @trainings[0].start_time)%></div>
+            <%= month_calendar_link(@trainings[0].start_time.strftime('%m'), @trainings[0].start_time, @user)%>.<%= day_calendar_link(@trainings[0].start_time.strftime('%d'), @trainings[0].start_time, @user)%></div>
           <div class="week"><%= wday_text @trainings[0].start_time.wday%></div>
         </div>
         <div class="activity_content">

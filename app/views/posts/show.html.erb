@@ -21,22 +21,7 @@
 <div id="narrow_right_content">
   <div class="sect">
     <h2></h2>
-    <ul class="sidebar_menu">
-      <li>
-        > <% if @training %>
-          <%= link_to '返回讨论区', training_posts_path(@training) %>
-        <% elsif @team %>
-          <%= link_to '返回讨论区', team_posts_path(@team) %>
-        <%end%>
-      </li>
-      <li>
-        > <% if @training %>
-          <%= link_to '发言', new_training_post_path(@training) %>
-        <% elsif @team %>
-          <%= link_to '发言', new_team_post_path(@team) %>
-        <%end%>
-      </li>
-    </ul>
+    <%=render :partial=>'posts/sidebar_menu'%>
   </div>
 
   <div class="sect">
