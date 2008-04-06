@@ -6,6 +6,9 @@ wefootball.formation = function(max_size, field, submit_url){
     this.submit_url = submit_url
     this.current_size = 0
     this.field = field;
+    this.field.draggable({
+        axis:'y'
+    })
     this.positions = {
         0:null, 
         1:null, 2:null, 3:null, 4:null, 5:null,
@@ -38,7 +41,7 @@ wefootball.formation.prototype = {
                 .css('left', wefootball.formation.getPositionPos(pos).left - 20)
                 .css('opacity', 0.5)
                 .droppable({
-                    accept: "*",
+                    accept: ".player_drag_handle",
                     activeClass: "accept_elem",
                     hoverClass: "over_accept_elem",
                     activate: function(){
@@ -137,6 +140,7 @@ wefootball.player = function(options){
     this.small_img = j("<div><div class='del'>X</div>"+this.small_image_tag+"<span>"+this.nickname+"</span>"+"</div>")
         .addClass('icon')
     this.tiny_img = j("<div style='width:40px;height:40px'>"+this.tiny_image_tag+"</div>")
+        .addClass('player_drag_handle')
         .append(this.small_img)
         .mouseover(function(){
             _this.small_img.css('display', 'block')
@@ -152,6 +156,7 @@ wefootball.player = function(options){
         .css('position', 'absolute')
         .draggable(drag_options);
     this.handles = j(".user_"+this.user_id)
+        .addClass('player_drag_handle')
         .draggable(drag_options);  
     if (j.browser.msie) this.fixSuperDrag(); //fix maxthon image-super-drag 
 }

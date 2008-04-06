@@ -43,9 +43,7 @@
         <%if current_user.is_team_admin_of?(@team)%>
           <%= link_to(image_tag("inviteIntoTeam.gif", :title=>"邀请朋友加入"), new_team_team_join_invitation_path(@team))%>
         <%end%>
-        <%if logged_in? && current_user.can_invite_team?(@team) %>
-          <%=link_to(image_tag("inviteMacth.gif", :title=>"邀请该队参加比赛"), new_match_invitation_path(:guest_team_id=>@team))%>
-        <%end%>
+        <%=link_to(image_tag("inviteMacth.gif", :title=>"邀请该队参加比赛"), new_match_invitation_path(:guest_team_id=>@team))%>
         </span>
       <%end%>
 
@@ -89,9 +87,7 @@
           <%if current_user.is_team_admin_of?(@team)%>
             <%= link_to("邀请朋友加入", new_team_team_join_invitation_path(@team))%>
           <%end%>
-          <%if current_user.can_invite_team?(@team) %>
-            <%=link_to("邀请该队进行比赛", new_match_invitation_path(:guest_team_id=>@team))%>
-          <%end%>
+          <%=link_to("邀请该队进行比赛", new_match_invitation_path(:guest_team_id=>@team))%>
         <%end%>
       </div>
     </div>

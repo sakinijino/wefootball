@@ -1,0 +1,81 @@
+<div id="narrow_right_content" class="sect">
+  <h2></h2>
+  <%=render :partial=>'sidebar_menu'%>
+</div>
+
+<div id="wide_left_content" class="sect">
+  <h2><%= h @title%></h2>
+  <table class="list">
+    <% @mis.each do |mi|%>
+      <tr>
+        <td><%= render(:partial => 'shared/team_icon', :object => mi.host_team)%></td>
+        <td style="width:100%">
+          <table class="match_invitation_list">
+          <tr>
+            <td style="width:60px">发起队</td>
+            <td>
+              <%= mi.host_team == @team ? '本队' : '对方'%>
+              <%=link_to h(mi.host_team.shortname), team_view_path(mi.host_team)%>
+            </td>
+          </tr>
+          <tr>
+            <td style="width:60px">状态</td>
+            <td>
+              <% another_team = mi.edit_by_host_team ? mi.host_team : mi.guest_team%>
+              邀请发出，等待<%=link_to h(another_team.shortname), team_view_path(another_team)%>回复
+            </td>
+          </tr>
+          <tr>
+            <td style="width:60px">时间</td>
+            <td><%= mi.new_start_time.strftime('%Y-%m-%d %H:%M')%></td>
+          </tr>
+          <tr>
+            <td style="width:60px">地点</td>
+            <td><%= h mi.new_location%></td>
+          </tr>
+          <tr>
+            <td style="width:60px">比赛性质</td>
+            <td><%= match_type_text mi.new_match_type%></td>
+          </tr>
+          <tr>
+            <td style="width:60px">人数</td>
+            <td><%= mi.new_size%>人制</td>
+          </tr>
+          <tr>
+            <td style="width:60px">半场时长</td>
+            <td><%= mi.new_half_match_length%>分钟</td>
+          </tr>
+          <tr>
+            <td style="width:60px">中间休息</td>
+            <td><%= mi.new_rest_length%>分钟</td>
+          </tr>
+          <tr>
+            <td style="width:60px">其他规则</td>
+            <td>
+              <ul>
+                <li><%= mi.new_has_judge ? '有' : '没有'%>裁判,
+                    <%= mi.new_has_card ? '有' : '没有'%>红黄牌,
+                    <%= mi.new_has_offside ? '有' : '没有'%>越位
+                </li>
+                <li>平局后<%= win_rule_text mi.new_win_rule%></li>
+              </ul>
+            </td>
+          </tr>
+          <%msg = mi.edit_by_host_team ? mi.guest_team_message: mi.host_team_message%>
+          <%if !msg.blank?%>
+          <tr>
+            <td style="width:60px">我的留言</td>
+            <td>
+              <%= h msg%>
+            </td>
+          </tr>
+          <%end%>
+          </table>
+        </td>
+        <td><%= render(:partial => 'shared/team_icon', :object => mi.guest_team)%></td>
+      </tr>
+    <%end%>
+  </table>
+</div>
+
+<div class="clearBoth"></div>

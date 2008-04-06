@@ -1,6 +1,6 @@
 inv1:
   id: 1
-  new_start_time: 2008-01-20 15:00:00
+  new_start_time: <%= 1.day.since.to_s(:db)%>
   new_location: Beijing, PKU
   new_match_type: 1
   new_size: 11

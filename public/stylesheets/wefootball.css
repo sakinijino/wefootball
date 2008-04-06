@@ -98,7 +98,7 @@ table th{ text-align: left; }
     position: absolute;
     top: 80px;
     left: 185px;
-    width: 502px;
+    width: 552px;
     text-align: center;
 }
 
@@ -345,7 +345,7 @@ ul.sidebar_menu li{
 ul.sidebar_menu li.seperate{
     border-top:dashed 1px #3D681A;
     padding-top:20px;
-    width:80%;
+    width:85%;
 }
 
 ul.sidebar_menu li,
@@ -383,4 +383,28 @@ a.resize_small_icon img {
     width: 22px;
     height: 22px;
     position: absolute;
+}
+
+table.match_invitation_list {
+    width: 100%;
+}
+
+table.match_invitation_list th,
+table.match_invitation_list td{
+    border: none;
+    vertical-align: top;
+}
+
+table.match_invitation_list td ul{
+    margin: 0;
+    padding: 0;
+}
+
+table.match_invitation_list td ul li{
+    list-style-type: none;
+}
+
+table.form .conflict {
+    background: #F2F7AB;
+    padding: 5px 5px;
 }

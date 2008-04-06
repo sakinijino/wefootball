@@ -15,6 +15,13 @@ class MatchInvitation < ActiveRecord::Base
   attr_accessible :new_has_judge, :new_has_card, :new_has_offside, :new_win_rule
   attr_accessible :new_description, :new_half_match_length, :new_rest_length
   
+  validates_presence_of     :new_location, :message => "请填写比赛地点"
+  validates_length_of        :new_location,    :maximum => 300
+  
+  validates_numericality_of :new_half_match_length, :new_rest_length
+  validates_inclusion_of    :new_half_match_length, :in => 0..60
+  validates_inclusion_of    :new_rest_length, :in => 0..60
+  
   validates_inclusion_of :new_match_type, :in => MATCH_TYPES, :allow_nil=>true
   validates_inclusion_of :new_size, :in => MATCH_SIZES, :allow_nil=>true
   validates_inclusion_of :new_win_rule, :in => WIN_RULES, :allow_nil=>true
@@ -23,6 +30,11 @@ class MatchInvitation < ActiveRecord::Base
   validates_length_of :host_team_message, :maximum =>MAX_TEAM_MESSAGE_LENGTH
   validates_length_of :guest_team_message, :maximum =>MAX_TEAM_MESSAGE_LENGTH 
 
+  def validate
+    st = new_start_time.respond_to?(:to_datetime) ? new_start_time.to_datetime : new_start_time
+    errors.add(:start_time, "比赛开始时间必须大于当前时间") if st < DateTime.now
+  end
+  
   def before_validation
     if self.host_team_message.nil?
       self.host_team_message = ""

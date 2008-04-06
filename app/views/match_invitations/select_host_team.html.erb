@@ -1,9 +1,22 @@
-<div>
+<div id="narrow_right_content" class="sect">
+  <h2></h2>
+  <ul class="sidebar_menu">
+    <li>
+      > <%= link_to '返回队伍首页', team_view_path(@team) %>
+    </li>
+  </ul>
+</div>
+
+<div id="wide_left_content" class="sect">
+    <h2><%=h @title%></h2>
   <%if @host_teams.empty?%>
-    <h1>您目前没有管理的球队，所以无法邀请<%=@guest_team.shortname%>进行比赛</h1>
-    <%= link_to "创建我自己的球队",new_team_path(:back_uri=>new_match_invitation_path(:guest_team_id=>@guest_team.id))%>
+    你暂时没有管理任何球队，因此无法邀请<%=@guest_team.shortname%>进行比赛
+    你可以在<%= link_to "这里", new_team_path(:back_uri=>new_match_invitation_path(:guest_team_id=>@guest_team.id))%>创建自己的球队
   <%else%>
-    <h1>请选择我方要出战的球队</h1>
+    
+    <div class="notification">
+       选择你希望与<%=link_to h(@guest_team.shortname), team_view_path(@guest_team)%>进行比赛的球队作为发起邀请的球队
+    </div>
     <%for t in @host_teams%>
       <div class="icon">
         <%=link_to small_team_image_tag(t), new_match_invitation_path(:host_team_id=>t.id, :guest_team_id=>@guest_team.id)%>
@@ -12,3 +25,5 @@
     <%end%>
   <%end%>
 </div>
+
+<div class="clearBoth"></div>

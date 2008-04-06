@@ -45,7 +45,8 @@ ActionController::Routing::Routes.draw do |map|
     teams.resources :team_join_invitations
     teams.resources :trainings
     teams.resources :posts
-    teams.resources :matches    
+    teams.resources :matches
+    teams.resources :match_invitations    
   end
   map.resources :team_views
   

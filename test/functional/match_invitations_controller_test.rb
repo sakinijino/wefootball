@@ -36,21 +36,41 @@ class MatchInvitationsControllerTest < ActionController::TestCase
   def test_should_create_match_invitation
     login_as :quentin    
     assert_difference('MatchInvitation.count') do
-      post :create, :match_invitation => {:host_team_id => teams(:inter).id,:guest_team_id => teams(:milan).id}
+      post :create, :match_invitation => {
+        :host_team_id => teams(:inter).id,
+        :guest_team_id => teams(:milan).id,
+        :new_location => "Beijing",
+        :new_start_time => 1.day.since,
+        :new_half_match_length => 45,
+        :new_rest_length => 15
+      }
     end
     assert_equal teams(:inter).id, assigns(:match_invitation).host_team_id
     assert_equal teams(:milan).id, assigns(:match_invitation).guest_team_id    
-    assert_redirected_to match_invitation_path(assigns(:match_invitation))
+    assert_redirected_to team_match_invitations_path(teams(:inter), :as => 'send')
   end
   
   def test_should_not_create_match_invitation
     login_as :quentin    
     assert_no_difference('MatchInvitation.count') do #host_team和guest_team是同一支队伍
-      post :create, :match_invitation => {:host_team_id => teams(:inter).id,:guest_team_id => teams(:inter).id}
+      post :create, :match_invitation => {
+        :host_team_id => teams(:inter).id,:guest_team_id => teams(:inter).id,
+        :new_location => "Beijing",
+        :new_start_time => 1.day.since,
+        :new_half_match_length => 45,
+        :new_rest_length => 15
+      }
     end
     assert_redirected_to '/'
     assert_no_difference('MatchInvitation.count') do #current_user并不是host_team_id所对应球队的管理员
-      post :create, :match_invitation => {:host_team_id => teams(:juven).id,:guest_team_id => teams(:milan).id}
+      post :create, :match_invitation => {
+        :host_team_id => teams(:juven).id,
+        :guest_team_id => teams(:milan).id,
+        :new_location => "Beijing",
+        :new_start_time => 1.day.since,
+        :new_half_match_length => 45,
+        :new_rest_length => 15
+     }
     end
     assert_redirected_to '/'
   end
@@ -65,7 +85,7 @@ class MatchInvitationsControllerTest < ActionController::TestCase
     ut = UserTeam.new
     ut.user_id = u.id
     ut.team_id = t1.id   
-    inv1 = MatchInvitation.new   
+    inv1 = create_match_invitation   
     inv1.host_team_id = t1.id
     inv1.guest_team_id = t2.id     
     
@@ -86,7 +106,7 @@ class MatchInvitationsControllerTest < ActionController::TestCase
     ut = UserTeam.new
     ut.user_id = u.id
     ut.team_id = t1.id   
-    inv1 = MatchInvitation.new   
+    inv1 = create_match_invitation   
     inv1.host_team_id = t1.id
     inv1.guest_team_id = t2.id    
     
@@ -113,7 +133,7 @@ class MatchInvitationsControllerTest < ActionController::TestCase
     ut = UserTeam.new
     ut.user_id = u.id
     ut.team_id = t1.id   
-    inv1 = MatchInvitation.new   
+    inv1 = create_match_invitation   
     inv1.host_team_id = t1.id
     inv1.guest_team_id = t2.id
     
@@ -141,7 +161,7 @@ class MatchInvitationsControllerTest < ActionController::TestCase
     ut = UserTeam.new
     ut.user_id = u.id
     ut.team_id = t1.id   
-    inv1 = MatchInvitation.new   
+    inv1 = create_match_invitation   
     inv1.host_team_id = t1.id
     inv1.guest_team_id = t2.id    
     
@@ -166,7 +186,7 @@ class MatchInvitationsControllerTest < ActionController::TestCase
     assert_equal "test_description", new_inv1.description #测试save_last_info!是否成功
     assert_equal "test", new_inv1.host_team_message #测试只能修改当前具有编辑权限的球队所对应的留言
     assert_equal "", new_inv1.guest_team_message
-    assert_redirected_to match_invitation_path(new_inv1)
+    assert_redirected_to team_match_invitations_path(t1, :as => 'send')
   end
   
   def test_should_update_by_guest_team #这个测试与上面的test_should_update_by_host_team对应，用来保证全路径覆盖
@@ -177,7 +197,7 @@ class MatchInvitationsControllerTest < ActionController::TestCase
     ut = UserTeam.new
     ut.user_id = u.id
     ut.team_id = t2.id #现在saki的球队变成了t2   
-    inv1 = MatchInvitation.new   
+    inv1 = create_match_invitation   
     inv1.host_team_id = t1.id
     inv1.guest_team_id = t2.id #现在saki的t2成为了客队    
     
@@ -202,7 +222,7 @@ class MatchInvitationsControllerTest < ActionController::TestCase
     assert_equal "test_description", new_inv1.description #测试save_last_info!是否成功
     assert_equal "", new_inv1.host_team_message #测试只能修改当前具有编辑权限的球队所对应的留言
     assert_equal "test", new_inv1.guest_team_message
-    assert_redirected_to match_invitation_path(new_inv1)
+    assert_redirected_to team_match_invitations_path(t2, :as => 'send')
   end  
   
   
@@ -217,7 +237,7 @@ class MatchInvitationsControllerTest < ActionController::TestCase
     ut.team_id = t1.id
     ut.is_admin = true
     ut.save     
-    inv1 = MatchInvitation.new   
+    inv1 = create_match_invitation   
     inv1.host_team_id = t1.id
     inv1.guest_team_id = t2.id    
     inv1.edit_by_host_team = true #如果当前是主队在编辑
@@ -225,9 +245,9 @@ class MatchInvitationsControllerTest < ActionController::TestCase
     assert_difference('MatchInvitation.count', -1) do
       delete :destroy, :id => inv1.id
     end
-    assert_redirected_to team_view_path(t1)
+    assert_redirected_to team_match_invitations_path(t1)
     
-    inv2 = MatchInvitation.new
+    inv2 = create_match_invitation
     inv2.host_team_id = t2.id #saki现在成了客队的管理员
     inv2.guest_team_id = t1.id    
     inv2.edit_by_host_team = false #如果当前是客队在编辑
@@ -235,7 +255,7 @@ class MatchInvitationsControllerTest < ActionController::TestCase
     assert_difference('MatchInvitation.count', -1) do
       delete :destroy, :id => inv2.id
     end
-    assert_redirected_to team_view_path(t1)    
+    assert_redirected_to team_match_invitations_path(t1)
   end
 
 
@@ -252,7 +272,7 @@ class MatchInvitationsControllerTest < ActionController::TestCase
     
     ut.is_admin = false #如果saki当前并不是管理员身份
     ut.save     
-    inv1 = MatchInvitation.new   
+    inv1 = create_match_invitation   
     inv1.host_team_id = t1.id
     inv1.guest_team_id = t2.id    
     inv1.edit_by_host_team = true #如果当前是主队在编辑
@@ -264,7 +284,7 @@ class MatchInvitationsControllerTest < ActionController::TestCase
 
     ut.is_admin = true #如果saki当前是管理员身份
     ut.save     
-    inv1 = MatchInvitation.new   
+    inv1 = create_match_invitation
     inv1.host_team_id = t1.id
     inv1.guest_team_id = t2.id    
     inv1.edit_by_host_team = false #如果当前并不是主队在编辑
@@ -273,5 +293,14 @@ class MatchInvitationsControllerTest < ActionController::TestCase
       delete :destroy, :id => inv1.id
     end
     assert_redirected_to '/'
-  end    
+  end
+protected
+  def create_match_invitation
+    m = MatchInvitation.new
+    m.new_location = "Beijing"
+    m.new_start_time = 1.day.since
+    m.new_half_match_length = 45
+    m.new_rest_length = 15
+    m
+  end
 end

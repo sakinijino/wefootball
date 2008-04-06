@@ -1,157 +1,165 @@
-<div>
-  <h1>比赛邀请</h1>
+<div id="narrow_right_content">
+  <div class="sect">
+  <h2>邀请概要</h2>
+    <table class="form">
+      <tr><td style="width:50px">
+        发起队
+      </td><td>
+        <%= small_team_image_link @host_team, :style=>"float:left;margin-right:10px"%>
+        <br/>
+        <span><%=link_to h(@host_team.shortname), team_view_path(@host_team.id)%></span>
+      </td></tr>
+      <tr ><td style="width:50px">
+        受邀队
+      </td><td>
+        <%= small_team_image_link @guest_team, :style=>"float:left;margin-right:10px"%>
+        <br/>
+        <span><%=link_to h(@guest_team.shortname), team_view_path(@guest_team.id)%></span>
+      </td></tr>
+      <tr>
+        <td style="width:50px">状态</td>
+        <td>
+          <%=link_to h(@another_team.shortname), team_view_path(@another_team.id)%>修改了比赛邀请，正等待我队回复
+        </td>
+      </tr>
+      <%msg = @match_invitation.edit_by_host_team ? @match_invitation.guest_team_message: @match_invitation.host_team_message%>
+      <%if !msg.blank?%>
+      <tr>
+        <td style="width:50px">对方留言</td>
+        <td>
+          
+          <%= h msg%>
+        </td>
+      </tr>
+      <%end%>
+    </table>
+  </div>
+  <div class="sect">
+    <h2></h2>
+    <%=render :partial=>'sidebar_menu'%>
+  </div>
 </div>
 
-<%= error_messages_for :match_invitation %>
-<% form_for :match_invitation, :url=>"", :html=>{:id=>"match_invitation_form"} do |f| %>  
+<div id="wide_left_content">
   
-  <p>
-    <b>约战球队</b><br />
-    <%if @editing_by_host_team == true%>
-        <%=link_to(@match_invitation.guest_team.shortname, team_view_path(@match_invitation.guest_team.id))%>
-    <%else%>
-        <%=link_to(@match_invitation.host_team.shortname, team_view_path(@match_invitation.host_team.id))%>
-    <%end%>
-  </p>  
-      
-  <p>
-    <b>开始时间</b>
-    <%= f.datetime_select :new_start_time %>
-    <%if @match_invitation.has_attribute_been_modified?(:start_time)%>
-        (我队上次的设定是：
-        <%= @match_invitation[:start_time].to_s(:db) %>  
-        )
-    <%end%>
-  </p>
+  <div class="sect">
+  <h2>修改比赛邀请</h2>
+  <%= error_messages_for :match_invitation %>
 
-  <p>
-    <b>地点</b>
-    <%= f.text_field :new_location %>
-    <%if @match_invitation.has_attribute_been_modified?(:location)%>
-        (我队上次的设定是：
-        <%= h(@match_invitation.location) %>  
-        )
-    <%end%>    
-  </p>
+  <% form_for @match_invitation do |f| %>
+    <%= f.hidden_field :guest_team_id,  :value=>@guest_team.id%>
+    <%= f.hidden_field :host_team_id,  :value=>@host_team.id%>
+    <table class="form">
+      <tr><td>
+        开始时间:
+      </td><td>
+        <%= f.datetime_select :new_start_time,  :start_year => Date.today.year, :end_year => 1.year.since.year, :use_month_numbers => true, :minute_step=>15 %>
+      </td><td>
+        <%if @match_invitation.has_attribute_been_modified?(:start_time)%>
+          <div class="conflict">我队上次的设定是: <%= @match_invitation.start_time.strftime('%Y-%m-%d %H:%M') %></div>
+        <%end%>
+      </td></tr>
+      <tr><td>
+        地点:
+      </td><td>
+        <%= f.text_field :new_location %>
+      </td><td>
+        <%if !@match_invitation.location.blank? && @match_invitation.has_attribute_been_modified?(:location)%>
+          <div class="conflict">我队上次的设定是: <%=h @match_invitation.location %></div>
+        <%end%>
+      </td></tr>
+      <tr><td>
+        比赛性质:
+      </td><td>
+        <%= f.select :new_match_type, MatchInvitation::MATCH_TYPES.map {|t| [match_type_text(t), t]} %>
+      </td><td>
+        <%if @match_invitation.has_attribute_been_modified?(:match_type)%>
+          <div class="conflict">我队上次的设定是: <%= match_type_text @match_invitation.match_type %></div>
+        <%end%>
+      </td></tr>
+      <tr><td>
+        人数:
+      </td><td>
+        <%= f.select :new_size, MatchInvitation::MATCH_SIZES %>人制
+      </td><td>
+        <%if @match_invitation.has_attribute_been_modified?(:size)%>
+          <div class="conflict">我队上次的设定是: <%= @match_invitation.size %>人制</div>
+        <%end%>
+      </td></tr>
+      <tr><td>
+        半场时间:
+      </td><td>
+        <%= f.text_field :new_half_match_length, :size=>1 %>分钟
+      </td><td>
+        <%if @match_invitation.has_attribute_been_modified?(:half_match_length)%>
+          <div class="conflict">我队上次的设定是: <%= @match_invitation.half_match_length %>分钟</div>
+        <%end%>
+      </td></tr>
+      <tr><td>
+        中场休息:
+      </td><td>
+        <%= f.text_field :new_rest_length, :size=>1 %>分钟
+      </td><td>
+        <%if @match_invitation.has_attribute_been_modified?(:rest_length)%>
+          <div class="conflict">我队上次的设定是: <%= @match_invitation.rest_length %>分钟</div>
+        <%end%>
+      <tr><td>
+        是否有裁判:
+      </td><td>
+        <%= f.check_box :new_has_judge %>
+      </td><td>
+        <%if @match_invitation.has_attribute_been_modified?(:has_judge)%>
+          <div class="conflict">我队上次的设定是: <%= @match_invitation.has_judge ? '有' : '没有'%>裁判</div>
+        <%end%>
+      </td></tr>
+      <tr><td>
+        是否有红黄牌:
+      </td><td>
+        <%= f.check_box :new_has_card %>
+      </td><td>
+        <%if @match_invitation.has_attribute_been_modified?(:has_card)%>
+          <div class="conflict">我队上次的设定是: <%= @match_invitation.has_card ? '有' : '没有'%>红黄牌</div>
+        <%end%>
+      </td></tr>
+      <tr><td>
+        是否有越位:
+      </td><td>
+        <%= f.check_box :new_has_offside %>
+      </td><td>
+        <%if @match_invitation.has_attribute_been_modified?(:has_offside)%>
+          <div class="conflict">我队上次的设定是: <%= @match_invitation.has_offside ? '有' : '没有'%>越位</div>
+        <%end%>
+      </td></tr>
+      <tr><td>
+        常规时间平局后:
+      </td><td>
+        <%= f.select :new_win_rule, MatchInvitation::WIN_RULES.map {|r| [win_rule_text(r), r]} %>
+      </td><td>
+        <%if @match_invitation.has_attribute_been_modified?(:win_rule)%>
+          <div class="conflict">我队上次的设定是: <%=win_rule_text @match_invitation.win_rule%></div>
+        <%end%>
+      </td></tr>
+    </table>
 
-  <p>
-    <b>比赛简介</b><br />
-    <%= f.text_area :new_description %>
-    <%if @match_invitation.has_attribute_been_modified?(:description)%>
-        (我队上次的设定是：
-        <%= h(@match_invitation.description) %>
-        )
-    <%end%>       
-  </p>  
-  
-  
-  <p>
-    <b>比赛类型</b>
-    <%= f.select :new_match_type, MatchInvitation::MATCH_TYPES.map {|t| [match_type_text(t), t]} %>
-    <%if @match_invitation.has_attribute_been_modified?(:match_type)%>
-        (我队上次的设定是：
-        <%= h(@match_invitation.match_type) %>  
-        )
-    <%end%>   
-  </p>
-
-  <p>
-    <b>参加人数</b>
-    <%= f.select :new_size, MatchInvitation::MATCH_SIZES %>
-    <%if @match_invitation.has_attribute_been_modified?(:size)%>
-        (我队上次的设定是：
-        <%= h(@match_invitation.size) %>  
-        )
-    <%end%>    
-  </p>
-
-  <p>
-    <b>有裁判</b><br />
-    <%= f.check_box :new_has_judge %>
-    <%if @match_invitation.has_attribute_been_modified?(:has_judge)%>
-        (我队上次的设定是：
-        <%= h(@match_invitation.has_judge) %>  
-        )
-    <%end%>     
-  </p>
-
-  <p>
-    <b>有红黄牌</b><br />
-    <%= f.check_box :new_has_card %>
-    <%if @match_invitation.has_attribute_been_modified?(:has_card)%>
-        (我队上次的设定是：
-        <%= h(@match_invitation.has_card) %>  
-        )
-    <%end%>     
-  </p>
-
-  <p>
-    <b>有越位</b><br />
-    <%= f.check_box :new_has_offside %>
-    <%if @match_invitation.has_attribute_been_modified?(:has_offside)%>
-        (我队上次的设定是：
-        <%= h(@match_invitation.has_offside) %>  
-        )
-    <%end%>    
-  </p>
-
-  <p>
-    <b>上下半场各</b><br />
-    <%= f.text_field :new_half_match_length %>分钟
-    <%if @match_invitation.has_attribute_been_modified?(:half_match_length)%>
-        (我队上次的设定是：
-        <%= h(@match_invitation.half_match_length) %>分钟 
-        )
-    <%end%>     
-  </p>
-
-  <p>
-    <b>中场休息</b><br />
-    <%= f.text_field :new_rest_length %>分钟
-    <%if @match_invitation.has_attribute_been_modified?(:rest_length)%>
-        (我队上次的设定是：
-        <%= h(@match_invitation.rest_length) %>分钟 
-        )
-    <%end%>    
-  </p>  
-  
-  <p>
-    <b>决胜规则</b><br />
-    <%= f.select :new_win_rule, MatchInvitation::WIN_RULES.map {|r| [win_rule_text(r), r]} %>
-    <%if @match_invitation.has_attribute_been_modified?(:win_rule)%>
-        (我队上次的设定是：
-        <%= h(@match_invitation.win_rule) %>
-        )
-    <%end%>   
-  </p>
-  
-  <%if @editing_by_host_team%>
-    <%if !@match_invitation.guest_team_message.nil?%>
-      <p>
-          <b><%=@match_invitation.guest_team.shortname%>的留言</b><br />
-          <%=h @match_invitation.guest_team_message%>
-      </p>
-    <%end%>
     <p>
-      <b>留言给<%=@match_invitation.guest_team.shortname%></b><br />
-      <%= f.text_area :host_team_message %>      
+      比赛说明<br />
+      <%= f.text_area :new_description, :cols => 40, :rows => 10 %>
     </p>
-  <%else%>
-    <%if !@match_invitation.host_team_message.nil?%>
-      <p>
-          <b><%=@match_invitation.host_team.shortname%>的留言</b><br />
-          <%=h @match_invitation.host_team_message%>
-      </p>
-    <%end%>
-    <p>
-      <b>留言给<%=@match_invitation.host_team.shortname%></b><br />
-      <%= f.text_area :guest_team_message %>      
-    </p>    
-  <%end%>
 
-  <p>
-    <%=link_to '接受邀请', matches_path(:id=>@match_invitation.id), :onclick=>"var f = document.getElementById('match_invitation_form');f.method = 'POST'; f.action = this.href;f.submit();return false;"%>
-    <%=link_to '协商邀请', match_invitation_path(@match_invitation), :onclick=>"var f = document.getElementById('match_invitation_form');f.method = 'POST'; f.action = this.href;var m = document.createElement('input'); m.setAttribute('type', 'hidden'); m.setAttribute('name', '_method'); m.setAttribute('value', 'put'); f.appendChild(m);f.submit();return false;"%>
-    <%=link_to "拒绝邀请", match_invitation_path(@match_invitation),:method=>"delete"%>
-  </p>
-<% end %>
+    <p>
+      给对方管理员的留言<br />
+      <%if @match_invitation.edit_by_host_team%>
+        <%= f.text_area :host_team_message, :value=>'', :cols => 40, :rows => 3 %>
+      <%else%>
+        <%= f.text_area :guest_team_message, :value=>'',  :cols => 40, :rows => 3 %>
+      <%end%>
+    </p>
+
+    <p>
+      <%= f.submit "协商" %>
+    </p>
+  <% end %>
+  </div>
+</div>
+
+<div class="clearBoth"></div>

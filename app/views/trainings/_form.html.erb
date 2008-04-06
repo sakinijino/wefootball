@@ -4,7 +4,7 @@
 <%end%>
 
 <p><label>日期</label><br/>
-<%= select_date @training.start_time.nil? ? nil : @training.start_time.to_date, :prefix => "start_time", :start_year => Date.today.year, :end_year => Date.today.year+1, :use_month_numbers => true %></p>
+<%= select_date @training.start_time.nil? ? nil : @training.start_time.to_date, :prefix => "start_time", :start_year => Date.today.year, :end_year => 1.year.since.year, :use_month_numbers => true %></p>
 
 <p><label>开始时间</label><br/>
 <%= select_hour @training.start_time.nil? ? nil : @training.start_time.hour, :prefix => "start_time" %>
@@ -26,5 +26,5 @@
   </p>
 </div>
   
-<p><label for="summary">说明</label><br/>
+<p><label for="summary">训练说明</label><br/>
 <%= f.text_area :summary %></p>

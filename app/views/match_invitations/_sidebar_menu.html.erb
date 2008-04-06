@@ -1,0 +1,11 @@
+<ul class="sidebar_menu">
+  <li>
+  > <%=link_to '需要处理的比赛邀请', team_match_invitations_path(@team)%>
+  </li>
+  <li>
+  > <%=link_to '等待对方回复的比赛邀请', team_match_invitations_path(@team, :as => 'send')%>
+  </li>
+  <li class='seperate'>
+    > <%= link_to "返回队伍首页", team_view_path(@team) %>
+  </li>
+</ul>

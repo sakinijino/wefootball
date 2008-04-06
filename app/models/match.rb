@@ -14,7 +14,7 @@ class Match < ActiveRecord::Base
   
   validates_presence_of     :start_time, :location, :size
   validates_length_of       :description, :maximum =>MAX_DESCRIPTION_LENGTH, :allow_nil => true
-  validates_inclusion_of   :situation_by_host, :situation_by_guest, :in => Position::POSITIONS, :allow_nil=>true  
+  validates_inclusion_of   :situation_by_host, :situation_by_guest, :in => SITUATIONS, :allow_nil=>true  
   validates_numericality_of :host_team_goal_by_host, :guest_team_goal_by_host, :allow_nil=>true   
   validates_numericality_of :host_team_goal_by_guest, :guest_team_goal_by_guest, :allow_nil=>true 
   

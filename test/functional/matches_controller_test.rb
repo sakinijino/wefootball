@@ -151,6 +151,8 @@ class MatchesControllerTest < ActionController::TestCase
     inv1 = MatchInvitation.new   
     inv1.host_team_id = t1.id
     inv1.guest_team_id = t2.id
+    inv1.new_half_match_length = 45
+    inv1.new_rest_length = 15
     inv1.new_start_time = 2.days.since
     inv1.new_location = '一体'
     inv1.edit_by_host_team = true
@@ -183,6 +185,8 @@ class MatchesControllerTest < ActionController::TestCase
     inv1.host_team_id = t1.id
     inv1.guest_team_id = t2.id
     inv1.new_start_time = 2.days.since
+    inv1.new_half_match_length = 45
+    inv1.new_rest_length = 15
     inv1.new_location = '一体'
     inv1.edit_by_host_team = true
     inv1.save!
@@ -197,19 +201,6 @@ class MatchesControllerTest < ActionController::TestCase
       post :create, :id => inv1.id, :match_invitation=>{}
     end
     assert_redirected_to match_path(assigns(:match))
-
-    Match.destroy_all
-    inv2 = MatchInvitation.new   
-    inv2.host_team_id = t1.id
-    inv2.guest_team_id = t2.id
-    inv2.new_start_time = 3.days.since
-    inv2.new_location = '一体'
-    inv2.edit_by_host_team = true
-    inv2.save!    
-    assert_no_difference('Match.count') do
-      post :create, :id => inv2.id, :match_invitation=>{:new_location => '五四'}
-    end
-    assert_template 'edit'   
   end  
 
 
@@ -339,10 +330,10 @@ class MatchesControllerTest < ActionController::TestCase
     assert_equal 'nb2', new_mj2.comment    
     assert_redirected_to team_view_path(t1)                                   
 
-    put :update, :id => match1.id, :team_id=>t1.id, :match => {:situation_by_host => 0},
+    put :update, :id => match1.id, :team_id=>t1.id, :match => {:situation_by_host => 5},
                                     :mj => {}#ceshi
     new_match1 = Match.find(match1)                              
-    assert_equal 0, new_match1.situation_by_host
+    assert_equal 5, new_match1.situation_by_host
     assert_redirected_to team_view_path(t1)           
   end
   
@@ -406,10 +397,10 @@ class MatchesControllerTest < ActionController::TestCase
     assert_equal 'nb2', new_mj2.comment    
     assert_redirected_to team_view_path(t1)                                   
 
-    put :update, :id => match1.id, :team_id=>t1.id, :match => {:situation_by_guest => 0},
+    put :update, :id => match1.id, :team_id=>t1.id, :match => {:situation_by_guest => 5},
                                     :mj => {}#ceshi
     new_match1 = Match.find(match1)                              
-    assert_equal 0, new_match1.situation_by_guest
+    assert_equal 5, new_match1.situation_by_guest
     assert_redirected_to team_view_path(t1)           
   end 
   

@@ -36,10 +36,6 @@ class MatchesController < ApplicationController
       fake_params_redirect
       return      
     end
-    if @match_invitation.has_been_modified?(params[:match_invitation])#如果用户已经做过修改，则不能创建
-      render :template => "match_invitations/edit", :id=>match_invitation_id
-      return
-    end
     Match.transaction do
       @match = Match.create_by_invitation(@match_invitation)
       MatchJoin.create_joins(@match)

@@ -29,9 +29,8 @@
       <%if is_admin%>
       <li><%= link_to("新建训练", new_team_training_path(team))%></li>
       <li><%= link_to("新建比赛", '#')%></li>
-      <li><%= link_to("发出比赛邀请", '#')%></li>
       <%end%>
-      <li><%= link_to("查看比赛邀请", '#')%></li>
+      <li><%= link_to("比赛邀请", team_match_invitations_path(team))%></li>
     </ul>
     <ul></ul>
     <%if is_admin%>
