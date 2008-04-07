@@ -1,10 +1,9 @@
-div.activity {
-    padding:20px;
-    border-top:dashed 1px #3D681A;
+div.activities {
+    padding: 10px 0 0 20px;
     line-height: normal;
 }
 
-div.activity div.activity_date {
+div.activities div.date {
     width:78px;
     height:78px;
     text-align: center;
@@ -12,7 +11,7 @@ div.activity div.activity_date {
     float: left;
 }
 
-div.activity div.activity_date div.day {
+div.activities div.date div.day {
     height:56%;
     padding-top:14%;
     color:White;
@@ -22,11 +21,11 @@ div.activity div.activity_date div.day {
     font-weight:bold;
 }
 
-div.activity div.activity_date div.day a{
+div.activities div.date div.day a{
     color:White;
 }
 
-div.activity div.activity_date div.week {
+div.activities div.date div.week {
     height:22%;
     padding-top:7%;
     font-size:12px;
@@ -34,23 +33,42 @@ div.activity div.activity_date div.week {
     color:#333333;
 }
 
-div.activity div.activity_content{
-    padding-left:5%;
-    padding-right:5%;
-    padding-top:5px;
-    color:#222222;
-    font-family:Arial;
-    font-size:13px;
-    float:left;
-    width: 290px;
+div.activities div.match_content,
+div.activities div.training_content {
+    margin-left: 20px;
+    float: left;
+    width: 275px;
 }
 
-div.narrow_activity div.activity_content{
-    width: 180px;
+div.activities div.training_icon,
+div.activities div.match_icon{
+    float: left;
 }
 
-div.activity div.activity_icon {
-    width:80px;
-    text-align:center;
+div.activities div.training_icon{
+    width: 54px;
+}
+
+div.activities div.match_icon{
+    width: 140px;
+}
+
+div.activities div.training_icon img.icon,
+div.activities div.match_icon img.icon{
+    margin: 0;
+}
+
+div.activities div.match_icon img.icon{
+    display: inline;
+}
+
+
+div.activities div.activity_list {
     float:left;
+}
+
+div.activities div.activity_list div.clearBoth{
+    padding-top: 10px;
+    margin: 0 0 15px 10px;
+    border-bottom: dashed 1px #3D681A;
 }

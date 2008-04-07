@@ -1,21 +1,6 @@
 class MatchesController < ApplicationController
   
   before_filter :login_required, :only=>[:create,:edit,:update,:destroy]
-  
-  def index
-    if (params[:user_id]) #显示用户参与的比赛
-      @user = User.find(params[:user_id], :include=>:matches)
-      @matches = @user.matches.recent
-      @title = "#{@user.nickname}的比赛"
-      render :layout => "user_layout"
-    else #显示队伍的所有比赛
-      @team = Team.find(params[:team_id])
-      @matches = @team.matches.recent
-      @title = "#{@team.shortname}的比赛"
-      @team_display = false;
-      render :layout => "team_layout"
-    end    
-  end
 
   def show
     @match = Match.find(params[:id])  

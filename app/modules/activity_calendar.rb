@@ -1,6 +1,6 @@
 module ActivityCalendar
   def recent(limit=nil, timeline=Time.now)
-    find :all, :conditions => ['start_time > ?', timeline], 
+    find :all, :conditions => ['end_time > ?', timeline], 
       :order=>'start_time', 
       :limit=>limit
   end

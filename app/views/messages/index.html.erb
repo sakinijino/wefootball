@@ -9,23 +9,23 @@
   <div>
     <table class="list">
     <tr>
-      <th>主题</th>
       <%if params[:as]!='sender' %>
           <th>发件人</th>
       <%else%>
           <th>收件人</th>
       <%end%>
+      <th>主题</th>
       <th>发件时间</th>
       <th>删除</th>
     </tr>
       <%@messages.each do |m|%>
         <tr <%= "class='highlight'" if !m.is_receiver_read && params[:as]!='sender'%>>
-          <td><%=link_to m.subject, message_path(m.id)%></td>
            <%if params[:as]!='sender' %>
-              <td><%=link_to h(m.sender.nickname), user_view_path(m.sender)%></td>
+              <td><%=h(m.sender.nickname)%></td>
           <%else%>
-              <td><%=link_to h(m.receiver.nickname), user_view_path(m.receiver)%></td>
+              <td><%=h(m.receiver.nickname)%></td>
           <%end%>
+          <td><%=link_to m.subject, message_path(m.id)%></td>
           <td><%=h m.created_at.to_s(:db)%></td>
           <td><%=check_box_tag "messages[]", m.id %></td>
         </tr>

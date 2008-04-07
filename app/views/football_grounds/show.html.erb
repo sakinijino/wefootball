@@ -1,3 +1,9 @@
+<%content_for(:javascript) do%>
+  <%= javascript_include_tag "jquery.dimensions.js" %>
+  <%= javascript_include_tag "ui.mouse.js" %>
+  <%= javascript_include_tag "ui.dialog.js" %>
+<%end%>
+
 <%content_for(:stylesheet) do%>
   <%= stylesheet_link_tag 'calendar' %>
   <%= stylesheet_link_tag 'activityitem' %>
@@ -21,25 +27,39 @@
       </div>
 
       <div style="margin: 10px 0 0 10px">
+        <%= link_to("我要去这个球场踢", '#', 
+                :onclick=>'j("#play_create_div").dialog("open");return false;')%>
         <%= link_to '编辑', edit_football_ground_path(@football_ground) if @is_editor%>
       </div>
     </div>
   </div>
 
-  <div class="sect">
-    <h2>未来24小时在这块场地踢的人</h2>
-    <%= render(:partial => 'shared/user_icon', :collection => @players)%>
-    <div class="clearBoth"></div>
+  <div id="play_create_div" class="jmodaldialog" style="width:250px">
+    <% form_for @play do |f| %>
+      <%= f.hidden_field :football_ground_id %>
+      <span>我要去这块球场踢...</span><br />
+      <p><label>哪天去</label><br/>
+      <%= select_date @default_start_time, :prefix => "start_time", :start_year => Date.today.year, :end_year => Date.today.year+1, :use_month_numbers => true %></p>
+
+      <p><label>几点到</label><br/>
+      <%= select_hour @default_start_time,:prefix => "start_time" %>
+      <%= select_minute @default_start_time,:prefix => "start_time", :minute_step=>15 %></p>
+
+      <p><label>几点走</label><br/>
+      <%= select_hour @default_end_time,:prefix => "end_time" %>
+      <%= select_minute @default_end_time,:prefix => "end_time", :minute_step=>15 %></p>
+
+      <%= f.submit '确认' %>
+      <%= f.submit "撤销", :onclick=>'j("#play_create_div").dialog("close");return false;' %>
+    <% end %>
   </div>
 </div>
 
 
 <div id="right_content">
-  <%if @trainings.length > 0%>
   <div class="sect">
-      <h2>未来24小时在这个球场安排的训练</h2>
-      <%= render(:partial => 'shared/training_list', :object => @trainings)%>
+    <h2>未来24小时在这个球场进行的活动</h2>
+    <%= render :partial => 'shared/activities', :object => @activities, :locals=>{:start_date=> Time.now, :end_date=> Time.now.tomorrow}%>
   </div>
-  <%end%>
 </div>
 <div class="clearBoth"></div>

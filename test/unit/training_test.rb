@@ -109,6 +109,22 @@ class TrainingTest < ActiveSupport::TestCase
     trainings(:training1).end_time = Time.now.since(3600)
     trainings(:training1).save_without_validation!
     assert !trainings(:training1).can_be_modified_by?(users(:saki))
+    assert trainings(:training1).can_be_destroyed_by?(users(:saki))
+    assert !trainings(:training1).can_be_modified_by?(users(:mike1))
+    assert !trainings(:training1).can_be_destroyed_by?(users(:mike1))
+    
+    trainings(:training1).start_time = 2.days.ago
+    trainings(:training1).end_time = 2.days.ago.since(3600)
+    trainings(:training1).save_without_validation!
+    assert !trainings(:training1).can_be_modified_by?(users(:saki))
+    assert trainings(:training1).can_be_destroyed_by?(users(:saki))
+    assert !trainings(:training1).can_be_modified_by?(users(:mike1))
+    assert !trainings(:training1).can_be_destroyed_by?(users(:mike1))
+    
+    trainings(:training1).start_time = 5.days.ago
+    trainings(:training1).end_time = 5.days.ago.since(3600)
+    trainings(:training1).save_without_validation!
+    assert !trainings(:training1).can_be_modified_by?(users(:saki))
     assert !trainings(:training1).can_be_destroyed_by?(users(:saki))
     assert !trainings(:training1).can_be_modified_by?(users(:mike1))
     assert !trainings(:training1).can_be_destroyed_by?(users(:mike1))

@@ -4,16 +4,30 @@ class TeamViewsController < ApplicationController
   TRAINING_LIST_LENGTH = 1
   USER_LIST_LENGTH = 9
   POSTS_LENGTH = 10
-  MATCH_LIST_LENGTH = 5
+  MATCH_LIST_LENGTH = 1
+  DISPLAY_DAYS = 18
   
   def show
     @team = Team.find(params[:id])
-    
-    @trainings = @team.trainings.recent(TRAINING_LIST_LENGTH, Time.today)
-    @matches = @team.matches.recent(MATCH_LIST_LENGTH, Time.today)
     @users = @team.users.find(:all, :limit => USER_LIST_LENGTH)
     @posts = @team.posts.find(:all, :limit=> POSTS_LENGTH)
-    @calendar_trainings_hash = @team.trainings.in_a_duration(Time.today, Time.today.since(3600*24*18)).group_by{|t| t.start_time.strftime("%Y-%m-%d")}
+    
+    tmp_tra = @team.trainings.recent(TRAINING_LIST_LENGTH)
+    tmp_mat = Match.find :all,
+      :conditions => ['(host_team_id = ? or guest_team_id = ?) and end_time > ?', @team.id, @team.id, Time.now],
+      :order => 'start_time',
+      :limit => MATCH_LIST_LENGTH
+    @recent_training = tmp_tra.length > 0 ? tmp_tra[0] : nil
+    @recent_matches = tmp_mat.length > 0 ? tmp_mat[0] : nil
+    if @recent_training != nil && @recent_matches!=nil
+      @recent_activity = @recent_training.start_time < @recent_matches.start_time ? @recent_training : @recent_matches
+    else
+      @recent_activity = @recent_training || @recent_matches
+    end
+    
+    @calendar_activities_hash = 
+      (@team.trainings.in_a_duration(Time.today, Time.today.since(3600*24*DISPLAY_DAYS)) +
+       @team.match_calendar_proxy.in_a_duration(Time.today, Time.today.since(3600*24*DISPLAY_DAYS))).group_by{|t| t.start_time.strftime("%Y-%m-%d")}
     
     @formation_uts = UserTeam.find_all_by_team_id(@team.id, :conditions => ["position is not null"], :include => [:user])
     @formation_array = @formation_uts.map {|ut| ut.position}

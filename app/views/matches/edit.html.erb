@@ -110,7 +110,7 @@
         
         <%for mj in @player_mjs%>
          <tr>
-            <td><%= render(:partial => 'shared/user_icon', :object => mj.user)%></td>
+            <td><%= user_icon(mj.user)%></td>
             <td><%= mj.position == nil ? "?" : fomation_position_text(mj.position)%></td>
             <td><%= text_field_tag "mj[#{mj.id}][goal]", mj.goal%></td>
             <td>

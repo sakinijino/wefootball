@@ -37,6 +37,23 @@ module UsersHelper
     link_to tiny_user_image_tag(user, options), user_view_path(user.id)
   end
   
+  def user_icon(user)
+    content = ''
+    case user
+    when User
+      content << %(
+      <div class="icon">
+        #{small_user_image_link user}
+        <span>#{link_to h(user.nickname), user_view_path(user.id)}</span>
+      </div>)
+    else
+      if user.respond_to?(:each)
+        user.each {|u| content << user_icon(u)}
+      end
+    end
+    content
+  end
+  
   def small_position_icon_position(i)
     return [75, 200] if i<=0
     return [90, 40] if i>=13

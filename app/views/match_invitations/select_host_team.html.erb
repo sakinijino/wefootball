@@ -10,12 +10,12 @@
 <div id="wide_left_content" class="sect">
     <h2><%=h @title%></h2>
   <%if @host_teams.empty?%>
-    你暂时没有管理任何球队，因此无法邀请<%=@guest_team.shortname%>进行比赛
+    你暂时没有管理任何球队，因此无法邀请<%=h @guest_team.shortname%>进行比赛
     你可以在<%= link_to "这里", new_team_path(:back_uri=>new_match_invitation_path(:guest_team_id=>@guest_team.id))%>创建自己的球队
   <%else%>
     
     <div class="notification">
-       选择你希望与<%=link_to h(@guest_team.shortname), team_view_path(@guest_team)%>进行比赛的球队作为发起邀请的球队
+       选定球队后，你会以该队管理员的身份向<%=link_to h(@guest_team.shortname), team_view_path(@guest_team)%>发出比赛邀请
     </div>
     <%for t in @host_teams%>
       <div class="icon">

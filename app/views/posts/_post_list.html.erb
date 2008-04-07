@@ -1,17 +1,27 @@
 <table class="list">
   <tr>
+    <th style="width:15px">&nbsp;</th>
     <th>话题</th>
     <th style="width:50px">作者</th>
     <th style="width:30px">回复</th>
-    <th style="width:120px; text-align:right">最后回复</th>
+    <th style="width:100px; text-align:right">最后回复</th>
   </tr>
 
 <% for post in post_list %>
   <tr>
+    <td>
+      <%if !post.training_id.nil?%>
+        <%= training_icon_link(post.training_id)%>
+      <%elsif !post.match_id.nil?%>
+        <%= match_icon_link(post.match_id)%>
+      <%else%>
+        <%= "&nbsp;"%>
+      <%end%>
+    </td>
     <td><%=link_to h(post.title), post  %></td>
     <td><%=h post.user.nickname %></td>
     <td><%= post.replies.size %></td>
-    <td><%= post.updated_at.strftime('%Y-%m-%d %H:%M:%S') %></td>
+    <td><%= post.updated_at.strftime('%Y-%m-%d %H:%M') %></td>
   </tr>
 <% end %>
 </table>

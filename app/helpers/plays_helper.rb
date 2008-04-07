@@ -1,12 +1,12 @@
-module PlaysHelper
+module PlaysHelper  
   def play_status_with_logged_in(play,user)
     status = ""
     if Time.now < play.start_time
       status = "尚未开始"
       if !PlayJoin.find_by_play_id_and_user_id(play.id,user.id)
-        status += "，您尚未报名"
+        status += "，我没说会去"
       else
-        status += "，您已报名"
+        status += "，我要去"
       end
     else
       if Time.now >= play.start_time && Time.now <= play.end_time
@@ -15,9 +15,9 @@ module PlaysHelper
         return "已结束"
       end
       if !PlayJoin.find_by_play_id_and_user_id(play.id,user.id)
-        status += "，您已参加"
+        status += "，我去了"
       else
-        status += "，您未参加"
+        status += "，我没去"
       end
     end
   end

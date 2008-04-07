@@ -1,7 +1,0 @@
-<%display_team = display_team!=nil ? display_team : true%>
-<%training_list.each do |t|%>
-  <div class="activity">
-    <%= render :partial=>"shared/training_item", :locals => {:training => t, :display_team => display_team}%>
-    <div class="clearBoth"></div>
-  </div>
-<%end%>

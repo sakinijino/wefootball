@@ -179,6 +179,7 @@
 			$('.ui-dialog:visible').each(function() {
 				maxZ = Math.max(maxZ, parseInt($(this).css("z-index"),10));
 			});
+                        if (maxZ > 997) maxZ = 997
 			overlay.$el && overlay.$el.css('z-index', ++maxZ);
 			uiDialog.css("z-index", ++maxZ);
 		};

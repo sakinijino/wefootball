@@ -4,4 +4,8 @@ module FootballGroundsHelper
   def ground_type_text(label)
    FootballGroundsHelper::GROUND_TYPE_TEXT[label]
   end
+  
+  def location_link(location, fgid)
+    link_to_if !fgid.nil?, h(location), football_ground_path(fgid)
+  end
 end

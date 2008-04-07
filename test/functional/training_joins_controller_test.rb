@@ -8,7 +8,7 @@ class TrainingJoinsControllerTest < ActionController::TestCase
     login_as :quentin
     assert_difference('TrainingJoin.count') do
       post :create, :user_id=>users(:quentin).id, :training_id=>trainings(:training1).id
-      assert_redirected_to training_view_path(assigns(:training).id)
+      assert_redirected_to training_path(assigns(:training).id)
     end
   end
   
@@ -25,7 +25,7 @@ class TrainingJoinsControllerTest < ActionController::TestCase
     login_as :quentin
     assert_no_difference('TrainingJoin.count') do
       post :create, :user_id=>users(:quentin).id, :training_id=>trainings(:training1).id
-      assert_redirected_to training_view_path(assigns(:training).id)
+      assert_redirected_to training_path(assigns(:training).id)
       assert_equal TrainingJoin::JOIN, tj.reload.status
     end
   end
@@ -59,7 +59,7 @@ class TrainingJoinsControllerTest < ActionController::TestCase
     login_as :saki
     assert_no_difference('TrainingJoin.count') do
       post :create, :user_id=>users(:saki).id, :training_id=>trainings(:training1).id
-      assert_redirected_to training_view_path(assigns(:training).id)
+      assert_redirected_to training_path(assigns(:training).id)
     end
   end
 
@@ -70,7 +70,7 @@ class TrainingJoinsControllerTest < ActionController::TestCase
     login_as :saki
     assert_difference('TrainingJoin.count', -1) do
       delete :destroy, :user_id => users(:saki).id, :training_id => trainings(:training1).id
-      assert_redirected_to training_view_path(trainings(:training1).id)
+      assert_redirected_to training_path(trainings(:training1).id)
     end
   end
   
@@ -87,7 +87,7 @@ class TrainingJoinsControllerTest < ActionController::TestCase
     login_as :quentin
     assert_difference('TrainingJoin.count', -1) do
       delete :destroy, :user_id=>users(:quentin).id, :training_id=>trainings(:training1).id
-      assert_redirected_to training_view_path(assigns(:training).id)
+      assert_redirected_to training_path(assigns(:training).id)
     end
   end
   

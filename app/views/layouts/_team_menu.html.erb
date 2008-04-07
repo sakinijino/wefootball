@@ -2,7 +2,6 @@
   <% is_admin = (logged_in? && current_user.is_team_admin_of?(team))%>
   <div class="l1_menu">
     <%= link_to("成员", team_team_joins_path(team))%>
-    <%= day_calendar_link('日程', Time.now, team)%>
     <%= day_calendar_link('活动', Time.now, team)%>
     <%= link_to '讨论', team_posts_path(team)%>
     <%if is_admin%>
@@ -22,10 +21,8 @@
       <%end%>
     </ul>
     <ul>
-      <li><%= day_calendar_link('今日日程', Time.now, team)%></li>
-      <li><%= month_calendar_link('本月日程', Time.now, team)%></li>
-    </ul>
-    <ul>
+      <li><%= day_calendar_link('今日活动', Time.now, team)%></li>
+      <li><%= month_calendar_link('本月活动', Time.now, team)%></li>
       <%if is_admin%>
       <li><%= link_to("新建训练", new_team_training_path(team))%></li>
       <li><%= link_to("新建比赛", '#')%></li>

@@ -27,7 +27,7 @@ class MatchInvitationsController < ApplicationController
     if params[:host_team_id].nil?
       @host_teams = current_user.teams.admin - [@guest_team]
       @team = @guest_team
-      @title = "从你管理的球队中选择要比赛的球队"
+      @title = "从你管理的球队中选择发起比赛邀请的球队"
       render :action=>"select_host_team", :layout=>"team_layout"
     else
       if !current_user.is_team_admin_of?(params[:host_team_id])

@@ -16,7 +16,7 @@
     <%for mj in player_mjs%>
      <tr>
         <td><%= fomation_position_text(mj.position)%></td>
-        <td><%= render(:partial => 'shared/user_icon', :object => mj.user)%></td>
+        <td><%= user_icon(mj.user)%></td>
         <td><%= status_text(mj.status)%></td>
 
         <%if (current_user == mj.user) && mj.match.is_before_match?%>
@@ -42,6 +42,6 @@
   </table>
   
   <h2>所有队员</h2>
-  <%= render(:partial => 'shared/user_icon', :collection => user_mjs.map{|item| item.user})%>
+  <%= user_icon(user_mjs.map{|item| item.user})%>
 
 </div>

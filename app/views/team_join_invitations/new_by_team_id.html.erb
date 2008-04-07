@@ -8,7 +8,7 @@
 
       <%@friends.each do |user|%>
         <div class="icon_select">
-          <%= render(:partial => 'shared/user_icon', :object => user)%>
+          <%= user_icon(user)%>
           <div class="input"><%= check_box_tag "users_id[]", user.id%></div>
         </div>
       <%end%>

@@ -5,12 +5,11 @@
 <div id="wide_left_content" class="sect">
     <%= render(:partial => 'calendar', 
         :locals => {:year => @date.year, :month => @date.month,
-        :trainings => @calendar_trainings_hash,
-        :matches => @calendar_matches_hash})%>
+        :activities => @calendar_activities_hash})%>
 </div>
 
 <div id="narrow_right_content" class="sect">
-  <h2>查看其它日程安排</h2>
+  <h2>查看其它活动</h2>
   <ul class="sidebar_menu">
     <% tmp = 6.months.ago%>
     <%(1..12).each do%>

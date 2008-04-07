@@ -1,0 +1,18 @@
+<%date = start_date
+  while date<=end_date do %>
+  <div class="activities">
+    <% das = activities[date.strftime("%Y-%m-%d")].nil? ? [] : 
+        activities[date.strftime("%Y-%m-%d")].sort_by{|t| t.start_time} %>
+    <% if das.length > 0%>
+      <%=date_div_link date, @user || @team%>
+        <div class="activity_list">
+          <% das.each do |act| %>
+              <%= render :partial => 'shared/activity', :object => act%>
+              <div class="clearBoth"></div>
+          <%end%>
+        </div>
+        <div class="clearBoth"></div>
+    <%end%>
+  </div>
+  <% date = date.tomorrow %>
+<%end%>

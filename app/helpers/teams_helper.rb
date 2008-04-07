@@ -15,4 +15,21 @@ module TeamsHelper
   def small_team_image_link(team, options={})
     link_to small_team_image_tag(team, options), team_view_path(team.id)
   end
+  
+  def team_icon(team)
+    content = ''
+    case team
+    when Team
+      content << %(
+      <div class="icon">
+        #{small_team_image_link team}
+        <span>#{link_to h(team.shortname), team_view_path(team.id)}</span>
+      </div>)
+    else
+      if team.respond_to?(:each)
+        team.each {|u| content << team_icon(u)}
+      end
+    end   
+    content
+  end
 end

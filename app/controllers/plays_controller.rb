@@ -4,7 +4,7 @@ class PlaysController < ApplicationController
 
   def show
     @play = Play.find(params[:id])
-    @title = ""
+    @title = "去 #{@play.location} 随便踢踢"
     @user = current_user 
     render :layout => "user_layout"    
   end
@@ -14,6 +14,7 @@ class PlaysController < ApplicationController
     @default_start_time = 1.hour.since
     @default_end_time = 2.hours.since
     @user = current_user
+    @title = "去随便踢踢"
     render :layout => "user_layout"
   end
 

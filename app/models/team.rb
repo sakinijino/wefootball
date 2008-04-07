@@ -81,19 +81,11 @@ class Team < ActiveRecord::Base
     UserTeam.team_formation(self)
   end
   
-  def matches
-    m = self.host_matches + self.guest_matches
-    def m.team=(t)
-      @team = t
-    end
-    m.team = self
-    def m.method_missing(method_id, *args)
-      @team.host_matches.send(method_id, *args) + @team.guest_matches.send(method_id, *args)  
-    end
-    m
+  def match_calendar_proxy
+    MatchCalendarProxy.new(self)
   end
   
-  class MatchProxy
+  class MatchCalendarProxy
     def initialize(match)
       @object = match
     end

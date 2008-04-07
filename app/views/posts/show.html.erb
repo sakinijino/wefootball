@@ -26,19 +26,7 @@
 
   <div class="sect">
   <h2>其他话题</h2>
-  <table class="list" style="width:90%">
-    <tr>
-      <th style="width:20%">作者</th>
-      <th style="width:80%">话题</th>
-    </tr>
-
-  <% for post in @related_posts %>
-    <tr>
-      <td><%=h post.user.nickname %></td>
-      <td><%=link_to h(post.title), post  %></td>
-    </tr>
-  <% end %>
-  </table>
+  <%= render :partial=>'posts/narrow_post_list', :object=>@related_posts%>
   </div>
 </div>
 <div class="clearBoth"></div>

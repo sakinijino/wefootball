@@ -63,7 +63,7 @@ class Training < ActiveRecord::Base
   end
   
   def can_be_destroyed_by?(user)
-    !started? && user.is_team_admin_of?(self.team_id)
+    !finished_before_3_days? && user.is_team_admin_of?(self.team_id)
   end
   
   def can_be_joined_by?(user)

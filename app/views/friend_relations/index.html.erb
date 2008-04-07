@@ -1,6 +1,6 @@
 <div id="wide_left_content" class="sect">
   <h2><%= h @title%></h2>
-  <%= render(:partial => 'shared/user_icon', :collection => @friendsList)%>
+  <%= user_icon(@friendsList)%>
 </div>
 
 <div id="narrow_right_content" class="sect">

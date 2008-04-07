@@ -34,7 +34,11 @@ class User < ActiveRecord::Base
 
   has_many :match_joins,
             :dependent => :destroy
-  has_many :matches, :through=>:match_joins, :extend => ActivityCalendar          
+  has_many :matches, :through=>:match_joins, :select => "distinct matches.*", :extend => ActivityCalendar
+  
+  has_many :play_joins,
+            :dependent => :destroy
+  has_many :plays, :through=>:play_joins, :extend => ActivityCalendar
   
   has_many :posts, :dependent => :destroy
 

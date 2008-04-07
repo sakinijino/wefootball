@@ -26,12 +26,19 @@
         </span>
       </div>
       <div class="monthDayBottomDiv">
-        <% dts = trainings[date.strftime("%Y-%m-%d")] %>
-        <% if !dts.nil?%>
-        <% dts.slice(0, 5).each do |t| %>
-          <%= link_to image_tag('training_icon.gif'), training_view_path(t)%>
+        <% das = activities[date.strftime("%Y-%m-%d")] %>
+        <% if !das.nil?%>
+        <% das.slice(0, 5).each do |act| %>
+          <%if act.class == Training
+              img_link = training_icon_link(act)
+            elsif act.class == Match
+              img_link = match_icon_link(act)
+            elsif act.class == Play
+              img_link = play_icon_link(act)
+            end%>
+          <%= img_link%>
         <%end%>
-        <%= day_calendar_link("更多", date, @user || @team, :class=>"more") if dts.length > 5%>
+        <%= day_calendar_link("更多", date, @user || @team, :class=>"more") if das.length > 5%>
         <%end%>
       </div>
     </div>

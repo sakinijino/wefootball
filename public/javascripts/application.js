@@ -40,6 +40,11 @@ j(function(){
 	
 	var dialogs = j("div.jdialog")
         if (dialogs.length > 0) dialogs.dialog({draggable:false, resizable:false, width:"auto", height:"auto"}).dialog('close');
+        
+        var dialogs = j("div.jmodaldialog")
+        if (dialogs.length > 0) dialogs.dialog({
+            modal:true, overlay:{opacity:0.7, background:'#fff'},
+            draggable:false, resizable:false, width:"auto", height:"auto"}).dialog('close');
          
         j("a.resize_small_icon img").mouseover(function(){
             j(this).css("z-index", "10")

@@ -55,7 +55,7 @@
     <%= render(:partial => 'posts/post_list', :object => @posts)%>
     <div style="margin: 5px 10px  0 10px;float:right">
       <%if logged_in? && current_user.is_team_member_of?(@training.team)%>
-        > <%= link_to '发言', new_training_post_path(@training) %>
+        > <%= link_to '针对本次训练发言', new_training_post_path(@training) %>
       <%end%>
       > <%= link_to '更多', training_posts_path(@training) %>
     </div>
@@ -65,13 +65,13 @@
 <div id="narrow_right_content">
   <div class="sect">
     <h2>参加这次训练的人</h2>
-    <%= render(:partial => 'shared/user_icon', :collection => @training.users.joined)%>
+    <%= user_icon(@training.users.joined)%>
     <div class="clearBoth"></div>
   </div>
 
   <div class="sect">
     <h2>尚未决定是否参加的人</h2>
-    <%= render(:partial => 'shared/user_icon', :collection => @training.users.undetermined)%>
+    <%= user_icon(@training.users.undetermined)%>
     <div class="clearBoth"></div>
   </div>
 </div>

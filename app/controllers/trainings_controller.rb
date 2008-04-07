@@ -2,6 +2,14 @@ class TrainingsController < ApplicationController
   before_filter :login_required
   before_filter :parse_time, :only => [:create, :update]
   
+  def show
+    @training = Training.find(params[:id])
+    @posts = @training.posts.find(:all, :limit=>10)
+    @team = @training.team
+    @title = "#{@training.team.shortname} #{@training.start_time.strftime('%m.%d')}的训练"
+    render :layout=>'team_layout'
+  end
+  
   def new
     @team = Team.find(params[:team_id])
     fake_params_redirect if (!current_user.is_team_admin_of?(@team))
@@ -20,7 +28,7 @@ class TrainingsController < ApplicationController
     @training = Training.new(params[:training])
     @training.team = @team
     if @training.save
-      redirect_to training_view_path(@training)
+      redirect_to training_path(@training)
     else
       render :action=>"new", :layout => "team_layout"
     end
@@ -31,7 +39,7 @@ class TrainingsController < ApplicationController
     @team = @training.team
     fake_params_redirect if (!@training.can_be_modified_by?(current_user))
     @title = "修改#{@training.start_time.strftime('%m月%d日')}训练的信息"
-    render :layout => "training_layout"
+    render :layout => "team_layout"
   end
   
   def update
@@ -40,9 +48,10 @@ class TrainingsController < ApplicationController
     if (!@training.can_be_modified_by?(current_user))
       fake_params_redirect
     elsif @training.update_attributes(params[:training])
-      redirect_to training_view_path(params[:id])
+      redirect_to training_path(params[:id])
     else
-      render :action=>'edit', :layout => "training_layout"
+      @title = "修改#{@training.start_time.strftime('%m月%d日')}训练的信息"
+      render :action=>'edit', :layout => "team_layout"
     end
   end
 

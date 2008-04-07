@@ -3,7 +3,7 @@
 <div class="l1_menu">
   <%= link_to("朋友", user_friend_relations_path(user))%>
   <%= link_to("球队", user_team_joins_path(user))%>
-  <%= day_calendar_link('日程', Time.now, user)%>
+  <%= day_calendar_link('活动', Time.now, user)%>
   <%= link_to("信箱", messages_path(:as=>'receiver'))%>
   <%= link_to("设置",  edit_user_path(current_user))%>
 </div>
@@ -20,8 +20,8 @@
     <li><%= link_to("球队申请", team_join_requests_path)%></li>
   </ul>
   <ul>
-    <li><%= day_calendar_link('今日日程', Time.now, user)%></li>
-    <li><%= month_calendar_link('本月日程', Time.now, user)%></li>
+    <li><%= day_calendar_link('今日活动', Time.now, user)%></li>
+    <li><%= month_calendar_link('本月活动', Time.now, user)%></li>
   </ul>
   <ul>
     <li><%= link_to("收件箱", messages_path(:as=>'receiver'))%></li>
@@ -33,15 +33,15 @@
 <div class="l1_menu">
   <%= link_to("朋友", user_friend_relations_path(user))%>
   <%= link_to("球队", user_team_joins_path(user))%>
-  <%= day_calendar_link('日程', Time.now, user)%>
+  <%= day_calendar_link('活动', Time.now, user)%>
 </div>
 
 <div class="l2_menu_list">
   <ul></ul>
   <ul></ul>
   <ul>
-    <li><%= day_calendar_link('今日日程', Time.now, user)%></li>
-    <li><%= month_calendar_link('本月日程', Time.now, user)%></li>
+    <li><%= day_calendar_link('今日活动', Time.now, user)%></li>
+    <li><%= month_calendar_link('本月活动', Time.now, user)%></li>
   </ul>
 </div>
 <%end%>

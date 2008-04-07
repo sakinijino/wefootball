@@ -2,14 +2,14 @@
   <%if @admin_teams.length > 0%>
   <div class="sect">
     <h2>管理的球队</h2>
-    <%= render(:partial => 'shared/team_icon', :collection => @admin_teams)%>
+    <%= team_icon(@admin_teams)%>
     <div class="clearBoth"></div>
   </div>
   <%end%>
 
   <div class="sect">
     <h2>参加的球队</h2>
-    <%= render(:partial => 'shared/team_icon', :collection => @other_teams)%>
+    <%= team_icon(@other_teams)%>
     <div class="clearBoth"></div>
   </div>
 </div>

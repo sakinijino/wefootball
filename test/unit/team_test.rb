@@ -148,8 +148,8 @@ class TeamTest < ActiveSupport::TestCase
     m2.location = 'Building 45A'
     m2.save!
     
-    assert_equal [m1,m2],t1.matches.sort_by{|i| i.start_time}
-    assert_equal [m2],t1.matches.recent        
+    assert_equal [m1,m2], t1.match_calendar_proxy.find(:all).sort_by{|i| i.start_time}
+    assert_equal [m2], t1.match_calendar_proxy.recent        
   end  
   
   private

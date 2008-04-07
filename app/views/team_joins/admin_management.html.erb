@@ -8,7 +8,7 @@
     <h2>管理员</h2>
     <%@admin_uts.each do |ut| %>
       <div style="float:left">
-        <%= render(:partial => 'shared/user_icon', :object => ut.user)%>
+        <%= user_icon(ut.user)%>
         <div>
           <%if !ut.is_the_only_one_admin?%>
             <%=link_to("不再担任管理员",team_join_path(ut, "ut[is_admin]" => false, 
@@ -26,7 +26,7 @@
     <h2>其他成员</h2>
     <%@other_uts.each do |ut| %>
       <div style="float:left">
-        <%= render(:partial => 'shared/user_icon', :object => ut.user)%>
+        <%= user_icon(ut.user)%>
         <div>
           <%=link_to("提升为管理员",team_join_path(ut, "ut[is_admin]" => true, 
               :back_uri => request.request_uri),:method=>:put) if ut.can_promote_as_admin_by?(current_user)%>

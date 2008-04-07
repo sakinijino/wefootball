@@ -8,7 +8,7 @@
 
     <%@teams.each do |team|%>
       <div class="icon_select">
-        <%= render(:partial => 'shared/team_icon', :object => team)%>
+        <%= team_icon(team)%>
         <div class="input"><%= check_box_tag "teams_id[]", team.id%></div>
       </div>
     <%end%>

@@ -36,9 +36,13 @@ ActionController::Routing::Routes.draw do |map|
     users.resources :friend_relations
     users.resources :team_join_invitations
     users.resources :team_joins
-    users.resources :trainings
   end 
   map.resources :user_views
+  
+  map.resources :sessions
+  map.resources :friend_relations
+  map.resources :friend_invitations
+  map.resources :messages, :collection => { :destroy_multi => :delete }
   
   map.resources :teams, :collection => { :search => :get }, :member => {:update_image => :put} do |teams|
     teams.resources :team_joins
@@ -51,13 +55,6 @@ ActionController::Routing::Routes.draw do |map|
   end
   map.resources :team_views
   
-  map.resources :trainings do |trainings|
-    trainings.resources :users
-    trainings.resources :training_joins
-    trainings.resources :posts
-  end
-  map.resources :training_views
-  
   map.resources :team_join_requests
   map.resources :team_join_invitations
   map.resources :team_joins, 
@@ -69,10 +66,10 @@ ActionController::Routing::Routes.draw do |map|
       :update_formation => :put
     }
   
-  map.resources :sessions
-  map.resources :friend_relations
-  map.resources :friend_invitations
-  map.resources :messages, :collection => { :destroy_multi => :delete }
+  map.resources :trainings do |trainings|
+    trainings.resources :training_joins
+    trainings.resources :posts
+  end
   
   map.resources :match_invitations
   map.resources :matches

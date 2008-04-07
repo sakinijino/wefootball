@@ -23,14 +23,6 @@ div.calendar div.monthAndYearDiv {
     width:217px;
 }
 
-.dateSaturdayDiv {
-    background-color:#ACBE33; 
-}
-
-.dateSundayDiv {
-    background-color:#F2F7AB; 
-}
-
 .hasActivityDiv {
     background-color:#F2F7AB; 
 }
@@ -80,17 +72,14 @@ div.calendar div.monthAndYearDiv {
     position:relative;
 }
 
-.normalDateDiv .dateContent .trainingContentSpan
+.normalDateDiv .dateContent .activityContent
 {
-    font-family:Arial;
-    font-size:14px;
     vertical-align: middle;
 }
 
 .normalDateDiv .dateContent .more
 {
     margin-right: 10px;
-    float:right;
     position:absolute;
     bottom: 5px;
     right:5px;

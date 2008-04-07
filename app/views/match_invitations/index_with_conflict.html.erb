@@ -8,7 +8,7 @@
   <table class="list">
     <% @mis.each do |mi|%>
       <tr>
-        <td><%= render(:partial => 'shared/team_icon', :object => mi.host_team)%></td>
+        <td><%= team_icon(mi.host_team)%></td>
         <td style="width:100%">
           <table class="match_invitation_list">
           <tr>
@@ -129,7 +129,7 @@
             <%=link_to '进行协商', edit_match_invitation_path(mi)%>
           </div>
         </td>
-        <td><%= render(:partial => 'shared/team_icon', :object => mi.guest_team)%></td>
+        <td><%= team_icon(mi.guest_team)%></td>
       </tr>
     <%end%>
   </table>

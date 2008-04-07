@@ -1,0 +1,49 @@
+<%if activity.class == Training%>
+  <div class="training_content">
+    <%= link_to activity.team.shortname, team_view_path(activity.team.id) %>训练
+    <br/><br/>
+    <%= activity.start_time.strftime('%H:%M')%>-<%= activity.end_time.strftime('%H:%M')%>,
+    <%= location_link activity.location, activity.football_ground_id %>
+    <br/><br/>
+    <%if logged_in? && (!@user || @user == current_user)%>
+      <%=link_to_if(activity.can_be_joined_by?(current_user), '我去', training_training_joins_path(activity), :method=>'post'){} %>
+      <%=link_to_if(activity.can_be_quited_by?(current_user), '我不去', training_training_join_path(activity, 0), :method=>'delete'){} %>
+      &nbsp;&nbsp;|&nbsp;&nbsp;
+    <%end%>
+    <%=link_to '详情', training_path(activity)%>
+  </div>
+  <div class="training_icon">
+    <%= small_team_image_link activity.team %>
+  </div>
+<%elsif activity.class == Match%>
+  <div class="match_content">
+    <%= link_to(activity.host_team.shortname, team_view_path(activity.host_team_id))%>
+    对阵
+    <%= link_to(activity.guest_team.shortname, team_view_path(activity.guest_team_id))%>
+    <br/><br/>
+    <%= activity.start_time.strftime('%H:%M')%>-<%= activity.end_time.strftime('%H:%M')%>,
+    <%= location_link activity.location, nil%>
+    <br/><br/>
+    <%=link_to '详情', match_view_path(activity)%>
+  </div>
+  <div class="match_icon">
+    <%= small_team_image_link activity.host_team %> V.S.
+    <%= small_team_image_link activity.guest_team %>
+  </div>
+<%elsif activity.class == Play%>
+  <div class="match_content">
+    <%= activity.start_time.strftime('%H:%M')%>-<%= activity.end_time.strftime('%H:%M')%>
+    去<%= link_to_if !activity.football_ground_id.nil?, h(activity.location), football_ground_path(activity.football_ground_id)%>随便踢踢
+    <br/><br/>
+    <%if logged_in? %>
+      <%= play_status_with_logged_in(activity,current_user) %>
+      <br/><br/>
+      <%=link_to_if(activity.can_be_joined_by?(current_user),'我也要去', play_play_joins_path(activity), :method=>'post') {}%>
+      <%=link_to_if(activity.can_be_unjoined_by?(current_user),'我不去了', play_play_join_path(activity,0), :method=>'delete') {}%>
+      &nbsp;&nbsp;|&nbsp;&nbsp;
+    <%else%>
+      <%= play_status_with_unlogged_in(activity) %>
+    <%end%>
+    <%=link_to '详情', play_path(activity)%>
+  </div>
+<%end%>

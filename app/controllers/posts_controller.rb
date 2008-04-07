@@ -22,7 +22,7 @@ class PostsController < ApplicationController
         @posts = @training.posts.public
       end
       @title = "#{@training.team.shortname} #{@training.start_time.strftime('%m.%d')}训练的讨论"
-      render :layout => "training_layout"
+      render :layout => "team_layout"
     else
       fake_params_redirect
     end
@@ -37,29 +37,17 @@ class PostsController < ApplicationController
     @can_reply = logged_in? && @post.can_be_replied_by?(current_user)
     @team = @post.team
     @training = @post.training
-    if @training
-      @related_posts = @training.posts.find(:all, :limit => 20) - [@post]
-      render :layout => "training_layout" 
-    elsif @team
-      @related_posts = @team.posts.find(:all, :limit => 20) - [@post]
-      render :layout => "team_layout" 
-    end
+    @related_posts = @team.posts.find(:all, :limit => 20) - [@post]
+    render :layout => "team_layout" 
   end
 
   def new
     @post = Post.new
-    @title = "在#{@team.shortname}的讨论区中发言" if @team
-    @title = "讨论#{@team.shortname} #{@training.start_time.strftime('%m.%d')}的训练" if @training
-    if @training
-      render :layout => "training_layout" 
-    elsif @team
-      render :layout => "team_layout" 
-    end
+    render :layout => "team_layout" 
   end
 
   def edit
     @team = @post.team
-    @title = "修改发言"
     render :layout => "team_layout"
   end
 
@@ -71,11 +59,7 @@ class PostsController < ApplicationController
     if @post.save
       redirect_to(@post)
     else
-      if @training
-        render :action => "new", :layout => "training_layout" 
-      elsif @team
-        render :action => "new", :layout => "team_layout" 
-      end
+      render :action => "new", :layout => "team_layout" 
     end
   end
 
@@ -108,10 +92,13 @@ protected
       @tid = @training.team_id
     end
     fake_params_redirect if !current_user.is_team_member_of?(@tid)
+    @title = "在#{@team.shortname}的讨论区中发言" if @team
+    @title = "讨论#{@team.shortname} #{@training.start_time.strftime('%m.%d')}的训练" if @training
   end
   
   def before_modify
     @post = Post.find(params[:id])
     fake_params_redirect if !@post.can_be_modified_by?(current_user)
+    @title = "修改发言"
   end
 end

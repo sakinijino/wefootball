@@ -105,59 +105,15 @@
     <%end%>
   </div>
 
-  <%if @trainings.length > 0%>
-  <div class="sect">
-    <h2><%=h @team.shortname%>最近一次训练</h2>
-    <div class="activity narrow_activity" style="border:none; padding: 0px">
-      <div class="activity_date">
-        <div class="day">
-          <%= month_calendar_link(@trainings[0].start_time.strftime('%m'), @trainings[0].start_time, @team)%>.<%= day_calendar_link(@trainings[0].start_time.strftime('%d'), @trainings[0].start_time, @team)%></div>
-        <div class="week"><%= wday_text @trainings[0].start_time.wday%></div>
-      </div>
-      <div class="activity_content">
-        <%= @trainings[0].start_time.strftime('%H:%M')%>-<%= @trainings[0].end_time.strftime('%H:%M')%>,
-        <%= link_to_if !@trainings[0].football_ground_id.nil?, h(@trainings[0].location), football_ground_path(@trainings[0].football_ground_id)%>, 训练
-        <br/><br/>
-        <%if logged_in? %>
-          <%=link_to_if(@trainings[0].can_be_joined_by?(current_user), '我去', training_training_joins_path(@trainings[0]), :method=>'post'){} %>
-          <%=link_to_if(@trainings[0].can_be_quited_by?(current_user), '我不去', training_training_join_path(@trainings[0], 0), :method=>'delete'){} %>
-        <%end%>
-        <%=link_to '详情', training_view_path(@trainings[0])%>
-      </div>
-      <div class="clearBoth"></div>
-    </div>
-    <div class="clearBoth"></div>
-  </div>
-  <%end%>
-
-  <%if @matches.length > 0%>
-    <div class="sect">
-      <h2><%=h @team.shortname%>最近的比赛</h2>
-      <%= render(:partial => 'shared/match_list', :object => @matches, :locals=>{:current_team_id=>@team.id})%>
-    </div>
-  <%end%>
-
   <div class="sect">        
     <h2><%=h @team.shortname%>的成员</h2>
-    <%= render(:partial => 'shared/user_icon', :collection => @users)%>
+    <%= user_icon(@users)%>
     <div class="clearBoth"></div>
   </div>
 
   <div class="sect">   
     <h2><%=h @team.shortname%>下的讨论</h2>
-    <table class="list" style="width:100%">
-      <tr>
-        <th style="width:20%">作者</th>
-        <th style="width:80%">话题</th>
-      </tr>
-
-    <% for post in @posts %>
-      <tr>
-        <td><%=h post.user.nickname %></td>
-        <td><%=link_to h(post.title), post  %></td>
-      </tr>
-    <% end %>
-    </table>
+    <%= render :partial=>'posts/narrow_post_list', :object=>@posts%>
     <div style="margin: 10px 0  0 10px;float:right;">
       <%if logged_in? && current_user.is_team_member_of?(@team)%>
         > <%= link_to '发言', new_team_post_path(@team) %>
@@ -168,10 +124,21 @@
 </div>
 
 <div id="right_content">
+  <%if @recent_activity != nil%>
+    <div class="sect">
+      <h2><%=h @team.shortname%>最近一次活动</h2>
+      <div class="activities">
+        <%=date_div_link @recent_activity.start_time, @team%>
+        <%= render :partial => 'shared/activity', :object => @recent_activity%>
+        <div class="clearBoth"></div>
+      </div>
+    </div>
+  <%end%>
+  
   <div class="sect">
-    <h2><%=h @team.shortname%>的日程</h2>
+    <h2><%=h @team.shortname%>近期的活动</h2>
     <%= render(:partial => 'shared/highlight_calendar', 
-      :locals => {:date => Date.today, :trainings => @calendar_trainings_hash})%>
+      :locals => {:date => Date.today, :days=> TeamViewsController::DISPLAY_DAYS, :activities => @calendar_activities_hash})%>
     <div class="clearBoth"></div>
   </div>
 </div>

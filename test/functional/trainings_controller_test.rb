@@ -6,7 +6,7 @@ class TrainingsControllerTest < ActionController::TestCase
     assert_difference('TrainingJoin.count', teams(:inter).users.size) do
     assert_difference('Training.count') do
       post :create, :training => { :team_id => teams(:inter).id, :location=>"School" }
-      assert_redirected_to training_view_path(assigns(:training))
+      assert_redirected_to training_path(assigns(:training))
     end
     end
     
@@ -40,7 +40,7 @@ class TrainingsControllerTest < ActionController::TestCase
         :hour => (t.hour+2).to_s,
         :minute => t.min.to_s
       }
-    assert_redirected_to training_view_path(assigns(:training))
+    assert_redirected_to training_path(assigns(:training))
     assert_equal t.to_s, Training.find(trainings(:training1).id).start_time.to_s
   end
   
@@ -75,9 +75,9 @@ class TrainingsControllerTest < ActionController::TestCase
     end
   end
   
-  def test_should_not_destroy_training_after_it_started
-    trainings(:training1).start_time = Time.now.ago(1800)
-    trainings(:training1).end_time = Time.now.since(3600)
+  def test_should_not_destroy_training_after_it_finished_3_days
+    trainings(:training1).start_time = 5.days.ago
+    trainings(:training1).end_time = 5.days.ago.since(3600)
     trainings(:training1).save_without_validation!
     login_as :mike1
     assert_no_difference('Training.count') do

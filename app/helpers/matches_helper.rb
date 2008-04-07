@@ -5,5 +5,4 @@ module MatchesHelper
   def situation_text(label)
    MatchesHelper::SITUATION_TEXTS[label]
   end
-  
 end
