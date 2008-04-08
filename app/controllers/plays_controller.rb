@@ -1,5 +1,6 @@
 class PlaysController < ApplicationController
-  before_filter :parse_time, :only => [:create]  
+  before_filter :parse_time, :only => [:create]
+  before_filter :login_required, :only=>[:new,:create]
   
 
   def show
@@ -12,9 +13,9 @@ class PlaysController < ApplicationController
   def new
     @play = Play.new
     @default_start_time = 1.hour.since
-    @default_end_time = 2.hours.since
+    @default_end_time = @default_start_time.since(3600)
+    @title = "去随便踢踢"    
     @user = current_user
-    @title = "去随便踢踢"
     render :layout => "user_layout"
   end
 

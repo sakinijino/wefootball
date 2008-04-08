@@ -1,10 +1,10 @@
 class Play < ActiveRecord::Base 
-#  validates_presence_of :start_time, :location
   belongs_to :football_ground
 
   has_many :play_joins,
-            :dependent => :destroy  
-  has_many :users, :through=>:play_joins  
+            :dependent => :destroy
+          
+  has_many :users, :through => :play_joins  
 
   validates_presence_of     :location, :message => "请填写地点"
   validates_length_of        :location,    :maximum => 300
@@ -18,7 +18,7 @@ class Play < ActiveRecord::Base
   
   def before_validation
     self.location = self.football_ground.name if self.football_ground!=nil
-    self.start_time = DateTime.now.tomorrow if self.start_time==nil
+    self.start_time = 1.hour.since if self.start_time==nil
     self.end_time = self.start_time.since(3600) if self.end_time==nil
   end
   

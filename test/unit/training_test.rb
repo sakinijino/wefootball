@@ -10,7 +10,6 @@ class TrainingTest < ActiveSupport::TestCase
       assert_not_nil t.id
       assert_not_nil t.start_time
       assert_not_nil t.end_time
-      assert_not_nil t.location
       assert_equal football_grounds(:yiti).name, t.location
       assert_equal teams(:inter).users.size, t.users.undetermined.size
       assert_equal 0, t.users.joined.size

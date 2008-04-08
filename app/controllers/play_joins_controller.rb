@@ -22,7 +22,6 @@ class PlayJoinsController < ApplicationController
     Play.transaction do
       @play_join.destroy
       if @play.play_joins.empty?
-        @play.destroy
         redirect_to user_view_path(current_user)
         return
       else
