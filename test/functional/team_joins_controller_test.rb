@@ -169,7 +169,7 @@ class TeamJoinsControllerTest < ActionController::TestCase
     user_teams(:saki_inter).position = 11
     user_teams(:saki_inter).save!
     put :update_formation, :team_id=>teams(:inter).id, :formation => {'13'=>user_teams(:saki_inter).id, '16'=>user_teams(:saki_milan).id}
-    assert_equal 11, user_teams(:saki_inter).position
+    assert_equal 11, user_teams(:saki_inter).reload.position
     assert_redirected_to '/'
   end
   
@@ -187,7 +187,8 @@ class TeamJoinsControllerTest < ActionController::TestCase
     user_teams(:saki_inter).save!
     put :update_formation, :team_id=>teams(:inter).id, 
       :formation => uts
-    assert_equal 11, user_teams(:saki_inter).position
+    assert_equal 1, UserTeam.find(:all, :conditions => ['team_id = ? and position is not null', teams(:inter).id]).size
+    assert_equal 11, user_teams(:saki_inter).reload.position
     assert_redirected_to '/'
   end
   

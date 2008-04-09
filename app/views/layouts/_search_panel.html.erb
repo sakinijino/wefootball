@@ -7,7 +7,7 @@
 <% form_tag search_paths[default][:url], :method=>:get, :id=>"header_search" do%>
   <table><tr>
   <td class="dropdown_container">
-    <%= image_tag 'default_user.gif', :width=>20, :height=>20%>
+    <%= image_tag 'default_user_tiny.gif', :width=>20, :height=>20%>
     <ul class="dropdown" style="top:20px;left:0px;width:100px">
       <%search_paths.values.each do |v|%>
         <li><%= v[:link_to]%></li>
@@ -15,6 +15,6 @@
     </ul>
   </td>
   <td><%= text_field_tag 'q', '', :size=>15 %></td>
-  <td><%= submit_tag '搜索', :class=>"submit" %></td>
+  <td><%= submit_tag '', :class=>"submit search", :title=>'搜索' %></td>
   </tr></table>
 <%end%>

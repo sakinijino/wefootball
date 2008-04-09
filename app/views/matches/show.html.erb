@@ -1,59 +1,69 @@
-<h1>比赛基本信息</h1>
-<p>
-  <b>开始时间:</b>
-  <%=h @match.start_time.strftime('%Y-%m-%d %H:%M') %>
-  <b>半场时长:</b>
-  <%=h @match.half_match_length %>分钟
-  <b>中场休息:</b>
-  <%=h @match.rest_length %>分钟  
-</p>
+<%content_for(:javascript) do%>
+  <%#= javascript_include_tag "jquery.dimensions.js" %>
+  <%#= javascript_include_tag "ui.mouse.js" %>
+  <%#= javascript_include_tag "ui.dialog.js" %>
+<%end%>
 
-<p>
-  <b>地点:</b>
-  <%=h @match.location %>
-</p>
+<%content_for(:stylesheet) do%>
+  <%= stylesheet_link_tag 'match' %>
+<%end%>
 
-<p>
-  <b>比赛类型:</b>
-  <%=h match_type_text(@match.match_type) %>
-</p>
+<table style="width:940px; margin-bottom:20px;">
+  <tr>
+    <td>
+     <%= @match.start_time.strftime("%Y-%m-%d %H:%M")%>
+    </td>
+    <td style="text-align:right">
+      <%= match_type_text @match.match_type%>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <%= h @match.location%>
+    </td>
+    <td style="text-align:right">
+      <%= @match.size%>人制
+    </td>
+  </tr>
+  <tr>
+    <td>
+      半场时长<%= @match.half_match_length%>分钟,
+      中场休息<%= @match.rest_length%>分钟
+    </td>
+    <td style="text-align:right">
+      <%= @match.has_judge ? '有' : '没有'%>裁判,
+      <%= @match.has_card ? '有' : '没有'%>红黄牌,
+      <%= @match.has_offside ? '有' : '没有'%>越位
+    </td>
+  </tr>
+  <tr>
+    <td>
+    </td>
+    <td style="text-align:right">
+      平局后<%= win_rule_text @match.win_rule%>
+    </td>
+  </tr>
+</table>
 
-<p>
-  <b>每方场上队员数:</b>
-  <%=h @match.size %>
-</p>
+<div id="match_blackboard">
+  ！！各种状态！！
+</div>
 
-<p>
-  <b>比赛规则:</b>
-  <%= @match.has_judge ? "有裁判" : "无裁判" %>
-  <%= @match.has_card ? "有红黄牌" : "无红黄牌" %>
-  <%= @match.has_offside ? "有越位": "无越位" %> 
-</p>
 
-<p>
-  <b>胜负规则:</b>
-  <%=h win_rule_text(@match.win_rule) %>
-</p>
+<div id="host_team_div">
+<%= render(:partial => 'team_in_match', :locals => {:team_player_mjs => @host_team_player_mjs,
+                                                    :match => @match,
+                                                    :team => @match.host_team,
+                                                    :formation_array => @host_formation_array,
+                                                    :is_host_team => true})%>
+</div>
 
-<p>
-  <b>比赛介绍:</b>
-  <%=h @match.description %>
-</p>
+<div id="guest_team_div">
+<%= render(:partial => 'team_in_match', :locals => {:team_player_mjs => @guest_team_player_mjs,
+                                                    :match => @match,
+                                                    :team => @match.guest_team,
+                                                    :formation_array => @guest_formation_array,
+                                                    :is_host_team => false})%>
+</div>
 
-<hr />
-
-<%= render(:partial => 'shared/team_in_match', :locals => {:user_mjs => @host_team_user_mjs,
-                                                           :player_mjs => @host_team_player_mjs,
-                                                           :match => @match,
-                                                           :team => @match.host_team})%>
-
-<hr />  
-
-<%= render(:partial => 'shared/team_in_match', :locals => {:user_mjs => @guest_team_user_mjs,
-                                                           :player_mjs => @guest_team_player_mjs,
-                                                           :match => @match,
-                                                           :team => @match.guest_team})%>
-  
-<%#*<h1>关于本次比赛的讨论</h1>%>
-<%#= render(:partial => 'shared/post_list', :object => @posts)%>    
-
+<div class="clearBoth"></div>

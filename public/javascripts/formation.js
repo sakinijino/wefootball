@@ -137,7 +137,7 @@ wefootball.player = function(options){
         start: function(){_this.field.adjustPositions(true)},
         stop: function(){_this.field.adjustPositions()}
     }
-    this.small_img = j("<div><div class='del'>X</div>"+this.small_image_tag+"<span>"+this.nickname+"</span>"+"</div>")
+    this.small_img = j("<div><div class='del'></div>"+this.small_image_tag+"<span>"+this.nickname+"</span>"+"</div>")
         .addClass('icon')
     this.tiny_img = j("<div style='width:40px;height:40px'>"+this.tiny_image_tag+"</div>")
         .addClass('player_drag_handle')

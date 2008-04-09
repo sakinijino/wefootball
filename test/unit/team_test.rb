@@ -13,9 +13,9 @@ class TeamTest < ActiveSupport::TestCase
   def test_image_path
     assert_equal Team::DEFAULT_IMAGE, teams(:inter).image
     assert_equal Team::DEFAULT_IMAGE, teams(:milan).image
-    assert_equal "/images/teams/t00000001.not_image", teams(:inter).image(nil, :refresh)
+    assert_equal "/images/teams/00/00/00/01.not_image", teams(:inter).image(nil, :refresh)
     assert_equal Team::DEFAULT_IMAGE, teams(:milan).image(nil, :refresh)
-    assert_equal "/images/teams/t00000001.not_image", teams(:inter).image
+    assert_equal "/images/teams/00/00/00/01.not_image", teams(:inter).image
     assert_equal Team::DEFAULT_IMAGE, teams(:milan).image
   end
   

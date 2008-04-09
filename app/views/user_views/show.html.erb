@@ -53,7 +53,7 @@
     <div class="tab">
     <span>昵称: <%= h @user.nickname%></span>
     <%if @user.gender != 0%>
-      <span><%= @user.gender == 1 ? '♂' : '♀'%></span>
+      <span><%= @user.gender == 1 ? '[♂]' : '[♀]'%></span>
     <%end%>
     <br/>
     <%= "<span>所在地: #{@user.city_text}</span><br/>" unless @user.city_text.nil?%>
@@ -118,21 +118,21 @@
   </div>
 
   <div class="sect">
-    <h2><%=h @user.nickname%>的朋友</h2>
-    <%= user_icon(@friends)%>
-    <div class="clearBoth"></div>
-  </div>
-
-  <div class="sect">
     <h2><%=h @user.nickname%>参加的球队</h2>
     <%= team_icon(@teams)%>
+    <div class="clearBoth"></div>
+  </div>
+  
+  <div class="sect">
+    <h2><%=h @user.nickname%>的朋友</h2>
+    <%= user_icon(@friends)%>
     <div class="clearBoth"></div>
   </div>
 </div>
 
 <div id="right_content">
   <%if @recent_activity != nil%>
-    <div class="sect">
+    <div class="sect" style="margin-bottom:30px">
       <h2><%=h @user.nickname%>最近一次活动</h2>
       <div class="activities">
         <%=date_div_link @recent_activity.start_time, @user%>

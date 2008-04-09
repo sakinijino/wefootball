@@ -2,37 +2,73 @@ require File.dirname(__FILE__) + '/../test_helper'
 
 class UserTeamTest < ActiveSupport::TestCase
   def test_depedency_observer #入队退队时的级联修改
+    MatchJoin.destroy_all
+    
+    matches(:one).start_time = Time.now.tomorrow
+    matches(:one).half_match_length = 25
+    matches(:one).rest_length = 10
+    matches(:one).save!
+    MatchJoin.create_joins(matches(:one))
+    mj = MatchJoin.find_by_match_id_and_team_id_and_user_id(matches(:one),teams(:inter),users(:saki))
+    mj.status = MatchJoin::JOIN
+    mj.save!
+    
+    matches(:two).start_time = 1.day.ago
+    matches(:two).half_match_length = 25
+    matches(:two).rest_length = 10
+    matches(:two).save!
+    MatchJoin.create_joins(matches(:two))
+    mj = MatchJoin.find_by_match_id_and_team_id_and_user_id(matches(:two),teams(:inter),users(:saki))
+    mj.status = MatchJoin::JOIN
+    mj.save!
+    
     assert trainings(:training1).has_joined_member?(users(:saki))
     assert trainings(:training4).has_joined_member?(users(:saki))
+    assert matches(:one).has_joined_team_member?(users(:saki),teams(:inter))
+    assert matches(:two).has_joined_team_member?(users(:saki),teams(:inter))
     
+    assert_difference("MatchJoin.find_all_by_team_id_and_user_id(teams(:inter),users(:saki)).size", -1) do
     assert_difference("users(:saki).trainings.reload.size", -2) do
       user_teams(:saki_inter).destroy
     end
+    end
     assert_equal 2, users(:saki).trainings.reload.size
-    assert trainings(:training1).has_member?(users(:saki))
+    assert trainings(:training1).has_joined_member?(users(:saki))
     assert !trainings(:training4).has_member?(users(:saki))
+    assert !matches(:one).has_joined_team_member?(users(:saki),teams(:inter))
+    assert matches(:two).has_joined_team_member?(users(:saki),teams(:inter))
     
+    assert_difference("MatchJoin.find_all_by_team_id_and_user_id(teams(:inter),users(:saki)).size", 1) do
     assert_difference("users(:saki).trainings.reload.size", 2) do
       ut = UserTeam.new
       ut.user = users(:saki)
       ut.team = teams(:inter)
       ut.save!
     end
+    end
     assert_equal 4, users(:saki).trainings.reload.size
     assert trainings(:training1).has_joined_member?(users(:saki))
     assert trainings(:training4).has_member?(users(:saki))
     assert !trainings(:training4).has_joined_member?(users(:saki))
+    assert matches(:one).has_team_member?(users(:saki),teams(:inter))
+    assert !matches(:one).has_joined_team_member?(users(:saki),teams(:inter))
+    assert matches(:two).has_joined_team_member?(users(:saki),teams(:inter))
     
     Training.destroy_all
+    Match.destroy_all
+    assert_no_difference("MatchJoin.find_all_by_team_id_and_user_id(teams(:inter),users(:saki)).size") do
     assert_no_difference("users(:saki).trainings.reload.size") do
       user_teams(:saki_inter).destroy
     end
+    end
     
+    assert_no_difference("MatchJoin.find_all_by_team_id_and_user_id(teams(:inter),users(:saki)).size") do
     assert_no_difference("users(:saki).trainings.reload.size") do
       ut = UserTeam.new
       ut.user = users(:saki)
       ut.team = teams(:inter)
       ut.save!
+    end
     end
   end
   

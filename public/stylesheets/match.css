@@ -1,0 +1,48 @@
+#content {
+    position: relative;
+}
+
+#match_blackboard {
+    position: absolute;
+    left: 325px;
+    width: 300px;
+    text-align: center;
+}
+
+#host_team_div { 
+    float: left;
+    width: 435px;
+    margin-right: 15px;
+}
+
+#guest_team_div {
+    float: right;
+    margin-right: 15px;  
+    width: 435px;
+    margin-left: 15px;
+    text-align: right;
+}
+
+#host_team_div img.title_icon{
+    float: left;
+    margin-right: 20px; 
+}
+
+#guest_team_div img.title_icon{
+    float: right;
+    margin-left: 20px;
+}
+
+#guest_team_div table {
+    text-align: left;
+}
+
+div.match_field {
+    position:relative;
+    width:363px;
+    height:260px
+}
+
+#guest_team_div div.match_field {
+    float:right;
+}

@@ -1,59 +1,74 @@
 class MatchJoinsController < ApplicationController
-
-  # GET /match_joins/1/edit
-  def edit
-    @match_id = params[:match_id]
-    @team_id = params[:team_id]
-    if !Match.find(@match_id).is_before_match_close? #只有比赛开始前才可以修改阵形
-      fake_params_redirect      
-      return
-    end    
-    if !current_user.is_team_admin_of?(params[:team_id])
-      fake_params_redirect
-    end
-    @player_mjs = MatchJoin.players(params[:match_id],params[:team_id])                               
-  end
-
-  def update
-    mj = MatchJoin.find(params[:id])
-    if !mj.match.is_before_match? #只有比赛开始前才可以修改参加比赛的状态
-      fake_params_redirect      
-      return
-    end    
-    if !current_user.is_team_member_of?(params[:team_id])
-      fake_params_redirect
-      return
-    end
-    match_join_hash = {:status=>params[:match_join][:status]}
-    mj.update_attributes(match_join_hash)
-    redirect_to match_path(mj.match_id)    
-  end
+  before_filter :login_required
+  before_filter :before_modify_formation, :only=>[:edit, :update_formation]
   
-  def update_all
+  def create
     @match = Match.find(params[:match_id])
-    @team_id = params[:team_id]
-    if !@match.is_before_match_close? #只有比赛关闭前才可以修改阵型
-      fake_params_redirect
-      return
-    end     
-    if !current_user.is_team_admin_of?(params[:team_id])
-      fake_params_redirect
-      return
+    @team = Team.find(params[:team_id])
+    if (@match.has_joined_team_member?(current_user, @team))
+      redirect_to match_path(@match)
+    elsif !@match.can_be_joined_by?(current_user, @team)
+      fake_params_redirect      
+    else
+      @mj = MatchJoin.find_or_initialize_by_user_id_and_match_id_and_team_id(self.current_user.id, @match, @team)
+      @mj.status = MatchJoin::JOIN
+      @mj.save!
+      redirect_to match_path(@match)
     end
-    
-    match_join_hash = {}
-    params[:mj].map{|k,v| [k,{:position=>v[:position]}]}.each do |i|
-      match_join_hash[i[0]] = i[1]
-    end    
-    MatchJoin.update(match_join_hash.keys,match_join_hash.values)
-    redirect_to match_path(@match.id)    
   end
-
   
   def destroy
     @match_join = MatchJoin.find(params[:id])
+    if (@match_join.user_id != self.current_user.id) ||
+      !@match_join.match.can_be_quited_by?(current_user, @match_join.team_id)
+      fake_params_redirect      
+      return
+    end
     @match_join.destroy
-
     redirect_to match_path(@match_join.match_id)
+  end
+  
+  def edit
+    @player_mjs = MatchJoin.players(params[:match_id],params[:team_id])       
+    @position_hash = {}
+    Position::POSITIONS.each { |pos| @position_hash[pos] = []}
+    @player_mjs.each do |ut|
+      user = ut.user
+      user.positions_array.each do |pos| 
+        @position_hash[pos] << user
+      end
+    end
+    @another_team = @team == @match.host_team ? @match.guest_team : @match.host_team
+    @title = "设置#{@team.shortname}的首发阵型"
+    render :layout => "team_layout"                       
+  end
+  
+  def update_formation  
+    MatchJoin.transaction do
+      MatchJoin.update_all(["position = ?", nil], ["team_id = ? and match_id = ? and position is not null", @team.id, @match.id])
+      current_formation_length = 0
+      pos_to_ut_hash = params[:formation] ? params[:formation] : {}
+      Team::FORMATION_POSITIONS.each do |pos|
+        pos = pos.to_s
+        if pos_to_ut_hash[pos]
+          ut = MatchJoin.find(pos_to_ut_hash[pos])
+          raise ApplicationController::FakeParametersError if (ut.team_id != @team.id || ut.match_id != @match.id)
+          ut.position = pos
+          ut.save!
+          current_formation_length+=1 if ut.position!=nil
+          raise ApplicationController::FakeParametersError if current_formation_length > @match.size
+        end
+      end
+      redirect_to match_path(@match)
+    end
+  rescue ApplicationController::FakeParametersError
+    fake_params_redirect
+  end
+
+protected
+  def before_modify_formation
+    @match = Match.find(params[:match_id])
+    @team = Team.find(params[:team_id])
+    fake_params_redirect if !@match.can_be_edited_formation_by?(current_user, @team)
   end
 end

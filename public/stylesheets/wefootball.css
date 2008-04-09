@@ -43,6 +43,7 @@ table th{ text-align: left; }
     background: #fff;
     display:none;
     position:absolute;
+    z-index: 200;
 }
 
 #header ul.dropdown li{
@@ -86,8 +87,12 @@ table th{ text-align: left; }
     float: left;
     position: relative;
     top: 100px;
-    width: 145px;
+    width: 175px;
     text-align:center;
+}
+
+#header_setting img.my_down {
+    margin-bottom:2px;
 }
 
 #header_setting a {
@@ -97,8 +102,8 @@ table th{ text-align: left; }
 #header_menu {
     position: absolute;
     top: 80px;
-    left: 185px;
-    width: 552px;
+    left: 215px;
+    width: 512px;
     text-align: center;
 }
 
@@ -149,8 +154,9 @@ table th{ text-align: left; }
 }
 
 #header_search input.submit {
-    background: transparent;
-    color: #fff;
+    background:transparent url(/images/search.gif);
+    width: 11px;
+    height: 11px;
     cursor: pointer;
 }
 
@@ -182,8 +188,6 @@ div.sect {
 div.sect h2 {
     margin: 0 0 5px -5px;
     padding: 5px;
-    height: 30px;
-    background:url(/images/seperateLine.jpg) no-repeat left bottom;
 }
 
 div.clearBoth {
@@ -317,7 +321,7 @@ div.post p{
 }
 
 div.post .title {
-    background-color:#EEEEFF; 
+    background-color:#FCFDFE; 
     padding: 2px 10px 2px 10px;
     width: 80%;
     display: -moz-inline-box;/*firefox hack*/
@@ -366,12 +370,20 @@ div.icon_select div.input {
 
 div.ui-dialog {
     background: #fff;
-    padding: 8px 10px 20px 10px;
+    padding: 12px 10px 15px 10px;
     border:solid 2px #3D681A;
 }
 
 div.ui-dialog div.ui-dialog-titlebar{
     text-align: right;
+    position: relative;
+}
+
+div.ui-dialog div.ui-dialog-titlebar .ui-dialog-titlebar-close {
+    font-weight: bold;
+    color: #3D681A;
+    position: absolute;
+    right: 0;
 }
 
 div.ui-dialog form{

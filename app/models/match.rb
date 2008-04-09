@@ -10,7 +10,14 @@ class Match < ActiveRecord::Base
   attr_accessible
   
   has_many :match_joins,
-            :dependent => :destroy
+            :dependent => :destroy  do
+    def host_team
+      find :all, :conditions => ['team_id = ?', @owner.host_team_id]
+    end
+    def guest_team
+      find :all, :conditions => ['team_id = ?', @owner.guest_team_id]
+    end
+  end
   
   validates_presence_of     :start_time, :location, :size
   validates_length_of       :description, :maximum =>MAX_DESCRIPTION_LENGTH, :allow_nil => true
@@ -76,26 +83,90 @@ class Match < ActiveRecord::Base
   def is_before_match_close?
     return TIME_LENGTH_TO_CLOSE_MATCH.days.ago < self.end_time   
   end
-
-  protected
-    
-    def self.calculate_situation_from_goal(host_team_goal, guest_team_goal)
-      distinct_goals = (host_team_goal.to_i - guest_team_goal.to_i)
-      if distinct_goals > 4
-        return 2
-      elsif distinct_goals > 2
-        return 3
-      elsif distinct_goals > 0
-        return 4
-      elsif distinct_goals == 0
-        return 5
-      elsif distinct_goals > -3
-        return 6
-      elsif distinct_goals > -5
-        return 7
-      else return 8
-      end
-    end
-
   
+  def has_team_member?(user, team_id)
+    return false if !belongs_to?(team_id)
+    user_id = case user
+    when User
+      user.id
+    else
+      user
+    end
+    MatchJoin.find :first, :conditions => ['user_id = ? and team_id = ? and match_id = ?', user_id, team_id, self.id]
+  end
+  
+  def has_joined_team_member?(user, team_id)
+    return false if !belongs_to?(team_id)
+    tj = has_team_member?(user, team_id)
+    tj!=nil && tj.status == MatchJoin::JOIN
+  end
+  
+  def can_be_joined_by?(user, team)
+    team_id = case team
+    when Team
+      team.id
+    else
+      team
+    end
+    belongs_to?(team_id) && is_before_match_close? && user.is_team_member_of?(team_id) && !has_joined_team_member?(user, team_id)
+  end
+  
+  def can_be_quited_by?(user, team)
+    team_id = case team
+    when Team
+      team.id
+    else
+      team
+    end
+    belongs_to?(team_id) && is_before_match? && has_team_member?(user, team_id)
+  end
+  
+  def can_be_edited_result_by?(user, team)
+    is_after_match_and_before_match_close? && self.can_be_edited_by?(user, team)
+  end
+  
+  def can_be_edited_formation_by?(user, team)
+    is_before_match_close? && self.can_be_edited_by?(user, team)
+  end
+  
+  def can_be_destroyed_by?(user)
+    is_before_match? && self.is_team_admin_of?(user)
+  end  
+
+  protected  
+  def can_be_edited_by?(user, team)
+    self.belongs_to?(team) && user.is_team_admin_of?(team)
+  end
+  
+  def belongs_to?(team)
+    team_id = case team
+    when Team
+      team.id
+    else
+      team
+    end
+    self.host_team_id == team_id || self.guest_team_id == team_id
+  end
+  
+  def is_team_admin_of?(user)
+    user.is_team_admin_of?(self.host_team_id)|| user.is_team_admin_of?(self.guest_team_id)
+  end
+  
+  def self.calculate_situation_from_goal(host_team_goal, guest_team_goal)
+    distinct_goals = (host_team_goal.to_i - guest_team_goal.to_i)
+    if distinct_goals > 4
+      return 2
+    elsif distinct_goals > 2
+      return 3
+    elsif distinct_goals > 0
+      return 4
+    elsif distinct_goals == 0
+      return 5
+    elsif distinct_goals > -3
+      return 6
+    elsif distinct_goals > -5
+      return 7
+    else return 8
+    end
+  end
 end

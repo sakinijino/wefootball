@@ -9,6 +9,18 @@ class MatchJoin < ActiveRecord::Base
   belongs_to :match
   belongs_to :user
   
+  validates_inclusion_of   :position, :in => Team::FORMATION_POSITIONS, :allow_nil => true
+  
+  attr_accessible :goal, :cards, :comment
+  
+  def before_validation
+    self.position = nil if self.position==""
+    if self.position!=nil
+      ut = UserTeam.find_by_user_id_and_team_id(self.user_id, self.team_id)
+      self.position = nil if ut.nil? || !ut.is_player
+    end
+  end
+  
   def self.create_joins(match)
     host_team = match.host_team
     for user in host_team.users
@@ -64,5 +76,4 @@ class MatchJoin < ActiveRecord::Base
       return [0,0]
     end
   end
-  
 end

@@ -24,7 +24,7 @@
     <%= activity.start_time.strftime('%H:%M')%>-<%= activity.end_time.strftime('%H:%M')%>,
     <%= location_link activity.location, nil%>
     <br/><br/>
-    <%=link_to '详情', match_view_path(activity)%>
+    <%=link_to '详情', match_path(activity)%>
   </div>
   <div class="match_icon">
     <%= small_team_image_link activity.host_team %> V.S.

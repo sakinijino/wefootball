@@ -294,18 +294,6 @@ class User < ActiveRecord::Base
     can_act_on_match_invitation?(match_invitation)
   end
   
-  def can_edit_match?(team,match)
-    self.is_team_admin_of?(team) && is_admin_of_match_teams?(match)
-  end
-  
-  def can_destroy_match?(match)
-    is_admin_of_match_teams?(match)
-  end  
-  
-  def match_join(match_id)
-    MatchJoin.find_by_user_id_and_match_id(self.id,match_id)
-  end
-  
   def full_blog_uri
     "http://#{self.blog}"
   end
@@ -360,9 +348,5 @@ class User < ActiveRecord::Base
       else
         return self.is_team_admin_of?(match_invitation.guest_team_id)
       end
-    end
-    
-    def is_admin_of_match_teams?(match)      
-      return self.is_team_admin_of?(match.host_team)|| self.is_team_admin_of?(match.guest_team)     
-    end    
+    end  
 end

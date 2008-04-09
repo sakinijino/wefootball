@@ -4,3 +4,10 @@ one:
   guest_team_id: 2
   start_time: 2000-01-01 00:00:00
   location: "default_location"
+
+two:
+  id: 2
+  host_team_id: 1
+  guest_team_id: 2
+  start_time: 2000-01-01 00:00:00
+  location: "default_location"

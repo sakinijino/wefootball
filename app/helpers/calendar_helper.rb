@@ -11,7 +11,7 @@ module CalendarHelper
     else
       title = ""
     end
-    link_to image_tag('match_icon.gif', :title=> title), match_view_path(m)
+    link_to image_tag('match_icon.gif', :title=> title), match_path(m)
   end
   
   def play_icon_link(t)

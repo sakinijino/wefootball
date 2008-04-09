@@ -2,10 +2,14 @@ module TeamJoinsHelper
   TOP_POS_MAP = {0=>520-35, 1=> 520-90, 2=> 520-180, 3=>520-257, 4=>520-347, 5=>520-445}
   LEFT_POS_MAP = {1=>186-135, 2=> 186-65, 3=> 186, 4=>186+65, 0=>186+135}
   
+  SMALL_MATCH_FIELD_HEIGHT = 363
+  RATING = 260 / 372.0
+  WIDTH = 36
+  HEIGHT = 34
+  
   def team_field_position(pos, formation_array = nil)
-    rating = 260 / 372.0
     pos = formation_field_position(pos, formation_array)
-    return {:top=>pos[:top]*rating, :left=>pos[:left]*rating}
+    return {:top=>pos[:top]*RATING, :left=>pos[:left]*RATING}
   end
   
   def formation_field_position(pos, formation_array = nil)
@@ -18,7 +22,17 @@ module TeamJoinsHelper
         left-=offset if pos == p+1 && !formation_array.include?(p)
       end
     end
-    return {:top=>top-17, :left=>left-18}
+    return {:top=>top-HEIGHT/2, :left=>left-WIDTH/2}
+  end
+  
+  def match_host_team_field_position(pos, formation_array = nil)
+    pos = team_field_position(pos, formation_array)
+    return {:top=>pos[:left], :left=>SMALL_MATCH_FIELD_HEIGHT-pos[:top]-WIDTH*RATING}
+  end
+  
+  def match_guest_team_field_position(pos, formation_array = nil)
+    pos = team_field_position(pos, formation_array)
+    return {:top=>pos[:left], :left=>pos[:top]}
   end
   
   def formation_text(formation_array)

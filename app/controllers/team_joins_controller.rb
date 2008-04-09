@@ -1,5 +1,6 @@
 class TeamJoinsController < ApplicationController
   before_filter :login_required, :except => [:index, :formation_index]
+  before_filter :before_edit, :only=>[:admin_management, :player_management, :formation_management, :update_formation]
   
   def index
     if (params[:user_id]) # 显示用户参加的所有队伍
@@ -29,11 +30,6 @@ class TeamJoinsController < ApplicationController
   end
   
   def admin_management
-    if (!current_user.is_team_admin_of?(params[:team_id]))
-      fake_params_redirect
-      return
-    end
-    @team = Team.find(params[:team_id])
     @admin_uts = UserTeam.find_all_by_team_id_and_is_admin(params[:team_id], true, :include=>[:user])
     @other_uts = UserTeam.find_all_by_team_id_and_is_admin(params[:team_id], false, :include=>[:user])
     @title = "#{@team.shortname}的成员管理"
@@ -41,11 +37,6 @@ class TeamJoinsController < ApplicationController
   end
   
   def player_management
-    if (!current_user.is_team_admin_of?(params[:team_id]))
-      fake_params_redirect
-      return
-    end
-    @team = Team.find(params[:team_id])
     @player_uts = UserTeam.find_all_by_team_id_and_is_player(params[:team_id], true, :include=>[:user])
     @other_uts = UserTeam.find :all, 
         :conditions => ["team_id = ? and is_player = ? and users.is_playable = ?", params[:team_id], false, true],
@@ -55,11 +46,6 @@ class TeamJoinsController < ApplicationController
   end
   
   def formation_management
-    if (!current_user.is_team_admin_of?(params[:team_id]))
-      fake_params_redirect
-      return
-    end
-    @team = Team.find(params[:team_id])
     @player_uts = UserTeam.find_all_by_team_id_and_is_player(params[:team_id], true, :include=>[:user])
     @position_hash = {}
     Position::POSITIONS.each { |pos| @position_hash[pos] = []}
@@ -121,11 +107,6 @@ class TeamJoinsController < ApplicationController
   end
   
   def update_formation
-    @team = Team.find(params[:team_id])
-    if (!current_user.is_team_admin_of?(@team))
-      fake_params_redirect
-      return
-    end
     UserTeam.transaction do
       UserTeam.update_all(["position = ?", nil], ["team_id = ? and position is not null", @team.id])
       current_formation_length = 0
@@ -154,6 +135,15 @@ class TeamJoinsController < ApplicationController
     else
       @tj.destroy
       redirect_with_back_uri_or_default team_view_path(@tj.team_id)
+    end
+  end
+
+protected
+  def before_edit
+    @team = Team.find(params[:team_id])
+    if (!current_user.is_team_admin_of?(@team))
+      fake_params_redirect
+      return
     end
   end
 end

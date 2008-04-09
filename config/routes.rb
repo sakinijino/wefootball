@@ -73,8 +73,7 @@ ActionController::Routing::Routes.draw do |map|
   
   map.resources :match_invitations
   map.resources :matches
-  map.resources :match_joins, :collection => { :update_all => :put }  
-  map.resources :match_views
+  map.resources :match_joins, :collection => { :update_formation => :put }  
   
   map.resources :plays do |plays|
     plays.resources :play_joins

@@ -19,16 +19,11 @@ class PlayJoinsController < ApplicationController
       return
     end
     @play_join = PlayJoin.find_by_play_id_and_user_id(@play.id,current_user.id)
-    Play.transaction do
-      @play_join.destroy
-      if @play.play_joins.empty?
-        redirect_to user_view_path(current_user)
-        return
-      else
-        redirect_to play_path(@play)
-        return
-      end
+    @play_join.destroy
+    if @play.play_joins.empty?
+      redirect_to user_view_path(current_user)
+    else
+      redirect_to play_path(@play)
     end
   end
-  
 end

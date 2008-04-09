@@ -5,6 +5,7 @@ class UserViewsController < ApplicationController
   TEAM_LIST_LENGTH = 9
   TRAINING_LIST_LENGTH = 1
   MATCHES_LIST_LENGTH = 1
+  PLAYS_LIST_LENGTH = 1
   DISPLAY_DAYS = 18
   
   def show
@@ -12,15 +13,14 @@ class UserViewsController < ApplicationController
     @friends = @user.friends(FRIEND_LIST_LENGTH)
     @teams = @user.teams.find(:all, :limit => TEAM_LIST_LENGTH)
     
-    tmp_tra = @user.trainings.recent(TRAINING_LIST_LENGTH)
-    tmp_mat = @user.matches.recent(MATCHES_LIST_LENGTH)
-    @recent_training = tmp_tra.length > 0 ? tmp_tra[0] : nil
-    @recent_matches = tmp_mat.length > 0 ? tmp_mat[0] : nil
-    if @recent_training != nil && @recent_matches!=nil
-      @recent_activity = @recent_training.start_time < @recent_matches.start_time ? @recent_training : @recent_matches
-    else
-      @recent_activity = @recent_training || @recent_matches
-    end
+    activities = []
+    tmp = @user.trainings.recent(TRAINING_LIST_LENGTH)
+    activities << tmp[0] if tmp.length > 0
+    tmp = @user.matches.recent(MATCHES_LIST_LENGTH)
+    activities << tmp[0] if tmp.length > 0
+    tmp = @user.plays.recent(PLAYS_LIST_LENGTH)
+    activities << tmp[0] if tmp.length > 0   
+    @recent_activity = activities.length > 0 ? (activities.sort_by{|act| act.start_time})[0] : nil
     
     st = Time.today
     et = Time.today.since(3600*24*DISPLAY_DAYS)

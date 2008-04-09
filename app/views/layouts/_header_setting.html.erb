@@ -1,7 +1,9 @@
 <div id="header_setting">
   <%if logged_in?%>
     <span class="dropdown_container">
-      <%= link_to("我的", user_view_path(current_user))%>&nbsp;&nbsp;| &nbsp;&nbsp;
+      <%= link_to("我的...", user_view_path(current_user))%>
+      <%= image_tag('my_down.gif', :title=>'', :class=>'my_down')%>
+      &nbsp;&nbsp;| &nbsp;&nbsp;
       <ul class="dropdown" style="top:15px;left:10px;width:50px">
         <li><%= link_to("首页", user_view_path(current_user))%></li>
         <li><%= link_to("朋友", user_friend_relations_path(current_user))%></li>

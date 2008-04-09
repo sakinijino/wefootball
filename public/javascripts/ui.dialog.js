@@ -74,7 +74,7 @@
 		var uiDialogTitlebar = $('.ui-dialog-titlebar', uiDialogContainer);
 		var title = (options.title) ? options.title : (uiDialogContent.attr('title')) ? uiDialogContent.attr('title') : '';
 		uiDialogTitlebar.append('<span class="ui-dialog-title">' + title + '</span>');
-		uiDialogTitlebar.append('<a href="#" class="ui-dialog-titlebar-close"><span>X</span></a>');
+		uiDialogTitlebar.append('<a href="#" class="ui-dialog-titlebar-close"><span><img src="/images/close.gif" /></span></a>');
 		this.uiDialogTitlebarClose = $('.ui-dialog-titlebar-close', uiDialogTitlebar)
 			.hover(function() { $(this).addClass('ui-dialog-titlebar-close-hover'); }, 
 			       function() { $(this).removeClass('ui-dialog-titlebar-close-hover'); })

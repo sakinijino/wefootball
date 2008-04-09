@@ -5,7 +5,18 @@ class MatchTest < ActiveSupport::TestCase
   def test_match_joins #测试到match_joins的关联正确
     m = matches(:one)
     assert_equal teams(:inter),m.host_team
-    assert_equal teams(:milan),m.guest_team    
+    assert_equal teams(:milan),m.guest_team
+
+    MatchJoin.create_joins(m)
+    assert_equal 4, m.match_joins.size
+    
+    assert_equal 2, m.match_joins.host_team.size  
+    assert_equal users(:quentin), (m.match_joins.host_team.find{|i| i.user_id = users(:quentin).id}).user
+    assert_nil m.match_joins.host_team.find{|i| i.user_id == users(:aaron).id}
+    
+    assert_equal 2, m.match_joins.guest_team.size
+    assert_equal users(:aaron), (m.match_joins.guest_team.find{|i| i.user_id = users(:aaron).id}).user
+    assert_nil m.match_joins.guest_team.find{|i| i.user_id == users(:quentin).id}
   end
 
   def test_protected_attr #测试attr_protected，以location为例
@@ -51,12 +62,22 @@ class MatchTest < ActiveSupport::TestCase
     m.save
     assert_equal true,m.is_before_match?
     assert_equal false,m.is_after_match_and_before_match_close?
-    assert_equal false,!m.is_before_match_close? #这里用!m.is_before_match_close?模拟m.is_after_match_close?       
+    assert_equal false,!m.is_before_match_close? #这里用!m.is_before_match_close?模拟m.is_after_match_close? 
+    
+    matches(:one).start_time = Time.now.ago(1800)
+    matches(:one).half_match_length = 25
+    matches(:one).rest_length = 10
+    matches(:one).save!
+    assert_equal false,m.is_before_match?
+    assert_equal false,m.is_after_match_and_before_match_close?
+    assert_equal true,m.is_before_match_close?
+    
     m.start_time = 1.days.ago
     m.save
     assert_equal false,m.is_before_match?
     assert_equal true,m.is_after_match_and_before_match_close?
     assert_equal false,!m.is_before_match_close?
+    
     m.start_time = 9.days.ago
     m.save
     assert_equal false,m.is_before_match?
@@ -94,4 +115,133 @@ class MatchTest < ActiveSupport::TestCase
     assert_equal m.guest_team_id, mi.guest_team_id   
   end
 
+  def test_match_join_status
+    matches(:one).start_time = Time.now.tomorrow
+    matches(:one).half_match_length = 25
+    matches(:one).rest_length = 10
+    matches(:one).save!
+    MatchJoin.destroy_all
+    MatchJoin.create_joins(matches(:one))
+    assert matches(:one).has_team_member?(users(:saki), teams(:inter).id) #待定
+    assert matches(:one).has_team_member?(users(:quentin), teams(:inter).id) #待定
+    assert !matches(:one).has_joined_team_member?(users(:saki), teams(:inter).id) #未加入
+    assert !matches(:one).has_joined_team_member?(users(:quentin), teams(:inter).id) #未加入
+    
+    mj = MatchJoin.find_by_match_id_and_team_id_and_user_id(matches(:one),teams(:inter),users(:saki))
+    mj.status = MatchJoin::JOIN
+    mj.save!
+    assert matches(:one).has_joined_team_member?(users(:saki), teams(:inter).id)
+    
+    assert matches(:one).has_team_member?(users(:saki), teams(:milan).id) #待定
+    mj = MatchJoin.find_by_match_id_and_team_id_and_user_id(matches(:one),teams(:milan),users(:saki))
+    mj.destroy
+    assert !matches(:one).has_team_member?(users(:saki), teams(:milan).id)
+    
+    assert !matches(:one).has_joined_team_member?(users(:saki), teams(:juven).id) #错误的球队
+    assert !matches(:one).has_joined_team_member?(users(:saki), teams(:juven).id) #错误的球队
+  end
+  
+  def test_can_join
+    matches(:one).start_time = Time.now.tomorrow
+    matches(:one).half_match_length = 25
+    matches(:one).rest_length = 10
+    matches(:one).save!
+    MatchJoin.destroy_all
+    MatchJoin.create_joins(matches(:one))
+    mj = MatchJoin.find_by_match_id_and_team_id_and_user_id(matches(:one),teams(:inter),users(:saki))
+    mj.status = MatchJoin::JOIN
+    mj.save!
+    
+    assert matches(:one).can_be_joined_by?(users(:quentin),teams(:inter)) #待定，可以加入
+    assert !matches(:one).can_be_joined_by?(users(:saki),teams(:inter)) #已加入，不能再加入
+    assert !matches(:one).can_be_joined_by?(users(:mike1),teams(:inter)) #不是本队，不能加入
+    
+    assert matches(:one).can_be_quited_by?(users(:quentin),teams(:inter)) #待定，不能退出
+    assert matches(:one).can_be_quited_by?(users(:saki),teams(:inter)) #可以退出
+    assert !matches(:one).can_be_quited_by?(users(:mike1),teams(:inter)) #不能退出
+    
+    matches(:one).start_time = 6.days.ago
+    matches(:one).half_match_length = 25
+    matches(:one).rest_length = 10
+    matches(:one).save!
+    
+    assert matches(:one).can_be_joined_by?(users(:quentin),teams(:inter)) #关闭之前，可以加入
+    assert !matches(:one).can_be_quited_by?(users(:saki),teams(:inter)) #已经结束，不能退出
+ 
+    
+    matches(:one).start_time = 8.days.ago
+    matches(:one).half_match_length = 25
+    matches(:one).rest_length = 10
+    matches(:one).save!
+    
+    assert !matches(:one).can_be_joined_by?(users(:quentin),teams(:inter)) #关闭不能加入
+    assert !matches(:one).can_be_quited_by?(users(:saki),teams(:inter)) #已经结束，不能退出
+    
+    assert !matches(:one).can_be_joined_by?(users(:saki), teams(:juven).id) #错误的球队
+    assert !matches(:one).can_be_quited_by?(users(:saki), teams(:juven).id) #错误的球队
+  end
+  
+  def test_can_edit_or_destroy
+    user_teams(:aaron_milan).is_admin = true
+    user_teams(:aaron_milan).save!
+    
+    matches(:one).start_time = Time.now.tomorrow
+    matches(:one).half_match_length = 25
+    matches(:one).rest_length = 10
+    matches(:one).save!
+    assert matches(:one).can_be_edited_formation_by?(users(:saki),teams(:inter))
+    assert !matches(:one).can_be_edited_result_by?(users(:saki),teams(:inter))
+    assert matches(:one).can_be_destroyed_by?(users(:saki))
+    assert !matches(:one).can_be_edited_formation_by?(users(:aaron),teams(:inter))
+    assert !matches(:one).can_be_edited_result_by?(users(:aaron),teams(:inter))
+    assert matches(:one).can_be_destroyed_by?(users(:aaron))
+    assert !matches(:one).can_be_edited_formation_by?(users(:mike1),teams(:inter))
+    assert !matches(:one).can_be_edited_result_by?(users(:mike1),teams(:inter))
+    assert !matches(:one).can_be_destroyed_by?(users(:mike1))
+    
+    matches(:one).start_time = Time.now.ago(1800)
+    matches(:one).half_match_length = 25
+    matches(:one).rest_length = 10
+    matches(:one).save!
+    assert matches(:one).can_be_edited_formation_by?(users(:saki),teams(:inter))
+    assert !matches(:one).can_be_edited_result_by?(users(:saki),teams(:inter))
+    assert !matches(:one).can_be_destroyed_by?(users(:saki))
+    assert !matches(:one).can_be_edited_formation_by?(users(:aaron),teams(:inter))
+    assert !matches(:one).can_be_edited_result_by?(users(:aaron),teams(:inter))
+    assert !matches(:one).can_be_destroyed_by?(users(:aaron))
+    assert !matches(:one).can_be_edited_formation_by?(users(:mike1),teams(:inter))
+    assert !matches(:one).can_be_edited_result_by?(users(:mike1),teams(:inter))
+    assert !matches(:one).can_be_destroyed_by?(users(:mike1))
+    
+    matches(:one).start_time = 6.days.ago
+    matches(:one).half_match_length = 25
+    matches(:one).rest_length = 10
+    matches(:one).save!
+    assert matches(:one).can_be_edited_formation_by?(users(:saki),teams(:inter))
+    assert matches(:one).can_be_edited_result_by?(users(:saki),teams(:inter))
+    assert !matches(:one).can_be_destroyed_by?(users(:saki))
+    assert !matches(:one).can_be_edited_formation_by?(users(:aaron),teams(:inter))
+    assert !matches(:one).can_be_edited_result_by?(users(:aaron),teams(:inter))
+    assert !matches(:one).can_be_destroyed_by?(users(:aaron))
+    assert !matches(:one).can_be_edited_formation_by?(users(:mike1),teams(:inter))
+    assert !matches(:one).can_be_edited_result_by?(users(:mike1),teams(:inter))
+    assert !matches(:one).can_be_destroyed_by?(users(:mike1))
+    
+    matches(:one).start_time = 8.days.ago
+    matches(:one).half_match_length = 25
+    matches(:one).rest_length = 10
+    matches(:one).save!
+    assert !matches(:one).can_be_edited_formation_by?(users(:saki),teams(:inter))
+    assert !matches(:one).can_be_edited_result_by?(users(:saki),teams(:inter))
+    assert !matches(:one).can_be_destroyed_by?(users(:saki))
+    assert !matches(:one).can_be_edited_formation_by?(users(:aaron),teams(:inter))
+    assert !matches(:one).can_be_edited_result_by?(users(:aaron),teams(:inter))
+    assert !matches(:one).can_be_destroyed_by?(users(:aaron))
+    assert !matches(:one).can_be_edited_formation_by?(users(:mike1),teams(:inter))
+    assert !matches(:one).can_be_edited_result_by?(users(:mike1),teams(:inter))
+    assert !matches(:one).can_be_destroyed_by?(users(:mike1))
+    
+    assert !matches(:one).can_be_edited_formation_by?(users(:saki), teams(:juven).id) #错误的球队
+    assert !matches(:one).can_be_edited_result_by?(users(:saki), teams(:juven).id) #错误的球队
+  end
 end

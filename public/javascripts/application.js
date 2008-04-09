@@ -124,9 +124,9 @@ j(function(){
                 })
             })
             var fi = span.id.split('-')[4]
-            if (fi=='') province_select.change()
-            else if (fi == 'city') city_select.change()
-            else {
+            if (fi=='') province_select.change() //设置到省一级，更新省的select
+            else if (fi == 'city') city_select.change() //设置到市一级，更新市的select
+            else { // 设置了球场，反向更新省市
                 province_select.get()[0].value = ProvinceCity_REVERSE_LIST[FootballGround_REVERSE_LIST[fi]]
                 province_select.change()
                 city_select.get()[0].value = FootballGround_REVERSE_LIST[fi];

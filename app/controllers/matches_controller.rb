@@ -4,14 +4,19 @@ class MatchesController < ApplicationController
 
   def show
     @match = Match.find(params[:id])  
-    @host_team_player_mjs = MatchJoin.find(:all,
-                                         :conditions => ["match_id=? and team_id=? and position is not null",@match.id,@match.host_team_id]
-                                        )    
-    @host_team_user_mjs = MatchJoin.find_all_by_match_id_and_team_id(@match.id,@match.host_team_id)
-    @guest_team_player_mjs = MatchJoin.find(:all,
-                                         :conditions => ["match_id=? and team_id=? and position is not null",@match.id,@match.guest_team_id]
-                                        )    
-    @guest_team_user_mjs = MatchJoin.find_all_by_match_id_and_team_id(@match.id,@match.guest_team_id)
+    @host_team_player_mjs = MatchJoin.find :all,
+      :conditions => ["match_id=? and team_id=? and position is not null",@match.id,@match.host_team_id],
+      :order => "position"
+    @host_formation_array = @host_team_player_mjs.map {|ut| ut.position}
+    
+    @guest_team_player_mjs = MatchJoin.find :all,
+      :conditions => ["match_id=? and team_id=? and position is not null",@match.id,@match.guest_team_id],
+      :order => "position"
+    @guest_formation_array = @guest_team_player_mjs.map {|ut| ut.position}
+    
+    @team = @match.host_team
+    
+    render :layout=>'team_layout'
   end
   
   def create
@@ -32,14 +37,10 @@ class MatchesController < ApplicationController
   def edit
     @team = Team.find(params[:team_id])
     @match = Match.find(params[:id],:include=>[:host_team,:guest_team])
-    if !@match.is_after_match_and_before_match_close? #只有比赛结束后才可以填写比赛结果和队员比赛信息
+    if !@match.can_be_edited_result_by?(current_user, @team)
       fake_params_redirect      
       return
-    end     
-    if !current_user.can_edit_match?(@team,@match)
-      fake_params_redirect
-      return      
-    end    
+    end
     @editing_by_host_team = (@team.id == @match.host_team_id)
     @player_mjs = MatchJoin.players(@match.id,@team.id) 
   end
@@ -47,13 +48,9 @@ class MatchesController < ApplicationController
   def update 
     @match = Match.find(params[:id])    
     @team = Team.find(params[:team_id])
-    if !@match.is_after_match_and_before_match_close? #只有比赛结束后才可以填写比赛结果和队员比赛信息
+    if !@match.can_be_edited_result_by?(current_user, @team)
       fake_params_redirect      
       return
-    end    
-    if !current_user.can_edit_match?(@team,@match)
-      fake_params_redirect
-      return      
     end
     @editing_by_host_team = (@team.id == @match.host_team_id)
     if @editing_by_host_team
@@ -87,44 +84,29 @@ class MatchesController < ApplicationController
        )
      @player_mjs = MatchJoin.players(@match.id,@team.id)
       render :action => "edit"
-      return
-    end
-    
-    if @match.save! && MatchJoin.update(match_join_hash.keys,match_join_hash.values)
+    elsif @match.save! && MatchJoin.update(match_join_hash.keys,match_join_hash.values)
       if @editing_by_host_team
         redirect_to team_view_path(@match.host_team_id)
-        return
       else
         redirect_to team_view_path(@match.guest_team_id)
-        return
       end
     else
       @player_mjs = MatchJoin.players(@match.id,@team.id)      
       render :action => "edit"
-      return
     end
   end
 
   def destroy
-    @match = Match.find(params[:id])
-    
-    if !@match.is_before_match_close? #只有比赛结束后到关闭前才可以填写比赛结果和队员比赛信息
-      fake_params_redirect      
-      return
-    end    
-    if !current_user.can_destroy_match?(@match)#权限检查
+    @match = Match.find(params[:id])    
+    if !@match.can_be_destroyed_by?(current_user)#权限检查
       fake_params_redirect
-      return      
-    end
-   
-    @match.destroy
-
-    if current_user.is_team_admin_of?(@match.host_team)
-      redirect_to team_view_path(@match.host_team_id)
-      return
     else
-      redirect_to team_view_path(@match.guest_team_id)
-      return
+      @match.destroy
+      if current_user.is_team_admin_of?(@match.host_team)
+        redirect_to team_view_path(@match.host_team_id)
+      else
+        redirect_to team_view_path(@match.guest_team_id)
+      end
     end
   end
 end

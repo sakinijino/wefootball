@@ -31,7 +31,7 @@ class UserImage < ActiveRecord::Base
     file_data.original_filename.gsub(/\.\w+$/) do |s|
       ext = s; ''
     end
-    self.filename = "u%08d#{ext}" % self.user_id if respond_to?(:filename)
+    self.filename = "%08d#{ext}" % self.user_id if respond_to?(:filename)
     if file_data.is_a?(StringIO)
       file_data.rewind
       self.temp_data = file_data.read
@@ -42,6 +42,9 @@ class UserImage < ActiveRecord::Base
   
   def full_filename(thumbnail = nil)
     file_system_path = (thumbnail ? thumbnail_class : self).attachment_options[:path_prefix].to_s
-    File.join(RAILS_ROOT, file_system_path, thumbnail_name_for(thumbnail))
+    fn = thumbnail_name_for(thumbnail)
+    path = fn.slice(0, 7).scan(/../)
+    path << fn.slice(6, fn.length-6)
+    File.join(RAILS_ROOT, file_system_path, *path)
   end
 end

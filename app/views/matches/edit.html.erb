@@ -111,7 +111,7 @@
         <%for mj in @player_mjs%>
          <tr>
             <td><%= user_icon(mj.user)%></td>
-            <td><%= mj.position == nil ? "?" : fomation_position_text(mj.position)%></td>
+            <td><%= mj.position == nil ? "?" : formation_position_text(mj.position)%></td>
             <td><%= text_field_tag "mj[#{mj.id}][goal]", mj.goal%></td>
             <td>
                 <%= select_tag "mj[#{mj.id}][cards]", options_for_select(MatchJoin::CARDS.map {|c| [card_text(c), c]},mj.cards) %>

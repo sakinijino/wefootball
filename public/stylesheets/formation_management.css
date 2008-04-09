@@ -41,16 +41,20 @@ div.icon, img.icon {
 #field_div div.icon {
     display:none;
     position:absolute;
-    padding: 10px 6px 2px 2px;
-    background: #eeeeff;
+    padding: 10px 2px 2px 2px;
+    background: #FCFDFE;
+/*    background: transparent url(/images/opacity_bg.gif) repeat;*/
     border:solid 2px #3D681A;
 }
 #field_div div.icon div.del{
-    color: #3D681A;
-    font-weight: bold;
+/*    font-weight: bold;*/
+/*    font-size: 10px;*/
+    background: url(/images/close.gif) no-repeat;
+    width:12px;
+    height:12px;
     position:absolute;
-    right: 2px;
-    top: -2px;
+    right: 1px;
+    top: 1px;
     cursor: pointer;
 }
 #field_div .pos_elem {

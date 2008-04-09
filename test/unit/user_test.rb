@@ -187,9 +187,9 @@ class UserTest < Test::Unit::TestCase
   def test_image_path
     assert_equal User::DEFAULT_IMAGE, users(:saki).image
     assert_equal User::DEFAULT_IMAGE, users(:aaron).image
-    assert_equal "/images/users/u00000003.not_image", users(:saki).image(nil, :refresh)
+    assert_equal "/images/users/00/00/00/03.not_image", users(:saki).image(nil, :refresh)
     assert_equal User::DEFAULT_IMAGE, users(:aaron).image(nil, :refresh)
-    assert_equal "/images/users/u00000003.not_image", users(:saki).image
+    assert_equal "/images/users/00/00/00/03.not_image", users(:saki).image
     assert_equal User::DEFAULT_IMAGE, users(:aaron).image
   end
   
