@@ -12,7 +12,11 @@ class TeamsController < ApplicationController
   end
 
   def search
-    @teams = Team.find_by_contents(params[:q])
+    if !params[:q].blank?
+      @teams = Team.find_by_contents(params[:q])
+      @title = "搜索“#{params[:q]}”的结果"
+    end
+    render :layout=>default_layout
   end
 
   def create

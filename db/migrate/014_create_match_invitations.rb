@@ -2,7 +2,7 @@ class CreateMatchInvitations < ActiveRecord::Migration
   def self.up
     create_table :match_invitations do |t|
       t.datetime :start_time
-      t.string :location, :limit=>300, :default=>''
+      t.string :location, :limit=>100
       t.integer :match_type
       t.integer :size
       t.boolean :has_judge
@@ -16,7 +16,7 @@ class CreateMatchInvitations < ActiveRecord::Migration
       t.integer :guest_team_id
       t.boolean :edit_by_host_team
       t.datetime :new_start_time
-      t.string :new_location, :limit=>300, :default=>''
+      t.string :new_location, :limit=>100
       t.integer :new_match_type
       t.integer :new_size
       t.boolean :new_has_judge

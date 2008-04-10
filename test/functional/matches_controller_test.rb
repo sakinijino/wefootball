@@ -13,45 +13,6 @@ class MatchesControllerTest < ActionController::TestCase
     assert_redirected_to new_session_path     
   end
 
-#  def test_show
-#    u1 = users(:saki)
-#    u2 = users(:mike1)
-#    u3 = users(:mike2)
-#    
-#    t1 = Team.create!(:name=>"test1",:shortname=>"t1")
-#    t2 = Team.create!(:name=>"test2",:shortname=>"t2")   
-#    ut1 = UserTeam.new
-#    ut1.user_id = u1.id
-#    ut1.team_id = t1.id   
-#    ut1.save!
-#    ut2 = UserTeam.new
-#    ut2.user_id = u2.id
-#    ut2.team_id = t2.id
-#    ut2.save!
-#    ut3 = UserTeam.new
-#    ut3.user_id = u3.id
-#    ut3.team_id = t2.id  
-#    ut3.save!    
-#    
-#    match1 = Match.new   
-#    match1.host_team_id = t1.id
-#    match1.guest_team_id = t2.id
-#    match1.start_time = 2.days.since
-#    match1.location = "一体"
-#    match1.save!
-#    MatchJoin.create_joins(match1)
-#    
-#    mj1 = MatchJoin.find_by_user_id_and_team_id_and_match_id(u1.id,t1.id,match1.id).update_attributes(:position=>1)
-#    mj2 = MatchJoin.find_by_user_id_and_team_id_and_match_id(u2.id,t2.id,match1.id).update_attributes(:position=>1)
-#    
-#    get :show, :id=>match1.id
-#    assert_equal [u1],assigns(:host_team_player_mjs).map{|item| item.user}
-#    assert_equal [u1],assigns(:host_team_user_mjs).map{|item| item.user}
-#    assert_equal [u2],assigns(:guest_team_player_mjs).map{|item| item.user}
-#    assert_equal [u2,u3],assigns(:guest_team_user_mjs).map{|item| item.user}    
-#    assert_response :success
-#  end
-
   def test_should_create_match
     login_as :saki
     u1 = users(:saki)
@@ -112,17 +73,44 @@ class MatchesControllerTest < ActionController::TestCase
     inv1.edit_by_host_team = true
     inv1.save!
     assert_no_difference('Match.count') do
-      post :create, :id => inv1.id, :match_invitation=>{}
+      post :create, :id => inv1.id
     end
     assert_redirected_to '/'
     
     ut1.is_admin = true
     ut1.save!   
     assert_difference('Match.count') do
-      post :create, :id => inv1.id, :match_invitation=>{}
+      post :create, :id => inv1.id
     end
     assert_redirected_to match_path(assigns(:match))
-  end  
+  end
+  
+  def test_should_not_create_match_with_an_outdated_mactch_invitation
+    login_as :saki
+    u = users(:saki)
+ 
+    t1 = Team.create!(:name=>"test1",:shortname=>"t1")
+    t2 = Team.create!(:name=>"test2",:shortname=>"t2")
+    inv = MatchInvitation.new
+    inv.host_team_id = t1.id
+    inv.guest_team_id = t2.id
+    inv.new_location = "Beijing"
+    inv.new_start_time = 1.day.ago
+    inv.new_half_match_length = 45
+    inv.new_rest_length = 15
+    inv.edit_by_host_team = true #如果当前是主队在编辑
+    inv.save_without_validation!
+    ut = UserTeam.new
+    ut.user_id = u.id
+    ut.team_id = t1.id
+    ut.is_admin = true
+    ut.save!
+    
+    assert_no_difference('Match.count') do
+      post :create, :id => inv.id
+    end
+    assert_redirected_to '/'
+  end 
 
 
   def test_should_edit

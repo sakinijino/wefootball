@@ -6,7 +6,7 @@ class UserViewsController < ApplicationController
   TRAINING_LIST_LENGTH = 1
   MATCHES_LIST_LENGTH = 1
   PLAYS_LIST_LENGTH = 1
-  DISPLAY_DAYS = 18
+  DISPLAY_DAYS = 13
   
   def show
     @user = User.find(params[:id], :include=>[:positions])

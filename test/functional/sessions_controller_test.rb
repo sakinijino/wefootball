@@ -30,7 +30,7 @@ class SessionsControllerTest < Test::Unit::TestCase
     login_as :quentin
     delete :destroy
     assert_nil session[:user_id]
-    assert_redirected_to "/"
+    assert_redirected_to new_session_path
   end
 
   def test_should_remember_me

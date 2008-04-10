@@ -29,6 +29,17 @@ class UserTeam < ActiveRecord::Base
     UserTeam.find :all, :conditions => ['team_id = ? and position is not null', team_id]
   end
   
+  def is_player=(ip)
+    old_is_player = is_player
+    write_attribute("is_player", ip)
+    @is_player_changed_to_false = @is_player_changed_to_false ? 
+      !(!old_is_player && is_player) : (old_is_player && !is_player) 
+  end
+  
+  def is_player_changed_to_false
+    @is_player_changed_to_false
+  end
+  
   def can_destroy_by?(user)
     (user.is_team_admin_of?(self.team_id) || self.user==user) && !is_the_only_one_admin?
   end

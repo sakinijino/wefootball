@@ -1,6 +1,7 @@
 class SessionsController < ApplicationController
 
   def new
+    render :layout => default_layout  
   end
   
   def create
@@ -15,7 +16,7 @@ class SessionsController < ApplicationController
       redirect_back_or_default(user_view_path(@user))
       flash[:notice] = "Logged in successfully"
     else
-      render :action => 'new'
+      render :action => 'new', :layout => default_layout  
     end
   end
   
@@ -24,6 +25,6 @@ class SessionsController < ApplicationController
     cookies.delete :auth_token
     reset_session
     flash[:notice] = "You have been logged out."
-    redirect_with_back_uri_or_default('/')
+    redirect_with_back_uri_or_default new_session_path
   end
 end

@@ -22,7 +22,7 @@ class Training < ActiveRecord::Base
   end
   
   validates_presence_of     :location, :message => "请填写训练地点"
-  validates_length_of        :location,    :maximum => 300
+  validates_length_of        :location,    :maximum => 100
   validates_length_of        :summary,    :maximum => 1000, :allow_nil=>true
   
   attr_protected :team_id
@@ -67,7 +67,7 @@ class Training < ActiveRecord::Base
   end
   
   def can_be_joined_by?(user)
-    !finished_before_3_days? && user.is_team_member_of?(self.team_id) && !has_joined_member?(user)
+    !started? && user.is_team_member_of?(self.team_id) && !has_joined_member?(user)
   end
   
   def can_be_quited_by?(user)

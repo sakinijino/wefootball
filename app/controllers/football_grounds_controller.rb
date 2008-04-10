@@ -5,12 +5,11 @@ class FootballGroundsController < ApplicationController
   cache_sweeper :football_ground_sweeper,
                   :only =>  [:update]
   
-  layout 'football_ground_layout'
   
   def unauthorize
     @football_grounds = FootballGround.find_all_by_status(0, :include => 'user')
     @title = "待审核球场"
-    render :action => "index"
+    render :action => "index", :layout => default_layout
   end
 
   def show
@@ -25,16 +24,19 @@ class FootballGroundsController < ApplicationController
     @play = Play.new(:football_ground_id => @football_ground.id)
     @default_start_time = 1.hour.since
     @default_end_time = 2.hours.since
+    render :layout => default_layout
   end
 
   def new
     @football_ground = FootballGround.new
     @title = '提交新球场资料'
+    render :layout => default_layout
   end
 
   def edit
     @title = "编辑球场资料"
     @football_ground = FootballGround.find(params[:id])
+    render :layout => default_layout
   end
 
   def create
@@ -43,7 +45,7 @@ class FootballGroundsController < ApplicationController
     if @football_ground.save
       redirect_with_back_uri_or_default '/'
     else
-      render :action => "new"
+      render :action => "new", :layout => default_layout
     end
   end
 
@@ -58,7 +60,7 @@ class FootballGroundsController < ApplicationController
     if @football_ground.update_attributes(params[:football_ground])
       redirect_to(@football_ground)
     else
-      render :action => "edit"
+      render :action => "edit", :layout => default_layout
     end
   end
 

@@ -165,7 +165,7 @@ class MatchTest < ActiveSupport::TestCase
     matches(:one).rest_length = 10
     matches(:one).save!
     
-    assert matches(:one).can_be_joined_by?(users(:quentin),teams(:inter)) #关闭之前，可以加入
+    assert !matches(:one).can_be_joined_by?(users(:quentin),teams(:inter)) #已经结束，不能加入
     assert !matches(:one).can_be_quited_by?(users(:saki),teams(:inter)) #已经结束，不能退出
  
     

@@ -6,8 +6,7 @@ class PlaysController < ApplicationController
   def show
     @play = Play.find(params[:id])
     @title = "去 #{@play.location} 随便踢踢"
-    @user = current_user 
-    render :layout => "user_layout"    
+    render :layout => default_layout  
   end
 
   def new

@@ -1,6 +1,9 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
 class MatchJoinsControllerTest < ActionController::TestCase
+  
+  self.use_transactional_fixtures = false
+  
   def test_should_create_match_join
     matches(:one).start_time = Time.now.tomorrow
     matches(:one).half_match_length = 25

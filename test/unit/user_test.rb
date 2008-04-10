@@ -319,6 +319,27 @@ class UserTest < Test::Unit::TestCase
     assert_equal false, u.can_reject_match_invitation?(inv)        
   end
   
+  def test_can_not_accept_outdated_match_invitation
+    u = create_user({:login => 'sakinijinoo@gmail.com', :nickname=>'AiHaibara'})
+    t1 = Team.create!(:name=>"test1",:shortname=>"t1")
+    t2 = Team.create!(:name=>"test2",:shortname=>"t2")
+    inv = MatchInvitation.new
+    inv.host_team_id = t1.id
+    inv.guest_team_id = t2.id
+    inv.new_location = "Beijing"
+    inv.new_start_time = 1.day.ago
+    inv.new_half_match_length = 45
+    inv.new_rest_length = 15
+    inv.edit_by_host_team = true #如果当前是主队在编辑
+    inv.save_without_validation!
+    ut = UserTeam.new
+    ut.user_id = u.id
+    ut.team_id = t1.id
+    ut.is_admin = true
+    ut.save!
+    assert !u.can_accpet_match_invitation?(inv) #过期邀请不能接收
+  end
+  
   def test_recent_match #测试user.matches.recent
     u = create_user({:login => 'sakinijinoo@gmail.com', :nickname=>'AiHaibara'})
     t1 = Team.create!(:name=>"test1",:shortname=>"t1")

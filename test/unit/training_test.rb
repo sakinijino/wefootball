@@ -65,7 +65,7 @@ class TrainingTest < ActiveSupport::TestCase
     trainings(:training1).end_time = 1.days.ago.since(3600)
     trainings(:training1).save_without_validation!
     
-    assert trainings(:training1).can_be_joined_by?(users(:quentin)) #3天之内，可以加入
+    assert !trainings(:training1).can_be_joined_by?(users(:quentin)) #已经结束不能加入
     assert !trainings(:training1).can_be_quited_by?(users(:saki)) #已经结束，不能退出
  
     

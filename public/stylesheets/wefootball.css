@@ -24,12 +24,20 @@ table th{ text-align: left; }
     border:solid 1px #3D681A;
 }
 
+#qmd {
+    width: 992px;
+    margin: 0 auto;
+    height: 25px;
+    background:url(/images/qmd.gif) right no-repeat;
+}
+
 #header {
     width:100%;
     height:131px;
     background-image:url(/images/head.gif);
     position: relative;
-    line-height: normal
+    line-height: normal;
+    z-index: 10;
 }
 
 #header .dropdown_container {
@@ -43,11 +51,12 @@ table th{ text-align: left; }
     background: #fff;
     display:none;
     position:absolute;
-    z-index: 200;
 }
 
 #header ul.dropdown li{
     list-style-type: none;
+    padding: 0px;
+    margin: 0px;
 }
 
 #header ul.dropdown li a{
@@ -407,16 +416,10 @@ table.match_invitation_list td{
     vertical-align: top;
 }
 
-table.match_invitation_list td ul{
-    margin: 0;
-    padding: 0;
-}
-
-table.match_invitation_list td ul li{
-    list-style-type: none;
-}
-
-table.form .conflict {
+table.match_invitation_list td.conflict {
     background: #F2F7AB;
-    padding: 5px 5px;
+}
+
+table.form td.conflict {
+    padding: 3px;
 }

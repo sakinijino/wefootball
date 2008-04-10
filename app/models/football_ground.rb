@@ -23,11 +23,13 @@ class FootballGround < ActiveRecord::Base
   validates_length_of        :description,    :maximum => 5000, :allow_nil => true
   
   def merge_to_and_delete(fg)
-    Training.update_all(["location = ?", fg.name], ["football_ground_id = ?", self.id])
-    Training.update_all(["football_ground_id = ?", fg.id], ["football_ground_id = ?", self.id])
-    Play.update_all(["location = ?", fg.name], ["football_ground_id = ?", self.id])
-    Play.update_all(["football_ground_id = ?", fg.id], ["football_ground_id = ?", self.id])
-    FootballGround.delete(self.id)
+    FootballGround.transaction do
+      Training.update_all(["location = ?", fg.name], ["football_ground_id = ?", self.id])
+      Training.update_all(["football_ground_id = ?", fg.id], ["football_ground_id = ?", self.id])
+      Play.update_all(["location = ?", fg.name], ["football_ground_id = ?", self.id])
+      Play.update_all(["football_ground_id = ?", fg.id], ["football_ground_id = ?", self.id])
+      FootballGround.delete(self.id)
+    end
   end
   
   def before_destroy

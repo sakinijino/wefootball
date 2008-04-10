@@ -33,7 +33,7 @@ j(function(){
         })
         
         j("#header_search .dropdown_container ul.dropdown li a").click(function(){
-            j('#header_search').attr('action', this.pathname)
+            j('#header_search').attr('action', "/"+this.pathname)
             j(this).parent().parent().hide();
             return false;
         })
@@ -124,9 +124,9 @@ j(function(){
                 })
             })
             var fi = span.id.split('-')[4]
-            if (fi=='') province_select.change() //ÉèÖÃµ½Ê¡Ò»¼¶£¬¸üÐÂÊ¡µÄselect
-            else if (fi == 'city') city_select.change() //ÉèÖÃµ½ÊÐÒ»¼¶£¬¸üÐÂÊÐµÄselect
-            else { // ÉèÖÃÁËÇò³¡£¬·´Ïò¸üÐÂÊ¡ÊÐ
+            if (fi=='') province_select.change() //ï¿½ï¿½ï¿½Ãµï¿½Ê¡Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¡ï¿½ï¿½select
+            else if (fi == 'city') city_select.change() //ï¿½ï¿½ï¿½Ãµï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ðµï¿½select
+            else { // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ò³¡£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¡ï¿½ï¿½
                 province_select.get()[0].value = ProvinceCity_REVERSE_LIST[FootballGround_REVERSE_LIST[fi]]
                 province_select.change()
                 city_select.get()[0].value = FootballGround_REVERSE_LIST[fi];

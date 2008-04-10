@@ -5,7 +5,7 @@ class TeamViewsController < ApplicationController
   USER_LIST_LENGTH = 9
   POSTS_LENGTH = 10
   MATCH_LIST_LENGTH = 1
-  DISPLAY_DAYS = 18
+  DISPLAY_DAYS = 13
   
   def show
     @team = Team.find(params[:id])

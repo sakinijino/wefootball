@@ -287,7 +287,7 @@ class User < ActiveRecord::Base
   end
   
   def can_accpet_match_invitation?(match_invitation)
-    can_act_on_match_invitation?(match_invitation)
+    !match_invitation.outdated? && can_act_on_match_invitation?(match_invitation)
   end  
   
   def can_reject_match_invitation?(match_invitation)

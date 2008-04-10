@@ -37,4 +37,16 @@ class UserTeamObserver < ActiveRecord::Observer
     MatchJoin.destroy_all(["user_id = ? and team_id = ? and (#{(['match_id = ?']*mids.size).join(' or ')})", 
         user_team.user_id, user_team.team_id, *mids]) if mids.size > 0
   end
+  
+  def after_update(user_team)
+    return if !user_team.is_player_changed_to_false
+    mids = Match.find(:all,
+      :conditions => ["(host_team_id = ? or guest_team_id = ?) and start_time > ?", 
+        user_team.team_id, 
+        user_team.team_id, 
+        Time.now]).map {|t| t.id}
+    MatchJoin.update_all(["position = ?", nil], 
+      ["user_id = ? and team_id = ? and (#{(['match_id = ?']*mids.size).join(' or ')})", 
+        user_team.user_id, user_team.team_id, *mids]) if mids.size > 0
+  end
 end

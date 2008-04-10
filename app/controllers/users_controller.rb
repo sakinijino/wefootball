@@ -7,7 +7,7 @@ class UsersController < ApplicationController
     self.current_user = params[:activation_code].blank? ? :false : User.find_by_activation_code(params[:activation_code])
     if logged_in? && !current_user.active?
       current_user.activate
-      flash[:notice] = "注册完毕！"
+      flash[:notice] = "你的帐号已经激活，现在可以修改你的信息"
       redirect_to edit_user_path(current_user)
     else
       fake_params_redirect
@@ -25,7 +25,8 @@ class UsersController < ApplicationController
         flash[:notice] = "目前并无#{params[:user][:login]}所对应的帐户"  
       end     
       redirect_to(new_session_path) 
-    end 
+    end
+    render :layout => default_layout
   end 
   
   def reset_password
@@ -43,18 +44,24 @@ class UsersController < ApplicationController
         @user.delete_password_reset_code
         UserMailer.deliver_reset_password(@user)          
         flash[:notice] = "帐户#{@user.login}的密码已经更改成功"    
-        redirect_to(new_session_path)   
+        redirect_to user_view_path(@user)
       else   
-        render :action => :reset_password   
-      end  
-    end 
+        render :action => :reset_password, :layout=>default_layout
+      end 
+    end
+    render :layout => default_layout
   end  
   
   def new
+    render :layout => default_layout  
   end
   
   def search
-    @users = User.find_by_contents(params[:q]) 
+    if !params[:q].blank?
+      @users = User.find_by_contents(params[:q])
+      @title = "搜索“#{params[:q]}”的结果"
+    end
+    render :layout=>default_layout
   end
   
   def create
@@ -76,7 +83,7 @@ class UsersController < ApplicationController
       flash[:notice] = "您的帐户已经注册成功，请登录您的注册邮箱（ #{@user.login}）激活帐户"    
       redirect_to(new_session_path)      
     else
-      render :action=>'new'
+      render :action=>'new', :layout => default_layout  
     end
   end
   

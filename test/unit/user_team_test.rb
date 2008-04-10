@@ -1,6 +1,62 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
 class UserTeamTest < ActiveSupport::TestCase
+  def test_set_is_player
+    ut = UserTeam.new
+    assert !ut.is_player 
+    ut.is_player = false #false => false
+    assert !ut.is_player_changed_to_false  
+    ut.is_player = true #false => true
+    assert !ut.is_player_changed_to_false
+    ut.is_player = true #true => true
+    assert !ut.is_player_changed_to_false
+    
+    ut.is_player = false #true => false and set is_player_changed_to_false
+    assert ut.is_player_changed_to_false
+    
+    
+    ut.is_player = false #false => false
+    assert ut.is_player_changed_to_false  
+    ut.is_player = true #false => true and reset is_player_changed_to_false
+    assert !ut.is_player_changed_to_false
+  end
+  
+  def test_depedency_update_positions_when_set_not_player
+    MatchJoin.destroy_all
+    
+    matches(:one).start_time = Time.now.tomorrow
+    matches(:one).half_match_length = 25
+    matches(:one).rest_length = 10
+    matches(:one).save!
+    MatchJoin.create_joins(matches(:one))
+    mj1 = MatchJoin.find_by_match_id_and_team_id_and_user_id(matches(:one),teams(:inter),users(:saki))
+    mj1.status = MatchJoin::JOIN
+    mj1.position = 1;
+    mj1.save!
+    
+    matches(:two).start_time = 1.day.ago
+    matches(:two).half_match_length = 25
+    matches(:two).rest_length = 10
+    matches(:two).save!
+    MatchJoin.create_joins(matches(:two))
+    mj2 = MatchJoin.find_by_match_id_and_team_id_and_user_id(matches(:two),teams(:inter),users(:saki))
+    mj2.status = MatchJoin::JOIN
+    mj2.position = 1;
+    mj2.save!
+    
+    ut = user_teams(:saki_inter)
+    ut.is_player = true
+    ut.save!
+    assert_equal 1, mj1.reload.position
+    assert_equal 1, mj2.reload.position
+    
+    ut = user_teams(:saki_inter)
+    ut.is_player = false
+    ut.save!
+    assert_equal nil, mj1.reload.position
+    assert_equal 1, mj2.reload.position
+  end
+  
   def test_depedency_observer #入队退队时的级联修改
     MatchJoin.destroy_all
     

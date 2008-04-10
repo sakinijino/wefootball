@@ -7,7 +7,7 @@ class Play < ActiveRecord::Base
   has_many :users, :through => :play_joins  
 
   validates_presence_of     :location, :message => "请填写地点"
-  validates_length_of        :location,    :maximum => 300
+  validates_length_of        :location,    :maximum => 100
   
   def validate
     st = start_time.respond_to?(:to_datetime) ? start_time.to_datetime : start_time

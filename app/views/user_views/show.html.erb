@@ -52,9 +52,9 @@
     <%end%>
     <div class="tab">
     <span>昵称: <%= h @user.nickname%></span>
-    <%if @user.gender != 0%>
-      <span><%= @user.gender == 1 ? '[♂]' : '[♀]'%></span>
-    <%end%>
+    <%#if @user.gender != 0%>
+      <%#= @user.gender == 1 ? '[♂]' : '[♀]'%>
+    <%#end%>
     <br/>
     <%= "<span>所在地: #{@user.city_text}</span><br/>" unless @user.city_text.nil?%>
     <%= "<span>生日: #{@user.birthday_text}</span><br/>" unless @user.birthday_text.nil?%>
@@ -69,8 +69,7 @@
     </div>
     <%if @user.is_playable%>
     <div class="tab">
-      <div style="float:left;position:relative">
-        <%= image_tag('small_field.jpg', :title=>"")%>
+      <div style="float:left;position:relative;background:url(/images/small_field.jpg) no-repeat;width:160px;height:222px">
         <%@user.positions_array.each do |p|%>
           <%pos = small_position_icon_position p%>
           <%= image_tag(p==@user.premier_position ? 'small_premier_position_icon.gif' : 'small_position_icon.gif',

@@ -1,6 +1,16 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
 class MatchInvitationTest < ActiveSupport::TestCase
+  
+  def test_outdated
+    m = match_invitations(:inv1)
+    m.new_start_time = 2.days.ago
+    m.new_location = "Beijing"
+    m.new_half_match_length = 45
+    m.new_rest_length = 15
+    m.save_without_validation!
+    assert m.outdated?
+  end
 
   def test_host_team_and_guest_team #测试到host_team和guest_team的关联正确
     m = match_invitations(:inv1)

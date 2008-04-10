@@ -16,7 +16,7 @@ class MatchInvitation < ActiveRecord::Base
   attr_accessible :new_description, :new_half_match_length, :new_rest_length
   
   validates_presence_of     :new_location, :message => "请填写比赛地点"
-  validates_length_of        :new_location,    :maximum => 300
+  validates_length_of        :new_location,    :maximum => 100
   
   validates_numericality_of :new_half_match_length, :new_rest_length
   validates_inclusion_of    :new_half_match_length, :in => 0..60
@@ -74,5 +74,9 @@ class MatchInvitation < ActiveRecord::Base
   def has_attribute_been_modified?(attribute_name)
     return (!self[attribute_name].nil?) &&
            (self[attribute_name] != self[("new_"+attribute_name.to_s).to_sym])
+  end
+  
+  def outdated?
+    new_start_time <= Time.now
   end
 end

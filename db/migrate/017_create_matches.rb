@@ -3,7 +3,7 @@ class CreateMatches < ActiveRecord::Migration
     create_table :matches do |t|
       t.datetime :start_time
       t.datetime :end_time
-      t.string :location, :limit=>300, :default=>''
+      t.string :location, :limit=>100, :default=>''
       t.integer :match_type
       t.integer :size,:default=>5
       t.boolean :has_judge

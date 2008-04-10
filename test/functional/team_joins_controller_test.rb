@@ -4,6 +4,8 @@ class TeamJoinsControllerTest < ActionController::TestCase
   # Replace this with your real tests.
   include AuthenticatedTestHelper
   
+  self.use_transactional_fixtures = false
+  
   def test_admin
     login_as :saki
     get :admin_management, :team_id => 2
@@ -183,11 +185,12 @@ class TeamJoinsControllerTest < ActionController::TestCase
       uts[i.to_s].save!
     end
     login_as :saki
-    user_teams(:saki_inter).position = 11
-    user_teams(:saki_inter).save!
-    put :update_formation, :team_id=>teams(:inter).id, 
-      :formation => uts
-    assert_equal 1, UserTeam.find(:all, :conditions => ['team_id = ? and position is not null', teams(:inter).id]).size
+    assert_no_difference "UserTeam.find(:all, :conditions => ['team_id = ? and position is not null', teams(:inter).id]).size" do
+      user_teams(:saki_inter).position = 11
+      user_teams(:saki_inter).save!
+      put :update_formation, :team_id=>teams(:inter).id, 
+        :formation => uts
+    end
     assert_equal 11, user_teams(:saki_inter).reload.position
     assert_redirected_to '/'
   end

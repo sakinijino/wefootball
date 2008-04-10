@@ -3,22 +3,18 @@ class MatchInvitationsController < ApplicationController
   
   def index
     @team = Team.find(params[:team_id])
-    if !current_user.is_team_admin_of?(@team)
-      fake_params_redirect
-      return
-    end
     if (params[:as] == 'send')
       @mis = MatchInvitation.find :all,
         :conditions=>["(host_team_id = ? and edit_by_host_team = ?) or (guest_team_id = ? and edit_by_host_team = ?)", @team, false, @team, true],
         :order => 'updated_at desc'
       @title = "等待对方回复的比赛邀请"
-      render :action=>'index_without_conflict', :layout=>"team_layout"
+      render :action=>'index_waiting_for_reply', :layout=>"team_layout"
     else
       @mis = MatchInvitation.find :all,
         :conditions=>["(host_team_id = ? and edit_by_host_team = ?) or (guest_team_id = ? and edit_by_host_team = ?)", @team, true, @team, false],
         :order => 'updated_at desc'
       @title = "需要处理的比赛邀请"
-      render :action=>'index_with_conflict', :layout=>"team_layout"
+      render :action=>'index_need_reply', :layout=>"team_layout"
     end
   end
   
@@ -41,6 +37,9 @@ class MatchInvitationsController < ApplicationController
       @match_invitation.new_start_time = 1.day.since
       @match_invitation.new_half_match_length = 45
       @match_invitation.new_rest_length = 15
+      @match_invitation.new_has_judge = false
+      @match_invitation.new_has_card = false
+      @match_invitation.new_has_offside = false
       render :layout=>"team_layout"
     end
   end
@@ -74,12 +73,9 @@ class MatchInvitationsController < ApplicationController
       fake_params_redirect
       return
     end
-    @host_team = @match_invitation.host_team
-    @guest_team = @match_invitation.guest_team
-    @self_team = @match_invitation.edit_by_host_team ? @host_team : @guest_team
-    @another_team = @match_invitation.edit_by_host_team ? @guest_team : @host_team
-    @team = @self_team
-    @title = "比赛邀请: #{@host_team.shortname} V.S. #{@guest_team.shortname}"
+    @unmodified_match_invitation = @match_invitation
+    set_teams
+    @title = "提出新比赛建议: #{@host_team.shortname} V.S. #{@guest_team.shortname}"
     render :layout=>"team_layout"
   end
   
@@ -90,23 +86,19 @@ class MatchInvitationsController < ApplicationController
       return
     end   
     @match_invitation.save_last_info!
+    @self_team = @match_invitation.edit_by_host_team ? @match_invitation.host_team : @match_invitation.guest_team
     if @match_invitation.edit_by_host_team
       @match_invitation.host_team_message = params[:match_invitation][:host_team_message]        
     else
       @match_invitation.guest_team_message = params[:match_invitation][:guest_team_message]
     end
-    @host_team = @match_invitation.host_team
-    @guest_team = @match_invitation.guest_team
-    @self_team = @match_invitation.edit_by_host_team ? @host_team : @guest_team
-    @another_team = @match_invitation.edit_by_host_team ? @guest_team : @host_team
-    
     @match_invitation.edit_by_host_team = !@match_invitation.edit_by_host_team
     if @match_invitation.update_attributes(params[:match_invitation])     
       redirect_to team_match_invitations_path(@self_team, :as => 'send')
     else
-      @team = @self_team
-      @match_invitation.edit_by_host_team = !@match_invitation.edit_by_host_team
-      @title = "比赛邀请: #{@host_team.shortname} V.S. #{@guest_team.shortname}"  
+      @unmodified_match_invitation = MatchInvitation.find(params[:id])
+      set_teams
+      @title = "提出新的比赛建议: #{@host_team.shortname} V.S. #{@guest_team.shortname}"  
       render :action => "edit", :layout=>"team_layout"
     end
   end
@@ -124,5 +116,13 @@ class MatchInvitationsController < ApplicationController
       redirect_to team_match_invitations_path(@match_invitation.guest_team)
     end
   end
-  
+
+  protected
+  def set_teams
+    @host_team = @unmodified_match_invitation.host_team
+    @guest_team = @unmodified_match_invitation.guest_team
+    @self_team = @unmodified_match_invitation.edit_by_host_team ? @host_team : @guest_team
+    @team = @self_team
+    @another_team = @unmodified_match_invitation.edit_by_host_team ? @guest_team : @host_team
+  end
 end

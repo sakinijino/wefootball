@@ -1,1 +1,26 @@
-<%= user_icon(@users)%>
+<div id="narrow_right_content" class="sect">
+  <h2></h2>
+  <ul class="sidebar_menu">
+    <li>
+      > <%= link_to "邀请朋友加入", '#' %>
+    </li>
+  </ul>
+</div>
+
+<div id="wide_left_content">
+  <div class="sect">
+    <h2></h2>
+    <% form_tag search_users_path, :method=>:get do%>
+      <%= text_field_tag 'q', params[:q], :size=>55 %>
+      <%= submit_tag '搜索用户' %>
+    <%end%>
+  </div>
+
+  <div class="sect">
+    <h2><%=h @title%></h2>
+    <%= user_icon(@users)%>
+    <div class="clearBoth"></div>
+  </div>
+</div>
+
+<div class="clearBoth"></div>

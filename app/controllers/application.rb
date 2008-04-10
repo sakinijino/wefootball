@@ -13,6 +13,15 @@ class ApplicationController < ActionController::Base
   class FakeParametersError < StandardError
   end
   
+  def default_layout
+    if logged_in?
+      @user = current_user
+      "user_layout"
+    else
+      "unlogin_layout"
+    end
+  end
+  
   def fake_params_redirect
     redirect_to '/'
   end

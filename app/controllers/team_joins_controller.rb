@@ -141,9 +141,6 @@ class TeamJoinsController < ApplicationController
 protected
   def before_edit
     @team = Team.find(params[:team_id])
-    if (!current_user.is_team_admin_of?(@team))
-      fake_params_redirect
-      return
-    end
+    fake_params_redirect if (!current_user.is_team_admin_of?(@team))
   end
 end

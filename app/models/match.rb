@@ -108,7 +108,7 @@ class Match < ActiveRecord::Base
     else
       team
     end
-    belongs_to?(team_id) && is_before_match_close? && user.is_team_member_of?(team_id) && !has_joined_team_member?(user, team_id)
+    belongs_to?(team_id) && is_before_match? && user.is_team_member_of?(team_id) && !has_joined_team_member?(user, team_id)
   end
   
   def can_be_quited_by?(user, team)
