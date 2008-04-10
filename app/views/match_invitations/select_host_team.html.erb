@@ -10,7 +10,8 @@
 <div id="wide_left_content" class="sect">
     <h2><%=h @title%></h2>
   <%if @host_teams.empty?%>
-    你暂时没有管理任何球队，因此无法邀请<%=h @guest_team.shortname%>进行比赛
+    <br/>
+    你暂时没有其他管理的球队，因此无法邀请<%=link_to h(@guest_team.shortname), team_view_path(@guest_team)%>进行比赛<br/><br/>
     你可以在<%= link_to "这里", new_team_path(:back_uri=>new_match_invitation_path(:guest_team_id=>@guest_team.id))%>创建自己的球队
   <%else%>
     

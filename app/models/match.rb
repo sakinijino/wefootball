@@ -9,6 +9,15 @@ class Match < ActiveRecord::Base
   
   attr_accessible
   
+  has_many :posts, :dependent => :destroy, :order => "updated_at desc" do
+    def team(team_id, options={})
+      find :all, {:conditions => ['team_id = ?', team_id]}.merge(options)
+    end
+    def team_public(team_id, options={})
+      find :all, {:conditions => ['team_id = ? and is_private = ?', team_id, false]}.merge(options)
+    end
+  end
+  
   has_many :match_joins,
             :dependent => :destroy  do
     def host_team

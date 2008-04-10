@@ -1,15 +1,27 @@
 <div class="sect">
   <h2><%=h team.shortname%></h2>
   <%= small_team_image_link team, :class=>'icon title_icon'%>
-  <%if logged_in? && current_user.is_team_admin_of?(team.id) %>
-    <%=link_to "编辑阵型", edit_match_join_path(0, :match_id=>match.id, :team_id=>team.id) %>
-    <%=link_to "填写赛果", edit_team_match_path(team, match) %>
+  <%if logged_in? %>
+    <%=link_to "编辑阵型", edit_match_join_path(0, :match_id=>match.id, :team_id=>team.id) if @match.can_be_edited_formation_by?(current_user, team)%>
+    <br/><br/>
+    <%if @match.can_be_edited_result_by?(current_user, team)%>
+      <%=link_to "填写赛果", edit_team_match_path(team, match) %>
+      <br/><br/>
+    <%end%>
+    <%if @match.can_be_destroyed_by?(current_user)%>
+      <%=link_to "取消比赛", match_path(@match), :method => :delete, :confirm => '真的要取消这场比赛吗？' %>
+      <br/><br/>
+    <%end%>
+    <%=link_to "代表该队参赛", 
+        match_joins_path(:team_id => team, :match_id => @match), :method=>:post if @match.can_be_joined_by?(current_user, team)%>
+    <%=link_to "不代表该队参赛", 
+        match_join_path(user_mj), :method=>:delete if @match.can_be_quited_by?(current_user, team)%>
   <%end%>
   <div class="clearBoth"></div>
 </div>
 
 <div class="sect">
-  <h2>阵型</h2>
+  <h2>首发</h2>
   <div class="match_field">
     <%= image_tag('match_small_field.jpg', :title=>"")%>
     <%team_player_mjs.each do |ut|%>
@@ -25,7 +37,6 @@
 </div>
 
 <div class="sect">
-  <h2>首发名单</h2>
   <table class="list" style="width:100%">
     <tr>
       <th>&nbsp;</th>
@@ -57,4 +68,15 @@
       </tr>
     <%end%>
   </table>
+</div>
+
+<div class="sect">   
+  <h2><%=h team.shortname%>下的讨论</h2>
+  <%= render :partial=>'posts/post_list', :object=>posts%>
+  <div style="margin: 10px 0  0 10px;float:right;">
+    <%if logged_in? && current_user.is_team_member_of?(team)%>
+      > <%= link_to '针对本场比赛发言', new_match_team_post_path(@match, team) %>
+    <%end%>
+    > <%= link_to '更多', match_team_posts_path(@match, team) %>
+  </div>
 </div>

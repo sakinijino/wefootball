@@ -55,7 +55,9 @@
                                                     :match => @match,
                                                     :team => @match.host_team,
                                                     :formation_array => @host_formation_array,
-                                                    :is_host_team => true})%>
+                                                    :is_host_team => true,
+                                                    :posts => @host_posts,
+                                                    :user_mj => @host_team_mj})%>
 </div>
 
 <div id="guest_team_div">
@@ -63,7 +65,9 @@
                                                     :match => @match,
                                                     :team => @match.guest_team,
                                                     :formation_array => @guest_formation_array,
-                                                    :is_host_team => false})%>
+                                                    :is_host_team => false,
+                                                    :posts => @guest_posts,
+                                                    :user_mj => @guest_team_mj})%>
 </div>
 
 <div class="clearBoth"></div>

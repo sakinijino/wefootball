@@ -10,7 +10,12 @@ class TeamViewsController < ApplicationController
   def show
     @team = Team.find(params[:id])
     @users = @team.users.find(:all, :limit => USER_LIST_LENGTH)
-    @posts = @team.posts.find(:all, :limit=> POSTS_LENGTH)
+    
+    if (logged_in? && current_user.is_team_member_of?(@team))
+      @posts = @team.posts.find(:all, :limit=> POSTS_LENGTH)
+    else
+      @posts = @team.posts.public :limit=> POSTS_LENGTH
+    end
     
     tmp_tra = @team.trainings.recent(TRAINING_LIST_LENGTH)
     tmp_mat = Match.find :all,

@@ -1,5 +1,7 @@
 class UsersController < ApplicationController
-  # Be sure to include AuthenticationSystem in Application Controller instead
+  skip_before_filter :store_current_location
+  before_filter :clear_store_location
+  
   before_filter :login_required, :only=>[:update, :edit]
   before_filter :param_id_should_be_current_user, :only=>[:update, :update_image, :edit]
 

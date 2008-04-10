@@ -10,7 +10,7 @@
 <div id="wide_left_content">
   <div class="sect">
     <h2></h2>
-    <% form_tag search_teams_path, :method=>:get do%>
+    <% form_tag search_teams_path do%>
       <%= text_field_tag 'q', params[:q], :size=>55 %>
       <%= submit_tag '搜索球队' %>
     <%end%>

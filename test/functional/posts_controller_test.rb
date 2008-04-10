@@ -4,7 +4,7 @@ class PostsControllerTest < ActionController::TestCase
   def test_should_get_team_index
     get :index, :team_id => 1
     assert_response :success
-    assert_equal 2, assigns(:posts).length
+    assert_equal 3, assigns(:posts).length
   end
   
   def test_should_get_training_index
@@ -13,11 +13,17 @@ class PostsControllerTest < ActionController::TestCase
     assert_equal 2, assigns(:posts).length
   end
   
+  def test_should_get_match_index
+    get :index, :match_id => 1, :team_id => 1
+    assert_response :success
+    assert_equal 1, assigns(:posts).length
+  end
+  
   def test_should_get_team_index_private
     login_as :saki
     get :index, :team_id => 1
     assert_response :success
-    assert_equal 4, assigns(:posts).length
+    assert_equal 6, assigns(:posts).length
   end
   
   def test_should_get_training_index_private
@@ -25,6 +31,13 @@ class PostsControllerTest < ActionController::TestCase
     get :index, :training_id => 1
     assert_response :success
     assert_equal 3, assigns(:posts).length
+  end
+  
+  def test_should_get_match_index_private
+    login_as :saki
+    get :index, :match_id => 1, :team_id => 1
+    assert_response :success
+    assert_equal 2, assigns(:posts).length
   end
   
   def test_get_show_can_reply
@@ -80,6 +93,17 @@ class PostsControllerTest < ActionController::TestCase
     end
     assert_equal users(:quentin).id, assigns(:post).user_id
     assert_redirected_to post_path(assigns(:post))
+    
+    assert_difference('Post.count') do
+    assert_difference('Team.find(teams(:inter).id).posts.length') do
+    assert_difference('Match.find(matches(:one).id).posts.team(teams(:inter)).length') do
+      post :create, :match_id=>matches(:one).id, :team_id=>teams(:inter).id, :post => { :title => 'Test', :content => '123456'}
+    end
+    end
+    end
+    assert_equal users(:quentin).id, assigns(:post).user_id
+    assert_redirected_to post_path(assigns(:post))
+    
     assert_difference('Post.count') do
     assert_difference('Team.find(teams(:inter).id).posts.length') do
       post :create, :team_id=>teams(:inter).id, :post => { :title => 'Test', :content => '123456'}

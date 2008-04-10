@@ -32,8 +32,8 @@ class Team < ActiveRecord::Base
             :extend => ActivityCalendar          
   
   has_many :posts, :dependent => :destroy, :order => "updated_at desc" do
-    def public
-      find :all, :conditions => ['is_private = ?', false]
+    def public(options={})
+      find :all, {:conditions => ['is_private = ?', false]}.merge(options)
     end
   end
   

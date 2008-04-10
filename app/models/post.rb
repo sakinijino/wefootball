@@ -2,6 +2,7 @@ class Post < ActiveRecord::Base
   belongs_to :team
   belongs_to :user
   belongs_to :training
+  belongs_to :match
 
   has_many :replies, :dependent => :destroy
   

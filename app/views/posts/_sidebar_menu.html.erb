@@ -1,18 +1,33 @@
 <ul class="sidebar_menu"> 
-  <% if logged_in? && @training && current_user.is_team_member_of?(@training.team)%>
-    <li>
-      > <%= link_to '针对本次训练发言', new_training_post_path(@training) %>
-    </li>
-  <%else%>
-    <li>
-      > <%= link_to '发言', new_team_post_path(@team) %>
-    </li>
+
+  <% if logged_in? %>
+    <% if @training && current_user.is_team_member_of?(@training.team)%>
+      <li>
+        > <%= link_to '针对本次训练发言', new_training_post_path(@training) %>
+      </li>
+    <% elsif @match && current_user.is_team_member_of?(@team)%>
+      <li>
+        > <%= link_to '针对本场比赛发言', new_match_team_post_path(@match, @team) %>
+      </li>
+    <%else%>
+      <li>
+        > <%= link_to '发言', new_team_post_path(@team) %>
+      </li>
+    <%end%>
   <%end%>
+  
   <% if @training %>
     <li>
-    > <%= link_to '本次训练相关的讨论', training_posts_path(@training) %>
+    > <%= link_to '本次训练的讨论', training_posts_path(@training) %>
     </li>
   <%end%>
+  
+  <% if @match %>
+    <li>
+    > <%= link_to '本场比赛的讨论', match_team_posts_path(@match, @team) %>
+    </li>
+  <%end%>
+  
   <li>
   > <%= link_to '队伍讨论区', team_posts_path(@team) %>
   </li>
@@ -20,6 +35,10 @@
   <li class="seperate">
     <% if @training %>
       > <%= link_to '返回训练详情', training_path(@training) %>
+  </li>
+  <li>
+    <%elsif @match%>
+      > <%= link_to '返回比赛详情', match_path(@match) %>
   </li>
   <li>
     <%end%>

@@ -11,6 +11,9 @@ class MatchJoinsController < ApplicationController
       fake_params_redirect      
     else
       @mj = MatchJoin.find_or_initialize_by_user_id_and_match_id_and_team_id(self.current_user.id, @match, @team)
+      @mj.match = @match
+      @mj.team = @team
+      @mj.user = self.current_user
       @mj.status = MatchJoin::JOIN
       @mj.save!
       redirect_to match_path(@match)

@@ -10,9 +10,11 @@ class MatchJoinsControllerTest < ActionController::TestCase
     matches(:one).rest_length = 10
     matches(:one).save!
     login_as :quentin
+    assert_difference('MatchJoin.find_all_by_user_id_and_team_id_and_match_id(users(:quentin), teams(:inter), matches(:one)).size') do
     assert_difference('MatchJoin.count') do
       post :create, :match_id=>matches(:one).id, :team_id=>teams(:inter)
-      assert_redirected_to match_path(assigns(:match).id)
+      assert_redirected_to match_path(matches(:one).id)
+    end
     end
   end
   

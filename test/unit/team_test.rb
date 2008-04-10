@@ -21,8 +21,9 @@ class TeamTest < ActiveSupport::TestCase
   
   def test_public_posts
     t = Team.find(1)
-    assert_equal 4, t.posts.length
-    assert_equal 2, t.posts.public.length
+    assert_equal 6, t.posts.length
+    assert_equal 3, t.posts.public.length
+    assert_equal 2, t.posts.public(:limit=>2).length
   end
   
   def test_before_validation
@@ -112,7 +113,7 @@ class TeamTest < ActiveSupport::TestCase
     assert_difference 'Training.count', -4 do
     assert_difference 'UserTeam.count', -2 do
     assert_difference 'TeamJoinRequest.count', -4 do
-    assert_difference 'Post.count', -4 do
+    assert_difference 'Post.count', -6 do
       inter = teams(:inter)
       inter.destroy
     end

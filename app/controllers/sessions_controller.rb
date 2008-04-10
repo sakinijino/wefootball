@@ -1,5 +1,7 @@
 class SessionsController < ApplicationController
 
+  skip_before_filter :store_current_location
+  
   def new
     render :layout => default_layout  
   end

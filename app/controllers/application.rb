@@ -2,6 +2,9 @@
 # Likewise, all the methods added will be available for all controllers.
 
 class ApplicationController < ActionController::Base
+  
+  before_filter :store_current_location
+  
   helper :all # include all helpers, all the time
   include AuthenticatedSystem
   # See ActionController::RequestForgeryProtection for details
@@ -11,6 +14,14 @@ class ApplicationController < ActionController::Base
   # protect_from_forgery
   # :secret => 'dd92c128b5358a710545b5e755694d57' 
   class FakeParametersError < StandardError
+  end
+  
+  def store_current_location #记录页面位置，登录后跳转回该页面
+    store_location if !logged_in? && request.get?
+  end
+  
+  def clear_store_location
+    session[:return_to] = nil
   end
   
   def default_layout

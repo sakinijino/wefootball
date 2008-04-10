@@ -154,6 +154,7 @@ class TrainingTest < ActiveSupport::TestCase
     t = Training.find(1)
     assert_equal 3, t.posts.length
     assert_equal 2, t.posts.public.length
+    assert_equal 1, t.posts.public(:limit=>1).length
   end
   
   def test_no_accessible

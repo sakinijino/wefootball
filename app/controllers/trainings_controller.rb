@@ -1,10 +1,18 @@
 class TrainingsController < ApplicationController
-  before_filter :login_required
+  before_filter :login_required, :except => [:show]
   before_filter :parse_time, :only => [:create, :update]
+  
+  POSTS_LENGTH = 10
   
   def show
     @training = Training.find(params[:id])
-    @posts = @training.posts.find(:all, :limit=>10)
+    
+    if (logged_in? && current_user.is_team_member_of?(@training.team_id))
+      @posts = @training.posts.find(:all, :limit=>POSTS_LENGTH)
+    else
+      @posts = @training.posts.public :limit=>POSTS_LENGTH
+    end
+    
     @team = @training.team
     @title = "#{@training.team.shortname} #{@training.start_time.strftime('%m.%d')}的训练"
     render :layout=>'team_layout'

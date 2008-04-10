@@ -244,4 +244,11 @@ class MatchTest < ActiveSupport::TestCase
     assert !matches(:one).can_be_edited_formation_by?(users(:saki), teams(:juven).id) #错误的球队
     assert !matches(:one).can_be_edited_result_by?(users(:saki), teams(:juven).id) #错误的球队
   end
+  
+  def test_public_posts
+    m = Match.find(1)
+    assert_equal 2, m.posts.team(2).length
+    assert_equal 1, m.posts.team(2, :limit=>1).length
+    assert_equal 1, m.posts.team_public(2).length
+  end
 end

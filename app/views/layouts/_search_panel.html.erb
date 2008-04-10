@@ -4,7 +4,7 @@
   :team => 
     {:link_to=>link_to("队伍", search_teams_path), :url=>search_teams_path}
 }%>
-<% form_tag search_paths[default][:url], :method=>:get, :id=>"header_search" do%>
+<% form_tag search_paths[default][:url], :method=>:post, :id=>"header_search" do%>
   <table><tr>
   <td class="dropdown_container">
     <%= image_tag 'default_user_tiny.gif', :width=>20, :height=>20%>

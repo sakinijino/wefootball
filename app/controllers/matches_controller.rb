@@ -1,6 +1,7 @@
-class MatchesController < ApplicationController
-  
+class MatchesController < ApplicationController  
   before_filter :login_required, :only=>[:create,:edit,:update,:destroy]
+  
+  POSTS_LENGTH = 10
 
   def show
     @match = Match.find(params[:id])  
@@ -14,8 +15,21 @@ class MatchesController < ApplicationController
       :order => "position"
     @guest_formation_array = @guest_team_player_mjs.map {|ut| ut.position}
     
-    @team = @match.host_team
+    if (logged_in? && current_user.is_team_member_of?(@match.host_team_id))
+      @host_posts = @match.posts.team(@match.host_team_id, :limit=>POSTS_LENGTH)
+    else
+      @host_posts = @match.posts.team_public(@match.host_team_id, :limit=>POSTS_LENGTH)
+    end
+    if (logged_in? && current_user.is_team_member_of?(@match.guest_team_id))
+      @guest_posts = @match.posts.team(@match.guest_team_id, :limit=>POSTS_LENGTH)
+    else
+      @guest_posts = @match.posts.team_public(@match.guest_team_id, :limit=>POSTS_LENGTH)
+    end
     
+    @host_team_mj = MatchJoin.find_by_user_id_and_team_id_and_match_id(current_user, @match.host_team, @match)
+    @guest_team_mj = MatchJoin.find_by_user_id_and_team_id_and_match_id(current_user, @match.guest_team, @match)
+    
+    @team = @match.host_team    
     render :layout=>'team_layout'
   end
   
