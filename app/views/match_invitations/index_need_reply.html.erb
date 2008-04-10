@@ -60,17 +60,11 @@
           </table>
 
           <div style="margin: 10px 0 10px 10px">
-            <%if current_user.can_accpet_match_invitation?(mi)%>
-              <%=link_to '接受对方的建议', matches_path(:id=>mi.id), :method=>:post%>
-              &nbsp;&nbsp;|&nbsp;&nbsp;
-            <%end%>
-            <%if current_user.can_reject_match_invitation?(mi)%>
-              <%=link_to "拒绝对方的建议", match_invitation_path(mi),:method=>:delete%>
-              &nbsp;&nbsp;|&nbsp;&nbsp;
-            <%end%>
-            <%if current_user.can_edit_match_invitation?(mi)%>
-              <%=link_to '提出新建议', edit_match_invitation_path(mi)%>
-            <%end%>
+            <%links = []%>
+            <%links << link_to('接受对方的建议', matches_path(:id=>mi.id), :method=>:post) if current_user.can_accpet_match_invitation?(mi)%>
+            <%links << link_to("拒绝对方的建议", match_invitation_path(mi),:method=>:delete) if current_user.can_reject_match_invitation?(mi)%>
+            <%links << link_to('提出新建议', edit_match_invitation_path(mi)) if current_user.can_edit_match_invitation?(mi)%>
+            <%= links_with_sticks links%>
           </div>
         </td>
         <td><%= team_icon(self_team)%></td>

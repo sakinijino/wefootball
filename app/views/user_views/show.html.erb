@@ -90,16 +90,18 @@
     <%end%>
 
     <div style="margin: 10px 0 0 10px">
+      <%links = []%>
       <%if logged_in? && @user.id != current_user.id %>
-      <%= link_to("给他写信", new_message_path(:to=>@user.id))%>
+      <%links << link_to("给他写信", new_message_path(:to=>@user.id))%>
       <%if @are_friends%>
-        <%= link_to("不和他玩", friend_relation_path(0, :user_id=>@user.id),:method=>"delete")  %>
+        <%links << link_to("不和他玩", friend_relation_path(0, :user_id=>@user.id),:method=>"delete")  %>
       <%elsif @can_send_invitation %>
-        <%= link_to("申请成为朋友", '#',
+        <%links << link_to("申请成为朋友", '#',
           :onclick=>'wefootball.openDialog(event, "#send_friend_invitation_div");return false') %>
       <%end%>
-      <%= link_to("邀请加入球队", new_user_team_join_invitation_path(@user)) %>
+      <%links << link_to("邀请加入球队", new_user_team_join_invitation_path(@user)) %>
       <%end%>
+      <%= links_with_sticks links%>
     </div>
   </div>
 

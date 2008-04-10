@@ -28,6 +28,7 @@
 
   <%=link_to "回复", new_message_path(:to=>@message.sender.id) if @message.sender!=current_user%>
   <%=link_to "再写一封", new_message_path(:to=>@message.receiver.id) if @message.receiver!=current_user%>
+  &nbsp;&nbsp;|&nbsp;&nbsp;
   <%=link_to "删除", message_path(@message.id), :method=>"delete"%>
   </div>
 </div>

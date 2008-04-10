@@ -21,14 +21,14 @@ class MatchJoinsController < ApplicationController
   end
   
   def destroy
-    @match_join = MatchJoin.find(params[:id])
-    if (@match_join.user_id != self.current_user.id) ||
-      !@match_join.match.can_be_quited_by?(current_user, @match_join.team_id)
-      fake_params_redirect      
-      return
+    @match = Match.find(params[:match_id])
+    @team = Team.find(params[:team_id])
+    if (!@match.can_be_quited_by?(current_user, @team))
+      fake_params_redirect
+    else
+      MatchJoin.destroy_all(["user_id = ? and team_id = ? and match_id = ?", current_user.id, @team.id, @match.id])
+      redirect_to match_path(@match)
     end
-    @match_join.destroy
-    redirect_to match_path(@match_join.match_id)
   end
   
   def edit

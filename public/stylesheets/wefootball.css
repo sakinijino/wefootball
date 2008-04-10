@@ -46,15 +46,15 @@ table th{ text-align: left; }
 
 #header ul.dropdown {
     border: 1px solid #3D681A;
-    margin: 0;
+    margin: 0px;
     padding: 3px;
     background: #fff;
     display:none;
     position:absolute;
+    list-style-type: none;
 }
 
 #header ul.dropdown li{
-    list-style-type: none;
     padding: 0px;
     margin: 0px;
 }

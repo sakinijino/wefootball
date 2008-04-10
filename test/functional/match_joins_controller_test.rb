@@ -94,7 +94,7 @@ class MatchJoinsControllerTest < ActionController::TestCase
     
     login_as :saki
     assert_difference('MatchJoin.count', -1) do
-      delete :destroy, :id => tj.id
+      delete :destroy, :match_id => matches(:one).id, :team_id => teams(:inter).id, :id=>0
       assert_redirected_to match_path(matches(:one).id)
     end
   end
@@ -113,8 +113,8 @@ class MatchJoinsControllerTest < ActionController::TestCase
     
     login_as :quentin
     assert_difference('MatchJoin.count', -1) do
-      delete :destroy, :id => tj.id
-      assert_redirected_to match_path(assigns(:match_join).match_id)
+      delete :destroy, :match_id => matches(:one).id, :team_id => teams(:inter).id, :id=>0
+      assert_redirected_to match_path(matches(:one).id)
     end
   end
   
@@ -132,26 +132,7 @@ class MatchJoinsControllerTest < ActionController::TestCase
     
     login_as :saki
     assert_no_difference('MatchJoin.count', -1) do
-      delete :destroy, :id => tj.id
-      assert_redirected_to '/'
-    end
-  end
-  
-  def test_should_not_destroy_match_join_of_other_user
-    matches(:one).start_time = Time.now.tomorrow
-    matches(:one).half_match_length = 25
-    matches(:one).rest_length = 10
-    matches(:one).save!
-    tj = MatchJoin.new
-    tj.user = users(:saki)
-    tj.match = matches(:one)
-    tj.team = teams(:inter)
-    tj.status = MatchJoin::JOIN
-    tj.save!
-    
-    login_as :quentin
-    assert_no_difference('MatchJoin.count') do
-      delete :destroy, :id => tj.id
+      delete :destroy, :match_id => matches(:one).id, :team_id => teams(:inter).id, :id=>0
       assert_redirected_to '/'
     end
   end

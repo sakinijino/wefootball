@@ -10,6 +10,18 @@
       <%=date_div_link @training.start_time, @team%>
       <%= render :partial => 'shared/activity', :object => @training%>
       <div class="clearBoth"></div>
+      <%if logged_in?%> 
+        <div style="float:right">
+          <%links = []%>
+          <%if @training.can_be_modified_by?(current_user)%>
+            <%links << "> #{link_to '修改', edit_training_path(@training)}"%>
+          <%end%>
+          <% if @training.can_be_destroyed_by?(current_user) %>
+            <%links << "> #{link_to '取消', training_path(@training), :method=>'delete', :confirm=>'真的要取消这次训练吗？'}"%>
+          <%end%>
+          <%= links_with_sticks links%>
+        </div>
+      <%end%>
     </div>
   </div>
 
@@ -26,10 +38,10 @@
     <h2>关于本次训练的讨论</h2>
     <%= render(:partial => 'posts/post_list', :object => @posts)%>
     <div style="margin: 5px 10px  0 10px;float:right">
-      <%if logged_in? && current_user.is_team_member_of?(@training.team)%>
-        > <%= link_to '针对本次训练发言', new_training_post_path(@training) %>
-      <%end%>
-      > <%= link_to '更多', training_posts_path(@training) %>
+      <%links = []%>
+      <%links << "> #{link_to '针对本次训练发言', new_training_post_path(@training)}" if logged_in? && current_user.is_team_member_of?(@training.team)%>
+      <%links << "> #{link_to '更多', training_posts_path(@training)}"%>
+      <%= links_with_sticks links%>
     </div>
   </div>
 </div>

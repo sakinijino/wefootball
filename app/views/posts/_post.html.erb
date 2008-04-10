@@ -13,10 +13,10 @@
 <%if logged_in?%>
 <div class="control">
 <%if post.is_a?(Post)%>
-  <%if post.can_be_modified_by?(current_user)%>
-    > <%= link_to '修改', edit_post_path(post) %>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
-    > <%= link_to "删除", post_path(post.id), :method=>"delete" if post.can_be_destroyed_by?(current_user) %>
-  <%end%>
+  <%links = []%>
+  <%links << "> #{link_to('修改', edit_post_path(post))}" if post.can_be_modified_by?(current_user)%>
+  <%links << "> #{link_to('删除',  post_path(post.id), :method=>"delete") if post.can_be_destroyed_by?(current_user)}"%>
+  <%= links_with_sticks links%>
 <%elsif post.is_a?(Reply)%>
   > <%= link_to "删除", post_reply_path(parent, post.id), :method=>"delete" if post.can_be_destroyed_by?(current_user) %>
 <%end%>

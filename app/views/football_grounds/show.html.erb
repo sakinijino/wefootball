@@ -27,9 +27,11 @@
       </div>
 
       <div style="margin: 10px 0 0 10px">
-        <%= link_to("我要去这个球场踢", '#', 
+        <%links = []%>
+        <%links << link_to("我要去这个球场踢", '#', 
                 :onclick=>'j("#play_create_div").dialog("open");return false;')%>
-        <%= link_to '编辑', edit_football_ground_path(@football_ground) if @is_editor%>
+        <%links << link_to('编辑', edit_football_ground_path(@football_ground)) if @is_editor%>
+        <%= links_with_sticks links%>
       </div>
     </div>
   </div>
