@@ -1,0 +1,80 @@
+<%content_for(:javascript) do%>
+  <%= javascript_include_tag "jquery.dimensions.js" %>
+  <%= javascript_include_tag "ui.mouse.js" %>
+  <%= javascript_include_tag "ui.draggable.js" %>
+  <%= javascript_include_tag "ui.draggable.ext.js" %>
+  <%= javascript_include_tag "ui.droppable.js" %>
+  <%= javascript_include_tag "ui.droppable.ext.js" %>
+  <%= javascript_include_tag "formation.js" %>
+<%end%>
+
+<%content_for(:stylesheet) do%>
+  <%= stylesheet_link_tag 'formation_management' %>
+<%end%>
+
+<div style="float:right;width:392px" class="sect">
+  <ul class="sidebar_menu">
+    <li>
+    > <%= link_to '返回比赛', sided_match_path(@sided_match)%>
+    </li>
+  </ul>
+  <div class="clearBoth"></div>
+  <div id="scroll_field">
+    <div style="margin-bottom:5px;"><%= submit_tag "保存修改", :onclick => 'formation.submit();'%></div>
+    <div id="field_div"></div>
+  </div>
+</div>
+
+<div style="float:left;width:530px" class="sect">
+  <h2><%=h @title%></h2>
+  <div class="notification">提示：将队员头像拖到球场上来安排阵型</div>
+  <div class="tab_container">
+    <% category = [['门将', [0]], ['后卫', (1..4)], ['中场', (5..9)], ['前锋', [13,10,11,12]]]%>
+    <% category.each_with_index do |item, i|%>
+      <span class="tab_link" style="<%= i==0 ? "margin-left:10px" : ""%>"><%=item[0]%></span>
+    <%end%>
+    <div class="clearBoth"></div>
+    <% category.each do |item|%>
+      <div class="tab">
+        <%item[1].each do |pos|%>
+          <%if @position_hash[pos].length > 0%>
+            <h2>可选的<%= position_text pos%></h2>
+            <%@position_hash[pos].each do |user|%>
+              <div class="icon user_<%= "#{user.id}"%>">
+                <%=small_user_image_tag user%>
+                <span><%=link_to h(user.nickname), user_view_path(user.id)%></span>
+              </div>
+            <%end%>
+            <div class="clearBoth"></div>
+          <%end%>
+        <%end%>
+      </div>
+    <%end%>
+  </div>
+</div>
+
+<% javascript_tag do %>
+    j(function(){
+      formation = new wefootball.formation(<%= @sided_match.size%>, j('#field_div'), '<%= update_formation_sided_match_joins_path(
+          :match_id=> @sided_match.id,
+          :team_id => @team.id, :escape=>false
+        )%>')
+      <% @player_mjs.each do |player_ut|%>
+        var options = {
+          user_id : <%= player_ut.user.id%>,
+          ut_id : <%= player_ut.id%>,
+          small_image_tag: '<%= small_user_image_tag player_ut.user%>',
+          tiny_image_tag: '<%= tiny_user_image_tag player_ut.user%>',
+          nickname : '<%= escape_javascript(h(player_ut.user.nickname))%>'
+        }
+        var p = new wefootball.player(options)
+        formation.addPlayer(p)
+        <%if player_ut.position != nil%>
+          formation.setPlayerToPosition(<%=player_ut.position%>, p);
+        <%end%>
+        formation.adjustPositions()
+      <%end%>
+    })
+<%end%>
+
+<div class="clearBoth"></div>
