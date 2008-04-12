@@ -1,7 +1,7 @@
 class Match < ActiveRecord::Base
   include ModelHelper
   
-  MAX_DESCRIPTION_LENGTH = 3000
+  MAX_DESCRIPTION_LENGTH = 3000 
   
   TIME_LENGTH_TO_CLOSE_MATCH = 7
   

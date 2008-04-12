@@ -13,7 +13,12 @@ class Play < ActiveRecord::Base
     st = start_time.respond_to?(:to_datetime) ? start_time.to_datetime : start_time
     et = end_time.respond_to?(:to_datetime) ? end_time.to_datetime : end_time
     errors.add(:start_time, "开始时间必须大于当前时间") if st < DateTime.now
-    errors.add(:end_time, "至少要进行15分钟") if (et - st)*24*60 < 15
+    time_span = (et - st)*24*60
+    if time_span <= 0
+      errors.add(:end_time, "开始时间必须小于结束时间")
+    elsif time_span < 15
+      errors.add(:end_time, "至少要进行15分钟") 
+    end
   end
   
   def before_validation

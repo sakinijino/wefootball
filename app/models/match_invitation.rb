@@ -3,6 +3,7 @@ class MatchInvitation < ActiveRecord::Base
   
   MAX_DESCRIPTION_LENGTH = 300
   MAX_TEAM_MESSAGE_LENGTH = 300
+  MAX_LOCATION_LENGTH = 100
   
   belongs_to :host_team, :class_name=>"Team", :foreign_key=>"host_team_id"
   belongs_to :guest_team, :class_name=>"Team", :foreign_key=>"guest_team_id"  
@@ -16,15 +17,15 @@ class MatchInvitation < ActiveRecord::Base
   attr_accessible :new_description, :new_half_match_length, :new_rest_length
   
   validates_presence_of     :new_location, :message => "请填写比赛地点"
-  validates_length_of        :new_location,    :maximum => 100
+  validates_length_of        :new_location,    :maximum => MAX_LOCATION_LENGTH
   
   validates_numericality_of :new_half_match_length, :new_rest_length
   validates_inclusion_of    :new_half_match_length, :in => 0..60
   validates_inclusion_of    :new_rest_length, :in => 0..60
   
-  validates_inclusion_of :new_match_type, :in => MATCH_TYPES, :allow_nil=>true
-  validates_inclusion_of :new_size, :in => MATCH_SIZES, :allow_nil=>true
-  validates_inclusion_of :new_win_rule, :in => WIN_RULES, :allow_nil=>true
+  validates_inclusion_of :new_match_type, :in => MATCH_TYPES
+  validates_inclusion_of :new_size, :in => MATCH_SIZES
+  validates_inclusion_of :new_win_rule, :in => WIN_RULES
 
   validates_length_of :new_description, :maximum =>MAX_DESCRIPTION_LENGTH
   validates_length_of :host_team_message, :maximum =>MAX_TEAM_MESSAGE_LENGTH
@@ -74,9 +75,5 @@ class MatchInvitation < ActiveRecord::Base
   def has_attribute_been_modified?(attribute_name)
     return (!self[attribute_name].nil?) &&
            (self[attribute_name] != self[("new_"+attribute_name.to_s).to_sym])
-  end
-  
-  def outdated?
-    new_start_time <= Time.now
   end
 end

@@ -51,6 +51,7 @@ ActionController::Routing::Routes.draw do |map|
     teams.resources :trainings
     teams.resources :posts
     teams.resources :matches
+    teams.resources :sided_matches    
     teams.resources :match_invitations    
   end
   map.resources :team_views
@@ -77,7 +78,10 @@ ActionController::Routing::Routes.draw do |map|
       teams.resources :posts
     end
   end
-  map.resources :match_joins, :collection => { :update_formation => :put }  
+  map.resources :match_joins, :collection => { :update_formation => :put }
+
+  map.resources :sided_matches, :member => {:edit_result =>:get, :update_result=>:put}
+  map.resources :sided_match_joins, :collection => { :edit_formation => :get, :update_formation => :put }
   
   map.resources :plays do |plays|
     plays.resources :play_joins

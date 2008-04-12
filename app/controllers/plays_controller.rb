@@ -11,23 +11,21 @@ class PlaysController < ApplicationController
 
   def new
     @play = Play.new
-    @default_start_time = 1.hour.since
-    @default_end_time = @default_start_time.since(3600)
+    @play.start_time = 1.hour.since #默认开始和结束时间
+    @play.end_time = @play.start_time.since(3600)
     @title = "去随便踢踢"    
     @user = current_user
     render :layout => "user_layout"
   end
 
   def create
+    @play = Play.new(params[:play])
     Play.transaction do
-      @play = Play.create!(params[:play])   
+      @play.save! 
       PlayJoin.create!(:play_id=>@play.id,:user_id=>current_user.id)    
       redirect_to play_path(@play)
     end
     rescue ActiveRecord::RecordInvalid => e
-      @play = Play.new
-      @default_start_time = 1.hour.since
-      @default_end_time = 2.hours.since
       @user = current_user
       render :action => 'new', :layout => "user_layout"   
   end

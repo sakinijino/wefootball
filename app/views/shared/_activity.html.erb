@@ -16,6 +16,24 @@
   <div class="training_icon">
     <%= small_team_image_link activity.team %>
   </div>
+<%elsif activity.class == SidedMatch%>
+  <div class="match_content">
+    <%= link_to activity.team.shortname, team_view_path(activity.team.id) %>训练
+    <br/><br/>
+    <%= activity.start_time.strftime('%H:%M')%>-<%= activity.end_time.strftime('%H:%M')%>,
+    <%= location_link activity.location, activity.football_ground_id %>
+    <br/><br/>
+    <%links = []%>
+    <%if logged_in? && (!@user || @user == current_user)%>
+      <%links << link_to('我去', sided_match_sided_match_join_path(activity), :method=>'post') if activity.can_be_joined_by?(current_user) %>
+      <%links << link_to('我不去', sided_match_sided_match_join_path(activity, 0), :method=>'delete') if activity.can_be_quited_by?(current_user) %>
+    <%end%>
+    <%links << link_to('详情', sided_match_path(activity))%>
+    <%= links_with_sticks links%>
+  </div>
+  <div class="training_icon">
+    <%= small_team_image_link activity.team %>
+  </div>
 <%elsif activity.class == Match%>
   <div class="match_content">
     <%= link_to(activity.host_team.shortname, team_view_path(activity.host_team_id))%>

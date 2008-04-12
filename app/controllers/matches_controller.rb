@@ -70,7 +70,7 @@ class MatchesController < ApplicationController
     if @editing_by_host_team
       @match.guest_team_goal_by_host = params[:match][:guest_team_goal_by_host]
       @match.host_team_goal_by_host = params[:match][:host_team_goal_by_host]      
-      if(params[:match][:guest_team_goal_by_host].nil? && params[:match][:host_team_goal_by_host].nil?)
+      if(params[:match][:guest_team_goal_by_host].blank? && params[:match][:host_team_goal_by_host].blank?)
         @match.situation_by_host = params[:match][:situation_by_host]
       else
         @match.situation_by_host = Match.calculate_situation(params[:match][:host_team_goal_by_host],params[:match][:guest_team_goal_by_host] )
@@ -78,17 +78,17 @@ class MatchesController < ApplicationController
     else
       @match.host_team_goal_by_guest = params[:match][:host_team_goal_by_guest]      
       @match.guest_team_goal_by_guest = params[:match][:guest_team_goal_by_guest]
-      if(params[:match][:guest_team_goal_by_guest].nil? && params[:match][:host_team_goal_by_guest].nil?)
+      if(params[:match][:guest_team_goal_by_guest].blank? && params[:match][:host_team_goal_by_guest].blank?)
         @match.situation_by_guest = params[:match][:situation_by_guest]
       else
         @match.situation_by_guest = Match.calculate_situation(params[:match][:host_team_goal_by_guest] ,params[:match][:guest_team_goal_by_guest])
       end     
     end
     
-    match_join_hash = {}
+    @match_join_hash = {}
     filled_goal_sum = 0
-    params[:mj].map{|k,v| [k,{:goal=>v[:goal],:cards=>v[:cards],:comment=>v[:comment]}]}.each do |i|
-      match_join_hash[i[0]] = i[1]
+    params[:mj].map{|k,v| [k,{:goal=>v[:goal],:cards=>v[:cards]}]}.each do |i|
+      @match_join_hash[i[0]] = i[1]
       filled_goal_sum += i[1][:goal].to_i
     end
     
@@ -98,15 +98,21 @@ class MatchesController < ApplicationController
        )
      @player_mjs = MatchJoin.players(@match.id,@team.id)
       render :action => "edit"
-    elsif @match.save! && MatchJoin.update(match_join_hash.keys,match_join_hash.values)
-      if @editing_by_host_team
-        redirect_to team_view_path(@match.host_team_id)
-      else
-        redirect_to team_view_path(@match.guest_team_id)
-      end
     else
-      @player_mjs = MatchJoin.players(@match.id,@team.id)      
-      render :action => "edit"
+      begin
+        Match.transaction do
+          @match.save!
+          MatchJoin.update!(@match_join_hash.keys,@match_join_hash.values)
+          if @editing_by_host_team
+            redirect_to team_view_path(@match.host_team_id)
+          else
+            redirect_to team_view_path(@match.guest_team_id)
+          end
+        end
+     rescue ActiveRecord::RecordInvalid => e
+       @player_mjs = MatchJoin.players(@match.id,@team.id)      
+       render :action => "edit"
+     end
     end
   end
 

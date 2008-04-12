@@ -1,4 +1,4 @@
-class MatchJoin < ActiveRecord::Base
+class SidedMatchJoin < ActiveRecord::Base
 
   UNDETERMINED = 0
   JOIN = 1
@@ -6,44 +6,25 @@ class MatchJoin < ActiveRecord::Base
   CARDS = [0,1,2,3]
   
   belongs_to :team
-  belongs_to :match
+  belongs_to :sided_match
   belongs_to :user
-  
-  validates_inclusion_of   :position, :in => Team::FORMATION_POSITIONS, :allow_nil => true
-  
-  attr_accessible :goal, :cards
-  
-  def before_validation
-    self.position = nil if self.position==""
-    if self.position!=nil
-      ut = UserTeam.find_by_user_id_and_team_id(self.user_id, self.team_id)
-      self.position = nil if ut.nil? || !ut.is_player
-    end
-  end
   
   def self.create_joins(match)
     host_team = match.host_team
     for user in host_team.users
-      mj = MatchJoin.new
+      mj = SidedMatchJoin.new
       mj.match_id = match.id
       mj.team_id = host_team.id
       mj.user_id = user.id
       mj.status = UNDETERMINED
       mj.save!
     end
-    guest_team = match.guest_team
-    for user in guest_team.users
-      mj = MatchJoin.new
-      mj.match_id = match.id
-      mj.team_id = guest_team.id
-      mj.user_id = user.id
-      mj.status = UNDETERMINED    
-      mj.save!
-    end
   end
   
-  def self.players(match_id,team_id)
-    MatchJoin.find(:all,
+  def self.players(match)
+    match_id = match.id
+    team_id = match.host_team_id
+    SidedMatchJoin.find(:all,
                    :select => 'mj.*',
                    :conditions => ["mj.match_id=? and mj.team_id=? and ut.is_player=true",match_id,team_id],
                    :joins => 'as mj inner join user_teams as ut on mj.team_id=ut.team_id and mj.user_id=ut.user_id'
@@ -76,4 +57,5 @@ class MatchJoin < ActiveRecord::Base
       return [0,0]
     end
   end
+  
 end

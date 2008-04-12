@@ -8,15 +8,15 @@
   <%= error_messages_for :play %>
   <% form_for @play do |f| %>
     <p><label>哪天去</label><br/>
-    <%= select_date @default_start_time, :prefix => "start_time", :start_year => Date.today.year, :end_year => Date.today.year+1, :use_month_numbers => true %></p>
+    <%= select_date @play.start_time, :prefix => "start_time", :start_year => Date.today.year, :end_year => Date.today.year+1, :use_month_numbers => true %></p>
 
     <p><label>几点去</label><br/>
-    <%= select_hour @default_start_time,:prefix => "start_time" %>
-    <%= select_minute @default_start_time,:prefix => "start_time", :minute_step=>15 %></p>
+    <%= select_hour @play.start_time,:prefix => "start_time" %>
+    <%= select_minute @play.start_time,:prefix => "start_time", :minute_step=>15 %></p>
 
     <p><label>几点走</label><br/>
-    <%= select_hour @default_end_time,:prefix => "end_time" %>
-    <%= select_minute @default_end_time,:prefix => "end_time", :minute_step=>15 %></p>
+    <%= select_hour @play.end_time,:prefix => "end_time" %>
+    <%= select_minute @play.end_time,:prefix => "end_time", :minute_step=>15 %></p>
 
     <div class="location_input">
       <p class="football_ground_input"><label for="football_ground_id">选一块场地</label><br/>
