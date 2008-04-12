@@ -1,0 +1,66 @@
+<%content_for(:javascript) do%>
+  <%#= javascript_include_tag "jquery.dimensions.js" %>
+  <%#= javascript_include_tag "ui.mouse.js" %>
+  <%#= javascript_include_tag "ui.dialog.js" %>
+<%end%>
+
+<%content_for(:stylesheet) do%>
+  <%= stylesheet_link_tag 'match' %>
+<%end%>
+
+<table style="width:940px; margin-bottom:20px;">
+  <tr>
+    <td>
+     对阵球队：<%= @match.guest_team_name%>
+    </td>
+  </tr>
+  <tr>
+    <td>
+     <%= @match.start_time.strftime("%Y-%m-%d %H:%M")%>
+    </td>
+    <td style="text-align:right">
+      <%= match_type_text @match.match_type%>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <%= h @match.location%>
+    </td>
+    <td style="text-align:right">
+      <%= @match.size%>人制
+    </td>
+  </tr>
+  <tr>
+    <td>
+      半场时长<%= @match.half_match_length%>分钟,
+      中场休息<%= @match.rest_length%>分钟
+    </td>
+    <td style="text-align:right">
+      <%= @match.has_judge ? '有' : '没有'%>裁判,
+      <%= @match.has_card ? '有' : '没有'%>红黄牌,
+      <%= @match.has_offside ? '有' : '没有'%>越位
+    </td>
+  </tr>
+  <tr>
+    <td>
+    </td>
+    <td style="text-align:right">
+      平局后<%= win_rule_text @match.win_rule%>
+    </td>
+  </tr>
+</table>
+
+<div id="match_blackboard">
+  ！！各种状态！！
+</div>
+
+
+<div id="host_team_div">
+<%= render(:partial => 'team_in_match', :locals => {:team_player_mjs => @host_team_player_mjs,
+                                                    :match => @match,
+                                                    :team => @match.host_team,
+                                                    :formation_array => @host_formation_array,
+                                                    :is_host_team => true})%>
+</div>
+
+<div class="clearBoth"></div>

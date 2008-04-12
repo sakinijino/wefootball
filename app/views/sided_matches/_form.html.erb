@@ -1,0 +1,68 @@
+<table class="form">
+  <tr><td>
+    我队：
+  </td><td>
+    <%= small_team_image_link @team, :style=>"float:left;margin-right:10px"%>
+    <br/>
+    <span><%=link_to h(@team.shortname), team_view_path(@team.id)%></span>
+  </td></tr>
+  <tr ><td>
+    对方：
+  </td><td>
+    <%= f.text_field :guest_team_name %>
+  </td></tr>
+  <tr><td>
+    开始时间:
+  </td><td>
+    <%= f.datetime_select :start_time,  :start_year => Date.today.year, :end_year => 1.year.since.year, :use_month_numbers => true, :minute_step=>15 %>
+  </td></tr>
+  <tr><td>
+    地点:
+  </td><td>
+    <%= f.text_field :location %>
+  </td></tr>
+  <tr><td>
+    比赛性质:
+  </td><td>
+    <%= f.select :match_type, SidedMatch::MATCH_TYPES.map {|t| [match_type_text(t), t]} %> 
+  </td></tr>
+  <tr><td>
+    人数:
+  </td><td>
+    <%= f.select :size, SidedMatch::MATCH_SIZES %>人制 
+  </td></tr>
+  <tr><td>
+    半场时间:
+  </td><td>
+    <%= f.text_field :half_match_length, :size=>1 %>分钟 
+  </td></tr>
+  <tr><td>
+    中场休息:
+  </td><td>
+    <%= f.text_field :rest_length, :size=>1 %>分钟
+  <tr><td>
+    是否有裁判:
+  </td><td>
+    <%= f.check_box :has_judge %>
+  </td></tr>
+  <tr><td>
+    是否有红黄牌:
+  </td><td>
+    <%= f.check_box :has_card %> 
+  </td></tr>
+  <tr><td>
+    是否有越位:
+  </td><td>
+    <%= f.check_box :has_offside %>
+  </td></tr>
+  <tr><td>
+    常规时间平局后:
+  </td><td>
+    <%= f.select :win_rule, MatchInvitation::WIN_RULES.map {|r| [win_rule_text(r), r]} %>
+  </td></tr>
+</table>
+
+<p>
+  比赛说明<br />
+  <%= f.text_area :description, :cols => 40, :rows => 10 %>
+</p>

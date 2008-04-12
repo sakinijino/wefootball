@@ -1,0 +1,48 @@
+<div>
+  <h1>比赛结果</h1>
+</div>
+
+<%= error_messages_for :sided_match %>
+
+<% form_for :sided_match, :url=>update_result_sided_match_path(@sided_match), :html=>{:method=>:put} do |f| %>
+  
+<%= hidden_field_tag :team_id, @team.id%>  
+
+    <p>
+      <b><%=@team.shortname%></b>
+      <%= f.text_field :host_team_goal %>
+      :
+      <%= f.text_field :guest_team_goal %>
+      <b><%=@sided_match.guest_team_name%></b>      
+    </p>
+    <p>
+      <b>赛况</b><br />
+      <%= f.radio_button(:situation,SidedMatch::SITUATIONS[0],{:checked=>true})%><%=situation_text(SidedMatch::SITUATIONS[0])%><br />
+      <%for s in SidedMatch::SITUATIONS[1..-1]%>
+          <%= f.radio_button(:situation,s)%><%=situation_text(s)%>
+          <%end%>
+    </p>
+
+<hr />
+      <table>
+        <th>球员</th>
+        <th>位置</th>
+        <th>入球</th>
+        <th>红/黄牌</th>
+
+        <%for mj in @player_mjs%>
+         <tr>
+            <td><%= user_icon(mj.user)%></td>
+            <td><%= mj.position == nil ? "?" : formation_position_text(mj.position)%></td>
+            <td><%= text_field_tag "mj[#{mj.id}][goal]", @match_join_hash? @match_join_hash[mj.id.to_s][:goal] : mj.goal%></td>
+            <td>
+                <%= select_tag "mj[#{mj.id}][cards]",options_for_select(SidedMatchJoin::CARDS.map {|c| [card_text(c), c]},@match_join_hash? @match_join_hash[mj.id.to_s][:cards].to_i : mj.cards)%>
+            </td>
+         </tr>
+        <%end%>
+      </table>
+
+      <p>
+       <%= f.submit "提交比赛结果" %>
+      </p>
+<% end %>
