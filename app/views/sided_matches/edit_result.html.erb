@@ -34,9 +34,15 @@
          <tr>
             <td><%= user_icon(mj.user)%></td>
             <td><%= mj.position == nil ? "?" : formation_position_text(mj.position)%></td>
-            <td><%= text_field_tag "mj[#{mj.id}][goal]", @match_join_hash? @match_join_hash[mj.id.to_s][:goal] : mj.goal%></td>
             <td>
-                <%= select_tag "mj[#{mj.id}][cards]",options_for_select(SidedMatchJoin::CARDS.map {|c| [card_text(c), c]},@match_join_hash? @match_join_hash[mj.id.to_s][:cards].to_i : mj.cards)%>
+                <%= text_field_tag "mj[#{mj.id}][goal]", 
+                    @match_join_hash && @match_join_hash[mj.id.to_s] ? @match_join_hash[mj.id.to_s][:goal] : mj.goal%></td>
+            <td>
+                <%= select_tag "mj[#{mj.id}][cards]", 
+                    options_for_select(
+                        SidedMatchJoin::CARDS.map {|c| [card_text(c), c]},
+                        @match_join_hash && @match_join_hash[mj.id.to_s] ? @match_join_hash[mj.id.to_s][:cards].to_i : mj.cards)
+                %>
             </td>
          </tr>
         <%end%>

@@ -3,6 +3,11 @@ module UsersHelper
    POSITION_TEXT =[
      '门将', '清道夫', '中后卫', '左后卫', '右后卫', '后腰', '中前卫', '左前卫', '右前卫', '前腰', '中锋', '左边锋', '右边锋', '二前锋'
     ]
+  
+  def smart_nickname(user)
+    user == current_user ? '我' : h(user.nickname)
+  end
+  
   def fitfoot_text(label)
    UsersHelper::FITFOOT_TEXT[label]
   end

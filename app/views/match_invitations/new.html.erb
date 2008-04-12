@@ -4,7 +4,7 @@
     <li>
       > <%= link_to "重新选择发起邀请的球队", new_match_invitation_path(:guest_team_id => @guest_team.id) %>
     </li>
-    <li class="seperate">
+    <li>
       > <%= link_to "返回#{h @host_team.shortname}首页", team_view_path(@host_team) %>
     </li>
     <li>

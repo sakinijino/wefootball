@@ -28,10 +28,9 @@ class MatchInvitationTest < ActiveSupport::TestCase
     assert_equal m.description,nil
     assert_equal m.new_description,"test2"
     m.description = "test2"
-    m.save
+    m.save!
     assert_equal m.description,"test2"    
-  end
- 
+  end 
   
   def test_before_validation #测试before_validation   
     m1 = MatchInvitation.new
@@ -40,12 +39,15 @@ class MatchInvitationTest < ActiveSupport::TestCase
     m1.new_half_match_length = 45
     m1.new_rest_length = 15
     m1.save!
-    assert_equal m1.host_team_message,""
-    assert_equal m1.guest_team_message,""    
-    assert_equal m1.new_description,""  
+    assert_equal "", m1.host_team_message
+    assert_equal "", m1.guest_team_message    
+    assert_equal "", m1.new_description
+    assert_equal 5, m1.new_size
+    assert_equal 1, m1.new_match_type
+    assert_equal 1, m1.new_win_rule
     
     m2 = match_invitations(:inv1)
-    m2.update_attributes!({:new_description =>'s'*2000})
+    m2.update_attributes!({:new_description =>'s'*4000})
     m2.host_team_message = 't'*2000
     m2.save!
     assert_equal m2.new_description.length,MatchInvitation::MAX_DESCRIPTION_LENGTH

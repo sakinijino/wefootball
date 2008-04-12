@@ -1,11 +1,41 @@
 <div class="calendar">
-  <%3.times do |i|
+  <%2.times do |i|
     act_a_day = activities[date.strftime("%Y-%m-%d")].nil? ? [] : 
         (activities[date.strftime("%Y-%m-%d")].sort_by{|t| t.start_time}) %>
-    <div class="normalDateDiv bigDateDiv <%= act_a_day.length > 2 ? 'hasManyActivitiesDiv' : (act_a_day.length > 0 ? 'hasActivityDiv' : '')%>">
+    <div class="normalDateDiv <%= act_a_day.length > 2 ? 'hasManyActivitiesDiv' : (act_a_day.length > 0 ? 'hasActivityDiv' : '')%>">
       <div class="bigMonthDayDiv">
         <span class="bigMonthDaySpan"><%=day_calendar_link(date.day, date, @user || @team)%></span>
         <span class="bigWeekDaySpan"><%=wday_text date.wday%></span>
+      </div>
+      <div class="dateContent">
+        <% if act_a_day.length > 0
+           (act_a_day.length>6 ? 6 : act_a_day.length).times do |j|
+              act = act_a_day[j]
+              if act.class == Training
+                img_link = training_icon_link(act)
+              elsif act.class == Match
+                img_link = match_icon_link(act)
+              elsif act.class == Play
+                img_link = play_icon_link(act)
+              end%>
+            <span class="activityContent">
+              <%= img_link%>
+            </span>
+          <%end%>
+          <%= day_calendar_link(">> 更多", date, @user || @team, :class=>"more") if act_a_day.length > 6%>
+        <%end%>
+      </div>
+    </div>
+    <% date = date.tomorrow %>
+  <%end%>
+  <%3.times do |i|
+    act_a_day = activities[date.strftime("%Y-%m-%d")].nil? ? [] : 
+        (activities[date.strftime("%Y-%m-%d")].sort_by{|t| t.start_time}) %>
+    <div class="normalDateDiv bigDateDiv <%= act_a_day.length > 2 ? 'hasManyActivitiesDiv' : (act_a_day.length > 0 ? 'hasActivityDiv' : '')%> <%= "todayDateDiv" if date.to_date == Date.today%>">
+      <div class="bigMonthDayDiv">
+        <span class="bigMonthDaySpan"><%=day_calendar_link(date.day, date, @user || @team)%></span>
+        <span class="bigWeekDaySpan">
+          <%=wday_text date.wday%></span>
       </div>
       <div class="dateContent">
         <% if act_a_day.length > 0 %>
@@ -33,14 +63,14 @@
         <%end%>
       </div>
     </div>
-    <%if i==1%>
+    <%if i==0%>
       <div class="normalDateDiv monthAndYearDiv">
         <%= month_calendar_link(date.strftime("%Y-%m"), date, @user || @team)%>
       </div>
     <%end%>
     <% date = date.tomorrow %>
   <%end%>
-  <%(days-3).times do |i|
+  <%(days-6).times do |i|
     act_a_day = activities[date.strftime("%Y-%m-%d")].nil? ? [] : 
         (activities[date.strftime("%Y-%m-%d")].sort_by{|t| t.start_time}) %>
     <div class="normalDateDiv <%= act_a_day.length > 2 ? 'hasManyActivitiesDiv' : (act_a_day.length > 0 ? 'hasActivityDiv' : '')%>">

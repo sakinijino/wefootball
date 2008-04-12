@@ -1,6 +1,15 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
 class MatchInvitationsControllerTest < ActionController::TestCase
+  
+  def test_new_without_host_team_id
+    login_as :saki
+    get :new, :guest_team_id => teams(:inter).id
+    assert_equal 1, assigns(:host_teams).length
+    
+    get :new, :guest_team_id => teams(:juven).id
+    assert_equal 2, assigns(:host_teams).length
+  end
 
   def test_unlogin
     get :new

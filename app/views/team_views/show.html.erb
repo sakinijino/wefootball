@@ -139,7 +139,7 @@
   <div class="sect">
     <h2><%=h @team.shortname%>近期的活动</h2>
     <%= render(:partial => 'shared/highlight_calendar', 
-      :locals => {:date => Date.today, :days=> TeamViewsController::DISPLAY_DAYS, :activities => @calendar_activities_hash})%>
+      :locals => {:date => @start_time, :days=> TeamViewsController::DISPLAY_DAYS, :activities => @calendar_activities_hash})%>
     <div class="clearBoth"></div>
   </div>
 </div>

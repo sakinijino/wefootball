@@ -5,7 +5,7 @@ class TeamViewsController < ApplicationController
   USER_LIST_LENGTH = 9
   POSTS_LENGTH = 10
   MATCH_LIST_LENGTH = 1
-  DISPLAY_DAYS = 13
+  DISPLAY_DAYS = 14
   
   def show
     @team = Team.find(params[:id])
@@ -30,9 +30,11 @@ class TeamViewsController < ApplicationController
       @recent_activity = @recent_training || @recent_matches
     end
     
+    @start_time = 3.days.ago.at_midnight
+    et = @start_time.since(3600*24*DISPLAY_DAYS)
     @calendar_activities_hash = 
-      (@team.trainings.in_a_duration(Time.today, Time.today.since(3600*24*DISPLAY_DAYS)) +
-       @team.match_calendar_proxy.in_a_duration(Time.today, Time.today.since(3600*24*DISPLAY_DAYS))).group_by{|t| t.start_time.strftime("%Y-%m-%d")}
+      (@team.trainings.in_a_duration(@start_time, et) +
+       @team.match_calendar_proxy.in_a_duration(@start_time, et)).group_by{|t| t.start_time.strftime("%Y-%m-%d")}
     
     @formation_uts = UserTeam.find_all_by_team_id(@team.id, :conditions => ["position is not null"], :include => [:user])
     @formation_array = @formation_uts.map {|ut| ut.position}

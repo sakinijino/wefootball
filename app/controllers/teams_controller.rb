@@ -27,7 +27,9 @@ class TeamsController < ApplicationController
       ut.save
       redirect_with_back_uri_or_default team_view_path(@team.id)
     else
-      render :action=>"new"
+      @user = current_user
+      @title = "新建球队"
+      render :action=>"new", :layout => "user_layout"
     end
   end
 

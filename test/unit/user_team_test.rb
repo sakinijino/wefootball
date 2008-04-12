@@ -22,8 +22,7 @@ class UserTeamTest < ActiveSupport::TestCase
   end
   
   def test_depedency_update_positions_when_set_not_player
-    MatchJoin.destroy_all
-    
+    MatchJoin.destroy_all   
     matches(:one).start_time = Time.now.tomorrow
     matches(:one).half_match_length = 25
     matches(:one).rest_length = 10
@@ -32,8 +31,7 @@ class UserTeamTest < ActiveSupport::TestCase
     mj1 = MatchJoin.find_by_match_id_and_team_id_and_user_id(matches(:one),teams(:inter),users(:saki))
     mj1.status = MatchJoin::JOIN
     mj1.position = 1;
-    mj1.save!
-    
+    mj1.save!    
     matches(:two).start_time = 1.day.ago
     matches(:two).half_match_length = 25
     matches(:two).rest_length = 10
@@ -44,22 +42,45 @@ class UserTeamTest < ActiveSupport::TestCase
     mj2.position = 1;
     mj2.save!
     
+    SidedMatchJoin.destroy_all
+    sided_matches(:one).start_time = Time.now.tomorrow
+    sided_matches(:one).half_match_length = 25
+    sided_matches(:one).rest_length = 10
+    sided_matches(:one).save!
+    SidedMatchJoin.create_joins(sided_matches(:one))
+    smj1 = SidedMatchJoin.find_by_match_id_and_user_id(sided_matches(:one) ,users(:saki))
+    smj1.status = SidedMatchJoin::JOIN
+    smj1.position = 1;
+    smj1.save!
+    sided_matches(:two).start_time = 1.day.ago
+    sided_matches(:two).half_match_length = 25
+    sided_matches(:two).rest_length = 10
+    sided_matches(:two).save!
+    SidedMatchJoin.create_joins(sided_matches(:two))
+    smj2 = SidedMatchJoin.find_by_match_id_and_user_id(sided_matches(:two) ,users(:saki))
+    smj2.status = SidedMatchJoin::JOIN
+    smj2.position = 1;
+    smj2.save!
+    
     ut = user_teams(:saki_inter)
     ut.is_player = true
     ut.save!
     assert_equal 1, mj1.reload.position
     assert_equal 1, mj2.reload.position
+    assert_equal 1, smj1.reload.position
+    assert_equal 1, smj2.reload.position
     
     ut = user_teams(:saki_inter)
     ut.is_player = false
     ut.save!
     assert_equal nil, mj1.reload.position
     assert_equal 1, mj2.reload.position
+    assert_equal nil, smj1.reload.position
+    assert_equal 1, smj2.reload.position
   end
   
   def test_depedency_observer #入队退队时的级联修改
-    MatchJoin.destroy_all
-    
+    MatchJoin.destroy_all   
     matches(:one).start_time = Time.now.tomorrow
     matches(:one).half_match_length = 25
     matches(:one).rest_length = 10
@@ -68,7 +89,6 @@ class UserTeamTest < ActiveSupport::TestCase
     mj = MatchJoin.find_by_match_id_and_team_id_and_user_id(matches(:one),teams(:inter),users(:saki))
     mj.status = MatchJoin::JOIN
     mj.save!
-    
     matches(:two).start_time = 1.day.ago
     matches(:two).half_match_length = 25
     matches(:two).rest_length = 10
@@ -78,28 +98,56 @@ class UserTeamTest < ActiveSupport::TestCase
     mj.status = MatchJoin::JOIN
     mj.save!
     
+    SidedMatchJoin.destroy_all
+    sided_matches(:one).start_time = Time.now.tomorrow
+    sided_matches(:one).half_match_length = 25
+    sided_matches(:one).rest_length = 10
+    sided_matches(:one).save!
+    SidedMatchJoin.create_joins(sided_matches(:one))
+    smj1 = SidedMatchJoin.find_by_match_id_and_user_id(sided_matches(:one) ,users(:saki))
+    smj1.status = SidedMatchJoin::JOIN
+    smj1.position = 1;
+    smj1.save!
+    sided_matches(:two).start_time = 1.day.ago
+    sided_matches(:two).half_match_length = 25
+    sided_matches(:two).rest_length = 10
+    sided_matches(:two).save!
+    SidedMatchJoin.create_joins(sided_matches(:two))
+    smj2 = SidedMatchJoin.find_by_match_id_and_user_id(sided_matches(:two) ,users(:saki))
+    smj2.status = SidedMatchJoin::JOIN
+    smj2.position = 1;
+    smj2.save!
+    
     assert trainings(:training1).has_joined_member?(users(:saki))
     assert trainings(:training4).has_joined_member?(users(:saki))
     assert matches(:one).has_joined_team_member?(users(:saki),teams(:inter))
     assert matches(:two).has_joined_team_member?(users(:saki),teams(:inter))
+    assert sided_matches(:one).has_joined_member?(users(:saki))
+    assert sided_matches(:two).has_joined_member?(users(:saki))
     
+    assert_difference("SidedMatchJoin.find_all_by_user_id(users(:saki)).size", -1) do
     assert_difference("MatchJoin.find_all_by_team_id_and_user_id(teams(:inter),users(:saki)).size", -1) do
     assert_difference("users(:saki).trainings.reload.size", -2) do
       user_teams(:saki_inter).destroy
     end
     end
+    end
     assert_equal 2, users(:saki).trainings.reload.size
     assert trainings(:training1).has_joined_member?(users(:saki))
     assert !trainings(:training4).has_member?(users(:saki))
-    assert !matches(:one).has_joined_team_member?(users(:saki),teams(:inter))
+    assert !matches(:one).has_team_member?(users(:saki),teams(:inter))
     assert matches(:two).has_joined_team_member?(users(:saki),teams(:inter))
+    assert !sided_matches(:one).has_member?(users(:saki))
+    assert sided_matches(:two).has_joined_member?(users(:saki))
     
+    assert_difference("SidedMatchJoin.find_all_by_user_id(users(:saki)).size", 1) do
     assert_difference("MatchJoin.find_all_by_team_id_and_user_id(teams(:inter),users(:saki)).size", 1) do
     assert_difference("users(:saki).trainings.reload.size", 2) do
       ut = UserTeam.new
       ut.user = users(:saki)
       ut.team = teams(:inter)
       ut.save!
+    end
     end
     end
     assert_equal 4, users(:saki).trainings.reload.size
@@ -109,21 +157,29 @@ class UserTeamTest < ActiveSupport::TestCase
     assert matches(:one).has_team_member?(users(:saki),teams(:inter))
     assert !matches(:one).has_joined_team_member?(users(:saki),teams(:inter))
     assert matches(:two).has_joined_team_member?(users(:saki),teams(:inter))
+    assert sided_matches(:one).has_member?(users(:saki))
+    assert !sided_matches(:one).has_joined_member?(users(:saki))
+    assert sided_matches(:two).has_joined_member?(users(:saki))
     
     Training.destroy_all
     Match.destroy_all
+    SidedMatch.destroy_all
+    assert_no_difference("SidedMatchJoin.find_all_by_user_id(users(:saki)).size") do
     assert_no_difference("MatchJoin.find_all_by_team_id_and_user_id(teams(:inter),users(:saki)).size") do
     assert_no_difference("users(:saki).trainings.reload.size") do
       user_teams(:saki_inter).destroy
     end
     end
+    end
     
+    assert_no_difference("SidedMatchJoin.find_all_by_user_id(users(:saki)).size") do
     assert_no_difference("MatchJoin.find_all_by_team_id_and_user_id(teams(:inter),users(:saki)).size") do
     assert_no_difference("users(:saki).trainings.reload.size") do
       ut = UserTeam.new
       ut.user = users(:saki)
       ut.team = teams(:inter)
       ut.save!
+    end
     end
     end
   end

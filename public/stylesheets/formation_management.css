@@ -5,26 +5,28 @@ ul.sidebar_menu {
 
 ul.sidebar_menu li {
     float:left;
-    margin: 5px 5px 0px 5px;
 }
 
 ul.sidebar_menu li.seperate {
     border: none;
-    padding-top:0px;
     width:auto;
-    border-left: 1px solid #3D681A;
-    padding-left: 10px;
+    padding-top: 5px;
 }
 
 ul.sidebar_menu li,
 ul.sidebar_menu li a{
     font-size: 12px;
 }
+
+ul.sidebar_menu li.selected{
+    display: none
+}
+
 div.icon {
     width:69px;
     height:70px;
     margin:3px;
-    padding: 6px 2px 2px 2px;
+    padding: 6px 4px 2px 4px;
 }
 div.selected_player {
     background: #eeeeff;
@@ -43,18 +45,15 @@ div.icon, img.icon {
     position:absolute;
     padding: 10px 2px 2px 2px;
     background: #FCFDFE;
-/*    background: transparent url(/images/opacity_bg.gif) repeat;*/
     border:solid 2px #3D681A;
 }
 #field_div div.icon div.del{
-/*    font-weight: bold;*/
-/*    font-size: 10px;*/
     background: url(/images/close.gif) no-repeat;
     width:12px;
     height:12px;
     position:absolute;
-    right: 1px;
-    top: 1px;
+    right: 0px;
+    top: 0px;
     cursor: pointer;
 }
 #field_div .pos_elem {

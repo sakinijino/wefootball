@@ -17,6 +17,44 @@ a img { border-width:0; }
 table {}
 table th{ text-align: left; }
 
+form.button-to {
+    display: inline;
+    margin: 0 10px 0 0;
+}
+
+form.button-to div {
+    display: inline;
+}
+
+#qmd {
+    height: 25px;
+    width:992px;
+    margin: 0 auto;
+    padding: 0;
+}
+
+#qmd .left {
+    background:url(/images/qmd_left.gif) no-repeat;
+    width:139px;
+    height: 25px;
+    float:right;
+}
+
+#qmd .center {
+    color: #333333;
+    background:url(/images/qmd_middle.gif) repeat-x;
+    float:right;
+    padding-top: 7px;
+    height: 25px;
+}
+
+#qmd .right {
+    background:url(/images/qmd_right.gif) no-repeat;
+    width:19px;
+    height: 25px;
+    float:right;
+}
+
 #main_content {
     width: 990px;
     margin: 0 auto;
@@ -24,27 +62,24 @@ table th{ text-align: left; }
     border:solid 1px #3D681A;
 }
 
-#qmd {
-    width: 992px;
-    margin: 0 auto;
-    height: 25px;
-    background:url(/images/qmd.gif) right no-repeat;
+* html #main_content {
+   margin-top: -7px;
 }
 
 #header {
     width:100%;
     height:131px;
-    background-image:url(/images/head.gif);
+    background:url(/images/head.gif) no-repeat;
     position: relative;
     line-height: normal;
-    z-index: 10;
+    z-index: 20;
 }
 
 #header .dropdown_container {
     position:relative;
 }
 
-#header ul.dropdown {
+#header .dropdown_container div.dropdown {
     border: 1px solid #3D681A;
     margin: 0px;
     padding: 3px;
@@ -54,19 +89,14 @@ table th{ text-align: left; }
     list-style-type: none;
 }
 
-#header ul.dropdown li{
-    padding: 0px;
-    margin: 0px;
-}
-
-#header ul.dropdown li a{
+#header .dropdown_container div.dropdown a{
     display: block;
     padding: 5px;
     background: #fff;
     color: #006666;
 }
 
-#header ul.dropdown li a:hover{
+#header .dropdown_container div.dropdown a:hover{
     background: #F2F7AB;
 }
 
@@ -146,9 +176,9 @@ table th{ text-align: left; }
 #header_search {
     margin: 0;
     padding: 0;
-    position: relative;
+    position: absolute;
     top: 95px;
-    float:right;
+    right: 5px;
 }
 
 #header_search table {
@@ -241,13 +271,6 @@ table.list td p{
     margin: 5px;
     padding: 0px;
     text-indent: 2em;
-}
-
-
-table.list td form{
-    float: left;
-    margin: 5px;
-    padding: 0px;
 }
 
 table.form td{
@@ -352,18 +375,26 @@ ul.sidebar_menu {
 
 ul.sidebar_menu li{
     list-style-type: none;
-    margin: 5px 5px 20px 5px;
+    margin-bottom: 15px;
 }
 
 ul.sidebar_menu li.seperate{
     border-top:dashed 1px #3D681A;
-    padding-top:20px;
-    width:85%;
+    margin: 0;
+    padding: 0;
+    height: 15px;
+    width: 70%;
 }
 
 ul.sidebar_menu li,
 ul.sidebar_menu li a{
     font-size: 14.8px;
+    padding: 5px;
+}
+
+ul.sidebar_menu li.selected a{
+    color: #000;
+    cursor: default;
 }
 
 div.icon_select {
@@ -422,4 +453,47 @@ table.match_invitation_list td.conflict {
 
 table.form td.conflict {
     padding: 3px;
+}
+
+div.errorExplanation ul{
+    list-style-type: none;
+    list-style-image: none;
+    border: 1px solid red;
+    background: rgb(255, 197, 190);
+    color: rgb(204, 0, 0);
+    padding: 3px 7px 3px 7px;
+    margin: 5px 0 0 0;
+    width: 60%;
+}
+
+div.fieldWithErrors {
+    display:inline;
+}
+
+div.fieldWithErrors input,
+div.fieldWithErrors textarea,
+div.fieldWithErrors select{
+   background: rgb(255, 197, 190);
+}
+
+div.message {
+    padding-top:20px
+}
+
+div.message div.icon {
+    margin-right:20px;
+    float:left;
+    width:60px
+}
+
+div.message div.content {
+    float:left;width:400px
+}
+
+div.message div.content p {
+    padding-bottom: 20px;
+}
+
+div.message div.title {
+    font-size:14px;border-bottom: dashed 1px #3D681A; padding-bottom:15px;
 }

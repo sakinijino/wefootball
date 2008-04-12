@@ -20,7 +20,9 @@
 
     <div class="location_input">
       <p class="football_ground_input"><label for="football_ground_id">选一块场地</label><br/>
-        <%= f.football_ground_select :football_ground_id, 'city', current_user.city%>    
+        <%= f.football_ground_select :football_ground_id, 
+          @play.football_ground_id.nil?  ? 'city' : nil,
+          @play.football_ground_id.nil? ? current_user.city : nil%>    
         <%= link_to "提交新场地", new_football_ground_path(:back_uri => request.request_uri)%>
       </p>
       <p class="location_text_input">
@@ -37,7 +39,7 @@
     <h2></h2>
     <ul class="sidebar_menu">
       <li>
-        > <%= link_to "返回个人首页", user_view_path(@user) %>
+        > <%= smart_return_user_view_menu_item(@user) %>
       </li>
     </ul>
   </div>

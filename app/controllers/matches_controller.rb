@@ -92,27 +92,26 @@ class MatchesController < ApplicationController
       filled_goal_sum += i[1][:goal].to_i
     end
     
-    if (
-        (@editing_by_host_team && (params[:match][:host_team_goal_by_host].to_i<filled_goal_sum)) ||
-        (@editing_by_guest_team && (params[:match][:host_team_goal_by_guest].to_i<filled_goal_sum))
-       )
-     @player_mjs = MatchJoin.players(@match.id,@team.id)
+    if ((@editing_by_host_team && (params[:match][:host_team_goal_by_host].to_i<filled_goal_sum)) ||
+          (@editing_by_guest_team && (params[:match][:host_team_goal_by_guest].to_i<filled_goal_sum)))
+      @player_mjs = MatchJoin.players(@match.id,@team.id)
       render :action => "edit"
-    else
-      begin
-        Match.transaction do
-          @match.save!
-          MatchJoin.update!(@match_join_hash.keys,@match_join_hash.values)
-          if @editing_by_host_team
-            redirect_to team_view_path(@match.host_team_id)
-          else
-            redirect_to team_view_path(@match.guest_team_id)
-          end
+      return
+    end
+    
+    begin
+      Match.transaction do
+        @match.save!
+        raise ActiveRecord::RecordInvalid if !MatchJoin.update(@match_join_hash.keys, @match_join_hash.values)
+        if @editing_by_host_team
+          redirect_to team_view_path(@match.host_team_id)
+        else
+          redirect_to team_view_path(@match.guest_team_id)
         end
-     rescue ActiveRecord::RecordInvalid => e
-       @player_mjs = MatchJoin.players(@match.id,@team.id)      
-       render :action => "edit"
-     end
+      end
+    rescue ActiveRecord::RecordInvalid => e
+      @player_mjs = MatchJoin.players(@match.id,@team.id)      
+      render :action => "edit"
     end
   end
 

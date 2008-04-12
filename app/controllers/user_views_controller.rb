@@ -6,7 +6,7 @@ class UserViewsController < ApplicationController
   TRAINING_LIST_LENGTH = 1
   MATCHES_LIST_LENGTH = 1
   PLAYS_LIST_LENGTH = 1
-  DISPLAY_DAYS = 13
+  DISPLAY_DAYS = 14
   
   def show
     @user = User.find(params[:id], :include=>[:positions])
@@ -22,12 +22,12 @@ class UserViewsController < ApplicationController
     activities << tmp[0] if tmp.length > 0   
     @recent_activity = activities.length > 0 ? (activities.sort_by{|act| act.start_time})[0] : nil
     
-    st = Time.today
-    et = Time.today.since(3600*24*DISPLAY_DAYS)
+    @start_time = 3.days.ago.at_midnight
+    et = @start_time.since(3600*24*DISPLAY_DAYS)
     @calendar_activities_hash = 
-      (@user.trainings.in_a_duration(st, et) + 
-      @user.matches.in_a_duration(st, et)+
-      @user.plays.in_a_duration(st, et)).group_by {|t| t.start_time.strftime("%Y-%m-%d")}
+      (@user.trainings.in_a_duration(@start_time, et) + 
+      @user.matches.in_a_duration(@start_time, et)+
+      @user.plays.in_a_duration(@start_time, et)).group_by {|t| t.start_time.strftime("%Y-%m-%d")}
     
     @firend_request = logged_in? ? FriendInvitation.find_by_applier_id_and_host_id(current_user, @user.id) : nil
     @firend_invitation = logged_in? ? FriendInvitation.find_by_applier_id_and_host_id(@user.id, current_user) : nil

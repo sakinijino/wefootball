@@ -1,11 +1,13 @@
 <ul class="sidebar_menu">
-  <li>
+  <li <%= selected_class_sidebar_menu_item(:action=>'index', :controller=>'team_join_requests')%>>
     > <%= link_to("申请加入球队的用户", team_team_join_requests_path(@team)) %>
   </li>
-  <li>
+  <li <%= selected_class_sidebar_menu_item(:action=>'index', :controller=>'team_join_invitations')%>>
     > <%= link_to("球队邀请加入的用户", team_team_join_invitations_path(@team)) %>
   </li>
   <li class='seperate'>
+  </li>
+  <li>
     > <%= link_to '返回队伍首页', team_view_path(@team) %>
   </li>
 </ul><%#

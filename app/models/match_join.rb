@@ -57,12 +57,12 @@ class MatchJoin < ActiveRecord::Base
   end
   
   def cards=(type_num)
-    result = split_cards(type_num)
+    result = MatchJoin.split_cards(type_num)
     self.yellow_card = result[0]
     self.red_card = result[1]
   end  
   
-  def split_cards(type_num)
+  def self.split_cards(type_num)
     case type_num.to_i
     when 0
       return [0,0]

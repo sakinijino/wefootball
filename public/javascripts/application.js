@@ -27,15 +27,20 @@ j(function(){
          
         j(".dropdown_container").each(function(i, item){
             item = j(item)
-            var ul = item.find('ul.dropdown')
+            var ul = item.find('div.dropdown')
             item.mouseover(function(){ul.show()})
                 .mouseout(function(){ul.hide()})
         })
         
-        j("#header_search .dropdown_container ul.dropdown li a").click(function(){
+        j("#header_search .dropdown_container div.dropdown a").click(function(){
             j('#header_search').attr('action', "/"+this.pathname)
-            j(this).parent().parent().hide();
+            j(this).parent().hide();
             return false;
+        })
+        
+        j("div.fieldWithErrors").each(function (i, item){
+             item = j(item)
+             item.find("input, textarea, select").focus(function(){item.removeClass('fieldWithErrors')})
         })
 	
 	var dialogs = j("div.jdialog")

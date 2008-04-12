@@ -21,6 +21,17 @@ class UserTeamObserver < ActiveRecord::Observer
       mj.status = MatchJoin::UNDETERMINED
       mj.save!
     end
+    
+    SidedMatch.find(:all,
+      :conditions => ["host_team_id = ? and start_time > ?", 
+        user_team.team_id, 
+        Time.now]).each do |match|
+      mj = SidedMatchJoin.new
+      mj.match_id = match.id
+      mj.user_id = user_team.user_id
+      mj.status = SidedMatchJoin::UNDETERMINED
+      mj.save!
+    end
   end
   
   def after_destroy(user_team)
@@ -36,6 +47,13 @@ class UserTeamObserver < ActiveRecord::Observer
         Time.now]).map {|t| t.id}
     MatchJoin.destroy_all(["user_id = ? and team_id = ? and (#{(['match_id = ?']*mids.size).join(' or ')})", 
         user_team.user_id, user_team.team_id, *mids]) if mids.size > 0
+    
+    mids = SidedMatch.find(:all,
+      :conditions => ["host_team_id = ? and start_time > ?", 
+        user_team.team_id, 
+        Time.now]).map {|t| t.id}
+    SidedMatchJoin.destroy_all(["user_id = ? and (#{(['match_id = ?']*mids.size).join(' or ')})", 
+        user_team.user_id, *mids]) if mids.size > 0
   end
   
   def after_update(user_team)
@@ -48,5 +66,13 @@ class UserTeamObserver < ActiveRecord::Observer
     MatchJoin.update_all(["position = ?", nil], 
       ["user_id = ? and team_id = ? and (#{(['match_id = ?']*mids.size).join(' or ')})", 
         user_team.user_id, user_team.team_id, *mids]) if mids.size > 0
+    
+    mids = SidedMatch.find(:all,
+      :conditions => ["host_team_id = ? and start_time > ?", 
+        user_team.team_id, 
+        Time.now]).map {|t| t.id}
+    SidedMatchJoin.update_all(["position = ?", nil], 
+      ["user_id = ? and (#{(['match_id = ?']*mids.size).join(' or ')})", 
+        user_team.user_id, *mids]) if mids.size > 0
   end
 end

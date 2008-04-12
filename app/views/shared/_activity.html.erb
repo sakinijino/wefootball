@@ -10,7 +10,7 @@
       <%links << link_to('我去', training_training_joins_path(activity), :method=>'post') if activity.can_be_joined_by?(current_user) %>
       <%links << link_to('我不去', training_training_join_path(activity, 0), :method=>'delete') if activity.can_be_quited_by?(current_user) %>
     <%end%>
-    <%links << link_to('详情', training_path(activity))%>
+    <%links << link_to('详情', training_path(activity)) if !(params[:controller] == "trainings" && params[:action] == "show")%>
     <%= links_with_sticks links%>
   </div>
   <div class="training_icon">
@@ -43,7 +43,7 @@
     <%= activity.start_time.strftime('%H:%M')%>-<%= activity.end_time.strftime('%H:%M')%>,
     <%= location_link activity.location, nil%>
     <br/><br/>
-    <%= link_to('详情', match_path(activity))%>  
+    <%= link_to('详情', match_path(activity)) if !(params[:controller] == "matches" && params[:action] == "show")%>  
   </div>
   <div class="match_icon">
     <%= small_team_image_link activity.host_team %> V.S.
@@ -54,15 +54,18 @@
     <%= activity.start_time.strftime('%H:%M')%>-<%= activity.end_time.strftime('%H:%M')%>
     去<%= link_to_if !activity.football_ground_id.nil?, h(activity.location), football_ground_path(activity.football_ground_id)%>随便踢踢
     <br/><br/>
-    <%if logged_in? && (!@user || @user == current_user) %>
-      <%= play_status_with_logged_in(activity,current_user) %>
+    <%if logged_in? && (!@user || @user == current_user)%>
+      <%= play_status_with_logged_in(activity,current_user)%>
       <br/><br/>
-      <%=link_to_if(activity.can_be_joined_by?(current_user),'我也要去', play_play_joins_path(activity), :method=>'post') {}%>
-      <%=link_to_if(activity.can_be_unjoined_by?(current_user),'我不去了', play_play_join_path(activity,0), :method=>'delete') {}%>
-      &nbsp;&nbsp;|&nbsp;&nbsp;
     <%else%>
       <%= play_status_with_unlogged_in(activity) %>
     <%end%>
-    <%=link_to '详情', play_path(activity)%>
+    <%links = []%>
+    <%if logged_in? && (!@user || @user == current_user) %>
+      <%links << link_to('我也要去', play_play_joins_path(activity), :method=>'post') if activity.can_be_joined_by?(current_user)%>
+      <%links << link_to('我不去了', play_play_join_path(activity,0), :method=>'delete') if activity.can_be_unjoined_by?(current_user)%>
+    <%end%>
+    <%links << link_to('详情', play_path(activity)) if !(params[:controller] == "plays" && params[:action] == "show")%>
+    <%=links_with_sticks links%>
   </div>
 <%end%>

@@ -15,7 +15,7 @@ class Training < ActiveRecord::Base
     end
   end
   
-  has_many :posts, :dependent => :destroy, :order => "updated_at desc" do
+  has_many :posts, :dependent => :nullify, :order => "updated_at desc" do
     def public(options={})
       find :all, {:conditions => ['is_private = ?', false]}.merge(options)
     end

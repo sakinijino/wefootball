@@ -12,8 +12,16 @@ class SidedMatch < ActiveRecord::Base
   has_many :sided_match_joins,
             :dependent => :destroy,
             :foreign_key => :match_id
-  
           
+  has_many :users, :through=>:sided_match_joins do
+    def joined
+      find :all, :conditions => ['status = ?', TrainingJoin::JOIN]
+    end
+    def undetermined
+      find :all, :conditions => ['status = ?', TrainingJoin::UNDETERMINED]
+    end
+  end
+            
   attr_protected :host_team_id
   
   validates_presence_of     :start_time, :message => "请填写比赛开始时间"
@@ -31,7 +39,7 @@ class SidedMatch < ActiveRecord::Base
   validates_inclusion_of :size, :in => MATCH_SIZES
   validates_inclusion_of :win_rule, :in => WIN_RULES 
 
-  validates_length_of       :description, :maximum =>MAX_DESCRIPTION_LENGTH, :allow_nil => true  
+  validates_length_of  :description, :maximum =>MAX_DESCRIPTION_LENGTH, :allow_nil => true  
   
   
   belongs_to :host_team, :class_name=>"Team", :foreign_key=>"host_team_id"
@@ -47,17 +55,21 @@ class SidedMatch < ActiveRecord::Base
   end
   
   def before_validation
+    self.description = "" if self.description.nil?
+    self.match_type = 1 if self.match_type.nil?
+    self.size = 5 if self.size.nil?
+    self.win_rule = 1 if self.win_rule.nil?
+    self.start_time = DateTime.now.tomorrow if self.start_time==nil
+    self.half_match_length = 45 if self.half_match_length==nil
+    self.rest_length = 15 if self.rest_length==nil
     attribute_slice(:description, MAX_DESCRIPTION_LENGTH)
-    if self.size.nil?
-      self.size = 11
-    end   
   end
 
   def self.calculate_situation(host_team_goal,guest_team_goal)
     if(host_team_goal.nil? || guest_team_goal.nil?)
       return 1
     elsif(!host_team_goal.nil? && !guest_team_goal.nil?)
-      return calculate_situation_from_goal(host_team_goal,guest_team_goal)
+      return Match.calculate_situation_from_goal(host_team_goal,guest_team_goal)
     end
   end
 
@@ -91,50 +103,26 @@ class SidedMatch < ActiveRecord::Base
   
   def can_be_joined_by?(user)
     team_id = self.host_team_id
-    is_before_match? && user.is_team_member_of?(team_id) && !has_joined_team_member?(user)
+    is_before_match? && user.is_team_member_of?(team_id) && !has_joined_member?(user)
   end
   
   def can_be_quited_by?(user)
     team_id = self.host_team_id
-    is_before_match? && user.is_team_member_of?(team_id) && has_team_member?(user)
+    is_before_match? && user.is_team_member_of?(team_id) && has_member?(user)
   end
   
-  def has_joined_team_member?(user)
-    tj = has_team_member?(user)
+  def has_joined_member?(user)
+    tj = has_member?(user)
     tj!=nil && tj.status == SidedMatchJoin::JOIN    
   end
   
-  def has_team_member?(user)
-    team_id = self.host_team_id
+  def has_member?(user)
     user_id = case user
     when User
       user.id
     else
       user
     end
-    SidedMatchJoin.find :first, :conditions => ['user_id = ? and team_id = ? and match_id = ?', user_id, team_id, self.id]
-  end  
-  
-
-  protected
-    
-  def self.calculate_situation_from_goal(host_team_goal, guest_team_goal)
-    distinct_goals = (host_team_goal.to_i - guest_team_goal.to_i)
-    if distinct_goals > 4
-      return 2
-    elsif distinct_goals > 2
-      return 3
-    elsif distinct_goals > 0
-      return 4
-    elsif distinct_goals == 0
-      return 5
-    elsif distinct_goals > -3
-      return 6
-    elsif distinct_goals > -5
-      return 7
-    else return 8
-    end
-  end  
-
-  
+    SidedMatchJoin.find :first, :conditions => ['user_id = ? and match_id = ?', user_id, self.id]
+  end
 end

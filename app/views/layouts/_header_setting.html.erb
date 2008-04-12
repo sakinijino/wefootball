@@ -4,14 +4,14 @@
       <%= link_to("我的...", user_view_path(current_user))%>
       <%= image_tag('my_down.gif', :title=>'', :class=>'my_down')%>
       &nbsp;&nbsp;| &nbsp;&nbsp;
-      <ul class="dropdown" style="top:15px;left:10px;width:50px">
-        <li><%= link_to("首页", user_view_path(current_user))%></li>
-        <li><%= link_to("朋友", user_friend_relations_path(current_user))%></li>
-        <li><%= link_to("球队", user_team_joins_path(current_user))%></li>
-        <li><%= day_calendar_link('活动', Time.now, current_user)%></li>
-        <li><%= link_to("信箱", messages_path)%></li>
-        <li><%= link_to("设置", edit_user_path(current_user))%></li>
-      </ul>
+      <div class="dropdown" style="top:15px;left:10px;width:50px">
+        <%= link_to("首页", user_view_path(current_user))%>
+        <%= link_to("朋友", user_friend_relations_path(current_user))%>
+        <%= link_to("球队", user_team_joins_path(current_user))%>
+        <%= day_calendar_link('活动', Time.now, current_user)%>
+        <%= link_to("信箱", messages_path)%>
+        <%= link_to("设置", edit_user_path(current_user))%>
+      </div>
     </span>
     <%= link_to "踢球去", new_play_path %>&nbsp;&nbsp;| &nbsp;&nbsp;
     <%= link_to "退出", session_path(0), :method=>:delete %>

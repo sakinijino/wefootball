@@ -4,15 +4,14 @@
 </div>
 
 <div id="wide_left_content" class="sect">
-  <h2><%= h @title%></h2>
   <%= error_messages_for :message %>
   <% form_for @message do |f| %>
     <table class="form">
       <tr>
         <td>写给:</td>
         <td>
-          <%= h @receiver.nickname%>
-          <div style="float:right"><%= small_user_image_link @receiver %></div>
+          <%= link_to h(@receiver.nickname), user_view_path(@receiver)%>
+          <div style=""><%= small_user_image_link @receiver, :style=>"margin:0;float:right" %></div>
        </td>
       </tr>
       <tr>

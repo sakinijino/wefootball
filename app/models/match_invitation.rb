@@ -1,7 +1,7 @@
 class MatchInvitation < ActiveRecord::Base
   include ModelHelper
   
-  MAX_DESCRIPTION_LENGTH = 300
+  MAX_DESCRIPTION_LENGTH = 3000
   MAX_TEAM_MESSAGE_LENGTH = 300
   MAX_LOCATION_LENGTH = 100
   
@@ -37,15 +37,12 @@ class MatchInvitation < ActiveRecord::Base
   end
   
   def before_validation
-    if self.host_team_message.nil?
-      self.host_team_message = ""
-    end
-    if self.guest_team_message.nil?
-      self.guest_team_message = ""      
-    end
-    if self.new_description.nil?
-      self.new_description = ""      
-    end 
+    self.host_team_message = "" if self.host_team_message.nil?
+    self.guest_team_message = "" if self.guest_team_message.nil?
+    self.new_description = ""  if self.new_description.nil?
+    self.new_match_type = 1 if self.new_match_type.nil?
+    self.new_size = 5 if self.new_size.nil?
+    self.new_win_rule = 1 if self.new_win_rule.nil?
     
     attribute_slice(:new_description, MAX_DESCRIPTION_LENGTH)
     attribute_slice(:host_team_message, MAX_TEAM_MESSAGE_LENGTH)
@@ -75,5 +72,9 @@ class MatchInvitation < ActiveRecord::Base
   def has_attribute_been_modified?(attribute_name)
     return (!self[attribute_name].nil?) &&
            (self[attribute_name] != self[("new_"+attribute_name.to_s).to_sym])
+  end
+  
+  def outdated?
+    new_start_time < Time.now
   end
 end

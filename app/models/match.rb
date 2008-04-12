@@ -9,7 +9,7 @@ class Match < ActiveRecord::Base
   
   attr_accessible
   
-  has_many :posts, :dependent => :destroy, :order => "updated_at desc" do
+  has_many :posts, :dependent => :nullify, :order => "updated_at desc" do
     def team(team_id, options={})
       find :all, {:conditions => ['team_id = ?', team_id]}.merge(options)
     end

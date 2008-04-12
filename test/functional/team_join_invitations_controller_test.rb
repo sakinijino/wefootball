@@ -3,6 +3,28 @@ require File.dirname(__FILE__) + '/../test_helper'
 class TeamJoinInvitationsControllerTest < ActionController::TestCase
   include AuthenticatedTestHelper
   
+  def test_new_by_user_id #邀请某人加入你管理的球队
+    login_as :saki
+    get :new, :user_id => users(:aaron)
+    assert_equal 1, assigns(:teams).length
+    
+    get :new, :user_id => users(:mike2)
+    assert_equal 2, assigns(:teams).length
+  end
+  
+  def test_new_by_team_id #邀请你的朋友加入某只你管理的球队
+    login_as :saki
+    get :new, :team_id => teams(:inter)
+    assert_equal 2, assigns(:friends).length
+    assert_equal users(:aaron), assigns(:friends)[0]
+    
+    get :new, :team_id => teams(:milan)
+    assert_equal 1, assigns(:friends).length
+    
+    get :new, :team_id => teams(:juven)
+    assert_redirected_to '/'
+  end
+  
   def test_index_unlogin
     get :index, :team_id=>teams(:inter).id
     assert_redirected_to new_session_path

@@ -17,8 +17,8 @@
 <div class="location_input">
   <p class="football_ground_input"><label for="football_ground_id">选择场地</label><br/>
     <%= f.football_ground_select :football_ground_id, 
-      @training.new_record? || @training.football_ground_id.nil?  ? 'city' : nil,
-      @training.new_record? || @training.football_ground_id.nil? ? @team.city : nil%>    
+      @training.football_ground_id.nil?  ? 'city' : nil,
+      @training.football_ground_id.nil? ? @team.city : nil%>    
     <%= link_to "提交新场地", new_football_ground_path(:back_uri => request.request_uri)%>
   </p>
   <p class="location_text_input">

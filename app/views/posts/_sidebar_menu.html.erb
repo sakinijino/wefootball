@@ -1,38 +1,37 @@
 <ul class="sidebar_menu"> 
 
   <% if logged_in? %>
+    <li <%= selected_class_sidebar_menu_item(:action=>'new')%>> 
+        >
     <% if @training && current_user.is_team_member_of?(@training.team)%>
-      <li>
-        > <%= link_to '针对本次训练发言', new_training_post_path(@training) %>
-      </li>
+        <%= link_to '针对本次训练发言', new_training_post_path(@training) %>
     <% elsif @match && current_user.is_team_member_of?(@team)%>
-      <li>
-        > <%= link_to '针对本场比赛发言', new_match_team_post_path(@match, @team) %>
-      </li>
+        <%= link_to '针对本场比赛发言', new_match_team_post_path(@match, @team) %>
     <%else%>
-      <li>
-        > <%= link_to '发言', new_team_post_path(@team) %>
-      </li>
+        <%= link_to '发言', new_team_post_path(@team) %>
     <%end%>
+    </li>
   <%end%>
   
   <% if @training %>
-    <li>
+    <li <%= selected_class_sidebar_menu_item(:action=>'index')%>>
     > <%= link_to '本次训练的讨论', training_posts_path(@training) %>
     </li>
   <%end%>
   
   <% if @match %>
-    <li>
+    <li <%= selected_class_sidebar_menu_item(:action=>'index')%>>
     > <%= link_to '本场比赛的讨论', match_team_posts_path(@match, @team) %>
     </li>
   <%end%>
   
-  <li>
+  <li <%= selected_class_sidebar_menu_item(:action=>'index', :boolean=>!@match && !@training)%>>
   > <%= link_to '队伍讨论区', team_posts_path(@team) %>
   </li>
     
   <li class="seperate">
+  </li>
+  <li>
     <% if @training %>
       > <%= link_to '返回训练详情', training_path(@training) %>
   </li>

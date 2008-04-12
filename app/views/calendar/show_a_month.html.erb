@@ -19,7 +19,9 @@
       </li>
     <%end%>
     <li class="seperate">
-      > <%= link_to "返回个人首页", user_view_path(@user) if @user%>
+    </li>
+    <li>
+      > <%= smart_return_user_view_menu_item(@user) if @user%>
       <%= link_to "返回队伍首页", team_view_path(@team) if @team%>
     </li>
   </ul>

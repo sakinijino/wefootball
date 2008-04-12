@@ -157,6 +157,16 @@ class TrainingTest < ActiveSupport::TestCase
     assert_equal 1, t.posts.public(:limit=>1).length
   end
   
+  def test_posts_dependency_nullify
+    t = Training.find(1)
+    l  = t.posts.size
+    assert_no_difference "t.team.posts.length" do
+    assert_difference "t.team.posts.find(:all, :conditions=>['training_id is not null']).length", -l do
+      t.destroy
+    end
+    end
+  end
+  
   def test_no_accessible
     t = trainings(:training1)
     tid = t.team_id
@@ -167,9 +177,7 @@ class TrainingTest < ActiveSupport::TestCase
   
   def test_destroy
     assert_difference 'TrainingJoin.count', -1 do
-    assert_difference 'Post.count', -3 do
       trainings(:training1).destroy
-    end
     end
   end
 end

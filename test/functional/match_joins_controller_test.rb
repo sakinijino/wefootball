@@ -39,8 +39,8 @@ class MatchJoinsControllerTest < ActionController::TestCase
   end
   
   def test_should_not_join_when_match_is_closed
-    matches(:one).start_time = 8.days.ago.ago(7200)
-    matches(:one).end_time = 8.days.ago.ago(3600)
+    matches(:one).start_time = 1.days.ago.ago(7200)
+    matches(:one).end_time = 1.days.ago.ago(3600)
     matches(:one).save!
     login_as :quentin
     assert_no_difference('MatchJoin.count') do

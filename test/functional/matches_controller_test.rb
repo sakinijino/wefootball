@@ -1,7 +1,7 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
 class MatchesControllerTest < ActionController::TestCase
-
+  
   def test_unlogin
     get :edit
     assert_redirected_to new_session_path    
@@ -219,8 +219,8 @@ class MatchesControllerTest < ActionController::TestCase
                                               :guest_team_goal_by_guest => 2,
                                               :situation_by_host => 0
                                               },
-                                    :mj => {mj1.id=>{:goal=>1,:cards=>2,:comment=>'nb'},
-                                            mj2.id=>{:goal=>1,:cards=>3,:comment=>'nb2'}
+                                    :mj => {mj1.id=>{:goal=>1,:cards=>2},
+                                            mj2.id=>{:goal=>1,:cards=>3}
                                            }
     new_match1 = Match.find(match1)                              
     assert_equal 2, new_match1.guest_team_goal_by_host
@@ -233,13 +233,13 @@ class MatchesControllerTest < ActionController::TestCase
     new_mj2 = MatchJoin.find_by_user_id_and_team_id_and_match_id(u2.id,t1.id,match1.id)     
     assert_equal 1, new_mj1.goal
     assert_equal 2, new_mj1.cards    
-    assert_equal 'nb', new_mj1.comment
     assert_equal 1, new_mj2.goal
     assert_equal 3, new_mj2.cards    
-    assert_equal 'nb2', new_mj2.comment    
     assert_redirected_to team_view_path(t1)                                   
 
-    put :update, :id => match1.id, :team_id=>t1.id, :match => {:situation_by_host => 5},
+    put :update, :id => match1.id, :team_id=>t1.id, :match => {:host_team_goal_by_host => "",
+                                              :guest_team_goal_by_host => "",
+                                              :situation_by_host => 5},
                                     :mj => {}#ceshi
     new_match1 = Match.find(match1)                              
     assert_equal 5, new_match1.situation_by_host
@@ -286,8 +286,8 @@ class MatchesControllerTest < ActionController::TestCase
                                               :guest_team_goal_by_host => 2,
                                               :situation_by_guest => 0
                                               },
-                                    :mj => {mj1.id=>{:goal=>1,:cards=>2,:comment=>'nb'},
-                                            mj2.id=>{:goal=>1,:cards=>3,:comment=>'nb2'}
+                                    :mj => {mj1.id=>{:goal=>1,:cards=>2},
+                                            mj2.id=>{:goal=>1,:cards=>3}
                                            }
     new_match1 = Match.find(match1)                              
     assert_equal 2, new_match1.guest_team_goal_by_guest
@@ -300,13 +300,13 @@ class MatchesControllerTest < ActionController::TestCase
     new_mj2 = MatchJoin.find_by_user_id_and_team_id_and_match_id(u2.id,t1.id,match1.id)     
     assert_equal 1, new_mj1.goal
     assert_equal 2, new_mj1.cards    
-    assert_equal 'nb', new_mj1.comment
     assert_equal 1, new_mj2.goal
-    assert_equal 3, new_mj2.cards    
-    assert_equal 'nb2', new_mj2.comment    
+    assert_equal 3, new_mj2.cards
     assert_redirected_to team_view_path(t1)                                   
 
-    put :update, :id => match1.id, :team_id=>t1.id, :match => {:situation_by_guest => 5},
+    put :update, :id => match1.id, :team_id=>t1.id, :match => {:host_team_goal_by_guest => "",
+                                              :guest_team_goal_by_guest => "",
+                                              :situation_by_guest => 5},
                                     :mj => {}#ceshi
     new_match1 = Match.find(match1)                              
     assert_equal 5, new_match1.situation_by_guest
@@ -363,8 +363,8 @@ class MatchesControllerTest < ActionController::TestCase
                                               :guest_team_goal_by_host => 2,
                                               :situation_by_guest => 0
                                               },
-                                    :mj => {mj1.id=>{:goal=>5,:cards=>2,:comment=>'nb'},
-                                            mj2.id=>{:goal=>3,:cards=>3,:comment=>'nb2'}
+                                    :mj => {mj1.id=>{:goal=>5,:cards=>2},
+                                            mj2.id=>{:goal=>3,:cards=>3}
                                            }
     assert_template 'edit'
   end  

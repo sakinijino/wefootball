@@ -64,10 +64,10 @@ class MatchTest < ActiveSupport::TestCase
     assert_equal false,m.is_after_match_and_before_match_close?
     assert_equal false,!m.is_before_match_close? #这里用!m.is_before_match_close?模拟m.is_after_match_close? 
     
-    matches(:one).start_time = Time.now.ago(1800)
-    matches(:one).half_match_length = 25
-    matches(:one).rest_length = 10
-    matches(:one).save!
+    m.start_time = Time.now.ago(1800)
+    m.half_match_length = 25
+    m.rest_length = 10
+    m.save!
     assert_equal false,m.is_before_match?
     assert_equal false,m.is_after_match_and_before_match_close?
     assert_equal true,m.is_before_match_close?
@@ -89,9 +89,8 @@ class MatchTest < ActiveSupport::TestCase
     m = matches(:one)
     MatchJoin.create_joins(m)
     assert_equal false, m.match_joins.empty?
-    match_join_num = m.match_joins.count
-#    assert_equal true, m.match_joins.empty?
-    assert_difference 'm.match_joins.count', 0-match_join_num do
+    match_join_num = m.match_joins.length
+    assert_difference 'MatchJoin.find_all_by_match_id(m.id).length', -match_join_num do
       Match.destroy(m)
     end
   end
@@ -250,5 +249,16 @@ class MatchTest < ActiveSupport::TestCase
     assert_equal 2, m.posts.team(2).length
     assert_equal 1, m.posts.team(2, :limit=>1).length
     assert_equal 1, m.posts.team_public(2).length
+  end
+  
+  def test_posts_dependency_nullify
+    t = Match.find(1)
+    l  = t.posts.team(t.host_team).size
+    assert_not_equal 0, l
+    assert_no_difference "t.host_team.posts.length" do
+    assert_difference "t.host_team.posts.find(:all, :conditions=>['match_id is not null']).length", -l do
+      t.destroy
+    end
+    end
   end
 end

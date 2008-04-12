@@ -3,7 +3,7 @@
   <%= error_messages_for :sided_match %>
 
   <% form_for @sided_match do |f| %>
-    <%= f.hidden_field :host_team_id,  :value=>@team.id%>
+    <%= f.hidden_field "sided_match[host_team_id]",  :value=>@team.id%>
     <%= render :partial => "form", :locals => {:f => f}%>  
     <p>
       <%= f.submit "创建" %>

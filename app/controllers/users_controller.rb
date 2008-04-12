@@ -92,7 +92,7 @@ class UsersController < ApplicationController
   def edit
     @user = User.find(params[:id], :include=>[:positions])
     @positions = @user.positions_array
-    @title = "修改个人信息"
+    @title = "修改我的信息"
     render :layout => "user_layout"
   end
   

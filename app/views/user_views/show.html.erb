@@ -11,12 +11,12 @@
 
 <div id="left_content">
   <div class="sect">
-    <h2><%=h @user.nickname%>的信息</h2>
+    <h2><%=smart_nickname @user%>的信息</h2>
 
     <%if @firend_request != nil || @firend_invitation != nil || @user_invitation_count > 0 ||  @team_invitation_count > 0%>
     <div class="notification">
       <%if @firend_request != nil%>
-        <span>等待<%=h @user.nickname%>确认朋友邀请</span>
+        <span>你已邀请<%=h @user.nickname%>成为朋友，等待对方邀请</span>
       <%end%>
 
       <%if @firend_invitation != nil%>
@@ -119,13 +119,13 @@
   </div>
 
   <div class="sect">
-    <h2><%=h @user.nickname%>参加的球队</h2>
+    <h2><%=smart_nickname @user%>参加的球队</h2>
     <%= team_icon(@teams)%>
     <div class="clearBoth"></div>
   </div>
   
   <div class="sect">
-    <h2><%=h @user.nickname%>的朋友</h2>
+    <h2><%=smart_nickname @user%>的朋友</h2>
     <%= user_icon(@friends)%>
     <div class="clearBoth"></div>
   </div>
@@ -134,7 +134,7 @@
 <div id="right_content">
   <%if @recent_activity != nil%>
     <div class="sect" style="margin-bottom:30px">
-      <h2><%=h @user.nickname%>最近一次活动</h2>
+      <h2><%=smart_nickname @user%>最近一次活动</h2>
       <div class="activities">
         <%=date_div_link @recent_activity.start_time, @user%>
         <%= render :partial => 'shared/activity', :object => @recent_activity%>
@@ -144,9 +144,9 @@
   <%end%>
 
   <div class="sect">
-    <h2><%=h @user.nickname%>近期的活动</h2>
+    <h2><%=smart_nickname @user%>近期的活动</h2>
     <%= render(:partial => 'shared/highlight_calendar', 
-      :locals => {:date => Date.today, :days=> UserViewsController::DISPLAY_DAYS, :activities => @calendar_activities_hash})%>
+      :locals => {:date => @start_time, :days=> UserViewsController::DISPLAY_DAYS, :activities => @calendar_activities_hash})%>
     <div class="clearBoth"></div>
   </div>
 </div>
