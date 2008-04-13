@@ -17,13 +17,13 @@ wefootball.openDialog = function (event, id){
 
 j(function(){
         var l2_menu_list = j("#header_menu div.l2_menu_list ul")
-	j("#header_menu div.l1_menu a").each(function(i, item){
-		item = j(item)
-		item.mouseover(function(){
-                     l2_menu_list.hide();
-                     j(l2_menu_list[i]).show();
-                })
-	})
+        j("#header_menu div.l1_menu a").each(function(i, item){
+          item = j(item)
+          item.mouseover(function(){
+                           l2_menu_list.hide();
+                           j(l2_menu_list[i]).show();
+                      })
+        })
          
         j(".dropdown_container").each(function(i, item){
             item = j(item)
@@ -33,7 +33,7 @@ j(function(){
         })
         
         j("#header_search .dropdown_container div.dropdown a").click(function(){
-            j('#header_search').attr('action', "/"+this.pathname)
+            j('#header_search').attr('action', this.href)
             j(this).parent().hide();
             return false;
         })

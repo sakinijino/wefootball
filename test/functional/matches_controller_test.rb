@@ -330,7 +330,12 @@ class MatchesControllerTest < ActionController::TestCase
     ut2.user_id = u2.id
     ut2.team_id = t1.id
     ut2.is_player = true
-    ut2.save!     
+    ut2.save!
+    ut2 = UserTeam.new
+    ut2.user_id = u2.id
+    ut2.team_id = t2.id
+    ut2.is_player = true
+    ut2.save!
     
     match1 = Match.new   
     match1.host_team_id = t1.id
@@ -346,6 +351,15 @@ class MatchesControllerTest < ActionController::TestCase
     match1.save!    
     put :update, :id => match1.id, :team_id=>t2.id, :match => {}, :mj => {}#处理user_id和team_id可能不匹配的情况     
     assert_redirected_to '/'
+    
+    tmp = MatchJoin.find_by_user_id_and_team_id_and_match_id(u2.id,t2.id,match1.id)
+    assert_not_nil tmp
+    put :update, :id => match1.id, :team_id=>t1.id, :match => {:host_team_goal_by_guest => 2,
+                                              :guest_team_goal_by_guest => 2,
+                                              :situation_by_guest => 0
+                                              },
+                                    :mj => {tmp.id=>{:goal=>1,:cards=>2}}#处理match_join不是本队的情况
+    assert_redirected_to '/'
 
     ut1.is_admin = false
     ut1.save!
@@ -357,15 +371,16 @@ class MatchesControllerTest < ActionController::TestCase
 
     mj1 = MatchJoin.find_by_user_id_and_team_id_and_match_id(u1.id,t1.id,match1.id)
     mj2 = MatchJoin.find_by_user_id_and_team_id_and_match_id(u2.id,t1.id,match1.id)     
-    put :update, :id => match1.id, :team_id=>t1.id, :match => {:host_team_goal_by_guest => 2,
-                                              :guest_team_goal_by_guest => 2,
-                                              :host_team_goal_by_host => 2,
-                                              :guest_team_goal_by_host => 2,
-                                              :situation_by_guest => 0
-                                              },
-                                    :mj => {mj1.id=>{:goal=>5,:cards=>2},
-                                            mj2.id=>{:goal=>3,:cards=>3}
-                                           }
+    put :update, :id => match1.id, :team_id=>t1.id, 
+            :match => {:host_team_goal_by_guest => 2,
+            :guest_team_goal_by_guest => 2,
+            :host_team_goal_by_host => 2,
+            :guest_team_goal_by_host => 2,
+            :situation_by_guest => 0
+          },
+            :mj => {mj1.id=>{:goal=>5,:cards=>2},
+            mj2.id=>{:goal=>3,:cards=>3}
+          }
     assert_template 'edit'
   end  
 

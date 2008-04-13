@@ -69,7 +69,7 @@
     </div>
     <%if @user.is_playable%>
     <div class="tab">
-      <div style="float:left;position:relative;background:url(/images/small_field.jpg) no-repeat;width:160px;height:222px">
+      <div class="positions_small_field">
         <%@user.positions_array.each do |p|%>
           <%pos = small_position_icon_position p%>
           <%= image_tag(p==@user.premier_position ? 'small_premier_position_icon.gif' : 'small_position_icon.gif',

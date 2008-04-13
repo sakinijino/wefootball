@@ -5,6 +5,7 @@ class TeamViewsController < ApplicationController
   USER_LIST_LENGTH = 9
   POSTS_LENGTH = 10
   MATCH_LIST_LENGTH = 1
+  SIDED_MATCH_LIST_LENGTH = 1
   DISPLAY_DAYS = 14
   
   def show
@@ -17,23 +18,23 @@ class TeamViewsController < ApplicationController
       @posts = @team.posts.public :limit=> POSTS_LENGTH
     end
     
-    tmp_tra = @team.trainings.recent(TRAINING_LIST_LENGTH)
-    tmp_mat = Match.find :all,
+    activities = []
+    tmp = @team.trainings.recent(TRAINING_LIST_LENGTH)
+    activities << tmp[0] if tmp.length > 0
+    tmp = Match.find :all,
       :conditions => ['(host_team_id = ? or guest_team_id = ?) and end_time > ?', @team.id, @team.id, Time.now],
       :order => 'start_time',
       :limit => MATCH_LIST_LENGTH
-    @recent_training = tmp_tra.length > 0 ? tmp_tra[0] : nil
-    @recent_matches = tmp_mat.length > 0 ? tmp_mat[0] : nil
-    if @recent_training != nil && @recent_matches!=nil
-      @recent_activity = @recent_training.start_time < @recent_matches.start_time ? @recent_training : @recent_matches
-    else
-      @recent_activity = @recent_training || @recent_matches
-    end
+    activities << tmp[0] if tmp.length > 0
+    tmp = @team.sided_matches.recent(SIDED_MATCH_LIST_LENGTH)
+    activities << tmp[0] if tmp.length > 0
+    @recent_activity = activities.length > 0 ? (activities.sort_by{|act| act.start_time})[0] : nil
     
     @start_time = 3.days.ago.at_midnight
     et = @start_time.since(3600*24*DISPLAY_DAYS)
     @calendar_activities_hash = 
       (@team.trainings.in_a_duration(@start_time, et) +
+       @team.sided_matches.in_a_duration(@start_time, et) +
        @team.match_calendar_proxy.in_a_duration(@start_time, et)).group_by{|t| t.start_time.strftime("%Y-%m-%d")}
     
     @formation_uts = UserTeam.find_all_by_team_id(@team.id, :conditions => ["position is not null"], :include => [:user])

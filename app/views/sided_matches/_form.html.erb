@@ -1,13 +1,6 @@
 <table class="form">
-  <tr><td>
-    我队：
-  </td><td>
-    <%= small_team_image_link @team, :style=>"float:left;margin-right:10px"%>
-    <br/>
-    <span><%=link_to h(@team.shortname), team_view_path(@team.id)%></span>
-  </td></tr>
   <tr ><td>
-    对方：
+    对方球队名称:
   </td><td>
     <%= f.text_field :guest_team_name %>
   </td></tr>
@@ -41,19 +34,22 @@
   </td><td>
     <%= f.text_field :rest_length, :size=>1 %>分钟
   <tr><td>
-    是否有裁判:
-  </td><td>
-    <%= f.check_box :has_judge %>
+      裁判
+    </td><td>
+      <%= f.radio_button :has_judge, true%>有
+      <%= f.radio_button :has_judge, false%>没有
   </td></tr>
   <tr><td>
-    是否有红黄牌:
-  </td><td>
-    <%= f.check_box :has_card %> 
+      红黄牌
+    </td><td>
+      <%= f.radio_button :has_card, true%>有
+      <%= f.radio_button :has_card, false%>没有
   </td></tr>
   <tr><td>
-    是否有越位:
-  </td><td>
-    <%= f.check_box :has_offside %>
+      越位
+    </td><td>
+      <%= f.radio_button :has_offside, true%>有
+      <%= f.radio_button :has_offside, false%>没有
   </td></tr>
   <tr><td>
     常规时间平局后:

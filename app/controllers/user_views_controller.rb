@@ -4,8 +4,9 @@ class UserViewsController < ApplicationController
   FRIEND_LIST_LENGTH = 9
   TEAM_LIST_LENGTH = 9
   TRAINING_LIST_LENGTH = 1
-  MATCHES_LIST_LENGTH = 1
-  PLAYS_LIST_LENGTH = 1
+  MATCH_LIST_LENGTH = 1
+  SIDED_MATCH_LIST_LENGTH = 1
+  PLAY_LIST_LENGTH = 1
   DISPLAY_DAYS = 14
   
   def show
@@ -16,10 +17,12 @@ class UserViewsController < ApplicationController
     activities = []
     tmp = @user.trainings.recent(TRAINING_LIST_LENGTH)
     activities << tmp[0] if tmp.length > 0
-    tmp = @user.matches.recent(MATCHES_LIST_LENGTH)
+    tmp = @user.matches.recent(MATCH_LIST_LENGTH)
     activities << tmp[0] if tmp.length > 0
-    tmp = @user.plays.recent(PLAYS_LIST_LENGTH)
-    activities << tmp[0] if tmp.length > 0   
+    tmp = @user.sided_matches.recent(SIDED_MATCH_LIST_LENGTH)
+    activities << tmp[0] if tmp.length > 0
+    tmp = @user.plays.recent(PLAY_LIST_LENGTH)
+    activities << tmp[0] if tmp.length > 0
     @recent_activity = activities.length > 0 ? (activities.sort_by{|act| act.start_time})[0] : nil
     
     @start_time = 3.days.ago.at_midnight
@@ -27,6 +30,7 @@ class UserViewsController < ApplicationController
     @calendar_activities_hash = 
       (@user.trainings.in_a_duration(@start_time, et) + 
       @user.matches.in_a_duration(@start_time, et)+
+      @user.sided_matches.in_a_duration(@start_time, et)+
       @user.plays.in_a_duration(@start_time, et)).group_by {|t| t.start_time.strftime("%Y-%m-%d")}
     
     @firend_request = logged_in? ? FriendInvitation.find_by_applier_id_and_host_id(current_user, @user.id) : nil

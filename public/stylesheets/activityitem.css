@@ -1,5 +1,5 @@
 div.activities {
-    padding: 10px 0 0 20px;
+    padding: 0px;
     line-height: normal;
 }
 
@@ -9,6 +9,8 @@ div.activities div.date {
     text-align: center;
     border:solid 1px #3D681A;
     float: left;
+    margin-top:8px;
+    margin-right:10px;
 }
 
 div.activities div.date div.day {
@@ -33,42 +35,64 @@ div.activities div.date div.week {
     color:#333333;
 }
 
-div.activities div.match_content,
-div.activities div.training_content {
-    margin-left: 20px;
-    float: left;
-    width: 275px;
-}
-
-div.activities div.training_icon,
-div.activities div.match_icon{
-    float: left;
-}
-
-div.activities div.training_icon{
-    width: 54px;
-}
-
-div.activities div.match_icon{
-    width: 140px;
-}
-
-div.activities div.training_icon img.icon,
-div.activities div.match_icon img.icon{
-    margin: 0;
-}
-
-div.activities div.match_icon img.icon{
-    display: inline;
-}
-
-
 div.activities div.activity_list {
     float:left;
 }
 
-div.activities div.activity_list div.clearBoth{
-    padding-top: 10px;
-    margin: 0 0 15px 10px;
-    border-bottom: dashed 1px #3D681A;
+div.activities div.activity{
+  width: 428px;
+  height: 107px;
+  padding: 20px 0 0 25px;
+  position:relative;
+  float: left;
+  margin-bottom: 6px;
+}
+
+div.activities div.activity div.content {
+  width: 310px;
+}
+
+div.activities div.training_activity,
+div.activities div.play_activity{
+  background:transparent url(/images/training_block_bg.gif) no-repeat;
+}
+
+div.activities div.training_activity div.activity_icon,
+div.activities div.play_activity div.activity_icon {
+  position:absolute;
+  right:28px;
+  top:28px;
+}
+
+div.activities div.match_activity {
+  background:transparent url(/images/match_block_bg.gif) no-repeat;
+}
+
+div.activities div.match_activity div.activity_icon {
+  position:absolute;
+  left:346px;
+  top:21px;
+  width: 100px;
+  height:100px;
+}
+
+div.activities div.match_activity div.activity_icon img.host_icon {
+  position:absolute;
+  top:0px;
+  left:0px;
+}
+
+div.activities div.match_activity div.activity_icon img.guest_icon {
+  position:absolute;
+  top:41px;
+  left:33px;
+}
+
+div.activities div.match_activity div.activity_icon img.vs {
+  position:absolute;
+  top:34px;
+  left:26px;
+  width:29px;
+  height:21px;
+  z-index: 5;
 }

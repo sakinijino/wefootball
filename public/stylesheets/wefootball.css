@@ -339,6 +339,21 @@ div.tab_container span.shortcut img {
     margin-left: 2px;
 }
 
+div.small_field {
+  position:relative;
+  background:url(/images/team_small_field.jpg) no-repeat;
+  width:260px;
+  height:363px
+}
+
+div.positions_small_field {
+  float:left;
+  position:relative;
+  background:url(/images/small_field.jpg) no-repeat;
+  width:160px;
+  height:222px
+}
+
 div.post {
     padding:10px;
     margin-bottom: 10px;

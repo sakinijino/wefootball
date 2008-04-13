@@ -15,6 +15,8 @@
                 img_link = training_icon_link(act)
               elsif act.class == Match
                 img_link = match_icon_link(act)
+              elsif act.class == SidedMatch
+                img_link = sided_match_icon_link(act)
               elsif act.class == Play
                 img_link = play_icon_link(act)
               end%>
@@ -48,6 +50,9 @@
             elsif act.class == Match
               link = match_path(act)
               img_link = match_icon_link(act)
+            elsif act.class == SidedMatch
+              link = sided_match_path(act)
+              img_link = sided_match_icon_link(act)
             elsif act.class == Play
               link = play_path(act)
               img_link = play_icon_link(act)
@@ -86,6 +91,8 @@
                 img_link = training_icon_link(act)
               elsif act.class == Match
                 img_link = match_icon_link(act)
+              elsif act.class == SidedMatch
+                img_link = sided_match_icon_link(act)
               elsif act.class == Play
                 img_link = play_icon_link(act)
               end%>

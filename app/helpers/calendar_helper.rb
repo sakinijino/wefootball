@@ -14,6 +14,16 @@ module CalendarHelper
     link_to image_tag('match_icon.gif', :title=> title), match_path(m)
   end
   
+  def sided_match_icon_link(m)
+    case m
+    when SidedMatch
+      title = "#{m.start_time.strftime("%m月%d日")} #{m.start_time.strftime("%H:%M")}-#{m.end_time.strftime("%H:%M")}\n在#{m.location}比赛"
+    else
+      title = ""
+    end
+    link_to image_tag('match_icon.gif', :title=> title), sided_match_path(m)
+  end
+  
   def play_icon_link(t)
     case t
     when Play

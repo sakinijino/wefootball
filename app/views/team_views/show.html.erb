@@ -65,7 +65,7 @@
         <%= "<span style='float:left;margin-left:5px;'>阵型: #{f_text}</span>" unless f_text.blank?%>
         <%= link_to '查看详细', formation_index_team_joins_path(:team_id => @team), :style=>"float:right; margin-right:15px;"%>
         <div class="clearBoth"></div>
-        <div style="position:relative;background:url(/images/team_small_field.jpg) no-repeat;width:260px;height:363px">
+        <div class="small_field">
           <%@formation_uts.each do |ut|%>
             <% pos = team_field_position(ut.position, @formation_array) %>
             <%= link_to small_user_image_tag(ut.user,

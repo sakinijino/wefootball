@@ -3,7 +3,7 @@ class SidedMatchesController < ApplicationController
   before_filter :login_required, :only=>[:create,:edit,:update,:destroy]
 
   def new
-    @team = Team.find(params[:sided_match][:host_team_id])
+    @team = Team.find(params[:team_id])
     if (!current_user.is_team_admin_of?(@team))
       fake_params_redirect
       return
@@ -12,6 +12,9 @@ class SidedMatchesController < ApplicationController
     @sided_match.start_time = 1.day.since
     @sided_match.half_match_length = 45
     @sided_match.rest_length = 15
+    @sided_match.has_judge = false;
+    @sided_match.has_card = false;
+    @sided_match.has_offside = false;
     @title = "创建新比赛"
     render :layout => "team_layout"
   end
@@ -19,8 +22,7 @@ class SidedMatchesController < ApplicationController
   def show
     @match = SidedMatch.find(params[:id])  
     @host_team_player_mjs = SidedMatchJoin.find(:all,
-                                         :conditions => ["match_id=? and position is not null",@match.id]
-                                        )    
+        :conditions => ["match_id=? and position is not null",@match.id])    
     @host_formation_array = @host_team_player_mjs.map {|ut| ut.position}
     
     @team = @match.host_team
@@ -42,7 +44,8 @@ class SidedMatchesController < ApplicationController
         SidedMatchJoin.create_joins(@sided_match)
         redirect_to sided_match_path(@sided_match)   
       end
-    rescue ActiveRecord::RecordInvalid => e    
+    rescue ActiveRecord::RecordInvalid => e
+      @title = "创建新比赛"
       render :action=>"new", :layout => "team_layout"
     end
   end    
@@ -53,22 +56,21 @@ class SidedMatchesController < ApplicationController
       fake_params_redirect
       return      
     end
+    @title = "编辑比赛"
     @team = @sided_match.host_team
-    render :layout=>'team_layout'     
+    render :layout=>'team_layout'
   end
 
   def update  
     @sided_match = SidedMatch.find(params[:id])    
     if !@sided_match.can_be_edited_by?(current_user)
-      fake_params_redirect
-      return      
-    end
-    
-    if @sided_match.update_attributes(params[:sided_match])
+      fake_params_redirect    
+    elsif @sided_match.update_attributes(params[:sided_match])
       redirect_to sided_match_path(@sided_match)
     else
-      @team = @sided_match.host_team     
-      render :action => "edit"
+      @team = @sided_match.host_team
+      @title = "编辑比赛"
+      render :action => "edit", :layout=>'team_layout'
       return
     end
   end
@@ -91,6 +93,19 @@ class SidedMatchesController < ApplicationController
       fake_params_redirect
       return      
     end
+
+    @player_mjs = SidedMatchJoin.players(@sided_match)
+    player_mjs_hash = @player_mjs.group_by{|mj| mj.id}
+    @match_join_hash = {}
+    filled_goal_sum = 0
+    params[:mj].map{|k,v| [k,{:goal=>v[:goal],:cards=>v[:cards]}]}.each do |i|
+      if !player_mjs_hash.has_key?(i[0].to_i)
+        fake_params_redirect      
+        return
+      end
+      @match_join_hash[i[0]] = i[1]
+      filled_goal_sum += i[1][:goal].to_i
+    end
     
     @sided_match.guest_team_goal = params[:sided_match][:guest_team_goal]
     @sided_match.host_team_goal = params[:sided_match][:host_team_goal]      
@@ -99,17 +114,9 @@ class SidedMatchesController < ApplicationController
     else
       @sided_match.situation = SidedMatch.calculate_situation(params[:sided_match][:host_team_goal],params[:sided_match][:guest_team_goal] )
     end
-    
-    @match_join_hash = {}
-    filled_goal_sum = 0
-    params[:mj].map{|k,v| [k,{:goal=>v[:goal],:cards=>v[:cards]}]}.each do |i|
-      @match_join_hash[i[0]] = i[1]
-      filled_goal_sum += i[1][:goal].to_i
-    end
 
     if (params[:sided_match][:host_team_goal].to_i<filled_goal_sum)
      @sided_match.errors.add_to_base("队员入球总数不能超过本队入球数")
-     @player_mjs = SidedMatchJoin.players(@sided_match)
      render :action => "edit_result", :layout=>'team_layout' 
      return
     end
@@ -117,12 +124,11 @@ class SidedMatchesController < ApplicationController
     begin
       SidedMatch.transaction do
         @sided_match.save!
-        SidedMatchJoin.update(@match_join_hash.keys,@match_join_hash.values)
+        raise ActiveRecord::RecordInvalid if !SidedMatchJoin.update(@match_join_hash.keys,@match_join_hash.values)
         redirect_to sided_match_path(@sided_match)
       end
     rescue ActiveRecord::RecordInvalid => e
-      @player_mjs = SidedMatchJoin.players(@sided_match.id,@team.id)      
-      render :action => "edit_result"
+      render :action => "edit_result", :layout=>'team_layout' 
     end
   end
 

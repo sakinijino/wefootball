@@ -7,8 +7,6 @@ class Team < ActiveRecord::Base
   has_one :team_image,
             :dependent => :destroy
   
-  has_many :trainings, :dependent => :destroy, :extend => ActivityCalendar
-  
   has_many :user_teams,
             :dependent => :destroy
   has_many :users, :through=>:user_teams do
@@ -22,13 +20,15 @@ class Team < ActiveRecord::Base
   
   has_many :team_join_requests,
             :dependent => :destroy
-          
-  has_many :match_joins,
-            :dependent => :destroy
+
+  has_many :trainings, :dependent => :destroy, :extend => ActivityCalendar
+  has_many :sided_matches, :foreign_key=>"host_team_id", :dependent => :destroy, :extend => ActivityCalendar
 
   has_many :host_matches,:foreign_key=>"host_team_id",:class_name=>"Match",
+            :dependent => :destroy,
             :extend => ActivityCalendar
   has_many :guest_matches,:foreign_key=>"guest_team_id",:class_name=>"Match",
+            :dependent => :destroy,
             :extend => ActivityCalendar          
   
   has_many :posts, :dependent => :destroy, :order => "updated_at desc" do

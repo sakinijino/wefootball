@@ -33,6 +33,8 @@
               img_link = training_icon_link(act)
             elsif act.class == Match
               img_link = match_icon_link(act)
+            elsif act.class == SidedMatch
+              img_link = sided_match_icon_link(act)
             elsif act.class == Play
               img_link = play_icon_link(act)
             end%>

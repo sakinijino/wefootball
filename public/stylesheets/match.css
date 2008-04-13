@@ -11,15 +11,13 @@
 
 #host_team_div { 
     float: left;
-    width: 435px;
-    margin-right: 15px;
+    width: 465px;
 }
 
 #guest_team_div {
     float: right;
     margin-right: 15px;  
-    width: 435px;
-    margin-left: 15px;
+    width: 465px;
     text-align: right;
 }
 
@@ -33,16 +31,34 @@
     margin-left: 20px;
 }
 
+table.player_list {
+  width:175px;
+}
+
+table.player_list td img.icon{
+  width:22px;
+  height:22px;
+}
+
+#host_team_div .player_list{
+  margin:0 5px 0 0;
+  float:left;
+}
+
+#host_team_div .small_field {
+  margin:25px 0 0 0;
+  float:left;
+}
+
+#guest_team_div .player_list {
+  float:right;
+}
+
+#guest_team_div .small_field {
+  margin:25px 5px 0 0;
+  float:right;
+}
+
 #guest_team_div table {
     text-align: left;
-}
-
-div.match_field {
-    position:relative;
-    width:363px;
-    height:260px
-}
-
-#guest_team_div div.match_field {
-    float:right;
 }

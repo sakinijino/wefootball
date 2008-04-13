@@ -188,6 +188,16 @@ class SidedMatchesControllerTest < ActionController::TestCase
     put :update_result, :id => match1.id, :team_id=>t1.id, :sided_match => {}, :mj => {}#处理不是管理员的情况  
     assert_redirected_to '/'
     
+    SidedMatchJoin.create_joins(matches(:one))
+    tmp = SidedMatchJoin.find_by_user_id_and_match_id(u1.id, matches(:one))
+    assert_not_nil tmp
+    put :update, :id => match1.id, :team_id=>t1.id, :match => {:host_team_goal => 2,
+                                              :guest_team_goal => 2,
+                                              :situation => 0
+                                              },
+                                    :mj => {tmp.id=>{:goal=>1,:cards=>2}}#处理match_join不是本场比赛的情况
+    assert_redirected_to '/'
+    
     ut1.is_admin = true #复位为管理员
     ut1.save!
 

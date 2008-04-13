@@ -23,39 +23,18 @@
 </div>
 
 <div class="sect">
-  <h2>首发</h2>
-  <div class="match_field">
-    <%= image_tag('match_small_field.jpg', :title=>"")%>
-    <%team_player_mjs.each do |ut|%>
-      <% pos = is_host_team ? 
-       match_host_team_field_position(ut.position, formation_array) :
-       match_guest_team_field_position(ut.position, formation_array) %>
-      <%= link_to small_user_image_tag(ut.user,
-        :style=>"left:#{pos[:left]}px;top:#{pos[:top]}px;",
-        :title=>ut.user.nickname), user_view_path(ut.user), :class=>"resize_small_icon" %>
-    <%end%>
-  </div>
-  <div class="clearBoth"></div>
-</div>
-
-<div class="sect">
-  <table class="list" style="width:100%">
+  <h2>首发名单</h2>
+  <table class="list player_list">
     <tr>
       <th>&nbsp;</th>
       <th style="width:80px">昵称</th>
-      <th>位置</th>
-      <th>惯用脚</th>
-      <th>身高(cm)</th>
-      <th>体重(kg)</th>
+      <th style="width:60px">位置</th>
     </tr>
     <% (team_player_mjs).each do |ut| %>
       <tr>
         <td><%= tiny_user_image_link ut.user%></td>
         <td style="width:80px"><%= link_to truncate(h(ut.user.nickname), 12), user_view_path(ut.user)%></td>
-        <td><%= formation_position_text ut.position %></td>
-        <td><%= fitfoot_text ut.user.fitfoot %></td>
-        <td><%= ut.user.height != nil ? ut.user.height : "未知" %></td>
-        <td><%= ut.user.weight != nil ? ut.user.weight : "未知"  %></td>
+        <td style="width:60px"><%= formation_position_text ut.position %></td>
       </tr>
     <%end%>
     <% tmp_user = User.new%>
@@ -64,12 +43,19 @@
         <td><%= tiny_user_image_tag tmp_user, :title=>''%></td>
         <td style="width:80px">尚未选定</td>
         <td>?</td>
-        <td>?</td>
-        <td>?</td>
-        <td>?</td>
       </tr>
     <%end%>
   </table>
+  <div class="small_field">
+    <%team_player_mjs.each do |ut|%>
+      <% pos = team_field_position(ut.position, formation_array) %>
+      <%= link_to small_user_image_tag(ut.user,
+        :style=>"left:#{pos[:left]}px;top:#{pos[:top]}px;",
+        :title=>ut.user.nickname), user_view_path(ut.user), :class=>"resize_small_icon" %>
+    <%end%>
+    <div class="clearBoth"></div>
+  </div>
+  <div class="clearBoth"></div>
 </div>
 
 <div class="sect">   

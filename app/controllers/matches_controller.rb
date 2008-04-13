@@ -62,10 +62,25 @@ class MatchesController < ApplicationController
   def update 
     @match = Match.find(params[:id])    
     @team = Team.find(params[:team_id])
+    
     if !@match.can_be_edited_result_by?(current_user, @team)
       fake_params_redirect      
       return
     end
+    
+    @player_mjs = MatchJoin.players(@match.id,@team.id)
+    player_mjs_hash = @player_mjs.group_by{|mj| mj.id}
+    @match_join_hash = {}
+    filled_goal_sum = 0
+    params[:mj].map{|k,v| [k,{:goal=>v[:goal],:cards=>v[:cards]}]}.each do |i|
+      if !player_mjs_hash.has_key?(i[0].to_i)
+        fake_params_redirect      
+        return
+      end
+      @match_join_hash[i[0]] = i[1]
+      filled_goal_sum += i[1][:goal].to_i
+    end
+    
     @editing_by_host_team = (@team.id == @match.host_team_id)
     if @editing_by_host_team
       @match.guest_team_goal_by_host = params[:match][:guest_team_goal_by_host]
@@ -85,16 +100,9 @@ class MatchesController < ApplicationController
       end     
     end
     
-    @match_join_hash = {}
-    filled_goal_sum = 0
-    params[:mj].map{|k,v| [k,{:goal=>v[:goal],:cards=>v[:cards]}]}.each do |i|
-      @match_join_hash[i[0]] = i[1]
-      filled_goal_sum += i[1][:goal].to_i
-    end
-    
     if ((@editing_by_host_team && (params[:match][:host_team_goal_by_host].to_i<filled_goal_sum)) ||
           (@editing_by_guest_team && (params[:match][:host_team_goal_by_guest].to_i<filled_goal_sum)))
-      @player_mjs = MatchJoin.players(@match.id,@team.id)
+      @match.errors.add_to_base("队员入球总数不能超过本队入球数")
       render :action => "edit"
       return
     end
