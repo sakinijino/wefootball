@@ -16,13 +16,28 @@ wefootball.openDialog = function (event, id){
 }
 
 j(function(){
+        var top_menu = j("#header_menu div.l1_menu")
+        var top_menu_items = j("#header_menu div.l1_menu a")
+        var l2_menu = j("#header_menu div.l2_menu_list")
         var l2_menu_list = j("#header_menu div.l2_menu_list ul")
-        j("#header_menu div.l1_menu a").each(function(i, item){
+        top_menu_items.each(function(i, item){
           item = j(item)
           item.mouseover(function(){
+                           top_menu_items.removeClass('selected')
+                           item.addClass('selected')
+                           top_menu.css('background-image', 'url("/images/top_menu_hover.gif")')
+                                   .css('background-position', (item.position().left-20)+'px 0px')
+
                            l2_menu_list.hide();
-                           j(l2_menu_list[i]).show();
+                           var l2_ml = j(l2_menu_list[i])
+                           l2_ml.show()
+                           var left = item.position().left
+                           var l2_ml_left = left  - Math.round(l2_ml.outerWidth()/2) + 30
+                           l2_ml.css('left', l2_ml_left > 0 ? l2_ml_left : 0);
+                           l2_menu.css('background-image', 'url("/images/top_l2_menu_hover.gif")')
+                                   .css('background-position', ((left-149>-10) ? ((left-149 < 130) ? (left-149) : 130) : -10)+'px 0px')
                       })
+          if (item.hasClass('selected')) item.mouseover();
         })
          
         j(".dropdown_container").each(function(i, item){
@@ -32,6 +47,14 @@ j(function(){
                 .mouseout(function(){ul.hide()})
         })
         
+        if (j.browser.opera) { // fix opera absolute div in span bug
+          var dc = j("#header_setting .dropdown_container")
+          if (dc.length > 0) {
+            j("#header_setting").css('text-align', 'left')
+            dc.css('display', 'block').css('float','left').css('margin-left', '16px').css('text-align', 'center')
+          }
+        }
+        
         j("#header_search .dropdown_container div.dropdown a").click(function(){
             j('#header_search').attr('action', this.href)
             j(this).parent().hide();
@@ -40,10 +63,10 @@ j(function(){
         
         j("div.fieldWithErrors").each(function (i, item){
              item = j(item)
-             item.find("input, textarea, select").focus(function(){item.removeClass('fieldWithErrors')})
+             item.find("input, textarea, select").focus(function(){item.removeClass('fieldWithErrors').addClass('fieldWithErrorsWhenFocus')})
         })
 	
-	var dialogs = j("div.jdialog")
+        var dialogs = j("div.jdialog")
         if (dialogs.length > 0) dialogs.dialog({draggable:false, resizable:false, width:"auto", height:"auto"}).dialog('close');
         
         var dialogs = j("div.jmodaldialog")

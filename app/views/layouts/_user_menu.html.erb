@@ -1,14 +1,16 @@
 <div id="header_menu">
 <%if logged_in? && user.id == current_user.id%>
 <div class="l1_menu">
-  <%= link_to("朋友", user_friend_relations_path(user))%>
-  <%= link_to("球队", user_team_joins_path(user))%>
-  <%= day_calendar_link('活动', Time.now, user)%>
-  <%= link_to("信箱", messages_path(:as=>'receiver'))%>
-  <%= link_to("设置",  edit_user_path(current_user))%>
+  <%= link_to("首页", user_view_path(user), :class=>is_selected_user_menu_item?(:user))%>
+  <%= link_to("朋友", user_friend_relations_path(user), :class=>is_selected_user_menu_item?(:friends))%>
+  <%= link_to("球队", user_team_joins_path(user), :class=>is_selected_user_menu_item?(:teams))%>
+  <%= day_calendar_link('活动', Time.now, user, :class=>is_selected_user_menu_item?(:activities))%>
+  <%= link_to("信箱", messages_path(:as=>'receiver'), :class=>is_selected_user_menu_item?(:messages))%>
+  <%= link_to("设置",  edit_user_path(current_user), :class=>is_selected_user_menu_item?(:setting))%>
 </div>
 
 <div class="l2_menu_list">
+  <ul></ul>
   <ul>
     <li><%= link_to("我的朋友", user_friend_relations_path(user))%></li>
     <li><%= link_to("朋友邀请", friend_invitations_path)%></li>
@@ -31,12 +33,14 @@
 </div>
 <%else%>
 <div class="l1_menu">
-  <%= link_to("朋友", user_friend_relations_path(user))%>
-  <%= link_to("球队", user_team_joins_path(user))%>
-  <%= day_calendar_link('活动', Time.now, user)%>
+  <%= link_to("首页", user_view_path(user), :class=>is_selected_user_menu_item?(:user))%>
+  <%= link_to("朋友", user_friend_relations_path(user), :class=>is_selected_user_menu_item?(:friends))%>
+  <%= link_to("球队", user_team_joins_path(user), :class=>is_selected_user_menu_item?(:teams))%>
+  <%= day_calendar_link('活动', Time.now, user, :class=>is_selected_user_menu_item?(:activities))%>
 </div>
 
 <div class="l2_menu_list">
+  <ul></ul>
   <ul></ul>
   <ul></ul>
   <ul>

@@ -6,9 +6,9 @@
     <li <%= selected_class_sidebar_menu_item(:action=>'new', :controller=>'teams')%>>
       > <%= link_to "新建球队", new_team_path %>
     </li>
-    <li class='seperate <%= selected_sidebar_menu_item(:action=>'index', :controller=>'team_join_invitations')%>'>
+    <li class='seperate'>
     </li>
-    <li>
+    <li <%= selected_class_sidebar_menu_item(:action=>'index', :controller=>'team_join_invitations')%>>
       > <%= link_to "邀请我加入的球队", team_join_invitations_path %>
     </li>
     <li <%= selected_class_sidebar_menu_item(:action=>'index', :controller=>'team_join_requests')%>>

@@ -25,6 +25,7 @@ div.activities div.date div.day {
 
 div.activities div.date div.day a{
     color:White;
+    background: transparent;
 }
 
 div.activities div.date div.week {

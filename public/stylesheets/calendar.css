@@ -42,6 +42,7 @@ div.calendar div.monthAndYearDiv {
 
 .monthAndYearDiv a {
     color:#000;
+    background: transparent;
 }
 
 .bigMonthDaySpan
@@ -55,6 +56,7 @@ div.calendar div.monthAndYearDiv {
 
 .bigMonthDaySpan a{
     color:#000;
+    background: transparent;
 }
 
 .bigWeekDaySpan

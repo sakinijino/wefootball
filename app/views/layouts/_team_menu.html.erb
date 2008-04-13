@@ -1,16 +1,18 @@
 <div id="header_menu">
   <% is_admin = (logged_in? && current_user.is_team_admin_of?(team))%>
   <div class="l1_menu">
-    <%= link_to("成员", team_team_joins_path(team))%>
-    <%= day_calendar_link('活动', Time.now, team)%>
-    <%= link_to '讨论', team_posts_path(team)%>
+    <%= link_to("首页", team_view_path(team), :class=>is_selected_team_menu_item?(:team))%>
+    <%= link_to("成员", team_team_joins_path(team), :class=>is_selected_team_menu_item?(:members))%>
+    <%= day_calendar_link('活动', Time.now, team, :class=>is_selected_team_menu_item?(:activities))%>
+    <%= link_to '讨论', team_posts_path(team), :class=>is_selected_team_menu_item?(:posts)%>
     <%if is_admin%>
-      <%= link_to("入队", team_team_join_requests_path(team))%>
-      <%= link_to("设置", edit_team_path(team))%>
+      <%= link_to("入队", team_team_join_requests_path(team), :class=>is_selected_team_menu_item?(:join))%>
+      <%= link_to("设置", edit_team_path(team), :class=>is_selected_team_menu_item?(:setting))%>
     <%end%>
   </div>
 
   <div class="l2_menu_list">
+    <ul></ul>
     <ul>
       <li><%= link_to("队伍成员", team_team_joins_path(team))%></li>
       <li><%= link_to '查看阵型', formation_index_team_joins_path(:team_id => team) %></li>

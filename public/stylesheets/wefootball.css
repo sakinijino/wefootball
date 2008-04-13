@@ -12,7 +12,8 @@ h2 {font-size:14px;font-weight:normal;margin:0}
 
 form { margin: 0; padding: 0; border: 0px; }
 textarea{ overflow:auto; }
-a { color: #006666; text-decoration: none; }
+a { color: #006666; text-decoration: none;}
+a:hover { color: #FFFFFF; text-decoration: none; background: #006666; }
 a img { border-width:0; }
 table {}
 table th{ text-align: left; }
@@ -73,6 +74,10 @@ form.button-to div {
     position: relative;
     line-height: normal;
     z-index: 20;
+}
+
+#header a {
+  background: transparent;
 }
 
 #header .dropdown_container {
@@ -140,15 +145,30 @@ form.button-to div {
 
 #header_menu {
     position: absolute;
-    top: 80px;
-    left: 215px;
-    width: 512px;
+    top: 74px;
+    left: 220px;
+    width: 507px;
     text-align: center;
 }
 
+#header_menu a{
+    color: #333333;
+}
+
+#header_menu a:hover{
+  text-decoration: underline;
+}
+
+#header_menu div.l2_menu_list a {
+  color: #666666;
+}
+
 #header_menu div.l1_menu{
-    margin: 0;
+    margin: 0 0 1px 0;
     font-size: 14px;
+    background: repeat-y;
+    height: 19px;
+    padding-top: 2px;
 }
 
 #header_menu div.l1_menu a{
@@ -156,14 +176,19 @@ form.button-to div {
 }
 
 #header_menu div.l2_menu_list {
-    margin: 0;
-    text-align: center
+    margin: 0 5px;
+    padding: 2px 0 0 0;
+    text-align: center;
+    height: 20px;
+    background: repeat-y ;
 }
 
 #header_menu div.l2_menu_list ul{
-    margin: 5px 0 0 0;
+    margin: 2px 10px 0 10px;
     padding: 0;
     display: none;
+    float:left;
+    position:relative;
 }
 
 #header_menu div.l2_menu_list ul li{
@@ -391,6 +416,7 @@ ul.sidebar_menu {
 ul.sidebar_menu li{
     list-style-type: none;
     margin-bottom: 15px;
+    padding: 5px;
 }
 
 ul.sidebar_menu li.seperate{
@@ -404,12 +430,13 @@ ul.sidebar_menu li.seperate{
 ul.sidebar_menu li,
 ul.sidebar_menu li a{
     font-size: 14.8px;
-    padding: 5px;
+    padding-left: 5px;
 }
 
 ul.sidebar_menu li.selected a{
     color: #000;
     cursor: default;
+    background: transparent;
 }
 
 div.icon_select {
@@ -481,7 +508,8 @@ div.errorExplanation ul{
     width: 60%;
 }
 
-div.fieldWithErrors {
+div.fieldWithErrors,
+div.fieldWithErrorsWhenFocus{
     display:inline;
 }
 
