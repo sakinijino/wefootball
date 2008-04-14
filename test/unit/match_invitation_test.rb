@@ -93,12 +93,52 @@ class MatchInvitationTest < ActiveSupport::TestCase
   
   def test_has_attribute_been_modified #测试has_attribute_been_modified?
     m = match_invitations(:inv1)
-    m.location = "北大一体"
-    m.save
-    m.update_attributes!(:new_location => "北大二体")
-    assert_equal m.has_attribute_been_modified?(:location), true
-    m.update_attributes!(:new_location => "北大一体")    
-    assert_equal m.has_attribute_been_modified?(:location), false     
+    m.size = 5
+    m.save!
+    m.save_last_info!
+    m.update_attributes!(:new_size => 6)
+    assert_equal m.has_attribute_been_modified?(:size), true
+    m.save_last_info!
+    m.update_attributes!(:new_size => 6)
+    assert_equal m.has_attribute_been_modified?(:size), false
+    
+    m = MatchInvitation.new
+    m.new_location = "北大一体"
+    m.save!
+    assert_equal false, m.has_attribute_been_modified?(:location)
+    assert_equal false, m.has_attribute_been_modified?(:football_ground_id)
+    m = MatchInvitation.new
+    m.new_football_ground_id = 1
+    m.save!
+    assert_equal false, m.has_attribute_been_modified?(:location)
+    assert_equal false, m.has_attribute_been_modified?(:football_ground_id)
+    
+    m = MatchInvitation.new
+    m.new_location = "北大一体"
+    m.save_last_info!
+    m.update_attributes!(:new_location => "北大二体", :new_football_ground_id=>nil)
+    assert m.has_attribute_been_modified?(:location)
+    assert m.has_attribute_been_modified?(:football_ground_id)
+    m.save_last_info!
+    m.update_attributes!(:new_location => "北大二体", :new_football_ground_id=>nil)
+    assert !m.has_attribute_been_modified?(:location)
+    assert !m.has_attribute_been_modified?(:football_ground_id)
+    m.save_last_info!
+    m.update_attributes!(:new_football_ground_id => 1, :new_location =>nil)
+    assert m.has_attribute_been_modified?(:location)
+    assert m.has_attribute_been_modified?(:football_ground_id)
+    m.save_last_info!
+    m.update_attributes!(:new_football_ground_id => 2, :new_location =>nil)
+    assert m.has_attribute_been_modified?(:location)
+    assert m.has_attribute_been_modified?(:football_ground_id)
+    m.save_last_info!
+    m.update_attributes!(:new_football_ground_id => 2, :new_location =>nil)
+    assert !m.has_attribute_been_modified?(:location)
+    assert !m.has_attribute_been_modified?(:football_ground_id)
+    m.save_last_info!
+    m.update_attributes!(:new_location => "北大二体", :new_football_ground_id=>nil)
+    assert m.has_attribute_been_modified?(:location)
+    assert m.has_attribute_been_modified?(:football_ground_id)
   end
 
 end

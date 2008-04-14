@@ -14,7 +14,7 @@ class CreateSidedMatches < ActiveRecord::Migration
       t.integer :half_match_length, :default=>0
       t.integer :rest_length, :default=>0
       t.integer :host_team_id
-      t.string :guest_team_name
+      t.string :guest_team_name, :limit=>15
       t.integer :host_team_goal
       t.integer :guest_team_goal
       t.integer :situation

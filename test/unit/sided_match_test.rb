@@ -190,21 +190,32 @@ class SidedMatchTest < ActiveSupport::TestCase
     assert !sided_matches(:one).can_be_destroyed_by?(users(:mike1))
   end
   
-#  def test_public_posts
-#    m = Match.find(1)
-#    assert_equal 2, m.posts.team(2).length
-#    assert_equal 1, m.posts.team(2, :limit=>1).length
-#    assert_equal 1, m.posts.team_public(2).length
-#  end
-#  
-#  def test_posts_dependency_nullify
-#    t = Match.find(1)
-#    l  = t.posts.team(t.host_team).size
-#    assert_not_equal 0, l
-#    assert_no_difference "t.host_team.posts.length" do
-#    assert_difference "t.host_team.posts.find(:all, :conditions=>['match_id is not null']).length", -l do
-#      t.destroy
-#    end
-#    end
-#  end
+  def test_public_posts
+    m = SidedMatch.find(1)
+    assert_equal 3, m.posts.length
+    assert_equal 1, m.posts.public(:limit=>1).length
+    assert_equal 2, m.posts.public.length
+  end
+  
+  def test_posts_dependency_nullify
+    t = SidedMatch.find(1)
+    l  = t.posts.size
+    assert_not_equal 0, l
+    assert_no_difference "t.team.posts.length" do
+    assert_difference "t.team.posts.find(:all, :conditions=>['sided_match_id is not null']).length", -l do
+      t.destroy
+    end
+    end
+  end
+  
+  def test_destroy
+    s = SidedMatchJoin.new
+    s.user = users(:saki)
+    s.match_id = 1
+    s.save!
+    
+    assert_difference 'SidedMatchJoin.count', -1 do
+      SidedMatch.find(1).destroy
+    end
+  end
 end

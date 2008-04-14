@@ -10,14 +10,7 @@
     )
   }%>
   <%
-    if (mi.new_football_ground_id.nil? && !mi.football_ground_id.nil?) ||
-        (!mi.new_football_ground_id.nil? && mi.football_ground_id.nil?)
-      is_modified = true
-    elsif !mi.new_football_ground_id.nil? && !mi.football_ground_id.nil?
-      is_modified = mi.has_attribute_been_modified?(:football_ground_id)
-    else
-      is_modified = mi.has_attribute_been_modified?(:location)
-    end
+    is_modified = mi.has_attribute_been_modified?(:location)
     cssklass = "class=\"conflict\""
   %>
   <tr>

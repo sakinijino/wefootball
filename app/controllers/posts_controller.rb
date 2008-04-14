@@ -4,7 +4,17 @@ class PostsController < ApplicationController
   before_filter :before_modify, :only=>[:edit, :update]
   
   def index
-    if (params[:team_id] && params[:match_id])
+    if (params[:sided_match_id])
+      @sided_match = SidedMatch.find(params[:sided_match_id])
+      @team = @sided_match.team
+      if (logged_in? && current_user.is_team_member_of?(@team.id))
+        @posts = @sided_match.posts
+      else
+        @posts = @sided_match.posts.public
+      end
+      @title = "讨论对阵 #{@sided_match.guest_team_name} 的比赛"
+      render :layout => "team_layout"
+    elsif (params[:team_id] && params[:match_id])
       @match = Match.find(params[:match_id])
       @team = Team.find(params[:team_id])
       if (logged_in? && current_user.is_team_member_of?(@team.id))
@@ -12,7 +22,7 @@ class PostsController < ApplicationController
       else
         @posts = @match.posts.team_public(@team)
       end
-      @title = "讨论对阵 #{(@match.host_team != @team ? @match.host_team : @match.guest_team).shortname} 的比赛" if @match
+      @title = "讨论对阵 #{(@match.host_team != @team ? @match.host_team : @match.guest_team).shortname} 的比赛"
       render :layout => "match_layout"
     elsif (params[:team_id])
       @team = Team.find(params[:team_id])
@@ -48,9 +58,9 @@ class PostsController < ApplicationController
     @team = @post.team
     @training = @post.training
     @match = @post.match
+    @sided_match = @post.sided_match
     @related_posts = @team.posts.find(:all, :limit => 20) - [@post]
-    
-    @match = @post.match
+
     if @match
       render :layout => "match_layout"
     else
@@ -82,6 +92,7 @@ class PostsController < ApplicationController
     @post.team_id = @tid
     @post.training = @training if @training
     @post.match = @match if @match
+    @post.sided_match = @sided_match if @sided_match
     @post.user = current_user
     if @post.save
       redirect_to(@post)
@@ -115,22 +126,24 @@ class PostsController < ApplicationController
 
 protected
   def before_post
-    if (params[:team_id] && params[:match_id])
+    if (params[:sided_match_id])
+      @sided_match = SidedMatch.find(params[:sided_match_id])
+      @team = @sided_match.team
+    elsif (params[:team_id] && params[:match_id])
       @team = Team.find(params[:team_id])
       @match = Match.find(params[:match_id])
-      @tid = @team.id
     elsif (params[:team_id])
       @team = Team.find(params[:team_id])
-      @tid = @team.id
     elsif (params[:training_id])
       @training = Training.find(params[:training_id])
       @team = @training.team
-      @tid = @training.team_id
     end
+    @tid = @team.id
     fake_params_redirect if !current_user.is_team_member_of?(@tid)
     @title = "在#{@team.shortname}的讨论区中发言" if @team
     @title = "讨论#{@team.shortname} #{@training.start_time.strftime('%m.%d')}的训练" if @training
     @title = "讨论对阵 #{(@match.host_team != @team ? @match.host_team : @match.guest_team).shortname} 的比赛" if @match
+    @title = "讨论对阵 #{@sided_match.guest_team_name} 的比赛" if @sided_match
   end
   
   def before_modify

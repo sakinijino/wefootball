@@ -225,14 +225,34 @@ class UserTest < Test::Unit::TestCase
   end
   
   def test_destroy
-    assert_difference 'Position.count', -3 do
-    assert_difference 'UserImage.count', -1 do
-    assert_difference 'Message.count', -5 do
-    assert_difference 'TrainingJoin.count', -4 do
-    assert_difference 'UserTeam.count', -3 do
-    assert_difference 'TeamJoinRequest.count', -2 do
-    assert_difference 'Post.count', -8 do
+    p = PlayJoin.new
+    p.user = users(:saki)
+    p.play_id = 1
+    p.save!
+    m = MatchJoin.new
+    m.user = users(:saki)
+    m.team_id = 1
+    m.match_id = 1
+    m.save!
+    s = SidedMatchJoin.new
+    s.user = users(:saki)
+    s.match_id = 1
+    s.save!
+    
+    assert_difference 'Position.count', -(Position.count(:conditions => ['user_id = ?', users(:saki)])) do
+    assert_difference 'UserImage.count', -(UserImage.find_all_by_user_id(users(:saki)).size) do
+    assert_difference 'Message.count', -(Message.count(:conditions => ['sender_id = ? or receiver_id = ?', users(:saki), users(:saki)])) do
+    assert_difference 'TrainingJoin.count', -(TrainingJoin.find_all_by_user_id(users(:saki)).size) do
+    assert_difference 'PlayJoin.count', -(PlayJoin.find_all_by_user_id(users(:saki)).size) do
+    assert_difference 'MatchJoin.count', -(MatchJoin.find_all_by_user_id(users(:saki)).size) do
+    assert_difference 'SidedMatchJoin.count', -(SidedMatchJoin.find_all_by_user_id(users(:saki)).size) do
+    assert_difference 'UserTeam.count', -(UserTeam.find_all_by_user_id(users(:saki)).size) do
+    assert_difference 'TeamJoinRequest.count', -(TeamJoinRequest.find_all_by_user_id(users(:saki)).size) do
+    assert_difference 'Post.count', -(Post.find_all_by_user_id(users(:saki)).size) do
       users(:saki).destroy
+    end
+    end
+    end
     end
     end
     end

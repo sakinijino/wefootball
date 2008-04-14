@@ -4,11 +4,17 @@ class PostsControllerTest < ActionController::TestCase
   def test_should_get_team_index
     get :index, :team_id => 1
     assert_response :success
-    assert_equal 3, assigns(:posts).length
+    assert_equal 5, assigns(:posts).length
   end
   
   def test_should_get_training_index
     get :index, :training_id => 1
+    assert_response :success
+    assert_equal 2, assigns(:posts).length
+  end
+  
+  def test_should_get_sided_match_index
+    get :index, :sided_match_id => 1
     assert_response :success
     assert_equal 2, assigns(:posts).length
   end
@@ -23,12 +29,19 @@ class PostsControllerTest < ActionController::TestCase
     login_as :saki
     get :index, :team_id => 1
     assert_response :success
-    assert_equal 6, assigns(:posts).length
+    assert_equal 9, assigns(:posts).length
   end
   
   def test_should_get_training_index_private
     login_as :saki
     get :index, :training_id => 1
+    assert_response :success
+    assert_equal 3, assigns(:posts).length
+  end
+  
+  def test_should_get_sided_match_index_private
+    login_as :saki
+    get :index, :sided_match_id => 1
     assert_response :success
     assert_equal 3, assigns(:posts).length
   end
@@ -70,9 +83,9 @@ class PostsControllerTest < ActionController::TestCase
   
   def test_get_new_noauth
     login_as :aaron
-    get :new, :team => 1
+    get :new, :team_id => teams(:inter).id
     assert_redirected_to '/'
-    get :new, :training => 1
+    get :new, :training_id => 1
     assert_redirected_to '/'
   end
   
@@ -88,6 +101,16 @@ class PostsControllerTest < ActionController::TestCase
     assert_difference('Training.find(trainings(:training1).id).team.posts.length') do
     assert_difference('Training.find(trainings(:training1).id).posts.length') do
       post :create, :training_id=>trainings(:training1).id, :post => { :title => 'Test', :content => '123456'}
+    end
+    end
+    end
+    assert_equal users(:quentin).id, assigns(:post).user_id
+    assert_redirected_to post_path(assigns(:post))
+    
+    assert_difference('Post.count') do
+    assert_difference('SidedMatch.find(sided_matches(:one).id).team.posts.length') do
+    assert_difference('SidedMatch.find(sided_matches(:one).id).posts.length') do
+      post :create, :sided_match_id=>sided_matches(:one).id, :post => { :title => 'Test', :content => '123456'}
     end
     end
     end

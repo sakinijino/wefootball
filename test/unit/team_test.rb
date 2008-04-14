@@ -21,8 +21,8 @@ class TeamTest < ActiveSupport::TestCase
   
   def test_public_posts
     t = Team.find(1)
-    assert_equal 6, t.posts.length
-    assert_equal 3, t.posts.public.length
+    assert_equal 9, t.posts.length
+    assert_equal 5, t.posts.public.length
     assert_equal 2, t.posts.public(:limit=>2).length
   end
   
@@ -109,13 +109,22 @@ class TeamTest < ActiveSupport::TestCase
   end
   
   def test_destroy
-    assert_difference 'TeamImage.count', -1 do
-    assert_difference 'Training.count', -4 do
-    assert_difference 'UserTeam.count', -2 do
-    assert_difference 'TeamJoinRequest.count', -4 do
-    assert_difference 'Post.count', -6 do
+    ms = Match.count :conditions => ['host_team_id = ? or guest_team_id = ?', teams(:inter).id,  teams(:inter).id]
+    sms = SidedMatch.find_all_by_host_team_id(teams(:inter)).size
+    assert_not_equal 0, ms
+    assert_not_equal 0, sms
+    
+    assert_difference 'TeamImage.count', -(TeamImage.find_all_by_team_id(teams(:inter)).size) do
+    assert_difference 'Training.count', -(Training.find_all_by_team_id(teams(:inter)).size) do
+    assert_difference 'Match.count', -ms do
+    assert_difference 'SidedMatch.count', -sms do
+    assert_difference 'UserTeam.count', -(UserTeam.find_all_by_team_id(teams(:inter)).size) do
+    assert_difference 'TeamJoinRequest.count', -(TeamJoinRequest.find_all_by_team_id(teams(:inter)).size) do
+    assert_difference 'Post.count', -(Post.find_all_by_team_id(teams(:inter)).size) do
       inter = teams(:inter)
       inter.destroy
+    end
+    end
     end
     end
     end

@@ -261,4 +261,16 @@ class MatchTest < ActiveSupport::TestCase
     end
     end
   end
+  
+  def test_destroy
+    m = MatchJoin.new
+    m.user = users(:saki)
+    m.team_id = 1
+    m.match_id = 1
+    m.save!
+    
+    assert_difference 'MatchJoin.count', -1 do
+      Match.find(1).destroy
+    end
+  end
 end

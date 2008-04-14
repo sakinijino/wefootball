@@ -132,7 +132,7 @@
 
 <div id="right_content">
   <%if @recent_activity != nil%>
-    <div class="sect" style="margin-bottom:30px">
+    <div class="sect">
       <h2><%=smart_nickname @user%>最近一次活动</h2>
       <div class="activities">
         <%=date_div_link @recent_activity.start_time, @user%>

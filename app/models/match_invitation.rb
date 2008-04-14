@@ -46,7 +46,9 @@ class MatchInvitation < ActiveRecord::Base
     self.new_match_type = 1 if self.new_match_type.nil?
     self.new_size = 5 if self.new_size.nil?
     self.new_win_rule = 1 if self.new_win_rule.nil?
-    
+    self.new_start_time = Time.now.tomorrow if self.new_start_time.nil?
+    self.new_half_match_length = 45 if self.new_half_match_length.nil?
+    self.new_rest_length= 15 if self.new_rest_length.nil?
     self.new_location = self.new_football_ground.name if self.new_football_ground!=nil    
     
     attribute_slice(:new_description, MAX_DESCRIPTION_LENGTH)
@@ -62,6 +64,10 @@ class MatchInvitation < ActiveRecord::Base
     end
   end
   
+  def is_a_new_invitation?
+    self.created_at == self.updated_at
+  end
+  
   def has_been_modified?(params)
     match_inv = MatchInvitation.new(params)
     self.attributes.each do |a|
@@ -75,6 +81,18 @@ class MatchInvitation < ActiveRecord::Base
   end
 
   def has_attribute_been_modified?(attribute_name)
+    if attribute_name == :football_ground_id || attribute_name == :location
+      if football_ground_id.nil? && location.nil?
+        return false
+      elsif (new_football_ground_id.nil? && !football_ground_id.nil?) ||
+        (!new_football_ground_id.nil? && football_ground_id.nil?)
+        return true
+      elsif !new_football_ground_id.nil? && !football_ground_id.nil?
+        return new_football_ground_id != football_ground_id
+      else
+        return new_location != location
+      end
+    end
     return (!self[attribute_name].nil?) &&
            (self[attribute_name] != self[("new_"+attribute_name.to_s).to_sym])
   end

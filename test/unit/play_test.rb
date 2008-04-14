@@ -70,4 +70,14 @@ class PlayTest < ActiveSupport::TestCase
     assert_equal true, plays(:play1).can_be_unjoined_by?(users(:mike1)) #已加入，可以退出
   end
 
+  def test_destroy
+    p = PlayJoin.new
+    p.user = users(:saki)
+    p.play_id = 1
+    p.save!
+    
+    assert_difference 'PlayJoin.count', -1 do
+      Play.find(1).destroy
+    end
+  end
 end

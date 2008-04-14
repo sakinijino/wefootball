@@ -5,6 +5,8 @@
         >
     <% if @training && current_user.is_team_member_of?(@training.team)%>
         <%= link_to '针对本次训练发言', new_training_post_path(@training) %>
+    <% elsif @sided_match && current_user.is_team_member_of?(@sided_match.team)%>
+        <%= link_to '针对本场比赛发言', new_sided_match_post_path(@sided_match) %>
     <% elsif @match && current_user.is_team_member_of?(@team)%>
         <%= link_to '针对本场比赛发言', new_match_team_post_path(@match, @team) %>
     <%else%>
@@ -19,13 +21,19 @@
     </li>
   <%end%>
   
+  <% if @sided_match %>
+    <li <%= selected_class_sidebar_menu_item(:action=>'index')%>>
+    > <%= link_to '本场比赛的讨论', sided_match_posts_path(@sided_match) %>
+    </li>
+  <%end%>
+  
   <% if @match %>
     <li <%= selected_class_sidebar_menu_item(:action=>'index')%>>
     > <%= link_to '本场比赛的讨论', match_team_posts_path(@match, @team) %>
     </li>
   <%end%>
   
-  <li <%= selected_class_sidebar_menu_item(:action=>'index', :boolean=>!@match && !@training)%>>
+  <li <%= selected_class_sidebar_menu_item(:action=>'index', :boolean=>!@match && !@training && !@sided_match)%>>
   > <%= link_to '队伍讨论区', team_posts_path(@team) %>
   </li>
     
@@ -34,13 +42,13 @@
   <li>
     <% if @training %>
       > <%= link_to '返回训练详情', training_path(@training) %>
-  </li>
-  <li>
+    <%elsif @sided_match%>
+      > <%= link_to '返回比赛详情', sided_match_path(@sided_match) %>
     <%elsif @match%>
       > <%= link_to '返回比赛详情', match_path(@match) %>
+    <%end%>
   </li>
   <li>
-    <%end%>
     > <%= link_to '返回队伍首页', team_view_path(@team) %>
   </li>
 </ul>

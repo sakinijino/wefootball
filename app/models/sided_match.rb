@@ -9,7 +9,8 @@ class SidedMatch < ActiveRecord::Base
   WIN_RULES = [1,2,3]  
   SITUATIONS = (1..8).to_a  
   
-  belongs_to :football_ground    
+  belongs_to :football_ground
+  belongs_to :team, :foreign_key => 'host_team_id'
   
   has_many :sided_match_joins,
             :dependent => :destroy,
@@ -23,6 +24,12 @@ class SidedMatch < ActiveRecord::Base
       find :all, :conditions => ['status = ?', TrainingJoin::UNDETERMINED]
     end
   end
+  
+  has_many :posts, :dependent => :nullify, :order => "updated_at desc" do
+    def public(options={})
+      find :all, {:conditions => ['is_private = ?', false]}.merge(options)
+    end
+  end
             
   attr_protected :host_team_id
   
@@ -33,7 +40,7 @@ class SidedMatch < ActiveRecord::Base
   
   validates_presence_of     :guest_team_name, :message => "请填写对方球队名称"
   
-  validates_length_of        :guest_team_name,    :maximum => 50
+  validates_length_of        :guest_team_name,    :maximum => 15
   validates_inclusion_of   :situation, :in => SITUATIONS, :allow_nil=>true  
   validates_numericality_of :host_team_goal, :guest_team_goal, :allow_nil=>true
   
