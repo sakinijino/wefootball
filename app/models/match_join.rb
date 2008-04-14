@@ -10,7 +10,7 @@ class MatchJoin < ActiveRecord::Base
   belongs_to :user
   
   validates_inclusion_of   :position, :in => Team::FORMATION_POSITIONS, :allow_nil => true
-  
+  validates_numericality_of :goal
   attr_accessible :goal, :cards
   
   def before_validation
@@ -19,6 +19,7 @@ class MatchJoin < ActiveRecord::Base
       ut = UserTeam.find_by_user_id_and_team_id(self.user_id, self.team_id)
       self.position = nil if ut.nil? || !ut.is_player
     end
+    self.goal=0 if self.goal.blank?
   end
   
   def self.create_joins(match)

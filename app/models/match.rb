@@ -39,7 +39,7 @@ class Match < ActiveRecord::Base
   belongs_to :host_team, :class_name=>"Team", :foreign_key=>"host_team_id"
   belongs_to :guest_team, :class_name=>"Team", :foreign_key=>"guest_team_id"
   
-  def before_save
+  def before_save   
     self.has_conflict = judge_conflict     
     self.end_time = self.start_time.since(60 * self.full_match_length)
   end
@@ -50,6 +50,12 @@ class Match < ActiveRecord::Base
   end
   
   def before_validation
+    if !(self.guest_team_goal_by_host.blank? || self.host_team_goal_by_host.blank?)
+      self.situation_by_host = Match.calculate_situation(self.guest_team_goal_by_host,self.host_team_goal_by_host )
+    end
+    if !(self.guest_team_goal_by_guest.blank? || self.host_team_goal_by_guest.blank?)
+      self.situation_by_guest = Match.calculate_situation(self.guest_team_goal_by_guest,self.host_team_goal_by_guest )
+    end     
     self.description = "" if self.description.nil?
     self.size = 11 if self.size.nil?
     self.match_type = 1 if self.match_type.nil?
@@ -148,6 +154,19 @@ class Match < ActiveRecord::Base
   
   def can_be_destroyed_by?(user)
     is_before_match? && self.is_team_admin_of?(user)
+  end
+
+  def judge_conflict
+    if self.host_team_goal_by_host && self.host_team_goal_by_guest && (self.host_team_goal_by_host!=self.host_team_goal_by_guest)    
+      return true
+    end
+    if self.guest_team_goal_by_host && self.guest_team_goal_by_guest && (self.guest_team_goal_by_host!=self.guest_team_goal_by_guest)    
+      return true
+    end      
+    if self.situation_by_host && self.situation_by_guest && (self.situation_by_host!=self.situation_by_guest)       
+      return true
+    end
+    return false
   end  
 
   protected  
@@ -187,16 +206,4 @@ class Match < ActiveRecord::Base
     end
   end
   
-  def judge_conflict
-    if self.host_team_goal_by_host && self.host_team_goal_by_guest && (self.host_team_goal_by_host!=self.host_team_goal_by_guest)
-      return true
-    end
-    if self.guest_team_goal_by_host && self.guest_team_goal_by_guest && (self.guest_team_goal_by_host!=self.guest_team_goal_by_guest)
-      return true
-    end      
-    if self.situation_by_host && self.situation_by_guest && (self.situation_by_host!=self.situation_by_guest)
-      return true
-    end
-    return false
-  end
 end

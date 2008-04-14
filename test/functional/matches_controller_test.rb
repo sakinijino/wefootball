@@ -208,7 +208,7 @@ class MatchesControllerTest < ActionController::TestCase
     assert_equal nil, match1.guest_team_goal_by_host
     assert_equal nil, match1.host_team_goal_by_host
     assert_equal nil, match1.guest_team_goal_by_guest
-    assert_equal nil, match1.guest_team_goal_by_guest
+    assert_equal nil, match1.host_team_goal_by_guest
     assert_equal nil, match1.situation_by_host
 
     mj1 = MatchJoin.find_by_user_id_and_team_id_and_match_id(u1.id,t1.id,match1.id)
@@ -217,16 +217,16 @@ class MatchesControllerTest < ActionController::TestCase
                                               :guest_team_goal_by_host => 2,
                                               :host_team_goal_by_guest => 2,
                                               :guest_team_goal_by_guest => 2,
-                                              :situation_by_host => 0
+                                              :situation_by_host => 1
                                               },
                                     :mj => {mj1.id=>{:goal=>1,:cards=>2},
                                             mj2.id=>{:goal=>1,:cards=>3}
                                            }
-    new_match1 = Match.find(match1)                              
+    new_match1 = Match.find(match1)
     assert_equal 2, new_match1.guest_team_goal_by_host
     assert_equal 2, new_match1.host_team_goal_by_host
     assert_equal nil, new_match1.guest_team_goal_by_guest
-    assert_equal nil, new_match1.guest_team_goal_by_guest
+    assert_equal nil, new_match1.host_team_goal_by_guest
     assert_not_equal 0, new_match1.situation_by_host
     assert_equal Match.calculate_situation(new_match1.host_team_goal_by_host,new_match1.guest_team_goal_by_host), new_match1.situation_by_host
     new_mj1 = MatchJoin.find_by_user_id_and_team_id_and_match_id(u1.id,t1.id,match1.id)
@@ -275,7 +275,7 @@ class MatchesControllerTest < ActionController::TestCase
     assert_equal nil, match1.guest_team_goal_by_guest
     assert_equal nil, match1.host_team_goal_by_guest
     assert_equal nil, match1.guest_team_goal_by_host
-    assert_equal nil, match1.guest_team_goal_by_host
+    assert_equal nil, match1.host_team_goal_by_host
     assert_equal nil, match1.situation_by_host
 
     mj1 = MatchJoin.find_by_user_id_and_team_id_and_match_id(u1.id,t1.id,match1.id)
@@ -284,7 +284,7 @@ class MatchesControllerTest < ActionController::TestCase
                                               :guest_team_goal_by_guest => 2,
                                               :host_team_goal_by_host => 2,
                                               :guest_team_goal_by_host => 2,
-                                              :situation_by_guest => 0
+                                              :situation_by_guest => 1
                                               },
                                     :mj => {mj1.id=>{:goal=>1,:cards=>2},
                                             mj2.id=>{:goal=>1,:cards=>3}
@@ -293,7 +293,7 @@ class MatchesControllerTest < ActionController::TestCase
     assert_equal 2, new_match1.guest_team_goal_by_guest
     assert_equal 2, new_match1.host_team_goal_by_guest
     assert_equal nil, new_match1.guest_team_goal_by_host
-    assert_equal nil, new_match1.guest_team_goal_by_host
+    assert_equal nil, new_match1.host_team_goal_by_host
     assert_not_equal 0, new_match1.situation_by_guest
     assert_equal Match.calculate_situation(new_match1.host_team_goal_by_guest,new_match1.guest_team_goal_by_guest), new_match1.situation_by_guest
     new_mj1 = MatchJoin.find_by_user_id_and_team_id_and_match_id(u1.id,t1.id,match1.id)
@@ -311,7 +311,173 @@ class MatchesControllerTest < ActionController::TestCase
     new_match1 = Match.find(match1)                              
     assert_equal 5, new_match1.situation_by_guest
     assert_redirected_to match_path(new_match1)
-  end 
+  end
+
+  def test_check_host_team_goals_in_update
+    login_as :saki #准备数据,这里为了清晰,不使用夹具数据
+    u1 = users(:saki)
+    u2 = users(:mike1)
+    t1 = Team.create!(:name=>"test1",:shortname=>"t1")
+    t2 = Team.create!(:name=>"test2",:shortname=>"t2")
+    ut1 = UserTeam.new
+    ut1.user_id = u1.id
+    ut1.team_id = t1.id
+    ut1.is_admin = true
+    ut1.is_player = true
+    ut1.save!
+    ut2 = UserTeam.new
+    ut2.user_id = u2.id
+    ut2.team_id = t1.id
+    ut2.is_player = true
+    ut2.save!      
+    
+    match1 = Match.new   
+    match1.host_team_id = t1.id
+    match1.guest_team_id = t2.id
+    match1.start_time = 1.days.ago
+    match1.location = '一体'
+    match1.save!
+    MatchJoin.create_joins(match1)
+
+    assert_equal nil, match1.guest_team_goal_by_host
+    assert_equal nil, match1.host_team_goal_by_host
+
+    mj1 = MatchJoin.find_by_user_id_and_team_id_and_match_id(u1.id,t1.id,match1.id)
+    mj2 = MatchJoin.find_by_user_id_and_team_id_and_match_id(u2.id,t1.id,match1.id)
+    assert_equal 0, mj1.goal
+    assert_equal 0, mj2.goal    
+    put :update, :id => match1.id, :team_id=>t1.id, :match => {
+                                              :host_team_goal_by_host => 2,
+                                              :guest_team_goal_by_host => 2,
+                                              },
+                                    :mj => {mj1.id=>{:goal=>1},
+                                            mj2.id=>{:goal=>1}
+                                           }
+    new_match1 = Match.find(match1)                              
+    assert_equal 2, new_match1.guest_team_goal_by_host
+    assert_equal 2, new_match1.guest_team_goal_by_host
+    new_mj1 = MatchJoin.find_by_user_id_and_team_id_and_match_id(u1.id,t1.id,match1.id)
+    new_mj2 = MatchJoin.find_by_user_id_and_team_id_and_match_id(u2.id,t1.id,match1.id)     
+    assert_equal 1, new_mj1.goal   
+    assert_equal 1, new_mj2.goal
+    assert_redirected_to match_path(new_match1)
+
+    put :update, :id => match1.id, :team_id=>t1.id, :match => {
+                                              :host_team_goal_by_host => 2,
+                                              :guest_team_goal_by_host => 2,
+                                              },
+                                    :mj => {mj1.id=>{:goal=>1},
+                                            mj2.id=>{}
+                                           }
+    new_match1 = Match.find(match1)                              
+    assert_equal 2, new_match1.guest_team_goal_by_host
+    assert_equal 2, new_match1.guest_team_goal_by_host
+    new_mj1 = MatchJoin.find_by_user_id_and_team_id_and_match_id(u1.id,t1.id,match1.id)
+    new_mj2 = MatchJoin.find_by_user_id_and_team_id_and_match_id(u2.id,t1.id,match1.id)     
+    assert_equal 1, new_mj1.goal   
+    assert_equal 0, new_mj2.goal
+    assert_redirected_to match_path(new_match1)   
+
+    put :update, :id => match1.id, :team_id=>t1.id, :match => {
+                                              :host_team_goal_by_host => 2,
+                                              :guest_team_goal_by_host => 2,
+                                              },
+                                    :mj => {mj1.id=>{:goal=>2},
+                                            mj2.id=>{:goal=>1}
+                                           }
+    new_match1 = Match.find(match1)                              
+    assert_equal 2, new_match1.guest_team_goal_by_host
+    assert_equal 2, new_match1.guest_team_goal_by_host
+    new_mj1 = MatchJoin.find_by_user_id_and_team_id_and_match_id(u1.id,t1.id,match1.id)
+    new_mj2 = MatchJoin.find_by_user_id_and_team_id_and_match_id(u2.id,t1.id,match1.id)     
+    assert_equal 1, new_mj1.goal   
+    assert_equal 0, new_mj2.goal
+    assert_equal "队员入球总数不能超过本队入球数", assigns(:match).errors['base']
+    assert_template 'edit'       
+  end
+  
+    def test_check_guest_team_goals_in_update
+    login_as :saki #准备数据,这里为了清晰,不使用夹具数据
+    u1 = users(:saki)
+    u2 = users(:mike1)
+    t1 = Team.create!(:name=>"test1",:shortname=>"t1")
+    t2 = Team.create!(:name=>"test2",:shortname=>"t2")
+    ut1 = UserTeam.new
+    ut1.user_id = u1.id
+    ut1.team_id = t1.id
+    ut1.is_admin = true
+    ut1.is_player = true
+    ut1.save!
+    ut2 = UserTeam.new
+    ut2.user_id = u2.id
+    ut2.team_id = t1.id
+    ut2.is_player = true
+    ut2.save!      
+    
+    match1 = Match.new   
+    match1.host_team_id = t2.id
+    match1.guest_team_id = t1.id
+    match1.start_time = 1.days.ago
+    match1.location = '一体'
+    match1.save!
+    MatchJoin.create_joins(match1)
+
+    assert_equal nil, match1.guest_team_goal_by_guest
+    assert_equal nil, match1.host_team_goal_by_guest
+
+    mj1 = MatchJoin.find_by_user_id_and_team_id_and_match_id(u1.id,t1.id,match1.id)
+    mj2 = MatchJoin.find_by_user_id_and_team_id_and_match_id(u2.id,t1.id,match1.id)
+    assert_equal 0, mj1.goal
+    assert_equal 0, mj2.goal    
+    put :update, :id => match1.id, :team_id=>t1.id, :match => {
+                                              :host_team_goal_by_guest => 2,
+                                              :guest_team_goal_by_guest => 2,
+                                              },
+                                    :mj => {mj1.id=>{:goal=>1},
+                                            mj2.id=>{:goal=>1}
+                                           }
+    new_match1 = Match.find(match1)                              
+    assert_equal 2, new_match1.guest_team_goal_by_guest
+    assert_equal 2, new_match1.guest_team_goal_by_guest
+    new_mj1 = MatchJoin.find_by_user_id_and_team_id_and_match_id(u1.id,t1.id,match1.id)
+    new_mj2 = MatchJoin.find_by_user_id_and_team_id_and_match_id(u2.id,t1.id,match1.id)     
+    assert_equal 1, new_mj1.goal   
+    assert_equal 1, new_mj2.goal
+    assert_redirected_to match_path(new_match1)
+
+    put :update, :id => match1.id, :team_id=>t1.id, :match => {
+                                              :host_team_goal_by_guest => 2,
+                                              :guest_team_goal_by_guest => 2,
+                                              },
+                                    :mj => {mj1.id=>{:goal=>1},
+                                            mj2.id=>{}
+                                           }
+    new_match1 = Match.find(match1)                              
+    assert_equal 2, new_match1.guest_team_goal_by_guest
+    assert_equal 2, new_match1.guest_team_goal_by_guest
+    new_mj1 = MatchJoin.find_by_user_id_and_team_id_and_match_id(u1.id,t1.id,match1.id)
+    new_mj2 = MatchJoin.find_by_user_id_and_team_id_and_match_id(u2.id,t1.id,match1.id)     
+    assert_equal 1, new_mj1.goal   
+    assert_equal 0, new_mj2.goal
+    assert_redirected_to match_path(new_match1)   
+
+    put :update, :id => match1.id, :team_id=>t1.id, :match => {
+                                              :host_team_goal_by_guest => 2,
+                                              :guest_team_goal_by_guest => 2,
+                                              },
+                                    :mj => {mj1.id=>{:goal=>2},
+                                            mj2.id=>{:goal=>1}
+                                           }
+    new_match1 = Match.find(match1)                              
+    assert_equal 2, new_match1.guest_team_goal_by_guest
+    assert_equal 2, new_match1.guest_team_goal_by_guest
+    new_mj1 = MatchJoin.find_by_user_id_and_team_id_and_match_id(u1.id,t1.id,match1.id)
+    new_mj2 = MatchJoin.find_by_user_id_and_team_id_and_match_id(u2.id,t1.id,match1.id)     
+    assert_equal 1, new_mj1.goal   
+    assert_equal 0, new_mj2.goal
+    assert_equal "队员入球总数不能超过本队入球数", assigns(:match).errors['base']
+    assert_template 'edit'       
+  end
   
   def test_should_not_update
     login_as :saki

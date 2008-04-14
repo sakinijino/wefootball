@@ -89,23 +89,15 @@ class MatchesController < ApplicationController
     if @editing_by_host_team
       @match.guest_team_goal_by_host = params[:match][:guest_team_goal_by_host]
       @match.host_team_goal_by_host = params[:match][:host_team_goal_by_host]      
-      if(params[:match][:guest_team_goal_by_host].blank? && params[:match][:host_team_goal_by_host].blank?)
-        @match.situation_by_host = params[:match][:situation_by_host]
-      else
-        @match.situation_by_host = Match.calculate_situation(params[:match][:host_team_goal_by_host],params[:match][:guest_team_goal_by_host] )
-      end
+      @match.situation_by_host = params[:match][:situation_by_host]
     else
       @match.host_team_goal_by_guest = params[:match][:host_team_goal_by_guest]      
       @match.guest_team_goal_by_guest = params[:match][:guest_team_goal_by_guest]
-      if(params[:match][:guest_team_goal_by_guest].blank? && params[:match][:host_team_goal_by_guest].blank?)
-        @match.situation_by_guest = params[:match][:situation_by_guest]
-      else
-        @match.situation_by_guest = Match.calculate_situation(params[:match][:host_team_goal_by_guest] ,params[:match][:guest_team_goal_by_guest])
-      end     
+      @match.situation_by_guest = params[:match][:situation_by_guest]  
     end
     
-    if ((@editing_by_host_team && (params[:match][:host_team_goal_by_host].to_i<filled_goal_sum)) ||
-          (@editing_by_guest_team && (params[:match][:host_team_goal_by_guest].to_i<filled_goal_sum)))
+    if ((@editing_by_host_team && !params[:match][:host_team_goal_by_host].blank? && (params[:match][:host_team_goal_by_host].to_i<filled_goal_sum)) ||
+          (!@editing_by_host_team && !params[:match][:guest_team_goal_by_guest].blank? && (params[:match][:guest_team_goal_by_guest].to_i<filled_goal_sum)))
       @match.errors.add_to_base("队员入球总数不能超过本队入球数")
       @title = "填写赛果"
       render :action => "edit", :layout=>'match_layout'

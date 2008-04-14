@@ -261,7 +261,7 @@ class MatchTest < ActiveSupport::TestCase
     end
     end
   end
-  
+
   def test_destroy
     m = MatchJoin.new
     m.user = users(:saki)
@@ -272,5 +272,113 @@ class MatchTest < ActiveSupport::TestCase
     assert_difference 'MatchJoin.count', -1 do
       Match.find(1).destroy
     end
+  end
+  
+  def test_judge_conflict
+    
+    #场景1:主队填了单边比分,客队填了双边比分,此时只比较双方的交集
+    m = Match.new
+    m.location = 'test'
+    m.host_team_goal_by_host = 1
+    m.host_team_goal_by_guest = 1
+    m.guest_team_goal_by_guest = 2
+    m.save!
+    assert_equal false, m.has_conflict
+    
+    m = Match.new
+    m.location = 'test'
+    m.guest_team_goal_by_host = 2
+    m.host_team_goal_by_guest = 1
+    m.guest_team_goal_by_guest = 2
+    m.save!    
+    assert_equal false, m.has_conflict
+    
+    m = Match.new
+    m.location = 'test'
+    m.host_team_goal_by_host = 1
+    m.host_team_goal_by_guest = 2
+    m.guest_team_goal_by_guest = 1
+    m.save!    
+    assert_equal true, m.has_conflict 
+    
+    m = Match.new
+    m.location = 'test'
+    m.guest_team_goal_by_host = 1
+    m.host_team_goal_by_guest = 2
+    m.guest_team_goal_by_guest = 2     
+    m.save!    
+    assert_equal true, m.has_conflict  
+    
+    #场景2:主队填写了单边比分,客队填写了赛况,则一定不会产生冲突
+    situation_index = 1
+    while situation_index <= 8
+      m = Match.new
+      m.location = 'test'
+      m.host_team_goal_by_host = 1
+      m.situation_by_guest = situation_index
+      m.save!
+      assert_equal false, m.has_conflict
+      situation_index = situation_index + 1
+    end
+    
+    #场景3:主队和客队都填写了双边比分,则可能产生冲突
+    m = Match.new
+    m.location = 'test'
+    m.host_team_goal_by_host = 1
+    m.guest_team_goal_by_host = 2    
+    m.host_team_goal_by_guest = 1
+    m.guest_team_goal_by_guest = 2
+    m.save!
+    assert_equal false, m.has_conflict
+    
+    m = Match.new
+    m.location = 'test'
+    m.host_team_goal_by_host = 1
+    m.guest_team_goal_by_host = 2    
+    m.host_team_goal_by_guest = 2
+    m.guest_team_goal_by_guest = 2
+    m.save!    
+    assert_equal true, m.has_conflict
+    
+    m = Match.new
+    m.location = 'test'
+    m.host_team_goal_by_host = 1
+    m.guest_team_goal_by_host = 2    
+    m.host_team_goal_by_guest = 3
+    m.guest_team_goal_by_guest = 4     
+    m.save!    
+    assert_equal true, m.has_conflict     
+    
+    #场景3:主队和客队都填写了赛况,则可能产生冲突
+    m = Match.new
+    m.location = 'test'
+    m.situation_by_host = 1
+    m.situation_by_guest = 1       
+    m.save!    
+    assert_equal false, m.has_conflict
+    
+    m = Match.new
+    m.location = 'test'
+    m.situation_by_host = 1
+    m.situation_by_guest = 2       
+    m.save!    
+    assert_equal true, m.has_conflict    
+    
+    #场景5:主队填写了双边比分,客队填写了赛况,则可能产生冲突
+    m = Match.new
+    m.location = 'test'
+    m.host_team_goal_by_host = 1
+    m.guest_team_goal_by_host = 1
+    m.situation_by_guest = 5       
+    m.save!    
+    assert_equal false, m.has_conflict
+    
+    m = Match.new
+    m.location = 'test'
+    m.host_team_goal_by_host = 1
+    m.guest_team_goal_by_host = 1
+    m.situation_by_guest = 4
+    m.save!    
+    assert_equal true, m.has_conflict     
   end
 end
