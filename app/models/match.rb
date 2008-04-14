@@ -38,17 +38,19 @@ class Match < ActiveRecord::Base
   belongs_to :guest_team, :class_name=>"Team", :foreign_key=>"guest_team_id"
   
   def before_save
+    self.has_conflict = judge_conflict    
     self.half_match_length = 0 if self.half_match_length.nil?
     self.rest_length = 0 if self.rest_length.nil?    
     self.end_time = self.start_time.since(60 * self.full_match_length)
   end
+
   
   def full_match_length
     2*self.half_match_length + self.rest_length
   end
   
   def before_validation
-    attribute_slice(:description, MAX_DESCRIPTION_LENGTH)
+    attribute_slice(:description, MAX_DESCRIPTION_LENGTH)    
     if self.size.nil?
       self.size = 11
     end   
@@ -66,6 +68,7 @@ class Match < ActiveRecord::Base
     match = Match.new
     match.start_time = invitation.new_start_time
     match.location = invitation.new_location
+    match.football_ground_id = invitation.new_football_ground_id
     match.match_type = invitation.new_match_type
     match.size = invitation.new_size
     match.has_judge = invitation.new_has_judge
@@ -177,5 +180,18 @@ class Match < ActiveRecord::Base
       return 7
     else return 8
     end
+  end
+  
+  def judge_conflict
+    if self.host_team_goal_by_host && self.host_team_goal_by_guest && (self.host_team_goal_by_host!=self.host_team_goal_by_guest)
+      return true
+    end
+    if self.guest_team_goal_by_host && self.guest_team_goal_by_guest && (self.guest_team_goal_by_host!=self.guest_team_goal_by_guest)
+      return true
+    end      
+    if self.situation_by_host && self.situation_by_guest && (self.situation_by_host!=self.situation_by_guest)
+      return true
+    end
+    return false
   end
 end

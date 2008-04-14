@@ -12,7 +12,7 @@
   <div class="sect">
     <h2><%=h @team.shortname%>的信息</h2>
 
-    <%if @team_join_request != nil || @team_join_invitation != nil || @team_join_request_count > 0 %>
+    <%if @team_join_request != nil || @team_join_invitation != nil || @team_join_request_count > 0 || @match_invitation_count > 0%>
     <div class="notification">
       <%if @team_join_request != nil%>
         <span>等待确认<%=h @team.shortname%>加入申请</span>
@@ -24,9 +24,18 @@
         <%= link_to '拒绝', team_join_invitation_path(@team_join_invitation.id, :back_uri => request.request_uri), :method => :delete %>
       <%end%>
 
-      <%if @team_join_request_count > 0%>
-        队伍有<%= link_to "#{@team_join_request_count}个加入申请", team_team_join_requests_path(@team) if @team_join_request_count > 0 %>
+      <%if @team_join_request_count > 0 || @match_invitation_count > 0%>
+        球队有:
       <%end%>
+      <%if @team_join_request_count > 0%>
+        <%= link_to "#{@team_join_request_count}个加入申请", team_team_join_requests_path(@team) %>
+        <br />
+      <%end%>
+      
+      <%if @match_invitation_count > 0%>
+        <%= '&nbsp;'*13 if @team_join_request_count > 0%>
+        <%= link_to "#{@match_invitation_count}个需要处理的比赛邀请", team_match_invitations_path(@team)%>
+      <%end%>  
     </div>
     <%end%>
 

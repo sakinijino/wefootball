@@ -5,6 +5,12 @@ class FootballGround < ActiveRecord::Base
   
   has_many :trainings, 
     :extend => ActivityCalendar
+  
+  has_many :matches, 
+    :extend => ActivityCalendar
+
+  has_many :sided_matches, 
+    :extend => ActivityCalendar   
     # comment this, since it set football_ground_id to null before we can modity the location
     # :dependent => :nullify
   

@@ -26,7 +26,7 @@
     <%= activity.class == Match ? link_to(activity.guest_team.shortname, team_view_path(activity.guest_team_id)) : activity.guest_team_name%>
     <br/><br/>
     <%= activity.start_time.strftime('%H:%M')%>-<%= activity.end_time.strftime('%H:%M')%>,
-    <%= location_link activity.location, nil%>
+    <%= location_link activity.location, activity.football_ground_id%>
     <br/><br/>
     <%= link_to('比赛详情', activity.class == Match ? match_path(activity) : sided_match_path(activity))%>  
   </div>

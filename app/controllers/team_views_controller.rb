@@ -48,8 +48,10 @@ class TeamViewsController < ApplicationController
       @user_team.can_destroy_by?(current_user) # 处理唯一管理员的情况，唯一管理员不能退队
     
     @team_join_request_count = 0
+    @match_invitation_count = 0
     if logged_in? && current_user.is_team_admin_of?(@team)
       @team_join_request_count = TeamJoinRequest.count(:conditions => ["team_id = ? and is_invitation = ?", @team, false])
+      @match_invitation_count = MatchInvitation.count(:conditions=>["(host_team_id = ? and edit_by_host_team = ?) or (guest_team_id = ? and edit_by_host_team = ?)", @team, true, @team, false ])
     end
     
     @title = "#{@team.shortname}的首页"

@@ -72,13 +72,15 @@ class MatchesController < ApplicationController
     player_mjs_hash = @player_mjs.group_by{|mj| mj.id}
     @match_join_hash = {}
     filled_goal_sum = 0
-    params[:mj].map{|k,v| [k,{:goal=>v[:goal],:cards=>v[:cards]}]}.each do |i|
-      if !player_mjs_hash.has_key?(i[0].to_i)
-        fake_params_redirect      
-        return
+    if params[:mj]
+      params[:mj].map{|k,v| [k,{:goal=>v[:goal],:cards=>v[:cards]}]}.each do |i|
+        if !player_mjs_hash.has_key?(i[0].to_i)
+          fake_params_redirect      
+          return
+        end
+        @match_join_hash[i[0]] = i[1]
+        filled_goal_sum += i[1][:goal].to_i
       end
-      @match_join_hash[i[0]] = i[1]
-      filled_goal_sum += i[1][:goal].to_i
     end
     
     @editing_by_host_team = (@team.id == @match.host_team_id)

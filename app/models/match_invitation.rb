@@ -6,7 +6,9 @@ class MatchInvitation < ActiveRecord::Base
   MAX_LOCATION_LENGTH = 100
   
   belongs_to :host_team, :class_name=>"Team", :foreign_key=>"host_team_id"
-  belongs_to :guest_team, :class_name=>"Team", :foreign_key=>"guest_team_id"  
+  belongs_to :guest_team, :class_name=>"Team", :foreign_key=>"guest_team_id"
+
+  belongs_to :new_football_ground, :class_name=>"FootballGround", :foreign_key=>"new_football_ground_id"  
   
   MATCH_TYPES = [1,2]
   MATCH_SIZES = (5..11).to_a
@@ -15,6 +17,7 @@ class MatchInvitation < ActiveRecord::Base
   attr_accessible :new_start_time, :new_location, :new_match_type, :new_size
   attr_accessible :new_has_judge, :new_has_card, :new_has_offside, :new_win_rule
   attr_accessible :new_description, :new_half_match_length, :new_rest_length
+  attr_accessible :new_location, :new_football_ground_id
   
   validates_presence_of     :new_location, :message => "请填写比赛地点"
   validates_length_of        :new_location,    :maximum => MAX_LOCATION_LENGTH
@@ -44,9 +47,11 @@ class MatchInvitation < ActiveRecord::Base
     self.new_size = 5 if self.new_size.nil?
     self.new_win_rule = 1 if self.new_win_rule.nil?
     
+    self.new_location = self.new_football_ground.name if self.new_football_ground!=nil    
+    
     attribute_slice(:new_description, MAX_DESCRIPTION_LENGTH)
     attribute_slice(:host_team_message, MAX_TEAM_MESSAGE_LENGTH)
-    attribute_slice(:guest_team_message, MAX_TEAM_MESSAGE_LENGTH)   
+    attribute_slice(:guest_team_message, MAX_TEAM_MESSAGE_LENGTH)
   end    
   
   def save_last_info!

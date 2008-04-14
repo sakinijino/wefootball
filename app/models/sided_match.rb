@@ -9,6 +9,8 @@ class SidedMatch < ActiveRecord::Base
   WIN_RULES = [1,2,3]  
   SITUATIONS = (1..8).to_a  
   
+  belongs_to :football_ground    
+  
   has_many :sided_match_joins,
             :dependent => :destroy,
             :foreign_key => :match_id
@@ -62,6 +64,7 @@ class SidedMatch < ActiveRecord::Base
     self.start_time = DateTime.now.tomorrow if self.start_time==nil
     self.half_match_length = 45 if self.half_match_length==nil
     self.rest_length = 15 if self.rest_length==nil
+    self.location = self.football_ground.name if self.football_ground!=nil     
     attribute_slice(:description, MAX_DESCRIPTION_LENGTH)
   end
 

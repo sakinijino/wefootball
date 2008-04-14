@@ -16,9 +16,10 @@ class FootballGroundsController < ApplicationController
     @football_ground = FootballGround.find(params[:id])
     @title = @football_ground.name
     trainings = @football_ground.trainings.in_later_hours(24)
-    matches = []#@football_ground.matches.in_later_hours(24)
+    matches = @football_ground.matches.in_later_hours(24)
+    sided_matches = @football_ground.sided_matches.in_later_hours(24)    
     plays = @football_ground.plays.in_later_hours(24)
-    @activities = (trainings+matches+plays).group_by{|t| t.start_time.strftime("%Y-%m-%d")}
+    @activities = (trainings+matches+plays+sided_matches).group_by{|t| t.start_time.strftime("%Y-%m-%d")}
     @is_editor = logged_in? && FootballGroundEditor.is_a_editor?(current_user)
     
     @play = Play.new(:football_ground_id => @football_ground.id)

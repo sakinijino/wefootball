@@ -1,3 +1,8 @@
+<%content_for(:javascript) do%>
+  <%= javascript_include_tag province_city_select_url %>
+  <%= javascript_include_tag football_ground_select_url %>
+<%end%>
+
 <div id="narrow_right_content" class="sect">
   <h2></h2>
   <ul class="sidebar_menu">
@@ -41,9 +46,18 @@
         <%= f.datetime_select :new_start_time,  :start_year => Date.today.year, :end_year => 1.year.since.year, :use_month_numbers => true, :minute_step=>15 %>
       </td></tr>
       <tr><td style="width:60px">
-        地点
+        选一块场地
       </td><td>
-        <%= f.text_field :new_location %>
+      <div class="location_input">
+        <p class="football_ground_input">
+          <%= f.football_ground_select :new_football_ground_id,@match_invitation.new_football_ground_id.nil?  ? 'city' : nil,
+      @match_invitation.new_football_ground_id.nil? ? @host_team.city : nil%>     
+          <%= link_to "提交新场地", new_football_ground_path(:back_uri => request.request_uri)%>
+        </p>
+        <p class="location_text_input">
+          <%= f.text_field :new_location, :value=> @match_invitation.new_football_ground_id.nil? ? @match_invitation.new_location : '' %> （如果场地不在列表中请在这里填写）
+        </p>
+      </div>
       </td></tr>
       <tr><td style="width:60px">
         比赛性质

@@ -1,3 +1,8 @@
+<%content_for(:javascript) do%>
+  <%= javascript_include_tag province_city_select_url %>
+  <%= javascript_include_tag football_ground_select_url %>
+<%end%>
+
 <div id="narrow_right_content">
   <div class="sect">
     <h2></h2>
@@ -64,7 +69,17 @@
       %>
       <%= macth_invitation_comparison_form_tr(@unmodified_match_invitation, '地点', :location, 
         Proc.new{ |t| h t}, 
-        Proc.new{ f.text_field :new_location })
+        Proc.new{%(
+                    <div class="location_input">
+                    <p class="football_ground_input">
+                    #{f.football_ground_select :new_football_ground_id,@match_invitation.new_football_ground_id.nil?  ? 'city' : nil,
+      @match_invitation.new_football_ground_id.nil? ? @self_team.city : nil}    
+                    </p>
+                    <p class="location_text_input">
+                    #{f.text_field :new_location, :value=> @match_invitation.new_football_ground_id.nil? ? @match_invitation.new_location : ''} （如果场地不在列表中请在这里填写）
+                    </p>
+                    </div>)
+                })
       %>
       <%= macth_invitation_comparison_form_tr(@unmodified_match_invitation, '比赛性质', :match_type, 
         Proc.new{ |t| match_type_text t}, 
