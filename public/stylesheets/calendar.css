@@ -23,6 +23,10 @@ div.calendar div.monthAndYearDiv {
     width:217px;
 }
 
+.todayDateDiv {
+  background:transparent url(/images/today.gif) no-repeat;
+}
+
 .hasActivityDiv {
     background-color:#F2F7AB; 
 }

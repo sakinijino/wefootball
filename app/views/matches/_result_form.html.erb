@@ -1,0 +1,73 @@
+<%if is_host_team
+  host_team_goal_sym = :host_team_goal_by_host
+  guest_team_goal_sym = :guest_team_goal_by_host
+  host_team_goal_by_another_team = @match.host_team_goal_by_guest
+  guest_team_goal_by_another_team = @match.guest_team_goal_by_guest
+  
+  situtaion_sym = :situation_by_host
+  situation_by_another_team = @match.situation_by_guest
+else
+  host_team_goal_sym = :host_team_goal_by_guest
+  guest_team_goal_sym = :guest_team_goal_by_guest
+  host_team_goal_by_another_team = @match.host_team_goal_by_host
+  guest_team_goal_by_another_team = @match.guest_team_goal_by_host
+  
+  situtaion_sym = :situation_by_guest
+  situation_by_another_team = @match.situation_by_host
+end%>
+<div class="result_input">
+  <div class="goal_input">
+    填写比分: &nbsp;&nbsp;> <a class="switch" href="javascript:void(0)">没有详细比分，填写赛况</a><br />
+    
+    <div class="result_block">
+      <p>
+        <%=@match.host_team.shortname%>
+        <%= f.text_field host_team_goal_sym, :size=>1 %>
+        :
+        <%= f.text_field guest_team_goal_sym, :size=>1 %>
+        <%=@match.guest_team.shortname%>
+      </p>
+
+      <%if !host_team_goal_by_another_team.nil? || !guest_team_goal_by_another_team.nil?%>
+        <p>
+          对方填写的比分: <br/>
+          <%if !host_team_goal_by_another_team.nil?%>
+            <%=@match.host_team.shortname%>
+            <span class="another_result"><%=host_team_goal_by_another_team%></span>
+          <%end%>
+
+          <%=':' if !host_team_goal_by_another_team.nil? && !guest_team_goal_by_another_team.nil?%>
+
+          <%if !guest_team_goal_by_another_team.nil?%>
+            <% if host_team_goal_by_another_team.nil?%>
+              <%= @match.guest_team.shortname %>
+              <span class="another_result"><%= guest_team_goal_by_another_team%></span>
+            <%else%>
+              <span class="another_result"><%= guest_team_goal_by_another_team%></span>
+              <%= @match.guest_team.shortname %>
+            <%end%>
+          <%end%>&nbsp;&nbsp;
+          > <a class="fill_result" id='goal-<%=host_team_goal_by_another_team%>-<%=guest_team_goal_by_another_team%>' href="javascript:void(0)">认可对方填写的比分</a>
+        </p>
+      <%end%>
+    </div>
+  </div>
+  <div class="situation_input">
+    填写赛况: &nbsp;&nbsp;> <a class="switch" href="javascript:void(0)">填写比分</a><br />
+    
+    <div class="result_block">
+      <p>
+        <%= f.radio_button(situtaion_sym,Match::SITUATIONS[0], :check => true)%><%=situation_text(Match::SITUATIONS[0])%><br />
+        <%for s in Match::SITUATIONS[1..-1]%>
+          <%= f.radio_button(situtaion_sym, s)%><%=situation_text(s)%>
+        <%end%>
+      </p>
+      <%if !situation_by_another_team.nil?%>
+        <p>
+          对方填写的赛况：<span class="another_result"><%=situation_text situation_by_another_team%></span>
+          > <a class="fill_result" id='situation-<%=situation_by_another_team%>' href="javascript:void(0)">认可对方填写的赛况</a>
+        </p>
+      <%end%>
+    </div>
+  </div>
+</div>

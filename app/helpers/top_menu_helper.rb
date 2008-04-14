@@ -44,11 +44,21 @@ module TopMenuHelper
     }
   }
   
+  MATCH_MENU = {
+    :match => Proc.new { |p|
+      p[:controller] == 'matches' && p[:action] == 'show'
+    }
+  }
+  
   def is_selected_user_menu_item?(item)
     USER_MENU[item].call(params) ? 'selected' : ''
   end
   
   def is_selected_team_menu_item?(item)
     TEAM_MENU[item].call(params) ? 'selected' : ''
+  end
+  
+  def is_selected_match_menu_item?(item)
+    MATCH_MENU[item].call(params) ? 'selected' : ''
   end
 end

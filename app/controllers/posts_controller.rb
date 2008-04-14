@@ -13,7 +13,7 @@ class PostsController < ApplicationController
         @posts = @match.posts.team_public(@team)
       end
       @title = "讨论对阵 #{(@match.host_team != @team ? @match.host_team : @match.guest_team).shortname} 的比赛" if @match
-      render :layout => "team_layout"
+      render :layout => "match_layout"
     elsif (params[:team_id])
       @team = Team.find(params[:team_id])
       if (logged_in? && current_user.is_team_member_of?(@team))
@@ -49,17 +49,32 @@ class PostsController < ApplicationController
     @training = @post.training
     @match = @post.match
     @related_posts = @team.posts.find(:all, :limit => 20) - [@post]
-    render :layout => "team_layout" 
+    
+    @match = @post.match
+    if @match
+      render :layout => "match_layout"
+    else
+      render :layout => "team_layout" 
+    end
   end
 
   def new
     @post = Post.new
-    render :layout => "team_layout" 
+    if (params[:team_id] && params[:match_id])
+      render :layout => "match_layout"
+    else
+      render :layout => "team_layout" 
+    end
   end
 
   def edit
     @team = @post.team
-    render :layout => "team_layout"
+    @match = @post.match
+    if @match
+      render :layout => "match_layout"
+    else
+      render :layout => "team_layout" 
+    end
   end
 
   def create
@@ -79,7 +94,12 @@ class PostsController < ApplicationController
     if @post.update_attributes(params[:post])
       redirect_to(@post)
     else
-      render :action => "edit", :layout => "team_layout"
+      @match = @post.match
+      if @match
+        render :action => "edit", :layout => "match_layout"
+      else
+        render :action => "edit", :layout => "team_layout" 
+      end
     end
   end
 

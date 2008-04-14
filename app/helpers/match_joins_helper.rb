@@ -3,7 +3,7 @@ module MatchJoinsHelper
      '待定', '参加'
     ]
     
-  CARD_TEXT = ['无','一黄','直接一红','两黄变一红']
+  CARD_TEXT = ['无','黄牌','红牌','两黄变一红']
   
   def status_text(label)
     MatchJoinsHelper::STATUS_TEXT[label]

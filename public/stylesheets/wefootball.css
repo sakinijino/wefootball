@@ -76,6 +76,10 @@ form.button-to div {
     z-index: 20;
 }
 
+#header.match_header {
+  background:url(/images/match_head.gif) no-repeat;
+}
+
 #header a {
   background: transparent;
 }
@@ -110,6 +114,19 @@ form.button-to div {
     left: 48px;
     top: 10px;
 }
+
+#host_header_icon {
+    position: absolute;
+    left: 30px;
+    top: 24px;
+}
+
+#guest_header_icon {
+    position: absolute;
+    left: 117px;
+    top: 24px;
+}
+
 
 #header_name {
     color: #fff;
@@ -167,7 +184,7 @@ form.button-to div {
     margin: 0 0 1px 0;
     font-size: 14px;
     background: repeat-y;
-    height: 19px;
+    height: 20px;
     padding-top: 2px;
 }
 
@@ -539,4 +556,13 @@ div.message div.content p {
 
 div.message div.title {
     font-size:14px;border-bottom: dashed 1px #3D681A; padding-bottom:15px;
+}
+
+div.result_block {
+  border: 1px solid #333333;padding:0 10px
+}
+
+div.result_block span.another_result {
+  font-weight: bold;
+  color: #333333;
 }

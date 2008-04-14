@@ -1,17 +1,13 @@
 <div class="sect">
   <h2><%=h team.shortname%></h2>
   <%= small_team_image_link team, :class=>'icon title_icon'%>
+  <%links = []%>
   <%if logged_in? %>
-    <%=link_to "编辑阵型", edit_match_join_path(0, :match_id=>match.id, :team_id=>team.id) if @match.can_be_edited_formation_by?(current_user, team)%>
+    <%links << link_to("编辑阵型", edit_match_join_path(0, :match_id=>match.id, :team_id=>team.id)) if @match.can_be_edited_formation_by?(current_user, team)%>
+    <%links << link_to("填写赛果", edit_team_match_path(team, match)) if @match.can_be_edited_result_by?(current_user, team)%>
+    <%links << link_to("取消比赛", match_path(@match), :method => :delete, :confirm => '真的要取消这场比赛吗？') if @match.can_be_destroyed_by?(current_user)%>
+    <%= links_with_sticks links%>
     <br/><br/>
-    <%if @match.can_be_edited_result_by?(current_user, team)%>
-      <%=link_to "填写赛果", edit_team_match_path(team, match) %>
-      <br/><br/>
-    <%end%>
-    <%if @match.can_be_destroyed_by?(current_user)%>
-      <%=link_to "取消比赛", match_path(@match), :method => :delete, :confirm => '真的要取消这场比赛吗？' %>
-      <br/><br/>
-    <%end%>
     <%links = []%>
     <%links << link_to("代表该队参赛", 
         match_joins_path(:team_id => team, :match_id => @match), :method=>:post) if @match.can_be_joined_by?(current_user, team)%>
@@ -59,7 +55,7 @@
 </div>
 
 <div class="sect">   
-  <h2><%=h team.shortname%>下的讨论</h2>
+  <h2>讨论</h2>
   <%= render :partial=>'posts/post_list', :object=>posts%>
   <div style="margin: 10px 0  0 10px;float:right;">
     <%links = []%>

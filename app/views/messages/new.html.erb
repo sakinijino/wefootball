@@ -5,13 +5,14 @@
 
 <div id="wide_left_content" class="sect">
   <%= error_messages_for :message %>
+  <br/>
   <% form_for @message do |f| %>
     <table class="form">
       <tr>
         <td>写给:</td>
         <td>
+          <%= small_user_image_link @receiver, :style=>"margin:0;float:right" %>
           <%= link_to h(@receiver.nickname), user_view_path(@receiver)%>
-          <div style=""><%= small_user_image_link @receiver, :style=>"margin:0;float:right" %></div>
        </td>
       </tr>
       <tr>

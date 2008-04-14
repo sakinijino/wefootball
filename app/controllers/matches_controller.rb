@@ -28,9 +28,8 @@ class MatchesController < ApplicationController
     
     @host_team_mj = MatchJoin.find_by_user_id_and_team_id_and_match_id(current_user, @match.host_team, @match)
     @guest_team_mj = MatchJoin.find_by_user_id_and_team_id_and_match_id(current_user, @match.guest_team, @match)
-    
-    @team = @match.host_team    
-    render :layout=>'team_layout'
+
+    render :layout=>'match_layout'
   end
   
   def create
@@ -56,7 +55,10 @@ class MatchesController < ApplicationController
       return
     end
     @editing_by_host_team = (@team.id == @match.host_team_id)
-    @player_mjs = MatchJoin.players(@match.id,@team.id) 
+    @player_mjs = MatchJoin.players(@match.id,@team.id)
+    
+    @title = "填写赛果"
+    render :layout=>'match_layout'
   end
 
   def update 
@@ -105,7 +107,8 @@ class MatchesController < ApplicationController
     if ((@editing_by_host_team && (params[:match][:host_team_goal_by_host].to_i<filled_goal_sum)) ||
           (@editing_by_guest_team && (params[:match][:host_team_goal_by_guest].to_i<filled_goal_sum)))
       @match.errors.add_to_base("队员入球总数不能超过本队入球数")
-      render :action => "edit"
+      @title = "填写赛果"
+      render :action => "edit", :layout=>'match_layout'
       return
     end
     
@@ -113,15 +116,12 @@ class MatchesController < ApplicationController
       Match.transaction do
         @match.save!
         raise ActiveRecord::RecordInvalid if !MatchJoin.update(@match_join_hash.keys, @match_join_hash.values)
-        if @editing_by_host_team
-          redirect_to team_view_path(@match.host_team_id)
-        else
-          redirect_to team_view_path(@match.guest_team_id)
-        end
+        redirect_to match_path(@match)
       end
     rescue ActiveRecord::RecordInvalid => e
       @player_mjs = MatchJoin.players(@match.id,@team.id)      
-      render :action => "edit"
+      @title = "填写赛果"
+      render :action => "edit", :layout=>'match_layout'
     end
   end
 

@@ -42,8 +42,8 @@ class MatchJoinsController < ApplicationController
       end
     end
     @another_team = @team == @match.host_team ? @match.guest_team : @match.host_team
-    @title = "设置#{@team.shortname}的首发阵型"
-    render :layout => "team_layout"                       
+    @title = "编辑首发阵型"
+    render :layout => "match_layout"                       
   end
   
   def update_formation  

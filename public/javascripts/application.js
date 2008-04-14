@@ -32,8 +32,10 @@ j(function(){
                            var l2_ml = j(l2_menu_list[i])
                            l2_ml.show()
                            var left = item.position().left
-                           var l2_ml_left = left  - Math.round(l2_ml.outerWidth()/2) + 30
-                           l2_ml.css('left', l2_ml_left > 0 ? l2_ml_left : 0);
+                           var l2_ml_width = l2_ml.outerWidth()
+                           var l2_ml_left = left  - Math.round(l2_ml_width/2) + 30
+                           var l2_ml_right = left + Math.round(l2_ml_width/2) + 30
+                           l2_ml.css('left', l2_ml_left > 0 ? (l2_ml_right > 497 ? (497-l2_ml_width) : l2_ml_left) : 0);
                            l2_menu.css('background-image', 'url("/images/top_l2_menu_hover.gif")')
                                    .css('background-position', ((left-149>-10) ? ((left-149 < 130) ? (left-149) : 130) : -10)+'px 0px')
                       })
@@ -152,9 +154,9 @@ j(function(){
                 })
             })
             var fi = span.id.split('-')[4]
-            if (fi=='') province_select.change() //���õ�ʡһ��������ʡ��select
-            else if (fi == 'city') city_select.change() //���õ���һ���������е�select
-            else { // �������򳡣��������ʡ��
+            if (fi=='') province_select.change()
+            else if (fi == 'city') city_select.change()
+            else {
                 province_select.get()[0].value = ProvinceCity_REVERSE_LIST[FootballGround_REVERSE_LIST[fi]]
                 province_select.change()
                 city_select.get()[0].value = FootballGround_REVERSE_LIST[fi];
@@ -167,16 +169,55 @@ j(function(){
             var div = j(div)
             var fgi = j(div.find(".football_ground_input")[0])
             var lti = j(div.find(".location_text_input")[0])
+            
             var selects = div.find("span.football_ground_select select")
-            var province_select = j(selects[0])
-            var city_select = j(selects[1])
-            var football_ground_select = j(selects[2])
-            province_select.change(function(e){lti.show()})
-            city_select.change(function(e){lti.show()})
-            football_ground_select.change(function(e){
-                if (e.target.value == '') lti.show()
-                else lti.hide()
+            var football_ground_select = selects[2]
+            var location_input = lti.find('input')[0]
+            fgi.find("a.switch").click(function(){
+              football_ground_select.value = ''
+              fgi.slideUp();
+              lti.slideDown();
             })
-            football_ground_select.change()
+            lti.find("a.switch").click(function(){
+              location_input.value = ''
+              lti.slideUp();
+              fgi.slideDown();
+            })
+            if (football_ground_select.value != '') {
+              location_input.value = ''
+              lti.hide();
+            }
+            else if (location_input.value == '') lti.hide();
+            else fgi.hide();
+        })
+        
+        j('div.result_input').each(function(i, div){
+          var div = j(div)
+          var gi = j(div.find(".goal_input")[0])
+          var si = j(div.find(".situation_input")[0])
+          
+          gi.find("a.fill_result").click(function(){
+            var goals = this.id.split('-')
+            if (goals[1]!='') gi.find('input')[0].value = goals[1]
+            if (goals[2]!='') gi.find('input')[1].value = goals[2]
+          })
+          si.find("a.fill_result").click(function(){
+            var situs = this.id.split('-')
+            if (situs[1]!='') {
+              si.find('input')[parseInt(situs[1])-1].checked = 'checked'
+            }
+          })
+          
+          gi.find("a.switch").click(function(){
+            gi.slideUp();
+            si.slideDown();
+            gi.find('input').attr('value', '')
+          })
+          si.find("a.switch").click(function(){
+            si.slideUp();
+            gi.slideDown();
+            si.find('input')[0].checked = 'checked'
+          })
+          si.hide();
         })
 })

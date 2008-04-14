@@ -235,7 +235,7 @@ class MatchesControllerTest < ActionController::TestCase
     assert_equal 2, new_mj1.cards    
     assert_equal 1, new_mj2.goal
     assert_equal 3, new_mj2.cards    
-    assert_redirected_to team_view_path(t1)                                   
+    assert_redirected_to match_path(new_match1)
 
     put :update, :id => match1.id, :team_id=>t1.id, :match => {:host_team_goal_by_host => "",
                                               :guest_team_goal_by_host => "",
@@ -243,7 +243,7 @@ class MatchesControllerTest < ActionController::TestCase
                                     :mj => {}#ceshi
     new_match1 = Match.find(match1)                              
     assert_equal 5, new_match1.situation_by_host
-    assert_redirected_to team_view_path(t1)           
+    assert_redirected_to match_path(new_match1)
   end
   
   def test_should_update_by_guest_team
@@ -302,7 +302,7 @@ class MatchesControllerTest < ActionController::TestCase
     assert_equal 2, new_mj1.cards    
     assert_equal 1, new_mj2.goal
     assert_equal 3, new_mj2.cards
-    assert_redirected_to team_view_path(t1)                                   
+    assert_redirected_to match_path(new_match1)
 
     put :update, :id => match1.id, :team_id=>t1.id, :match => {:host_team_goal_by_guest => "",
                                               :guest_team_goal_by_guest => "",
@@ -310,7 +310,7 @@ class MatchesControllerTest < ActionController::TestCase
                                     :mj => {}#ceshi
     new_match1 = Match.find(match1)                              
     assert_equal 5, new_match1.situation_by_guest
-    assert_redirected_to team_view_path(t1)           
+    assert_redirected_to match_path(new_match1)
   end 
   
   def test_should_not_update

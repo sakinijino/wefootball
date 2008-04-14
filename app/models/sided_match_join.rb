@@ -8,6 +8,8 @@ class SidedMatchJoin < ActiveRecord::Base
   belongs_to :sided_match, :foreign_key => 'match_id'
   belongs_to :user
   
+  attr_accessible :goal, :cards
+  
   validates_inclusion_of   :position, :in => Team::FORMATION_POSITIONS, :allow_nil => true
   
   def before_validation

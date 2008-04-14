@@ -1,0 +1,32 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+  <title><%=h @title ? @title : h("#{@match.host_team.shortname} v.s. #{@match.guest_team.shortname}")%></title>
+  <%= javascript_include_tag "jquery-1.2.3.min.js" %>
+  <%= javascript_include_tag "jquery.dimensions.js" %>
+  <%= javascript_include_tag "application" %>
+  <%= yield :javascript%>
+  <%= stylesheet_link_tag 'wefootball' %>
+  <%= yield :stylesheet%>
+</head>
+<body>
+<%= render(:partial => 'layouts/qmd')%>
+<div id="main_content">
+<div id="header" class="match_header">
+  <%= link_to small_team_image_tag(@match.host_team, :class=>''), team_view_path(@match.host_team), :id=>"host_header_icon" %>
+  <%= link_to small_team_image_tag(@match.guest_team, :class=>''), team_view_path(@match.guest_team), :id=>"guest_header_icon" %>
+  <%= render(:partial => 'layouts/header_setting')%>
+  <%= render(:partial => 'layouts/match_menu', :locals => {:match => @match})%>
+  
+  <%= render(:partial => 'layouts/search_panel', :locals => {:default => :team})%>
+</div>
+
+<div id="content">
+<%= yield  %>
+</div>
+</div>
+</body>
+</html>

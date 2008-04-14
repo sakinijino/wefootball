@@ -5,6 +5,7 @@ ul.sidebar_menu {
 
 ul.sidebar_menu li {
     float:left;
+    margin-bottom: 0px;
 }
 
 ul.sidebar_menu li.seperate {
