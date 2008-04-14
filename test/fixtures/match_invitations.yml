@@ -10,3 +10,4 @@ inv1:
   new_win_rule: 1
   new_half_match_length: 30
   new_rest_length: 10
+  new_description: Hello

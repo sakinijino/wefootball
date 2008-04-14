@@ -43,7 +43,7 @@ form.button-to div {
 
 #qmd .center {
     color: #333333;
-    background:url(/images/qmd_middle.gif) repeat-x;
+    background:url(/images/qmd_middle2.gif) repeat-x;
     float:right;
     padding-top: 7px;
     height: 25px;
@@ -317,6 +317,7 @@ table.list td p{
 
 table.form td{
     vertical-align: top;
+    padding-bottom: 8px;
 }
 
 div.notification {

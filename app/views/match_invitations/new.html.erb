@@ -21,83 +21,77 @@
 <div id="wide_left_content" class="sect">
   <h2><%= h @title%></h2>
   <%= error_messages_for :match_invitation %>
-
+  <br/>
   <% form_for @match_invitation do |f| %>
     <%= f.hidden_field :guest_team_id,  :value=>@guest_team.id%>
     <%= f.hidden_field :host_team_id,  :value=>@host_team.id%>
     <table class="form">
-      <tr><td style="width:60px">
-        发起队
+      <tr ><td>
+        邀请的球队:
       </td><td>
-        <%= small_team_image_link @host_team, :style=>"float:left;margin-right:10px"%>
-        <br/>
-        <span><%=link_to h(@host_team.shortname), team_view_path(@host_team.id)%></span>
-      </td></tr>
-      <tr ><td style="width:60px">
-        受邀队
-      </td><td>
-        <%= small_team_image_link @guest_team, :style=>"float:left;margin-right:10px"%>
-        <br/>
+        <%= small_team_image_link @guest_team, :style=>"margin:0;float:right"%>
         <span><%=link_to h(@guest_team.shortname), team_view_path(@guest_team.id)%></span>
       </td></tr>
-      <tr><td style="width:60px">
-        开始时间
+      <tr><td>
+        开始时间:
       </td><td>
         <%= f.datetime_select :new_start_time,  :start_year => Date.today.year, :end_year => 1.year.since.year, :use_month_numbers => true, :minute_step=>15 %>
       </td></tr>
-      <tr><td style="width:60px">
-        选一块场地
+      <tr><td>
+        选择场地:
       </td><td>
       <div class="location_input">
-        <p class="football_ground_input">
-          <%= f.football_ground_select :new_football_ground_id,@match_invitation.new_football_ground_id.nil?  ? 'city' : nil,
-      @match_invitation.new_football_ground_id.nil? ? @host_team.city : nil%>     
-          <%= link_to "提交新场地", new_football_ground_path(:back_uri => request.request_uri)%>
-        </p>
-        <p class="location_text_input">
-          <%= f.text_field :new_location, :value=> @match_invitation.new_football_ground_id.nil? ? @match_invitation.new_location : '' %> （如果场地不在列表中请在这里填写）
-        </p>
+        <div class="football_ground_input">
+          <%= f.football_ground_select :new_football_ground_id,
+              @match_invitation.new_football_ground_id.nil?  ? 'city' : nil,
+              @match_invitation.new_football_ground_id.nil? ? @host_team.city : nil%><br/>    
+          <a class="switch" href="javascript:void(0)">场地不在列表中, 点击此处填写地点</a>
+        </div>
+        <div class="location_text_input">
+          <%= f.text_field :new_location, :value=> @match_invitation.new_football_ground_id.nil? ? @match_invitation.new_location : '' %>
+          <br/><a class="switch" href="javascript:void(0)">从列表中选择场地</a>
+        </div>
       </div>
       </td></tr>
-      <tr><td style="width:60px">
-        比赛性质
+      <tr><td>
+        比赛性质:
       </td><td>
         <%= f.select :new_match_type, MatchInvitation::MATCH_TYPES.map {|t| [match_type_text(t), t]} %> 
       </td></tr>
-      <tr><td style="width:60px">
-        人数
+      <tr><td>
+        人数:
       </td><td>
         <%= f.select :new_size, MatchInvitation::MATCH_SIZES %>人制 
       </td></tr>
-      <tr><td style="width:60px">
-        半场时间
+      <tr><td>
+        半场时间:
       </td><td>
         <%= f.text_field :new_half_match_length, :size=>1 %>分钟 
       </td></tr>
-      <tr><td style="width:60px">
-        中场休息
+      <tr><td>
+        中场休息:
       </td><td>
         <%= f.text_field :new_rest_length, :size=>1 %>分钟
-      <tr><td style="width:60px">
-        裁判
+      <tr><td>
+        裁判:
       </td><td>
         <%= f.radio_button :new_has_judge, true%>有
         <%= f.radio_button :new_has_judge, false%>没有
       </td></tr>
-      <tr><td style="width:60px">
-        红黄牌
+      <tr><td>
+        红黄牌:
       </td><td>
         <%= f.radio_button :new_has_card, true%>有
         <%= f.radio_button :new_has_card, false%>没有
       </td></tr>
-      <tr><td style="width:60px">
-        越位
+      <tr><td>
+        越位:
       </td><td>
         <%= f.radio_button :new_has_offside, true%>有
         <%= f.radio_button :new_has_offside, false%>没有
       </td></tr>
-      <tr><td style="width:60px">
-        平局后
+      <tr><td>
+        常规时间平局后:
       </td><td>
         <%= f.select :new_win_rule, MatchInvitation::WIN_RULES.map {|r| [win_rule_text(r), r]} %>
       </td></tr>

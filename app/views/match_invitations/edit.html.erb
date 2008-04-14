@@ -3,14 +3,14 @@
   <%= javascript_include_tag football_ground_select_url %>
 <%end%>
 
-<div id="narrow_right_content">
+<div id="narrow_right_content" style="width:290px;">
   <div class="sect">
     <h2></h2>
     <%=render :partial=>'sidebar_menu'%>
   </div>
 </div>
 
-<div id="wide_left_content">
+<div id="wide_left_content" style="width:620px;">
   <div class="sect">
   <h2><%=h @title%></h2>
   <table>
@@ -45,9 +45,8 @@
     </tr>
   </table>
   <br/>
-  <br/>
   <%= error_messages_for :match_invitation %>
-
+  <br/>
   <% form_for @match_invitation do |f| %>
     <%= f.hidden_field :guest_team_id,  :value=>@guest_team.id%>
     <%= f.hidden_field :host_team_id,  :value=>@host_team.id%>
@@ -67,20 +66,42 @@
         Proc.new{ f.datetime_select :new_start_time, 
           :start_year => Date.today.year, :end_year => 1.year.since.year, :use_month_numbers => true, :minute_step=>15 })
       %>
-      <%= macth_invitation_comparison_form_tr(@unmodified_match_invitation, '地点', :location, 
-        Proc.new{ |t| h t}, 
-        Proc.new{%(
-                    <div class="location_input">
-                    <p class="football_ground_input">
-                    #{f.football_ground_select :new_football_ground_id,@match_invitation.new_football_ground_id.nil?  ? 'city' : nil,
-      @match_invitation.new_football_ground_id.nil? ? @self_team.city : nil}    
-                    </p>
-                    <p class="location_text_input">
-                    #{f.text_field :new_location, :value=> @match_invitation.new_football_ground_id.nil? ? @match_invitation.new_location : ''} （如果场地不在列表中请在这里填写）
-                    </p>
-                    </div>)
-                })
+      <%
+        if (@unmodified_match_invitation.new_football_ground_id.nil? && !@unmodified_match_invitation.football_ground_id.nil?) ||
+            (!@unmodified_match_invitation.new_football_ground_id.nil? && @unmodified_match_invitation.football_ground_id.nil?)
+          is_modified = true
+        elsif !@unmodified_match_invitation.new_football_ground_id.nil? && !@unmodified_match_invitation.football_ground_id.nil?
+          is_modified = @unmodified_match_invitation.has_attribute_been_modified?(:football_ground_id)
+        else
+          is_modified = @unmodified_match_invitation.has_attribute_been_modified?(:location)
+        end
+        cssklass = "class=\"conflict\""
       %>
+      <tr>
+        <td style="width:60px">场地</td>
+        <td style="width:280px" >
+          <div class="location_input">
+            <div class="football_ground_input">
+              <%= f.football_ground_select :new_football_ground_id,
+                @match_invitation.new_football_ground_id.nil?  ? 'city' : nil,
+                @match_invitation.new_football_ground_id.nil? ? @self_team.city : nil%>
+              <br/>
+              <a class="switch" href="javascript:void(0)">场地不在列表中, 点击此处填写地点</a>
+            </div>
+            <div class="location_text_input">
+              <%= f.text_field :new_location, :value=> @match_invitation.new_football_ground_id.nil? ? @match_invitation.new_location : ''%>
+              <br/><a class="switch" href="javascript:void(0)">从列表中选择场地</a>
+            </div>
+          </div>
+        </td>
+        <td <%=cssklass if is_modified%>>
+          <%=location_link(@unmodified_match_invitation.new_location, @unmodified_match_invitation.new_football_ground_id)%>
+        </td>
+        <td <%=cssklass if is_modified%>>
+          <%= @unmodified_match_invitation.location.nil? && @unmodified_match_invitation.football_ground_id.nil? ? '无' : 
+            is_modified ? location_link(@unmodified_match_invitation.location, @unmodified_match_invitation.football_ground_id) : '一致'%>
+        </td>
+      </tr>
       <%= macth_invitation_comparison_form_tr(@unmodified_match_invitation, '比赛性质', :match_type, 
         Proc.new{ |t| match_type_text t}, 
         Proc.new{ f.select :new_match_type, MatchInvitation::MATCH_TYPES.map {|t| [match_type_text(t), t]}})

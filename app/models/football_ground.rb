@@ -34,6 +34,10 @@ class FootballGround < ActiveRecord::Base
       Training.update_all(["football_ground_id = ?", fg.id], ["football_ground_id = ?", self.id])
       Play.update_all(["location = ?", fg.name], ["football_ground_id = ?", self.id])
       Play.update_all(["football_ground_id = ?", fg.id], ["football_ground_id = ?", self.id])
+      Match.update_all(["location = ?", fg.name], ["football_ground_id = ?", self.id])
+      Match.update_all(["football_ground_id = ?", fg.id], ["football_ground_id = ?", self.id])
+      SidedMatch.update_all(["location = ?", fg.name], ["football_ground_id = ?", self.id])
+      SidedMatch.update_all(["football_ground_id = ?", fg.id], ["football_ground_id = ?", self.id])
       FootballGround.delete(self.id)
     end
   end
@@ -43,6 +47,10 @@ class FootballGround < ActiveRecord::Base
     Training.update_all("football_ground_id = NULL", ["football_ground_id = ?", self.id])
     Play.update_all(["location = ?", self.name], ["football_ground_id = ?", self.id])
     Play.update_all("football_ground_id = NULL", ["football_ground_id = ?", self.id])
+    Match.update_all(["location = ?", self.name], ["football_ground_id = ?", self.id])
+    Match.update_all("football_ground_id = NULL", ["football_ground_id = ?", self.id])
+    SidedMatch.update_all(["location = ?", self.name], ["football_ground_id = ?", self.id])
+    SidedMatch.update_all("football_ground_id = NULL", ["football_ground_id = ?", self.id])
   end
   
   def before_validation

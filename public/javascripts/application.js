@@ -179,7 +179,6 @@ j(function(){
               lti.slideDown();
             })
             lti.find("a.switch").click(function(){
-              location_input.value = ''
               lti.slideUp();
               fgi.slideDown();
             })

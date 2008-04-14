@@ -25,15 +25,15 @@
       <%end%>
 
       <%if @team_join_request_count > 0 || @match_invitation_count > 0%>
-        球队有:
+        球队有
       <%end%>
       <%if @team_join_request_count > 0%>
-        <%= link_to "#{@team_join_request_count}个加入申请", team_team_join_requests_path(@team) %>
-        <br />
+        <%= link_to "#{@team_join_request_count}个加入申请", team_team_join_requests_path(@team) %>, 
+        <%#*<br />%>
       <%end%>
       
       <%if @match_invitation_count > 0%>
-        <%= '&nbsp;'*13 if @team_join_request_count > 0%>
+        <%#= '&nbsp;'*13 if @team_join_request_count > 0%>
         <%= link_to "#{@match_invitation_count}个需要处理的比赛邀请", team_match_invitations_path(@team)%>
       <%end%>  
     </div>

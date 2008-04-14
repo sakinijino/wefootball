@@ -28,6 +28,8 @@ class Match < ActiveRecord::Base
     end
   end
   
+  belongs_to :football_ground
+  
   validates_presence_of     :start_time, :location, :size
   validates_length_of       :description, :maximum =>MAX_DESCRIPTION_LENGTH, :allow_nil => true
   validates_inclusion_of   :situation_by_host, :situation_by_guest, :in => SITUATIONS, :allow_nil=>true  
@@ -38,9 +40,7 @@ class Match < ActiveRecord::Base
   belongs_to :guest_team, :class_name=>"Team", :foreign_key=>"guest_team_id"
   
   def before_save
-    self.has_conflict = judge_conflict    
-    self.half_match_length = 0 if self.half_match_length.nil?
-    self.rest_length = 0 if self.rest_length.nil?    
+    self.has_conflict = judge_conflict     
     self.end_time = self.start_time.since(60 * self.full_match_length)
   end
 
@@ -50,10 +50,15 @@ class Match < ActiveRecord::Base
   end
   
   def before_validation
+    self.description = "" if self.description.nil?
+    self.size = 11 if self.size.nil?
+    self.match_type = 1 if self.match_type.nil?
+    self.win_rule = 1 if self.win_rule.nil?
+    self.start_time = DateTime.now.tomorrow if self.start_time==nil
+    self.half_match_length = 45 if self.half_match_length==nil
+    self.rest_length = 15 if self.rest_length==nil
+    self.location = self.football_ground.name if self.football_ground!=nil    
     attribute_slice(:description, MAX_DESCRIPTION_LENGTH)    
-    if self.size.nil?
-      self.size = 11
-    end   
   end
 
   def self.calculate_situation(host_team_goal,guest_team_goal)

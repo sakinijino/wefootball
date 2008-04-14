@@ -15,17 +15,19 @@
     <%= f.datetime_select :start_time,  :start_year => Date.today.year, :end_year => 1.year.since.year, :use_month_numbers => true, :minute_step=>15 %>
   </td></tr>
   <tr><td>
-    选一块场地
+    选择场地:
   </td><td>
   <div class="location_input">
-    <p class="football_ground_input">
-      <%= f.football_ground_select :football_ground_id,@sided_match.football_ground_id.nil?  ? 'city' : nil,
-  @sided_match.football_ground_id.nil? ? @team.city : nil%>     
-      <%= link_to "提交新场地", new_football_ground_path(:back_uri => request.request_uri)%>
-    </p>
-    <p class="location_text_input">
-      <%= f.text_field :location, :value=> @sided_match.football_ground_id.nil? ? @sided_match.location : '' %> （如果场地不在列表中请在这里填写）
-    </p>
+    <div class="football_ground_input">
+      <%= f.football_ground_select :football_ground_id, 
+          @sided_match.football_ground_id.nil?  ? 'city' : nil,
+          @sided_match.football_ground_id.nil? ? @team.city : nil%><br/>
+      <a class="switch" href="javascript:void(0)">场地不在列表中, 点击此处填写地点</a>
+    </div>
+    <div class="location_text_input">
+      <%= f.text_field :location, :value=> @sided_match.football_ground_id.nil? ? @sided_match.location : '' %>
+      <br/><a class="switch" href="javascript:void(0)">从列表中选择场地</a>
+    </div>
   </div>
   </td></tr>
   <tr><td>
@@ -48,19 +50,19 @@
   </td><td>
     <%= f.text_field :rest_length, :size=>1 %>分钟
   <tr><td>
-      裁判
+      裁判:
     </td><td>
       <%= f.radio_button :has_judge, true%>有
       <%= f.radio_button :has_judge, false%>没有
   </td></tr>
   <tr><td>
-      红黄牌
+      红黄牌:
     </td><td>
       <%= f.radio_button :has_card, true%>有
       <%= f.radio_button :has_card, false%>没有
   </td></tr>
   <tr><td>
-      越位
+      越位:
     </td><td>
       <%= f.radio_button :has_offside, true%>有
       <%= f.radio_button :has_offside, false%>没有
