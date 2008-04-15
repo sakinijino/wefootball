@@ -98,24 +98,22 @@ class SidedMatchesController < ApplicationController
     player_mjs_hash = @player_mjs.group_by{|mj| mj.id}
     @match_join_hash = {}
     filled_goal_sum = 0
-    params[:mj].map{|k,v| [k,{:goal=>v[:goal],:cards=>v[:cards]}]}.each do |i|
-      if !player_mjs_hash.has_key?(i[0].to_i)
-        fake_params_redirect      
-        return
+    if params[:mj]
+      params[:mj].map{|k,v| [k,{:goal=>v[:goal],:cards=>v[:cards]}]}.each do |i|
+        if !player_mjs_hash.has_key?(i[0].to_i)
+          fake_params_redirect      
+          return
+        end
+        @match_join_hash[i[0]] = i[1]
+        filled_goal_sum += i[1][:goal].to_i
       end
-      @match_join_hash[i[0]] = i[1]
-      filled_goal_sum += i[1][:goal].to_i
-    end
-    
-    @sided_match.guest_team_goal = params[:sided_match][:guest_team_goal]
-    @sided_match.host_team_goal = params[:sided_match][:host_team_goal]      
-    if(params[:sided_match][:guest_team_goal].blank? && params[:sided_match][:host_team_goal].blank?)
-      @sided_match.situation = params[:sided_match][:situation]
-    else
-      @sided_match.situation = SidedMatch.calculate_situation(params[:sided_match][:host_team_goal],params[:sided_match][:guest_team_goal] )
     end
 
-    if (params[:sided_match][:host_team_goal].to_i<filled_goal_sum)
+    @sided_match.host_team_goal = params[:sided_match][:host_team_goal]    
+    @sided_match.guest_team_goal = params[:sided_match][:guest_team_goal]      
+    @sided_match.situation = params[:sided_match][:situation]
+
+    if (!@sided_match.host_team_goal.blank? && @sided_match.host_team_goal<filled_goal_sum)
      @sided_match.errors.add_to_base("队员入球总数不能超过本队入球数")
      render :action => "edit_result", :layout=>'team_layout' 
      return

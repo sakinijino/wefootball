@@ -18,6 +18,7 @@ class SidedMatchJoin < ActiveRecord::Base
       ut = UserTeam.find_by_user_id_and_team_id(self.user_id, self.sided_match.host_team_id)
       self.position = nil if ut.nil? || !ut.is_player
     end
+    self.goal=0 if self.goal.blank?    
   end
   
   def self.create_joins(match)

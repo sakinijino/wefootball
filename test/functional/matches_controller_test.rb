@@ -396,7 +396,7 @@ class MatchesControllerTest < ActionController::TestCase
     assert_template 'edit'       
   end
   
-    def test_check_guest_team_goals_in_update
+  def test_check_guest_team_goals_in_update
     login_as :saki #准备数据,这里为了清晰,不使用夹具数据
     u1 = users(:saki)
     u2 = users(:mike1)

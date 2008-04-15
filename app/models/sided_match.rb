@@ -53,7 +53,7 @@ class SidedMatch < ActiveRecord::Base
   
   belongs_to :host_team, :class_name=>"Team", :foreign_key=>"host_team_id"
   
-  def before_save
+  def before_save   
     self.half_match_length = 0 if self.half_match_length.nil?
     self.rest_length = 0 if self.rest_length.nil?    
     self.end_time = self.start_time.since(60 * self.full_match_length)
@@ -64,6 +64,9 @@ class SidedMatch < ActiveRecord::Base
   end
   
   def before_validation
+    if !(self.guest_team_goal.blank? && self.host_team_goal.blank?)
+      self.situation = Match.calculate_situation(self.host_team_goal,self.guest_team_goal )
+    end    
     self.description = "" if self.description.nil?
     self.match_type = 1 if self.match_type.nil?
     self.size = 5 if self.size.nil?
@@ -73,14 +76,6 @@ class SidedMatch < ActiveRecord::Base
     self.rest_length = 15 if self.rest_length==nil
     self.location = self.football_ground.name if self.football_ground!=nil     
     attribute_slice(:description, MAX_DESCRIPTION_LENGTH)
-  end
-
-  def self.calculate_situation(host_team_goal,guest_team_goal)
-    if(host_team_goal.nil? || guest_team_goal.nil?)
-      return 1
-    elsif(!host_team_goal.nil? && !guest_team_goal.nil?)
-      return Match.calculate_situation_from_goal(host_team_goal,guest_team_goal)
-    end
   end
 
   def is_before_match?
