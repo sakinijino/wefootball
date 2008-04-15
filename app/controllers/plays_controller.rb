@@ -1,14 +1,23 @@
 class PlaysController < ApplicationController
   before_filter :parse_time, :only => [:create]
   before_filter :login_required, :only=>[:new,:create]
-  
+
+  PLAYER_LIST_LENGTH = 18  
 
   def show
     @play = Play.find(params[:id])
     @title = "去 #{@play.location} 随便踢踢"
+    @players = @play.users.find(:all,:limit=>PLAYER_LIST_LENGTH+1)
     render :layout => default_layout  
   end
 
+  def players
+    @play = Play.find(params[:id])    
+    @title = "#{@play.start_time.strftime('%Y-%m-%d %H:%M')}-#{@play.end_time.strftime('%H:%M')}，在#{@play.location}一起踢球"
+    @players = @play.users
+    render :layout => default_layout    
+  end
+  
   def new
     @play = Play.new
     @play.start_time = 1.hour.since #默认开始和结束时间

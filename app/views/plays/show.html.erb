@@ -17,10 +17,18 @@
 <div id="narrow_right_content">
   <div class="sect">
     <h2>打算一起去踢的有...</h2>
-    <%= user_icon(@play.users)%>
+    <%if @players.length <= PlaysController::PLAYER_LIST_LENGTH%>
+        <%= user_icon(@players)%>
+    <%else%>
+        <%@players.pop%>
+        <%= user_icon(@players)%>
+        <%= link_to ">> 更多",players_play_path(@play.id), :class=>"more" %>
+    <%end%>  
     <div class="clearBoth"></div>
   </div>
 </div>
+
+
 
 <div class="clearBoth"></div>
 

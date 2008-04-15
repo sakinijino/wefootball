@@ -118,14 +118,27 @@
   </div>
 
   <div class="sect">
-    <h2><%=smart_nickname @user%>参加的球队</h2>
-    <%= team_icon(@teams)%>
+    <h2><%=smart_nickname @user%>参加的球队</h2>    
+    <%if @teams.length <= UserViewsController::TEAM_LIST_LENGTH%>
+        <%= team_icon(@teams)%>
+    <%else%>
+        <%@teams.pop%>
+        <%= team_icon(@teams)%>
+        <%= link_to ">> 更多",user_team_joins_path(@user.id), :class=>"more" %>
+    <%end%>    
+    
     <div class="clearBoth"></div>
   </div>
   
   <div class="sect">
     <h2><%=smart_nickname @user%>的朋友</h2>
-    <%= user_icon(@friends)%>
+    <%if @friends.length <= UserViewsController::FRIEND_LIST_LENGTH%>
+        <%= user_icon(@friends)%>
+    <%else%>
+        <%@friends.pop%>
+        <%= user_icon(@friends)%>
+        <%= link_to ">> 更多",user_friend_relations_path(@user.id), :class=>"more" %>
+    <%end%>
     <div class="clearBoth"></div>
   </div>
 </div>

@@ -11,8 +11,8 @@ class UserViewsController < ApplicationController
   
   def show
     @user = User.find(params[:id], :include=>[:positions])
-    @friends = @user.friends(FRIEND_LIST_LENGTH)
-    @teams = @user.teams.find(:all, :limit => TEAM_LIST_LENGTH)
+    @friends = @user.friends(FRIEND_LIST_LENGTH + 1)
+    @teams = @user.teams.find(:all, :limit => TEAM_LIST_LENGTH+1)
     
     activities = []
     tmp = @user.trainings.recent(TRAINING_LIST_LENGTH)

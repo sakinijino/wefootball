@@ -50,13 +50,25 @@
 <div id="narrow_right_content">
   <div class="sect">
     <h2>参加这次训练的人</h2>
-    <%= user_icon(@training.users.joined)%>
+    <%if @joined_users.length <= TrainingsController::JOINED_USER_LIST_LENGTH%>
+        <%= user_icon(@joined_users)%>
+    <%else%>
+        <%@joined_users.pop%>
+        <%= user_icon(@joined_users)%>
+        <%= link_to ">> 更多",joined_users_training_path(@training.id), :class=>"more" %>
+    <%end%>
     <div class="clearBoth"></div>
   </div>
-
+         
   <div class="sect">
     <h2>尚未决定是否参加的人</h2>
-    <%= user_icon(@training.users.undetermined)%>
+    <%if @undetermined_users.length <= TrainingsController::UNDETERMINED_USER_LIST_LENGTH%>
+        <%= user_icon(@undetermined_users)%>
+    <%else%>
+        <%@undetermined_users.pop%>
+        <%= user_icon(@undetermined_users)%>
+        <%= link_to ">> 更多",undetermined_users_training_path(@training.id), :class=>"more" %>
+    <%end%>
     <div class="clearBoth"></div>
   </div>
 </div>

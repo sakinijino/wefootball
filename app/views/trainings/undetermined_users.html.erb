@@ -1,0 +1,10 @@
+<div id="wide_left_content" class="sect">
+  <h2>尚未决定是否参加<%=link_to @title, training_path(@training)%>的人</h2>
+  <%= user_icon(@undetermined_users)%>
+</div>
+
+<div id="narrow_right_content" class="sect">
+  <h2></h2>
+  <%=render :partial=>'sidebar_menus/team_view_training_users'%>
+</div>
+<div class="clearBoth"></div>

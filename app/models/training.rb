@@ -7,11 +7,11 @@ class Training < ActiveRecord::Base
   has_many :training_joins,
             :dependent => :destroy
   has_many :users, :through=>:training_joins do
-    def joined
-      find :all, :conditions => ['status = ?', TrainingJoin::JOIN]
+    def joined(limit=nil)
+      find(:all, :conditions => ['status = ?', TrainingJoin::JOIN])
     end
-    def undetermined
-      find :all, :conditions => ['status = ?', TrainingJoin::UNDETERMINED]
+    def undetermined(limit=nil)
+      find(:all, :conditions => ['status = ?', TrainingJoin::UNDETERMINED])
     end
   end
   

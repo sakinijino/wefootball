@@ -1,0 +1,10 @@
+<div id="wide_left_content" class="sect">
+  <h2><%=link_to @title, play_path(@play)%>的人</h2>
+  <%= user_icon(@players)%>
+</div>
+
+<div id="narrow_right_content" class="sect">
+  <h2></h2>
+  <%=render :partial=>'sidebar_menus/user_view_players'%>
+</div>
+<div class="clearBoth"></div>

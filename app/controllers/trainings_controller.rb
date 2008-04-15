@@ -3,6 +3,8 @@ class TrainingsController < ApplicationController
   before_filter :parse_time, :only => [:create, :update]
   
   POSTS_LENGTH = 10
+  JOINED_USER_LIST_LENGTH = 9
+  UNDETERMINED_USER_LIST_LENGTH = 9  
   
   def show
     @training = Training.find(params[:id])
@@ -14,9 +16,27 @@ class TrainingsController < ApplicationController
     end
     
     @team = @training.team
+    @joined_users = @training.users.joined(JOINED_USER_LIST_LENGTH+1)
+    @undetermined_users = @training.users.undetermined(UNDETERMINED_USER_LIST_LENGTH+1)    
     @title = "#{@training.team.shortname} #{@training.start_time.strftime('%m.%d')}的训练"
     render :layout=>'team_layout'
   end
+  
+  def joined_users
+    @training = Training.find(params[:id])
+    @title = "#{@training.team.shortname} #{@training.start_time.strftime('%m.%d')}的训练"
+    @joined_users = @training.users.joined
+    @team = @training.team
+    render :layout=>'team_layout'    
+  end
+  
+  def undetermined_users
+    @training = Training.find(params[:id])
+    @title = "#{@training.team.shortname} #{@training.start_time.strftime('%m.%d')}的训练"
+    @undetermined_users = @training.users.undetermined
+    @team = @training.team
+    render :layout=>'team_layout'    
+  end  
   
   def new
     @team = Team.find(params[:team_id])
