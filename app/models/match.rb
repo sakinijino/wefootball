@@ -17,6 +17,15 @@ class Match < ActiveRecord::Base
       find :all, {:conditions => ['team_id = ? and is_private = ?', team_id, false]}.merge(options)
     end
   end
+
+  has_many :users, :through=>:match_joins do
+    def joined_with_team_id(team_id)
+      find :all, {:conditions => ['team_id = ? and status = ?', team_id,MatchJoin::JOIN]}
+    end
+    def undetermined_with_team_id(team_id)
+      find :all, {:conditions => ['team_id = ? and status = ?', team_id,MatchJoin::UNDETERMINED]}
+    end
+  end
   
   has_many :match_joins,
             :dependent => :destroy  do

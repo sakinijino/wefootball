@@ -74,7 +74,7 @@ ActionController::Routing::Routes.draw do |map|
   end
   
   map.resources :match_invitations
-  map.resources :matches do |matches|
+  map.resources :matches, :member => {:undetermined_users=>:get, :joined_users=>:get} do |matches|
     matches.resources :team do |teams|
       teams.resources :posts
     end

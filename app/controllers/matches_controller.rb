@@ -32,6 +32,22 @@ class MatchesController < ApplicationController
     render :layout=>'match_layout'
   end
   
+  def joined_users
+    @match = Match.find(params[:id])
+    @team = Team.find(params[:team_id])
+    @title = "#{@team.name}已决定参加的人"
+    @users = @match.users.joined_with_team_id(@team)
+    render :action=>'users', :layout=>'match_layout'    
+  end
+  
+  def undetermined_users
+    @match = Match.find(params[:id])
+    @team = Team.find(params[:team_id])
+    @title = "#{@team.name}尚未决定是否参加的人"      
+    @users = @match.users.undetermined_with_team_id(@team)
+    render :action=>'users', :layout=>'match_layout'    
+  end   
+  
   def create
     match_invitation_id = params[:id]
     @match_invitation = MatchInvitation.find(match_invitation_id)
