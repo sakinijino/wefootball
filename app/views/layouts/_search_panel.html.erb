@@ -1,20 +1,28 @@
-<% search_paths = {
+<% team_img = image_tag('teamIcon.gif', :title=>'') 
+   user_img = image_tag('peopleIcon.gif', :title=>'')
+  search_paths = {
   :user => 
-    {:link_to=>link_to("用户", search_users_path), :url=>search_users_path},
+    {:image => user_img,
+    :link_to=>"#{link_to(user_img, search_users_path)} #{link_to('用户', search_users_path)}", 
+    :url=>search_users_path},
   :team => 
-    {:link_to=>link_to("队伍", search_teams_path), :url=>search_teams_path}
+    {:image => team_img,
+    :link_to=>"#{link_to(team_img, search_teams_path)} #{link_to("队伍", search_teams_path)}", 
+    :url=>search_teams_path}
 }%>
 <% form_tag search_paths[default][:url], :method=>:post, :id=>"header_search" do%>
   <table><tr>
-  <%#*<td class="dropdown_container">%>
-    <%#= image_tag 'default_user_tiny.gif', :width=>20, :height=>20%>
-    <%#*<div class="dropdown" style="top:20px;left:0px;width:100px">%>
-      <%#search_paths.values.each do |v|%>
-        <%#= v[:link_to]%>
-      <%#end%>
-    <%#*</div>%>
-  <%#*</td>%>
-  <td><%= text_field_tag 'q', '', :size=>20 %></td>
+  <td class="dropdown_container">
+    <%= search_paths[default][:image]%>
+    <div class="dropdown" style="top:20px;left:0px;width:60px">
+      <%search_paths.values.each do |v|%>
+        <div>
+          <%= v[:link_to]%>
+        </div>
+      <%end%>
+    </div>
+  </td>
+  <td><%= text_field_tag 'q', '', :size=>18 %></td>
   <td><%= submit_tag '', :class=>"submit search", :title=>'搜索' %></td>
   </tr></table>
 <%end%>

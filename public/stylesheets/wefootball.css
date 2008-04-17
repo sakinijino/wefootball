@@ -98,17 +98,6 @@ form.button-to div {
     list-style-type: none;
 }
 
-#header .dropdown_container div.dropdown a{
-    display: block;
-    padding: 5px;
-    background: #fff;
-    color: #006666;
-}
-
-#header .dropdown_container div.dropdown a:hover{
-    background: #F2F7AB;
-}
-
 #header_icon {
     position: absolute;
     left: 48px;
@@ -158,6 +147,17 @@ form.button-to div {
 
 #header_setting a {
     color: #fff;
+}
+
+#header_setting .dropdown_container div.dropdown a{
+    display: block;
+    padding: 5px;
+    background: #fff;
+    color: #006666;
+}
+
+#header_setting .dropdown_container div.dropdown a:hover{
+    background: #F2F7AB;
 }
 
 #header_menu {
@@ -220,11 +220,13 @@ form.button-to div {
     padding: 0;
     position: absolute;
     top: 85px;
-    right:4px;
+    left: 781px;
 }
 
 #header_search table {
     vertical-align: middle;
+    margin: 0;
+    padding: 0;
 }
 
 #header_search input {
@@ -235,10 +237,28 @@ form.button-to div {
 }
 
 #header_search input.submit {
-    width: 30px;
+    width: 32px;
     height: 30px;
     cursor: pointer;
     background: transparent;
+}
+
+#header_search .dropdown_container div.dropdown div{
+  padding: 1px 2px;
+}
+
+#header_search .dropdown_container div.dropdown div.hover,
+#header_search .dropdown_container div.dropdown div:hover{
+    background: #F2F7AB;
+}
+
+#header_search .dropdown_container div.dropdown img{
+  margin: 0;
+  padding: 0;
+}
+
+#header_search .dropdown_container div.dropdown a{
+    color: #333333;
 }
 
 #content {
