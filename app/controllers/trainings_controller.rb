@@ -65,7 +65,10 @@ class TrainingsController < ApplicationController
   def edit
     @training = Training.find(params[:id])
     @team = @training.team
-    fake_params_redirect if (!@training.can_be_modified_by?(current_user))
+    if (!@training.can_be_modified_by?(current_user))
+      fake_params_redirect
+      return
+    end
     @title = "修改#{@training.start_time.strftime('%m月%d日')}训练的信息"
     render :layout => "team_layout"
   end

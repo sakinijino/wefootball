@@ -32,7 +32,9 @@ ActionController::Routing::Routes.draw do |map|
   # See how all your routes lay out with "rake routes"
   
   # Install the default routes as the lowest priority.
-  map.resources :users, :collection => { :search => :post }, :member => {:update_image => :put} do |users|
+  map.resources :users, 
+    :collection => { :search => :post, :invite => :get, :create_with_invitation => :post }, 
+    :member => {:update_image => :put} do |users|
     users.resources :friend_relations
     users.resources :team_join_invitations
     users.resources :team_joins
@@ -112,10 +114,11 @@ ActionController::Routing::Routes.draw do |map|
   map.send_mail_to '/messages/to/:to', :controller => 'messages', :action => 'new'
   
   map.activate '/activate/:activation_code', :controller => 'users', :action=> 'activate', :activation_code => nil
+  map.activate '/signup_with_invitation/:invitation_code', :controller => 'users', :action=> 'new_with_invitation', :invitation_code => nil  
   map.signup '/signup', :controller => 'users', :action => 'new'
   map.login '/login', :controller => 'sessions', :action => 'new'
   map.logout '/logout', :controller => 'sessions', :action => 'destroy'
-  map.forgot_password '/forgot_password', :controller => 'users', :action => 'forgot_password'
+  map.forgot_password '/forgot_password', :controller => 'users', :action => 'forgot_password' 
   map.reset_password '/reset_password/:password_reset_code', :controller => 'users', :action => 'reset_password', :password_reset_code => nil  
   
   map.connect ':controller/:action/:id'

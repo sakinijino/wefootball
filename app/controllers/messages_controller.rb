@@ -56,6 +56,7 @@ class MessagesController < ApplicationController
       as = 'receiver'
     else
       fake_params_redirect
+      return
     end
     @message.destroy_by!(current_user)
     redirect_to messages_path(:as=>as)

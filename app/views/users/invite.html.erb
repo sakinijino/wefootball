@@ -1,0 +1,22 @@
+<div id="wide_left_content" class="sect">
+  <h2>邀请你的朋友使用WeFootball</h2>
+  <%= error_messages_for :register_invitation %>
+
+  <%if @has_joined_notice%>
+    <%=@has_joined_notice%><br />
+    其个人主页在<%=link_to '这里',user_view_path(@has_joined_user_id)%>
+  <%end%>
+
+  <% form_for @register_invitation, :url=>invite_users_path do |f| -%>
+
+  <p><label for="login">朋友的邮箱</label><br/>
+  <%= f.text_field :login %></p>
+
+  <p><label for="message">留言(可选)</label><br/>
+  <%= f.text_area :message %></p>
+
+  <p><%= submit_tag '邀请' %></p>
+  <% end -%>
+</div>
+
+<div class="clearBoth"></div>

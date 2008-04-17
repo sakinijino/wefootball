@@ -7,6 +7,14 @@ class UserMailer < ActionMailer::Base
   
   end
   
+  def invite_notification(host, invitation)   
+    setup_invitation_email(invitation)
+    @subject    += "#{host.nickname}邀请您使用WeFootball"
+    @body[:signup_url]  = "#{HOST}/signup_with_invitation/#{invitation.invitation_code}"    
+    @body[:host_url]  = "#{HOST}/user_views/#{host.id}"
+    @body[:host] = host
+  end  
+  
   def activation(user)
     setup_email(user)
     @subject    += '您的帐号已经被激活！'
@@ -34,5 +42,13 @@ class UserMailer < ActionMailer::Base
       @sent_on     = Time.now
       @body[:user] = user
     end
+    
+    def setup_invitation_email(invitation)
+      @recipients  = "#{invitation.login}"
+      @from        = %("WeFootball" <welcome@wefootball.org>) # Sets the User FROM Name and Email
+      @subject     = "[WeFootball]"
+      @sent_on     = Time.now
+      @body[:invitation] = invitation
+    end    
 
 end

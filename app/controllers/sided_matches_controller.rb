@@ -71,7 +71,6 @@ class SidedMatchesController < ApplicationController
       @team = @sided_match.host_team
       @title = "编辑比赛"
       render :action => "edit", :layout=>'team_layout'
-      return
     end
   end
   
