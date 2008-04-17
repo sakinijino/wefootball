@@ -40,7 +40,37 @@
 </table>
 
 <div id="match_blackboard">
-  ！！各种状态！！
+  <%if !@match.is_after_match? %>
+    <%= time_status_text @match%>
+  <%else%>
+    <%= match_result_text @match%>
+    <div class="host_result">
+      <%if @match.has_conflict%>
+        <span>主队认可的赛果: <%= match_result_text_by_host @match%></span>
+      <%end%>
+      <table class="goal_list">
+        <% (@host_team_goals).each do |ut| %>
+          <tr>
+            <td><%= link_to h(ut.user.nickname), user_view_path(ut.user)%></td>
+            <td><%=ut.goal%></td>
+          </tr>
+        <%end%>
+      </table>
+    </div>
+    <div class="guest_result">
+      <%if @match.has_conflict%>
+        <span>客队认可的赛果: <%= match_result_text_by_guest @match%></span>
+      <%end%>
+      <table class="goal_list">
+        <% (@guest_team_goals).each do |ut| %>
+          <tr>
+            <td><%=ut.goal%></td>
+            <td><%= link_to truncate(h(ut.user.nickname), 12), user_view_path(ut.user)%></td>
+          </tr>
+        <%end%>
+      </table>
+    </div>
+  <%end%>
 </div>
 
 
@@ -50,8 +80,7 @@
                                                     :team => @match.host_team,
                                                     :formation_array => @host_formation_array,
                                                     :is_host_team => true,
-                                                    :posts => @host_posts,
-                                                    :user_mj => @host_team_mj})%>
+                                                    :posts => @host_posts})%>
 </div>
 
 <div id="guest_team_div">
@@ -60,8 +89,7 @@
                                                     :team => @match.guest_team,
                                                     :formation_array => @guest_formation_array,
                                                     :is_host_team => false,
-                                                    :posts => @guest_posts,
-                                                    :user_mj => @guest_team_mj})%>
+                                                    :posts => @guest_posts})%>
 </div>
 
 <div class="clearBoth"></div>

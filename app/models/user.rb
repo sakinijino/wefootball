@@ -74,7 +74,7 @@ class User < ActiveRecord::Base
   validates_length_of       :blog, :maximum => 256
   validates_format_of       :full_blog_uri, :allow_nil => true,
      :with => /(^$)|(^(http|https):\/\/[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$)/ix,
-     :if => Proc.new {|u| !u.blog.blank?}
+     :if => Proc.new {|u| !u.blog.blank?}, :message => "blog地址必须是一个url"
   
   validates_numericality_of :weight, :height, :if=>:is_playable, :allow_nil=>true
   validates_inclusion_of    :weight, :in => 0..400, :if=>:is_playable,
@@ -83,6 +83,8 @@ class User < ActiveRecord::Base
     :message => '... Are you kidding me?', :allow_nil=>true
   validates_inclusion_of    :fitfoot, :in => FITFOOT, :if=>:is_playable
   validates_inclusion_of   :premier_position, :in => Position::POSITIONS, :if=>:is_playable, :message => '未知的位置'
+  
+  validates_multiparameter_assignments :message => "无效的生日日期" 
   
   def before_validation
     self.nickname = self.login.split('@')[0] if self.login!=nil && (self.nickname==nil || self.nickname == "")

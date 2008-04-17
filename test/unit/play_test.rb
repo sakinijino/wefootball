@@ -52,6 +52,12 @@ class PlayTest < ActiveSupport::TestCase
     assert_equal true, plays(:play1).is_before_play?    
   end
 
+  def test_has_member
+    PlayJoin.create!(:user_id=>users(:mike1).id,:play_id=>plays(:play1).id)
+    assert_equal false, plays(:play1).has_member?(users(:saki)) 
+    assert_equal true, plays(:play1).has_member?(users(:mike1))    
+  end
+  
   def test_can_join
     PlayJoin.create!(:user_id=>users(:mike1).id,:play_id=>plays(:play1).id)    
     
@@ -59,15 +65,15 @@ class PlayTest < ActiveSupport::TestCase
     plays(:play1).start_time = 3.hours.ago
     assert_equal false, plays(:play1).can_be_joined_by?(users(:saki)) 
     assert_equal false, plays(:play1).can_be_joined_by?(users(:mike1))
-    assert_equal false, plays(:play1).can_be_unjoined_by?(users(:saki)) 
-    assert_equal false, plays(:play1).can_be_unjoined_by?(users(:mike1)) 
+    assert_equal false, plays(:play1).can_be_quited_by?(users(:saki)) 
+    assert_equal false, plays(:play1).can_be_quited_by?(users(:mike1)) 
    
     #如果play尚未开始
     plays(:play1).start_time = 3.hours.since
     assert_equal true, plays(:play1).can_be_joined_by?(users(:saki)) #可以加入
     assert_equal false, plays(:play1).can_be_joined_by?(users(:mike1)) #已加入，不能再加入
-    assert_equal false, plays(:play1).can_be_unjoined_by?(users(:saki)) #未加入，不能退出
-    assert_equal true, plays(:play1).can_be_unjoined_by?(users(:mike1)) #已加入，可以退出
+    assert_equal false, plays(:play1).can_be_quited_by?(users(:saki)) #未加入，不能退出
+    assert_equal true, plays(:play1).can_be_quited_by?(users(:mike1)) #已加入，可以退出
   end
 
   def test_destroy

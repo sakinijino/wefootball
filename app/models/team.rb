@@ -43,6 +43,8 @@ class Team < ActiveRecord::Base
   validates_length_of        :summary,    :maximum => 3000, :allow_nil=>true
   validates_length_of        :style,    :maximum => 50
   
+  validates_multiparameter_assignments :message => "无效的建队日期" 
+  
   attr_protected :uploaded_data
   
   def before_validation

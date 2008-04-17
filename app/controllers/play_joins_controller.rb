@@ -14,7 +14,7 @@ class PlayJoinsController < ApplicationController
 
   def destroy
     @play = Play.find(params[:play_id])
-    if !@play.can_be_unjoined_by?(current_user)
+    if !@play.can_be_quited_by?(current_user)
       fake_params_redirect
       return
     end

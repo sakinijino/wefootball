@@ -31,20 +31,34 @@ class Play < ActiveRecord::Base
     Time.now < self.start_time
   end
   
-  def can_be_joined_by?(user_id)
-    if self.is_before_play? && !PlayJoin.find_by_user_id_and_play_id(user_id,self.id)
-      return true
-    else
-      return false
+  def has_member?(user)
+    user_id = case user
+    when User
+      user.id
+    else 
+      user
     end
+    PlayJoin.find_by_user_id_and_play_id(user_id,self.id) != nil
+  end
+  
+  def can_be_joined_by?(user)
+    user_id = case user
+    when User
+      user.id
+    else 
+      user
+    end
+    self.is_before_play? && PlayJoin.find_by_user_id_and_play_id(user_id,self.id) == nil
   end
 
-  def can_be_unjoined_by?(user_id)
-    if self.is_before_play? && PlayJoin.find_by_user_id_and_play_id(user_id,self.id)
-      return true
-    else
-      return false
-    end    
+  def can_be_quited_by?(user)
+    user_id = case user
+    when User
+      user.id
+    else 
+      user
+    end
+    self.is_before_play? && PlayJoin.find_by_user_id_and_play_id(user_id,self.id) != nil
   end
   
 end

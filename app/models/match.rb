@@ -108,6 +108,10 @@ class Match < ActiveRecord::Base
     return Time.now < self.start_time
   end
   
+  def is_after_match?
+    return Time.now > self.end_time
+  end
+  
   def is_after_match_and_before_match_close?
     return ((Time.now > self.end_time) && (TIME_LENGTH_TO_CLOSE_MATCH.days.ago < self.end_time))
   end

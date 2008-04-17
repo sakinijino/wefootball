@@ -19,15 +19,17 @@
     <%= select_minute @play.end_time,:prefix => "end_time", :minute_step=>15 %></p>
 
     <div class="location_input">
-      <p class="football_ground_input"><label for="football_ground_id">选一块场地</label><br/>
+      <label for="football_ground_id">选择场地</label><br/>
+      <div class="football_ground_input">
         <%= f.football_ground_select :football_ground_id, 
           @play.football_ground_id.nil?  ? 'city' : nil,
-          @play.football_ground_id.nil? ? current_user.city : nil%>    
-        <%= link_to "提交新场地", new_football_ground_path(:back_uri => request.request_uri)%>
-      </p>
-      <p class="location_text_input">
-        <%= f.text_field :location, :value=> @play.football_ground_id.nil? ? @play.location : '' %> （如果场地不在列表中请在这里填写）
-      </p>
+          @play.football_ground_id.nil? ? current_user.city : nil%>
+        <a class="switch" href="javascript:void(0)">场地不在列表中, 点击此处填写地点</a>
+      </div>
+      <div class="location_text_input">
+        <%= f.text_field :location, :value=> @play.football_ground_id.nil? ? @play.location : '' %>
+        &nbsp;&nbsp;<a class="switch" href="javascript:void(0)">从列表中选择场地</a>
+      </div>
     </div>
 
     <p><%= submit_tag '确认' %></p>

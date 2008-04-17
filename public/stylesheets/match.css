@@ -4,9 +4,39 @@
 
 #match_blackboard {
     position: absolute;
-    left: 325px;
-    width: 300px;
+    left: 250px;
+    width: 450px;
+    margin-top: -50px;
     text-align: center;
+}
+
+#match_blackboard div.host_result,
+#match_blackboard div.guest_result{
+  width: 190px;
+  height:100%;
+  border: 1px solid #333333;
+  padding: 5px
+}
+
+#match_blackboard div.host_result {
+  float:left;
+  padding-left:20px;
+  text-align: right;
+}
+
+#match_blackboard div.guest_result{
+  float:right;
+  padding-right: 20px;
+  text-align: left;
+}
+
+table.goal_list{
+  width: 100%;
+}
+
+table.goal_list td img.icon{
+  width:22px;
+  height:22px;
 }
 
 #host_team_div { 
@@ -21,11 +51,13 @@
     text-align: right;
 }
 
-#host_team_div img.title_icon{
+#host_team_div img.title_icon,
+#host_team_div div.info{
     float: left;
-    margin-right: 20px; 
+    margin-right: 20px;
 }
 
+#guest_team_div div.info,
 #guest_team_div img.title_icon{
     float: right;
     margin-left: 20px;

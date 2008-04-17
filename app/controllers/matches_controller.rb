@@ -26,8 +26,14 @@ class MatchesController < ApplicationController
       @guest_posts = @match.posts.team_public(@match.guest_team_id, :limit=>POSTS_LENGTH)
     end
     
-    @host_team_mj = MatchJoin.find_by_user_id_and_team_id_and_match_id(current_user, @match.host_team, @match)
-    @guest_team_mj = MatchJoin.find_by_user_id_and_team_id_and_match_id(current_user, @match.guest_team, @match)
+    @host_team_goals = MatchJoin.find_all_by_team_id_and_match_id(
+      @match.host_team, @match,
+      :conditions => ["goal > 0"]
+    )
+    @guest_team_goals = MatchJoin.find_all_by_team_id_and_match_id(
+      @match.guest_team, @match,
+      :conditions => ["goal > 0"]
+    )
 
     render :layout=>'match_layout'
   end

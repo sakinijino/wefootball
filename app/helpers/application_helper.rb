@@ -34,13 +34,13 @@ module ApplicationHelper
       end
       
     when 2..44           then "#{distance_in_minutes}分钟"#"#{distance_in_minutes} minutes"
-    when 45..89          then '1小时左右'#'about 1 hour'
-    when 90..1439        then '#{(distance_in_minutes.to_f / 60.0).round}小时左右'#"about #{(distance_in_minutes.to_f / 60.0).round} hours"
+    when 45..89          then '1小时'#'about 1 hour'
+    when 90..1439        then "#{(distance_in_minutes.to_f / 60.0).round}小时"#"about #{(distance_in_minutes.to_f / 60.0).round} hours"
     when 1440..2879      then '1天'#'1 day'
     when 2880..43199     then "#{(distance_in_minutes / 1440).round}天"#"#{(distance_in_minutes / 1440).round} days"
-    when 43200..86399    then '1个月左右'#'about 1 month'
+    when 43200..86399    then '1个月'#'about 1 month'
     when 86400..525599   then "#{(distance_in_minutes / 43200).round}月"#"#{(distance_in_minutes / 43200).round} months"
-    when 525600..1051199 then "1年左右"#'about 1 year'
+    when 525600..1051199 then "1年"#'about 1 year'
     else                      "#{(distance_in_minutes / 525600).round}年"#"over #{(distance_in_minutes / 525600).round} years"
     end
   end

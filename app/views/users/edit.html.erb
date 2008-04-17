@@ -14,6 +14,7 @@
 <div id="wide_left_content" class="sect">
   <h2><%=h @title%></h2>
   <%= error_messages_for :user %>
+  <br/>
   <div class="tab_container" style="margin:10px 0 20px 0">
   <span class="tab_link" style="margin-left: 10px;">修改个人信息</span>
   <span class="tab_link <%= "tabSelected" if params[:tab_index] == '1'%>">修改球员信息</span>

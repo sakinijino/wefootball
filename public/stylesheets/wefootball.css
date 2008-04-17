@@ -123,7 +123,7 @@ form.button-to div {
 
 #guest_header_icon {
     position: absolute;
-    left: 117px;
+    left: 122px;
     top: 24px;
 }
 
@@ -219,8 +219,8 @@ form.button-to div {
     margin: 0;
     padding: 0;
     position: absolute;
-    top: 95px;
-    right: 5px;
+    top: 85px;
+    right:4px;
 }
 
 #header_search table {
@@ -228,17 +228,17 @@ form.button-to div {
 }
 
 #header_search input {
-    margin: 0;
+    margin: -2px 5px 0 0;
     padding: 0;
     border: none;
     background: #fff;
 }
 
 #header_search input.submit {
-    background:transparent url(/images/search.gif);
-    width: 11px;
-    height: 11px;
+    width: 30px;
+    height: 30px;
     cursor: pointer;
+    background: transparent;
 }
 
 #content {

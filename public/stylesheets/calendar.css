@@ -108,6 +108,10 @@ div.calendar div.monthAndYearDiv {
     margin: -4px 20px;
 }
 
+.monthCalendar .monthAndYear a{
+    background: transparent;
+}
+
 /*Fix ie6 float double margin bug*/
 .monthCalendar .weekDayDiv,
 .monthCalendar .monthDayDiv,
