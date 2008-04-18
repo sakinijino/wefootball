@@ -40,7 +40,8 @@
           <td style="width:60px"><%= formation_position_text mj.position %></td>
           <td>
             <%= text_field_tag "mj[#{mj.id}][goal]", 
-                @match_join_hash && @match_join_hash[mj.id.to_s] ? @match_join_hash[mj.id.to_s][:goal] : mj.goal, :size=>1%></td>
+                @match_join_hash && @match_join_hash[mj.id.to_s] ? @match_join_hash[mj.id.to_s][:goal] : mj.goal,
+                :maxlength => 2, :size=>1%></td>
           <%if @match.has_card%>
             <td>
               <%= select_tag "mj[#{mj.id}][cards]", 
