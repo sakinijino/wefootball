@@ -5,13 +5,29 @@
 
 <div id="wide_left_content">
   <div class="sect">
-    <h2><%= h @title%></h2>
+    <h2>踢着玩的基本信息</h2>
     <div class="activities">
       <%=date_div_link @play.start_time, @user%>
-      <%= render :partial => 'shared/activity', :object => @play%>
+      <div style="float:left">
+        <span>时间: </span><%= @play.start_time.strftime("%H:%M")%>-<%=@play.end_time.strftime("%H:%M")%><br />
+        <span>地点: </span><%= location_link @play.location, @play.football_ground_id %><br />
+      </div>
       <div class="clearBoth"></div>
     </div>
-  </div>
+    <%if logged_in?%>
+      <div style="float:right">
+        <%links = []%>
+        <% if @play.can_be_joined_by?(current_user) %>
+          > <%links << "#{link_to '我也要去', play_play_joins_path(@play), :method=>:post}"%>     
+        <%end%>
+        <% if @play.can_be_quited_by?(current_user) %>           
+          > <%links << "#{link_to "我不去了",play_play_join_path(@play, 0), :method=>:delete}"%>        
+        <%end%>
+        <%= links_with_sticks links%>
+      </div>
+      <div class="clearBoth"></div>
+    <%end%>   
+    </div>
 </div>
 
 <div id="narrow_right_content">
@@ -22,7 +38,7 @@
     <%else%>
         <%@players.pop%>
         <%= user_icon(@players)%>
-        <%= link_to ">> 更多",players_play_path(@play.id), :class=>"more" %>
+        <%= link_to "> 更多",players_play_path(@play.id), :class=>"more" %>
     <%end%>  
     <div class="clearBoth"></div>
   </div>

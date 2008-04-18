@@ -19,20 +19,20 @@
       <div style="float:left">
         <%links = []%>
         <%if @training.can_be_modified_by?(current_user)%>
-          <%links << "> #{link_to '修改', edit_training_path(@training)}"%>
+          > <%links << "#{link_to '修改', edit_training_path(@training)}"%>
         <%end%>
         <% if @training.can_be_destroyed_by?(current_user) %>
-          <%links << "> #{link_to '取消', training_path(@training), :method=>'delete', :confirm=>'真的要取消这次训练吗？'}"%>
+          > <%links << "#{link_to '取消', training_path(@training), :method=>'delete', :confirm=>'真的要取消这次训练吗？'}"%>
         <%end%>
         <%= links_with_sticks links%>
       </div>
       <div style="float:right">
         <%links = []%>
         <% if @training.can_be_joined_by?(current_user) %>
-          <%links << "> #{link_to '我要参加', training_training_joins_path(@training), :method=>:post}"%>     
+          > <%links << "#{link_to '我要参加', training_training_joins_path(@training), :method=>:post}"%>     
         <%end%>
         <% if @training.can_be_quited_by?(current_user) %>           
-          <%links << "> #{link_to "我不参加了",training_training_join_path(@training, 0), :method=>:delete}"%>        
+          > <%links << "#{link_to "我不参加了",training_training_join_path(@training, 0), :method=>:delete}"%>        
         <%end%>
         <%= links_with_sticks links%>
       </div>
@@ -67,7 +67,7 @@
     <%else%>
         <%@joined_users.pop%>
         <%= user_icon(@joined_users)%>
-        <%= link_to ">> 更多",joined_users_training_path(@training.id), :class=>"more" %>
+        <%= link_to "> 更多",joined_users_training_path(@training.id), :class=>"more" %>
     <%end%>
     <div class="clearBoth"></div>
   </div>
@@ -79,7 +79,7 @@
     <%else%>
         <%@undetermined_users.pop%>
         <%= user_icon(@undetermined_users)%>
-        <%= link_to ">> 更多",undetermined_users_training_path(@training.id), :class=>"more" %>
+        <%= link_to "> 更多",undetermined_users_training_path(@training.id), :class=>"more" %>
     <%end%>
     <div class="clearBoth"></div>
   </div>
