@@ -38,16 +38,16 @@ class SidedMatchJoinsControllerTest < ActionController::TestCase
     end
   end
   
-  def test_should_not_join_when_match_is_finished
-    sided_matches(:one).start_time = 1.days.ago.ago(7200)
-    sided_matches(:one).end_time = 1.days.ago.ago(3600)
-    sided_matches(:one).save!
-    login_as :quentin
-    assert_no_difference('SidedMatchJoin.count') do
-      post :create, :match_id=>sided_matches(:one).id
-      assert_redirected_to '/'
-    end
-  end
+#  def test_should_not_join_when_match_is_finished
+#    sided_matches(:one).start_time = 1.days.ago.ago(7200)
+#    sided_matches(:one).end_time = 1.days.ago.ago(3600)
+#    sided_matches(:one).save!
+#    login_as :quentin
+#    assert_no_difference('SidedMatchJoin.count') do
+#      post :create, :match_id=>sided_matches(:one).id
+#      assert_redirected_to '/'
+#    end
+#  end
   
   def test_should_not_join_when_is_not_a_member_of_team
     sided_matches(:one).start_time = Time.now.tomorrow
@@ -115,23 +115,23 @@ class SidedMatchJoinsControllerTest < ActionController::TestCase
     end
   end
   
-  def test_should_not_destroy_match_join_when_it_started
-    sided_matches(:one).start_time = Time.now.ago(1800)
-    sided_matches(:one).half_match_length = 25
-    sided_matches(:one).rest_length = 10
-    sided_matches(:one).save!
-    tj = SidedMatchJoin.new
-    tj.user = users(:saki)
-    tj.sided_match = sided_matches(:one)
-    tj.status = SidedMatchJoin::JOIN
-    tj.save!
-    
-    login_as :saki
-    assert_no_difference('SidedMatchJoin.count', -1) do
-      delete :destroy, :match_id => sided_matches(:one).id, :id=>0
-      assert_redirected_to '/'
-    end
-  end
+#  def test_should_not_destroy_match_join_when_it_started
+#    sided_matches(:one).start_time = Time.now.ago(1800)
+#    sided_matches(:one).half_match_length = 25
+#    sided_matches(:one).rest_length = 10
+#    sided_matches(:one).save!
+#    tj = SidedMatchJoin.new
+#    tj.user = users(:saki)
+#    tj.sided_match = sided_matches(:one)
+#    tj.status = SidedMatchJoin::JOIN
+#    tj.save!
+#    
+#    login_as :saki
+#    assert_no_difference('SidedMatchJoin.count', -1) do
+#      delete :destroy, :match_id => sided_matches(:one).id, :id=>0
+#      assert_redirected_to '/'
+#    end
+#  end
   
   def test_update_formation
     sided_matches(:one).start_time = Time.now.tomorrow

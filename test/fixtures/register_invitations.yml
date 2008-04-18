@@ -1,11 +1,11 @@
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
-
-one:
-  email: MyString
-  message: MyText
-  invitation_code: MyString
-
-two:
-  email: MyString
-  message: MyText
-  invitation_code: MyString
+#
+#one:
+#  email: MyString
+#  message: MyText
+#  invitation_code: MyString
+#
+#two:
+#  email: MyString
+#  message: MyText
+#  invitation_code: MyString

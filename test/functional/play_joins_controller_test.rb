@@ -20,24 +20,24 @@ class PlayJoinsControllerTest < ActionController::TestCase
     assert_redirected_to play_path(assigns(:play)) 
   end
   
-  def test_should_not_create
-    login_as :mike1
-    
-    p = Play.new(:football_ground_id=>football_grounds(:yiti).id)
-    p.start_time = 1.hour.ago #比赛已经开始后就不能再参加
-    p.save_without_validation!
-    assert_no_difference('PlayJoin.count') do
-      post :create, :play_id=>p.id
-    end
-    assert_redirected_to '/'
-    
-    p.start_time = 1.hour.since
-    p.save!
-    post :create, :play_id=>p.id
-    assert_equal [p], users(:mike1).play_joins.map{|item| item.play}
-    post :create, :play_id=>p.id #已参加后就不能重复参加
-    assert_redirected_to '/'    
-  end
+#  def test_should_not_create
+#    login_as :mike1
+#    
+#    p = Play.new(:football_ground_id=>football_grounds(:yiti).id)
+#    p.start_time = 1.hour.ago #比赛已经开始后就不能再参加
+#    p.save_without_validation!
+#    assert_no_difference('PlayJoin.count') do
+#      post :create, :play_id=>p.id
+#    end
+#    assert_redirected_to '/'
+#    
+#    p.start_time = 1.hour.since
+#    p.save!
+#    post :create, :play_id=>p.id
+#    assert_equal [p], users(:mike1).play_joins.map{|item| item.play}
+#    post :create, :play_id=>p.id #已参加后就不能重复参加
+#    assert_redirected_to '/'    
+#  end
   
   def test_should_destroy
     login_as :mike1

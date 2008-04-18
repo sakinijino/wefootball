@@ -113,7 +113,6 @@ class SidedMatchesController < ApplicationController
   end
 
   def update_result
-    p "aaaaaaaaaaaaaaaaaaaa"
     @sided_match = SidedMatch.find(params[:id])
     @team = @sided_match.host_team
     if !@sided_match.can_be_edited_result_by?(current_user)

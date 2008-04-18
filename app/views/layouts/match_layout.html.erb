@@ -25,7 +25,10 @@
 </div>
 
 <div id="content">
-<%= yield  %>
+  <%if flash[:notice]%>
+    <div class="flash"><%= flash[:notice] %></div>
+  <%end%>
+  <%= yield  %>
 </div>
 </div>
 </body>

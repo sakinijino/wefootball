@@ -30,16 +30,16 @@ class TrainingJoinsControllerTest < ActionController::TestCase
     end
   end
   
-  def test_should_not_join_when_training_finished_3_days
-    trainings(:training1).start_time = 3.days.ago.ago(7200)
-    trainings(:training1).end_time = 3.days.ago.ago(3600)
-    trainings(:training1).save_without_validation!
-    login_as :quentin
-    assert_no_difference('TrainingJoin.count') do
-      post :create, :training_id=>trainings(:training1).id
-      assert_redirected_to '/'
-    end
-  end
+#  def test_should_not_join_when_training_finished_3_days
+#    trainings(:training1).start_time = 3.days.ago.ago(7200)
+#    trainings(:training1).end_time = 3.days.ago.ago(3600)
+#    trainings(:training1).save_without_validation!
+#    login_as :quentin
+#    assert_no_difference('TrainingJoin.count') do
+#      post :create, :training_id=>trainings(:training1).id
+#      assert_redirected_to '/'
+#    end
+#  end
   
   def test_should_not_join_when_is_not_a_member_of_team
     trainings(:training1).start_time = Time.now.tomorrow
@@ -91,16 +91,16 @@ class TrainingJoinsControllerTest < ActionController::TestCase
     end
   end
   
-  def test_should_not_destroy_training_join_when_it_started
-    trainings(:training1).start_time = Time.now.ago(1800)
-    trainings(:training1).end_time = Time.now.since(1800)
-    trainings(:training1).save_without_validation!
-    login_as :saki
-    assert_no_difference('TrainingJoin.count', -1) do
-      delete :destroy, :training_id => trainings(:training1).id
-      assert_redirected_to '/'
-    end
-  end
+#  def test_should_not_destroy_training_join_when_it_started
+#    trainings(:training1).start_time = Time.now.ago(1800)
+#    trainings(:training1).end_time = Time.now.since(1800)
+#    trainings(:training1).save_without_validation!
+#    login_as :saki
+#    assert_no_difference('TrainingJoin.count', -1) do
+#      delete :destroy, :training_id => trainings(:training1).id
+#      assert_redirected_to '/'
+#    end
+#  end
   
   def test_should_not_destroy_training_join_when_not_joined
     trainings(:training1).start_time = Time.now.tomorrow

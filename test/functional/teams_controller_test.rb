@@ -52,7 +52,7 @@ class TeamsControllerTest < ActionController::TestCase
   def test_update_team_with_long_style
     login_as :saki
     put :update, :id => teams(:inter).id, :team => {:style=>'Inter Milan'*100}
-    assert_equal 50, assigns(:style).name.length
+    assert_equal 50, assigns(:team).style.length
     assert_redirected_to edit_team_path(teams(:inter).id)
   end
   
