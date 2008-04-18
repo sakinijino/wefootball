@@ -56,7 +56,8 @@ class User < ActiveRecord::Base
   validates_length_of     :password, :minimum =>4, :message => "密码最少需要填写4位", :if => :password_required?
   validates_length_of       :password, :maximum =>40, :message => "密码最长可以填40位", :if => :password_required?
   validates_confirmation_of :password,                   :if => :password_required?, :message=>'填写的密码不一致'
-  validates_length_of        :login,    :within => 3..40, :message=>'E-mail长度不太对吧'
+  validates_length_of        :login,    :minimum => 3, :message=>''
+  validates_length_of        :login,    :maximum => 40, :message=>'E-mail太长了吧'
   validates_uniqueness_of   :login, :case_sensitive => false, :message=>'这个E-mail已经注册过了'
   
   validates_length_of       :nickname, :maximum => 15, :message=>'昵称最长可以填15个字'

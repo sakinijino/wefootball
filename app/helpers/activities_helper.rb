@@ -24,18 +24,18 @@ module ActivitiesHelper
     :in => {
       :training => {
         :time => '训练正在进行',
-        :joined => '我在参加',
-        :undetermined => '',
+        :joined => '我正在训练',
+        :undetermined => '要去吗?',
         :unjoined => '我没去',
       },
       :play => {
         :time => '正在进行',
-        :joined => '我在参加',
+        :joined => '我正在踢',
       },
       :sided_match => {
         :time => '比赛正在进行',
-        :joined => '我在参加',
-        :undetermined => '',
+        :joined => '我正在比赛',
+        :undetermined => '要去吗?',
         :unjoined => '我没去',
       },
       :match => {
