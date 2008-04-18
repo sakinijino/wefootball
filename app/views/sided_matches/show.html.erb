@@ -11,7 +11,7 @@
         <%=date_div_link @match.start_time, @match.host_team%>
         <div style="float:left">
           <span>对阵球队: </span><%= @match.guest_team_name%><br />
-          <span>时间: </span><%= @match.start_time.strftime("%Y-%m-%d %H:%M")%>-<%=@match.end_time.strftime("%H:%M")%><br />
+          <span>时间: </span><%= @match.start_time.strftime("%H:%M")%>-<%=@match.end_time.strftime("%H:%M")%><br />
           <span>时长: </span>上下半场各<%= @match.half_match_length%>分钟,中场休息<%= @match.rest_length%>分钟<br />
           <span>地点: </span><%= location_link @match.location, @match.football_ground_id %><br />
           <span>比赛类型: </span><%= match_type_text @match.match_type%><br />

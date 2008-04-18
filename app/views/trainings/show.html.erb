@@ -9,7 +9,7 @@
     <div class="activities">
       <%=date_div_link @training.start_time, @team%>
       <div style="float:left">
-        <span>时间: </span><%= @training.start_time.strftime("%Y-%m-%d %H:%M")%>-<%=@training.end_time.strftime("%H:%M")%><br />
+        <span>时间: </span><%= @training.start_time.strftime("%H:%M")%>-<%=@training.end_time.strftime("%H:%M")%><br />
         <span>地点: </span><%= location_link @training.location, @training.football_ground_id %><br />
       </div>
         <div class="clearBoth"></div>

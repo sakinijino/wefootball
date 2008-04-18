@@ -41,7 +41,7 @@ class MessagesControllerTest < ActionController::TestCase
   def test_create_message_error
     login_as :saki
     assert_no_difference('Message.count') do
-      post :create, :message => {:receiver_id=>users(:mike1).id, :subject=>'h'*201, :content=>'h'*2001 }
+      post :create, :message => {:receiver_id=>users(:mike1).id, :subject=>'h'*201, :content=>'h'*3001 }
       assert_template 'new'
       assert assigns(:message).errors.on(:subject)
       assert assigns(:message).errors.on(:content)

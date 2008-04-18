@@ -19,20 +19,21 @@ class MatchInvitation < ActiveRecord::Base
   attr_accessible :new_description, :new_half_match_length, :new_rest_length
   attr_accessible :new_location, :new_football_ground_id
   
-  validates_presence_of     :new_location, :message => "请填写比赛地点"
-  validates_length_of        :new_location,    :maximum => MAX_LOCATION_LENGTH
+  validates_presence_of     :new_location, :message => "请填写或选择比赛场地"
+  validates_length_of        :new_location, :maximum => MAX_LOCATION_LENGTH, :message => "场地名称最长可以填#{MAX_LOCATION_LENGTH}个字"
   
-  validates_numericality_of :new_half_match_length, :new_rest_length
-  validates_inclusion_of    :new_half_match_length, :in => 0..60
-  validates_inclusion_of    :new_rest_length, :in => 0..60
+  validates_numericality_of :new_half_match_length, :message => "半场时间需要填写数字"
+  validates_numericality_of :new_rest_length, :message => "中场休息时间需要填写数字"
+  validates_inclusion_of    :new_half_match_length, :in => 0..60, :message => "半场时间必须在1小时之内"
+  validates_inclusion_of    :new_rest_length, :in => 0..60, :message => "中场休息时间必须在1小时之内"
   
-  validates_inclusion_of :new_match_type, :in => MATCH_TYPES
-  validates_inclusion_of :new_size, :in => MATCH_SIZES
-  validates_inclusion_of :new_win_rule, :in => WIN_RULES
+  validates_inclusion_of :new_match_type, :in => MATCH_TYPES, :message => "不要自己构造表单提交..."
+  validates_inclusion_of :new_size, :in => MATCH_SIZES, :message => "不要自己构造表单提交..."
+  validates_inclusion_of :new_win_rule, :in => WIN_RULES, :message => "不要自己构造表单提交..."
 
-  validates_length_of :new_description, :maximum =>MAX_DESCRIPTION_LENGTH
-  validates_length_of :host_team_message, :maximum =>MAX_TEAM_MESSAGE_LENGTH
-  validates_length_of :guest_team_message, :maximum =>MAX_TEAM_MESSAGE_LENGTH 
+  validates_length_of :new_description, :maximum =>MAX_DESCRIPTION_LENGTH, :message => "比赛描述最长可以填#{MAX_DESCRIPTION_LENGTH}个字"
+  validates_length_of :guest_team_message, :host_team_message, 
+    :maximum =>MAX_TEAM_MESSAGE_LENGTH, :message => "留言最长可以填#{MAX_TEAM_MESSAGE_LENGTH}个字"
 
   def validate
     st = new_start_time.respond_to?(:to_datetime) ? new_start_time.to_datetime : new_start_time

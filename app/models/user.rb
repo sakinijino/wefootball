@@ -46,43 +46,45 @@ class User < ActiveRecord::Base
   
   has_many :posts, :dependent => :destroy
 
-  validates_presence_of     :login, :nickname
+  validates_presence_of     :login, :message=>'请填写E-mail'
+  validates_presence_of     :nickname, :message=>'请填写昵称'
   validates_format_of       :login, 
     :with=> /^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$/,
     :message => '需要用E-mail注册'
-  validates_presence_of     :password,                   :if => :password_required?
-  validates_presence_of     :password_confirmation,      :if => :password_required?
-  validates_length_of       :password, :within => 4..40, :if => :password_required?
-  validates_confirmation_of :password,                   :if => :password_required?
-  validates_length_of        :login,    :within => 3..40
-  validates_uniqueness_of   :login, :case_sensitive => false
+  validates_presence_of     :password,                   :if => :password_required?, :message=>'请填写密码'
+  validates_presence_of     :password_confirmation,      :if => :password_required?, :message=>'请确认密码'
+  validates_length_of     :password, :minimum =>4, :message => "密码最少需要填写4位", :if => :password_required?
+  validates_length_of       :password, :maximum =>40, :message => "密码最长可以填40位", :if => :password_required?
+  validates_confirmation_of :password,                   :if => :password_required?, :message=>'填写的密码不一致'
+  validates_length_of        :login,    :within => 3..40, :message=>'E-mail长度不太对吧'
+  validates_uniqueness_of   :login, :case_sensitive => false, :message=>'这个E-mail已经注册过了'
   
-  validates_length_of       :nickname, :maximum => 15
+  validates_length_of       :nickname, :maximum => 15, :message=>'昵称最长可以填15个字'
   validates_inclusion_of    :birthday_display_type, :in => [0, #不显示生日
     1, #显示年月日
     2, #显示月日
     3 #显示年
-  ]
+  ], :message => "不要自己构造表单提交..."
   validates_inclusion_of    :gender, :in => [0, #未填
     1, #男
     2, #女
-  ]
-  validates_inclusion_of   :city, :in => ProvinceCity::CITY_VALUE_RANGE
-  validates_length_of       :summary, :maximum => 3000, :allow_nil=>true
-  validates_length_of       :favorite_star, :maximum => 200
-  validates_length_of       :favorite_team, :maximum => 200
-  validates_length_of       :blog, :maximum => 256
+  ], :message => "不要自己构造表单提交..."
+  validates_inclusion_of   :city, :in => ProvinceCity::CITY_VALUE_RANGE, :message => "不要自己构造表单提交..."
+  validates_length_of       :summary, :maximum => 3000, :allow_nil=>true, :message => "个人简介最长可以填3000个字"
+  validates_length_of       :favorite_star, :maximum => 200, :message => "最喜欢的球星最长可以填200个字"
+  validates_length_of       :favorite_team, :maximum => 200, :message => "最喜欢的球队最长可以填200个字"
+  validates_length_of       :blog, :maximum => 256, :message => "blog地址最长可以填256个字"
   validates_format_of       :full_blog_uri, :allow_nil => true,
      :with => /(^$)|(^(http|https):\/\/[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$)/ix,
      :if => Proc.new {|u| !u.blog.blank?}, :message => "blog地址必须是一个url"
   
-  validates_numericality_of :weight, :height, :if=>:is_playable, :allow_nil=>true
+  validates_numericality_of :weight, :height, :if=>:is_playable, :allow_nil=>true, :message => "身高体重需要填写数字"
   validates_inclusion_of    :weight, :in => 0..400, :if=>:is_playable,
-    :message => '... Are you kidding me?', :allow_nil=>true
+    :message => '体重填的不太对吧……', :allow_nil=>true
   validates_inclusion_of    :height, :in => 0..250, :if=>:is_playable,
-    :message => '... Are you kidding me?', :allow_nil=>true
-  validates_inclusion_of    :fitfoot, :in => FITFOOT, :if=>:is_playable
-  validates_inclusion_of   :premier_position, :in => Position::POSITIONS, :if=>:is_playable, :message => '未知的位置'
+    :message => '身高填的不太对吧……', :allow_nil=>true
+  validates_inclusion_of    :fitfoot, :in => FITFOOT, :if=>:is_playable, :message => "不要自己构造表单提交..."
+  validates_inclusion_of   :premier_position, :in => Position::POSITIONS, :if=>:is_playable, :message => "不要自己构造表单提交..."
   
   validates_multiparameter_assignments :message => "无效的生日日期" 
   

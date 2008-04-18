@@ -2,9 +2,10 @@ class Message < ActiveRecord::Base
   belongs_to :sender, :class_name=>"User", :foreign_key=>"sender_id"
   belongs_to :receiver, :class_name=>"User", :foreign_key=>"receiver_id"
   
-  validates_presence_of     :content, :subject
-  validates_length_of       :content, :in =>5..2000
-  validates_length_of       :subject, :maximum =>200
+  validates_presence_of     :subject, :message => "请填写标题"
+  validates_length_of     :content, :minimum =>5, :message => "别吝惜笔墨, 最少也写5个字吧"
+  validates_length_of       :content, :maximum =>3000, :message => "内容最长可以填3000个字"
+  validates_length_of       :subject, :maximum =>50, :message => "标题最长可以填50个字"
   
   attr_accessible :subject, :content
   

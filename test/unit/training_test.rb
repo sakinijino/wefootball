@@ -131,8 +131,8 @@ class TrainingTest < ActiveSupport::TestCase
   
   def test_summary_length
     t = trainings(:training1)
-    t.update_attributes!({:summary=>'s'*2000, :start_time => Time.now.since(3600), :end_time => Time.now.since(7200)})
-    assert_equal 1000, t.summary.length
+    t.update_attributes!({:summary=>'s'*4000, :start_time => Time.now.since(3600), :end_time => Time.now.since(7200)})
+    assert_equal 3000, t.summary.length
   end
   
   def test_validate_time

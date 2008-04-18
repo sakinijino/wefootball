@@ -37,22 +37,28 @@ class SidedMatch < ActiveRecord::Base
   
   validates_presence_of     :start_time, :message => "请填写比赛开始时间"
   
-  validates_presence_of     :location, :message => "请填写比赛地点"
-  validates_length_of :location, :maximum => MAX_LOCATION_LENGTH 
+  validates_presence_of     :location, :message => "请填写或选择比赛场地"
+  validates_length_of :location, :maximum => MAX_LOCATION_LENGTH, :message=>"场地名称最长可以填#{MAX_LOCATION_LENGTH}个字"
   
   validates_presence_of     :guest_team_name, :message => "请填写对方球队名称"
   
-  validates_length_of        :guest_team_name,    :maximum => 15
-  validates_inclusion_of   :situation, :in => SITUATIONS, :allow_nil=>true  
-  validates_numericality_of :host_team_goal, :guest_team_goal, :allow_nil=>true
+  validates_length_of        :guest_team_name, :maximum => 15, :message => "球队名称最长可以填15个字"
+  validates_inclusion_of   :situation, :in => SITUATIONS, :allow_nil=>true, :message => "不要自己构造表单提交..."
+  validates_numericality_of :host_team_goal, :guest_team_goal, :allow_nil=>true, :message => "进球数需要填写数字"
+  validates_inclusion_of    :host_team_goal, :guest_team_goal, 
+      :allow_nil=>true, :in => 0..99, :message => "真的进了这么多球吗？"
   
-  validates_inclusion_of :match_type, :in => MATCH_TYPES
-  validates_inclusion_of :size, :in => MATCH_SIZES
-  validates_inclusion_of :win_rule, :in => WIN_RULES 
+  validates_numericality_of :half_match_length, :message => "半场时间需要填写数字"
+  validates_numericality_of :rest_length, :message => "中场休息时间需要填写数字"
+  validates_inclusion_of    :half_match_length, :in => 0..60, :message => "半场时间必须在1小时之内"
+  validates_inclusion_of    :rest_length, :in => 0..60, :message => "中场休息时间必须在1小时之内"
+  
+  validates_inclusion_of :match_type, :in => MATCH_TYPES, :message => "不要自己构造表单提交..."
+  validates_inclusion_of :size, :in => MATCH_SIZES, :message => "不要自己构造表单提交..."
+  validates_inclusion_of :win_rule, :in => WIN_RULES , :message => "不要自己构造表单提交..."
 
-  validates_length_of  :description, :maximum =>MAX_DESCRIPTION_LENGTH, :allow_nil => true  
-  
-  
+  validates_length_of  :description, :maximum =>MAX_DESCRIPTION_LENGTH, :allow_nil => true, :message => "比赛描述最长可以填#{MAX_DESCRIPTION_LENGTH}个字"
+   
   belongs_to :host_team, :class_name=>"Team", :foreign_key=>"host_team_id"
   
   def before_save   
@@ -93,11 +99,13 @@ class SidedMatch < ActiveRecord::Base
   end
 
   def can_be_edited_by?(user)
-    is_before_match? && user.is_team_admin_of?(self.host_team_id)
+    #is_before_match? && user.is_team_admin_of?(self.host_team_id)
+    user.is_team_admin_of?(self.host_team_id)
   end  
   
   def can_be_edited_result_by?(user)
-    is_after_match? && user.is_team_admin_of?(self.host_team_id)
+    #is_after_match? && user.is_team_admin_of?(self.host_team_id)
+    user.is_team_admin_of?(self.host_team_id)
   end
   
   def can_be_edited_formation_by?(user)
@@ -110,12 +118,14 @@ class SidedMatch < ActiveRecord::Base
   
   def can_be_joined_by?(user)
     team_id = self.host_team_id
-    is_before_match? && user.is_team_member_of?(team_id) && !has_joined_member?(user)
+    #is_before_match? && user.is_team_member_of?(team_id) && !has_joined_member?(user)
+    user.is_team_member_of?(team_id) && !has_joined_member?(user)
   end
   
   def can_be_quited_by?(user)
     team_id = self.host_team_id
-    is_before_match? && user.is_team_member_of?(team_id) && has_member?(user)
+    #is_before_match? && user.is_team_member_of?(team_id) && has_member?(user)
+    user.is_team_member_of?(team_id) && has_member?(user)
   end
   
   def has_joined_member?(user)

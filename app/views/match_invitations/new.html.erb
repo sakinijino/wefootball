@@ -38,17 +38,18 @@
         <%= f.datetime_select :new_start_time,  :start_year => Date.today.year, :end_year => 1.year.since.year, :use_month_numbers => true, :minute_step=>15 %>
       </td></tr>
       <tr><td>
-        选择场地:
+        场地:
       </td><td>
       <div class="location_input">
         <div class="football_ground_input">
           <%= f.football_ground_select :new_football_ground_id,
               @match_invitation.new_football_ground_id.nil?  ? 'city' : nil,
               @match_invitation.new_football_ground_id.nil? ? @host_team.city : nil%><br/>    
-          <a class="switch" href="javascript:void(0)">场地不在列表中, 点击此处填写地点</a>
+          <a class="switch" href="javascript:void(0)">场地不在列表中, 点击此处填写</a>
         </div>
         <div class="location_text_input">
-          <%= f.text_field :new_location, :value=> @match_invitation.new_football_ground_id.nil? ? @match_invitation.new_location : '' %>
+          <%= f.text_field :new_location, :maxlength => 100, :size => 30,
+            :value=> @match_invitation.new_football_ground_id.nil? ? @match_invitation.new_location : '' %>
           <br/><a class="switch" href="javascript:void(0)">从列表中选择场地</a>
         </div>
       </div>
@@ -66,12 +67,12 @@
       <tr><td>
         半场时间:
       </td><td>
-        <%= f.text_field :new_half_match_length, :size=>1 %>分钟 
+        <%= f.text_field :new_half_match_length, :maxlength => 2, :size=>1 %>分钟 
       </td></tr>
       <tr><td>
         中场休息:
       </td><td>
-        <%= f.text_field :new_rest_length, :size=>1 %>分钟
+        <%= f.text_field :new_rest_length, :maxlength => 2, :size=>1 %>分钟
       <tr><td>
         裁判:
       </td><td>

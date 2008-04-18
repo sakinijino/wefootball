@@ -10,7 +10,10 @@ class SidedMatchJoin < ActiveRecord::Base
   
   attr_accessible :goal, :cards
   
-  validates_inclusion_of   :position, :in => Team::FORMATION_POSITIONS, :allow_nil => true
+  validates_numericality_of :goal, :message => "进球数必须是数字"
+  validates_inclusion_of    :goal, :allow_nil=>true, :in => 0..99, :message => "真的进了这么多球吗？"
+  validates_inclusion_of   :cards, :in => CARDS, :allow_nil => true, :message => "不要自己构造表单提交..."
+  validates_inclusion_of   :position, :in => Team::FORMATION_POSITIONS, :allow_nil => true, :message => "不要自己构造表单提交..."
   
   def before_validation
     self.position = nil if self.position==""

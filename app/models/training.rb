@@ -21,9 +21,9 @@ class Training < ActiveRecord::Base
     end
   end
   
-  validates_presence_of     :location, :message => "请填写训练地点"
-  validates_length_of        :location,    :maximum => 100
-  validates_length_of        :summary,    :maximum => 1000, :allow_nil=>true
+  validates_presence_of     :location, :message => "请选择或填写训练场地"
+  validates_length_of        :location,    :maximum => 100, :message=>"场地名称最长可以填100个字"
+  validates_length_of        :summary,    :maximum => 3000, :allow_nil=>true, :message => "比赛描述最长可以填3000个字"
   
   attr_protected :team_id
   
@@ -32,11 +32,11 @@ class Training < ActiveRecord::Base
     et = end_time.respond_to?(:to_datetime) ? end_time.to_datetime : end_time
     errors.add(:start_time, "训练开始时间必须大于当前时间") if st < DateTime.now
     errors.add(:end_time, "训练至少要进行15分钟") if (et - st)*24*60 < 15
-    errors.add(:end_time, "训练时间不能超过1天") if (et - st) > 1
+    errors.add(:end_time, "训练时间最长可以填1天") if (et - st) > 1
   end
   
   def before_validation
-    attribute_slice(:summary, 1000)
+    attribute_slice(:summary, 3000)
     self.location = self.football_ground.name if self.football_ground!=nil
     self.start_time = DateTime.now.tomorrow if self.start_time==nil
     self.end_time = self.start_time.since(3600) if self.end_time==nil
@@ -59,20 +59,22 @@ class Training < ActiveRecord::Base
   end
   
   def can_be_modified_by?(user)
-    !started? && user.is_team_admin_of?(self.team_id)
+    #!started? && user.is_team_admin_of?(self.team_id)
+    user.is_team_admin_of?(self.team_id)
   end
   
   def can_be_destroyed_by?(user)
-    !finished_before_3_days? && user.is_team_admin_of?(self.team_id)
+    #!finished_before_3_days? && user.is_team_admin_of?(self.team_id)
+    user.is_team_admin_of?(self.team_id)
   end
   
   def can_be_joined_by?(user)
-#    !started? && user.is_team_member_of?(self.team_id) && !has_joined_member?(user)
+    #!started? && user.is_team_member_of?(self.team_id) && !has_joined_member?(user)
     user.is_team_member_of?(self.team_id) && !has_joined_member?(user)
   end
   
   def can_be_quited_by?(user)
-#    !started? && has_member?(user)
+    #!started? && has_member?(user)
     has_member?(user)
   end
   

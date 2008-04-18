@@ -6,7 +6,7 @@ class TeamJoinRequest < ActiveRecord::Base
   
   attr_protected :user_id, :team_id  
   
-  validates_length_of  :message, :maximum => 150, :allow_nil=>true
+  validates_length_of  :message, :maximum => 150, :allow_nil=>true, :message => "消息最长可以填150个字"
 
   def before_validation
     attribute_slice(:message, 150)

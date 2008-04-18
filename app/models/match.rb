@@ -39,11 +39,13 @@ class Match < ActiveRecord::Base
   
   belongs_to :football_ground
   
-  validates_presence_of     :start_time, :location, :size
   validates_length_of       :description, :maximum =>MAX_DESCRIPTION_LENGTH, :allow_nil => true
-  validates_inclusion_of   :situation_by_host, :situation_by_guest, :in => SITUATIONS, :allow_nil=>true  
-  validates_numericality_of :host_team_goal_by_host, :guest_team_goal_by_host, :allow_nil=>true   
-  validates_numericality_of :host_team_goal_by_guest, :guest_team_goal_by_guest, :allow_nil=>true 
+  validates_inclusion_of   :situation_by_host, :situation_by_guest, :in => SITUATIONS, :allow_nil=>true, :message => "不要自己构造表单提交..."
+  validates_numericality_of :host_team_goal_by_host, :host_team_goal_by_guest, :allow_nil=>true, :message => "主队进球数需要填写数字"
+  validates_numericality_of :guest_team_goal_by_host, :guest_team_goal_by_guest, :allow_nil=>true, :message => "客队进球数需要填写数字"
+  validates_inclusion_of    :host_team_goal_by_host, :host_team_goal_by_guest, 
+      :guest_team_goal_by_host, :guest_team_goal_by_guest,
+      :allow_nil=>true, :in => 0..99, :message => "真的进了这么多球吗？"
   
   belongs_to :host_team, :class_name=>"Team", :foreign_key=>"host_team_id"
   belongs_to :guest_team, :class_name=>"Team", :foreign_key=>"guest_team_id"

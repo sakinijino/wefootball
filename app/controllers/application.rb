@@ -67,18 +67,18 @@ class ActionView::Helpers::FormBuilder
   end
 end
 
-module ActiveRecord
-  class Errors
-    def full_messages
-      full_messages = []
-      
-      @errors.each_key do |attr|
-        @errors[attr].each do |msg|
-          next if msg.nil?
-          full_messages << msg
-        end
-      end
-      full_messages
-    end
-  end
-end
+#module ActiveRecord
+#  class Errors
+#    def full_messages
+#      full_messages = []
+#      
+#      @errors.each_key do |attr|
+#        @errors[attr].each do |msg|
+#          next if msg.nil?
+#          full_messages << msg
+#        end
+#      end
+#      full_messages
+#    end
+#  end
+#end

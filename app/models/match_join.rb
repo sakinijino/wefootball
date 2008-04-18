@@ -9,8 +9,10 @@ class MatchJoin < ActiveRecord::Base
   belongs_to :match
   belongs_to :user
   
-  validates_inclusion_of   :position, :in => Team::FORMATION_POSITIONS, :allow_nil => true
-  validates_numericality_of :goal
+  validates_inclusion_of   :position, :in => Team::FORMATION_POSITIONS, :allow_nil => true, :message => "不要自己构造表单提交..."
+  validates_numericality_of :goal, :message => "进球数需要填写数字"
+  validates_inclusion_of    :goal, :allow_nil=>true, :in => 0..99, :message => "真的进了这么多球吗？"
+  validates_inclusion_of   :cards, :in => CARDS, :allow_nil => true, :message => "不要自己构造表单提交..."
   attr_accessible :goal, :cards
   
   def before_validation

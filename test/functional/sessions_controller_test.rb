@@ -14,7 +14,7 @@ class SessionsControllerTest < Test::Unit::TestCase
   end
 
   def test_should_login
-    post :create, :login => 'sakinijino0725@163.com', :password => 'test'
+    post :create, :login => 'sakinijino0725@163.com', :password => '111111'
     assert session[:user_id]
     assert 'sakinijino0725@163.com', assigns["user"].login
     assert_redirected_to user_view_path(assigns["user"])

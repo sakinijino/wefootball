@@ -6,8 +6,8 @@ class Play < ActiveRecord::Base
           
   has_many :users, :through => :play_joins  
 
-  validates_presence_of     :location, :message => "请填写地点"
-  validates_length_of        :location,    :maximum => 100
+  validates_presence_of     :location, :message => "请填写或选择场地"
+  validates_length_of        :location,    :maximum => 100, :message=>"场地名称最长可以填100个字"
   
   def validate
     st = start_time.respond_to?(:to_datetime) ? start_time.to_datetime : start_time
@@ -48,7 +48,8 @@ class Play < ActiveRecord::Base
     else 
       user
     end
-    self.is_before_play? && PlayJoin.find_by_user_id_and_play_id(user_id,self.id) == nil
+    #self.is_before_play? && PlayJoin.find_by_user_id_and_play_id(user_id,self.id) == nil
+    PlayJoin.find_by_user_id_and_play_id(user_id,self.id) == nil
   end
 
   def can_be_quited_by?(user)
@@ -58,7 +59,8 @@ class Play < ActiveRecord::Base
     else 
       user
     end
-    self.is_before_play? && PlayJoin.find_by_user_id_and_play_id(user_id,self.id) != nil
+    #self.is_before_play? && PlayJoin.find_by_user_id_and_play_id(user_id,self.id) != nil
+    PlayJoin.find_by_user_id_and_play_id(user_id,self.id) != nil
   end
   
 end

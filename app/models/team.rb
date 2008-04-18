@@ -37,19 +37,19 @@ class Team < ActiveRecord::Base
     end
   end
   
-  validates_presence_of     :name, :shortname
-  validates_length_of        :name,    :maximum => 50
-  validates_length_of        :shortname,    :maximum => 15
-  validates_length_of        :summary,    :maximum => 3000, :allow_nil=>true
-  validates_length_of        :style,    :maximum => 50
+  validates_presence_of     :name, :message => "请填写球队全名"
+  validates_presence_of     :shortname, :message => "请填写队名"
+  validates_length_of        :name, :maximum => 50, :message => "球队全名最长可以填50个字"
+  validates_length_of        :shortname,    :maximum => 15, :message => "队名最长可以填15个字"
+  validates_length_of        :summary,    :maximum => 3000, :allow_nil=>true, :message => "球队简介最长可以填3000个字"
+  validates_length_of        :style,    :maximum => 50, :message => "球队风格最长可以填15个字"
+  validates_inclusion_of   :city, :in => ProvinceCity::CITY_VALUE_RANGE, :message => "不要自己构造表单提交..."
   
   validates_multiparameter_assignments :message => "无效的建队日期" 
   
   attr_protected :uploaded_data
   
   def before_validation
-    attribute_slice(:name, 50)
-    attribute_slice(:shortname, 15)
     attribute_slice(:summary, 3000)
     attribute_slice(:style, 50)
   end

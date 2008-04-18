@@ -27,13 +27,11 @@ class TeamTest < ActiveSupport::TestCase
   end
   
   def test_before_validation
-    teams(:inter).update_attributes!({:name => 'nickname'*50, 
-        :shortname => 'favorite_star'*50, 
-        :style => 'favorite_team'*50, 
+    teams(:inter).update_attributes!({:name => 'AC Milan', 
+        :shortname => 'AC', 
+        :style => 'faver'*50, 
         :summary => 'summary'*1000 })
     assert teams(:inter).valid?
-    assert_equal 50, teams(:inter).name.length
-    assert_equal 15, teams(:inter).shortname.length
     assert_equal 50, teams(:inter).style.length
     assert_equal 3000, teams(:inter).summary.length
   end

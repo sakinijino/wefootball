@@ -7,7 +7,7 @@ class UserTeam < ActiveRecord::Base
   
   attr_protected :user_id, :team_id, :position
   
-  validates_inclusion_of   :position, :in => Team::FORMATION_POSITIONS, :allow_nil => true
+  validates_inclusion_of   :position, :in => Team::FORMATION_POSITIONS, :allow_nil => true, :message => "不要自己构造表单提交..."
   
   def before_validation
     self.position = nil if !self.is_player

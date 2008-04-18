@@ -1,4 +1,4 @@
-<div class="sect">
+<div id="wide_left_content" class="sect">
   <h2><%= h @title%></h2>
   <%= error_messages_for :football_ground %>
 
@@ -20,3 +20,5 @@
 
   <%= (button_to '删除', @football_ground, :confirm => '确定删除？', :method => :delete) if @football_ground.status == 0 %>
 </div>
+
+<div class="clearBoth"></div>

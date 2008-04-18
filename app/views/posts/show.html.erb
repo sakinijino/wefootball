@@ -9,6 +9,7 @@
   <div class="sect clearBoth">
     <h2>回复</h2>
     <%= error_messages_for :reply %>
+    <br/>
     <% form_for :reply, :url => post_replies_path(@post) do |f| %>
       <%= f.text_area :content, :rows=>10, :cols=>50 %>
       <br/><br/>
