@@ -5,14 +5,18 @@
 
 <div id="wide_left_content">
   <div class="sect">
-    <h2><%= h @title%></h2>
+    <h2>训练基本信息</h2>
     <div class="activities">
       <%=date_div_link @training.start_time, @team%>
-      <%= render :partial => 'shared/activity', :object => @training%>
+      <div style="float:left">
+        <span>时间: </span><%= @training.start_time.strftime("%Y-%m-%d %H:%M")%>-<%=@training.end_time.strftime("%H:%M")%><br />
+        <span>地点: </span><%= location_link @training.location, @training.football_ground_id %><br />
+      </div>
+        <div class="clearBoth"></div>
       <div class="clearBoth"></div>
     </div>
     <%if logged_in?%> 
-      <div style="float:right">
+      <div style="float:left">
         <%links = []%>
         <%if @training.can_be_modified_by?(current_user)%>
           <%links << "> #{link_to '修改', edit_training_path(@training)}"%>
@@ -22,25 +26,33 @@
         <%end%>
         <%= links_with_sticks links%>
       </div>
-    <%end%>
-    <div class="clearBoth"></div>
+      <div style="float:right">
+        <%links = []%>
+        <% if @training.can_be_joined_by?(current_user) %>
+          <%links << "> #{link_to '我要参加', training_training_joins_path(@training), :method=>:post}"%>     
+        <%end%>
+        <% if @training.can_be_quited_by?(current_user) %>           
+          <%links << "> #{link_to "我不参加了",training_training_join_path(@training, 0), :method=>:delete}"%>        
+        <%end%>
+        <%= links_with_sticks links%>
+      </div>
+      <div class="clearBoth"></div>
+    <%end%>   
   </div>
 
-<%if !@training.summary.blank?%>
-  <div class="tab_container">
-    <span class="tab_link" style="margin-left: 10px;">本次训练说明</span>
-    <div class="tab">
-      <p><%=simple_format auto_link(h(@training.summary), :urls)%></p>
-    </div>
-  </div>
-<%end%>
+  <%if !@training.summary.blank?%>
+  <div class="sect">
+    <h2>训练说明</h2>
+    <p><%=simple_format auto_link(h(@training.summary), :urls)%></p>
+  </div>  
+  <%end%>       
 
   <div class="sect">
     <h2>关于本次训练的讨论</h2>
     <%= render(:partial => 'posts/post_list', :object => @posts)%>
     <div style="margin: 5px 10px  0 10px;float:right">
       <%links = []%>
-      <%links << "> #{link_to '针对本次训练发言', new_training_post_path(@training)}" if logged_in? && current_user.is_team_member_of?(@training.team)%>
+      <%links << "> #{link_to '针对本次发言', new_training_post_path(@training)}" if logged_in? && current_user.is_team_member_of?(@training.team)%>
       <%links << "> #{link_to '更多', training_posts_path(@training)}"%>
       <%= links_with_sticks links%>
     </div>

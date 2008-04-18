@@ -57,7 +57,7 @@ end%>
     
     <div class="result_block">
       <p>
-        <%= f.radio_button(situtaion_sym,Match::SITUATIONS[0], :check => true)%><%=situation_text(Match::SITUATIONS[0])%><br />
+        <%= f.radio_button(situtaion_sym,Match::SITUATIONS[0], :checked => true)%><%=situation_text(Match::SITUATIONS[0])%><br />
         <%for s in Match::SITUATIONS[1..-1]%>
           <%= f.radio_button(situtaion_sym, s)%><%=situation_text(s)%>
         <%end%>

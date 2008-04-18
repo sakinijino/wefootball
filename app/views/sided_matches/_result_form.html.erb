@@ -1,0 +1,33 @@
+<%
+  host_team_goal_sym = :host_team_goal
+  guest_team_goal_sym = :guest_team_goal 
+  situtaion_sym = :situation
+%>
+
+<div class="result_input">
+  <div class="goal_input">
+    填写比分: &nbsp;&nbsp;> <a class="switch" href="javascript:void(0)">没有详细比分，填写赛况</a><br />
+    
+    <div class="result_block">
+      <div style="margin: 10px 0">
+        <%=@sided_match.host_team.shortname%>
+        <%= f.text_field host_team_goal_sym, :maxlength => 2, :size=>1 %>
+        :
+        <%= f.text_field guest_team_goal_sym, :maxlength => 2, :size=>1 %>
+        <%=@sided_match.guest_team_name%>
+      </div>
+    </div>
+  </div>
+  <div class="situation_input">
+    填写赛况: &nbsp;&nbsp;> <a class="switch" href="javascript:void(0)">填写比分</a><br />
+    
+    <div class="result_block">
+      <p>
+        <%= f.radio_button(situtaion_sym,SidedMatch::SITUATIONS[0], :checked => true)%><%=situation_text(SidedMatch::SITUATIONS[0])%><br />
+        <%for s in SidedMatch::SITUATIONS[1..-1]%>
+          <%= f.radio_button(situtaion_sym, s)%><%=situation_text(s)%>
+        <%end%>
+      </p>
+    </div>
+  </div>
+</div>

@@ -60,10 +60,10 @@ class Match < ActiveRecord::Base
   
   def before_validation
     if !(self.guest_team_goal_by_host.blank? || self.host_team_goal_by_host.blank?)
-      self.situation_by_host = Match.calculate_situation(self.guest_team_goal_by_host,self.host_team_goal_by_host )
+      self.situation_by_host = Match.calculate_situation(self.host_team_goal_by_host,self.guest_team_goal_by_host)
     end
     if !(self.guest_team_goal_by_guest.blank? || self.host_team_goal_by_guest.blank?)
-      self.situation_by_guest = Match.calculate_situation(self.guest_team_goal_by_guest,self.host_team_goal_by_guest )
+      self.situation_by_guest = Match.calculate_situation(self.host_team_goal_by_host,self.guest_team_goal_by_guest)
     end     
     self.description = "" if self.description.nil?
     self.size = 11 if self.size.nil?

@@ -17,11 +17,13 @@ class SidedMatch < ActiveRecord::Base
             :foreign_key => :match_id
           
   has_many :users, :through=>:sided_match_joins do
-    def joined
-      find :all, :conditions => ['status = ?', TrainingJoin::JOIN]
+    def joined(limit=nil)
+      find :all, :conditions => ['status = ?', SidedMatchJoin::JOIN],
+            :limit => limit
     end
-    def undetermined
-      find :all, :conditions => ['status = ?', TrainingJoin::UNDETERMINED]
+    def undetermined(limit=nil)
+      find :all, :conditions => ['status = ?', SidedMatchJoin::UNDETERMINED],
+            :limit => limit        
     end
   end
   

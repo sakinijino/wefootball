@@ -83,7 +83,8 @@ ActionController::Routing::Routes.draw do |map|
   end
   map.resources :match_joins, :collection => { :update_formation => :put }
 
-  map.resources :sided_matches, :member => {:edit_result =>:get, :update_result=>:put} do |sided_matches|
+  map.resources :sided_matches,
+    :member => {:edit_result =>:get, :update_result=>:put, :undetermined_users=>:get, :joined_users=>:get} do |sided_matches|
     sided_matches.resources :sided_match_joins
     sided_matches.resources :posts
   end

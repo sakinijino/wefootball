@@ -79,7 +79,7 @@ class MatchesController < ApplicationController
     @editing_by_host_team = (@team.id == @match.host_team_id)
     @player_mjs = MatchJoin.players(@match.id,@team.id)
     
-    @title = "填写赛果"
+    @title = "填写比赛结果"
     render :layout=>'match_layout'
   end
 
@@ -121,7 +121,7 @@ class MatchesController < ApplicationController
     if ((@editing_by_host_team && !@match.host_team_goal_by_host.blank? && (@match.host_team_goal_by_host<filled_goal_sum)) ||
           (!@editing_by_host_team && !@match.guest_team_goal_by_guest.blank? && (@match.guest_team_goal_by_guest<filled_goal_sum)))
       @match.errors.add_to_base("队员入球总数不能超过本队入球数")
-      @title = "填写赛果"
+      @title = "填写比赛结果"
       render :action => "edit", :layout=>'match_layout'
       return
     end
@@ -134,7 +134,7 @@ class MatchesController < ApplicationController
       end
     rescue ActiveRecord::RecordInvalid => e
       @player_mjs = MatchJoin.players(@match.id,@team.id)      
-      @title = "填写赛果"
+      @title = "填写比赛结果"
       render :action => "edit", :layout=>'match_layout'
     end
   end

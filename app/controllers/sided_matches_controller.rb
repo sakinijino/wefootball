@@ -2,6 +2,10 @@ class SidedMatchesController < ApplicationController
   
   before_filter :login_required, :only=>[:create,:edit,:update,:destroy]
 
+  JOINED_USER_LIST_LENGTH = 9
+  UNDETERMINED_USER_LIST_LENGTH = 9
+  POSTS_LENGTH = 10  
+  
   def new
     @team = Team.find(params[:team_id])
     if (!current_user.is_team_admin_of?(@team))
@@ -23,11 +27,33 @@ class SidedMatchesController < ApplicationController
     @match = SidedMatch.find(params[:id])  
     @host_team_player_mjs = SidedMatchJoin.find(:all,
         :conditions => ["match_id=? and position is not null",@match.id])    
-    @host_formation_array = @host_team_player_mjs.map {|ut| ut.position}
-    
+    @host_formation_array = @host_team_player_mjs.map {|ut| ut.position}  
     @team = @match.host_team
+    @joined_users = @match.users.joined(JOINED_USER_LIST_LENGTH+1)
+    @undetermined_users = @match.users.undetermined(UNDETERMINED_USER_LIST_LENGTH+1)
+    if (logged_in? && current_user.is_team_member_of?(@match.host_team_id))
+      @posts = @match.posts.find(:all, :limit=>POSTS_LENGTH)
+    else
+      @posts = @match.posts.public :limit=>POSTS_LENGTH
+    end
     render :layout=>'team_layout'    
   end
+  
+  def joined_users
+    @match = SidedMatch.find(params[:id])
+    @title = "#{@match.host_team.shortname} #{@match.start_time.strftime('%m.%d')}的比赛"
+    @users = @match.users.joined
+    @team = @match.team
+    render :action=>'users', :layout=>'team_layout'    
+  end
+  
+  def undetermined_users
+    @match = SidedMatch.find(params[:id])
+    @title = "#{@match.host_team.shortname} #{@match.start_time.strftime('%m.%d')}的比赛"
+    @users = @match.users.undetermined
+    @team = @match.team
+    render :action=>'users', :layout=>'team_layout'    
+  end    
 
   def create
     @team = Team.find(params[:sided_match][:host_team_id])
@@ -82,10 +108,12 @@ class SidedMatchesController < ApplicationController
     end
     @player_mjs = SidedMatchJoin.players(@sided_match)
     @team = @sided_match.host_team
+    @title = "填写比赛结果"
     render :layout=>'team_layout'     
   end
 
-  def update_result 
+  def update_result
+    p "aaaaaaaaaaaaaaaaaaaa"
     @sided_match = SidedMatch.find(params[:id])
     @team = @sided_match.host_team
     if !@sided_match.can_be_edited_result_by?(current_user)

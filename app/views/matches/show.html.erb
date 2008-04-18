@@ -46,7 +46,7 @@
     <%= match_result_text @match%>
     <div class="host_result">
       <%if @match.has_conflict%>
-        <span>主队认可的赛果: <%= match_result_text_by_host @match%></span>
+        <span>主队认可的比赛结果: <%= match_result_text_by_host @match%></span>
       <%end%>
       <table class="goal_list">
         <% (@host_team_goals).each do |ut| %>
@@ -59,7 +59,7 @@
     </div>
     <div class="guest_result">
       <%if @match.has_conflict%>
-        <span>客队认可的赛果: <%= match_result_text_by_guest @match%></span>
+        <span>客队认可的比赛结果: <%= match_result_text_by_guest @match%></span>
       <%end%>
       <table class="goal_list">
         <% (@guest_team_goals).each do |ut| %>

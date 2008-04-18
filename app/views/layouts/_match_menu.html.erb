@@ -15,7 +15,7 @@
           <li><%= link_to("编辑阵型", edit_match_join_path(0, :match_id=>match.id, :team_id=>match.host_team_id))%></li>
         <%end%>
         <%if match.can_be_edited_result_by?(current_user, match.host_team_id)%>
-          <li><%= link_to("填写赛果", edit_team_match_path(match.host_team_id, match))%></li>
+          <li><%= link_to("填写比赛结果", edit_team_match_path(match.host_team_id, match))%></li>
         <%end%>
       <%end%>
     </ul>
@@ -27,7 +27,7 @@
           <li><%= link_to("编辑阵型", edit_match_join_path(0, :match_id=>match.id, :team_id=>match.guest_team_id))%></li>
         <%end%>
         <%if match.can_be_edited_result_by?(current_user, match.guest_team_id)%>
-          <li><%= link_to("填写赛果", edit_team_match_path(match.guest_team_id, match))%></li>
+          <li><%= link_to("填写比赛结果", edit_team_match_path(match.guest_team_id, match))%></li>
         <%end%>
       <%end%>
     </ul>

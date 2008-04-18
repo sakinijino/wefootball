@@ -67,11 +67,13 @@ class Training < ActiveRecord::Base
   end
   
   def can_be_joined_by?(user)
-    !started? && user.is_team_member_of?(self.team_id) && !has_joined_member?(user)
+#    !started? && user.is_team_member_of?(self.team_id) && !has_joined_member?(user)
+    user.is_team_member_of?(self.team_id) && !has_joined_member?(user)
   end
   
   def can_be_quited_by?(user)
-    !started? && has_member?(user)
+#    !started? && has_member?(user)
+    has_member?(user)
   end
   
   def has_member?(user)

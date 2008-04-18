@@ -18,7 +18,6 @@ class TrainingsController < ApplicationController
     @team = @training.team
     @joined_users = @training.users.joined(JOINED_USER_LIST_LENGTH+1)
     @undetermined_users = @training.users.undetermined(UNDETERMINED_USER_LIST_LENGTH+1)    
-    @title = "#{@training.team.shortname} #{@training.start_time.strftime('%m.%d')}的训练"
     render :layout=>'team_layout'
   end
   
