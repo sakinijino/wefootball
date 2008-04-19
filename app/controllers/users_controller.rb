@@ -27,8 +27,9 @@ class UsersController < ApplicationController
         flash[:notice] = "目前并无#{params[:user][:login]}所对应的帐户"  
       end     
       redirect_to(new_session_path) 
+    else
+      render :layout => 'unlogin_layout'
     end
-    render :layout => 'unlogin_layout'
   end 
   
   def reset_password
