@@ -15,7 +15,7 @@
     <%if @firend_request != nil || @firend_invitation != nil || @user_invitation_count > 0 ||  @team_invitation_count > 0%>
     <div class="notification">
       <%if @firend_request != nil%>
-        <span>你已邀请<%=h @user.nickname%>成为朋友，等待对方邀请</span>
+        <span>你已邀请<%=h @user.nickname%>成为朋友, 等待对方邀请</span>
       <%end%>
 
       <%if @firend_invitation != nil%>
@@ -62,7 +62,7 @@
     <%= "<span>喜欢的球队: #{h @user.favorite_team}</span><br/>" unless @user.favorite_team.blank?%>
     <%= "<span>blog地址: <a href='#{@user.full_blog_uri}' target='_blank'>#{word_wrap_with_wbr(h(@user.blog))}</a></span><br/>" unless @user.blog.blank?%>
     <%if !@user.summary.blank?%>
-        <span>自我介绍：</span>
+        <span>自我介绍: </span>
         <p><%=simple_format auto_link(h(@user.summary), :urls)%></p>
     <%end%>
     </div>

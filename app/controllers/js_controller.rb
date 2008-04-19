@@ -1,5 +1,5 @@
 class JsController < ApplicationController
-  caches_page :province_city_select#, :football_ground_select
+  caches_page :province_city_select, :football_ground_select
 
   def province_city_select
     respond_to do |format|

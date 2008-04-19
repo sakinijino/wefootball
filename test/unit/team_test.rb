@@ -48,10 +48,10 @@ class TeamTest < ActiveSupport::TestCase
     Training.destroy_all
     assert_equal 0, Training.count
     td = Time.now.next_month.next_month.monday.tomorrow.tomorrow
-    #创建训练，每个训练时长2小时
-    create_training(td, 1) #当前时间，落入今天
-    create_training(td.at_midnight.ago(7200).since(1), 1) #昨天晚上10点过1秒，结束时落入今天 
-    create_training(td.at_midnight.tomorrow.ago(1), 1) #明天0点前1秒，落入今天  
+    #创建训练, 每个训练时长2小时
+    create_training(td, 1) #当前时间, 落入今天
+    create_training(td.at_midnight.ago(7200).since(1), 1) #昨天晚上10点过1秒, 结束时落入今天 
+    create_training(td.at_midnight.tomorrow.ago(1), 1) #明天0点前1秒, 落入今天  
     create_training(td.at_midnight.ago(7200), 1) #昨天晚上10点  
     create_training(td.at_midnight.tomorrow, 1) #明天0点    
     assert_equal 3, t.trainings.in_a_day(td).length
@@ -62,10 +62,10 @@ class TeamTest < ActiveSupport::TestCase
     Training.destroy_all
     assert_equal 0, Training.count
     td = Time.now.next_month.next_month.monday.tomorrow.tomorrow
-    #创建训练，每个训练时长2小时
-    create_training(td, 1) #当前时间，落入本周
-    create_training(td.monday.ago(7200).since(1), 1) #上周日晚上10点过1秒，结束时落入本周
-    create_training(td.monday.next_week.ago(1), 1) #下周一0点前1秒，落入本周
+    #创建训练, 每个训练时长2小时
+    create_training(td, 1) #当前时间, 落入本周
+    create_training(td.monday.ago(7200).since(1), 1) #上周日晚上10点过1秒, 结束时落入本周
+    create_training(td.monday.next_week.ago(1), 1) #下周一0点前1秒, 落入本周
     create_training(td.monday.ago(7200), 1) #上周日晚上10点
     create_training(td.monday.next_week, 1) #下周一0点
     assert_equal 3, t.trainings.in_a_week(td).length
@@ -76,10 +76,10 @@ class TeamTest < ActiveSupport::TestCase
     Training.destroy_all
     assert_equal 0, Training.count
     td = Time.now.next_month.next_month.monday.tomorrow.tomorrow
-    #创建训练，每个训练时长2小时
-    create_training(td, 1) #当前时间，落入本月
-    create_training(td.at_beginning_of_month.ago(7200).since(1), 1) #上月最后一天晚上10点过1秒，结束时落入本月
-    create_training(td.at_beginning_of_month.next_month.ago(1), 1) #下月第一天0点前1秒，落入本月
+    #创建训练, 每个训练时长2小时
+    create_training(td, 1) #当前时间, 落入本月
+    create_training(td.at_beginning_of_month.ago(7200).since(1), 1) #上月最后一天晚上10点过1秒, 结束时落入本月
+    create_training(td.at_beginning_of_month.next_month.ago(1), 1) #下月第一天0点前1秒, 落入本月
     create_training(td.at_beginning_of_month.ago(7200), 1) #上月最后一天晚上10点
     create_training(td.at_beginning_of_month.next_month, 1) #下月第一天0点
     assert_equal 3, t.trainings.in_a_month(td).length
@@ -90,9 +90,9 @@ class TeamTest < ActiveSupport::TestCase
     Training.destroy_all
     assert_equal 0, Training.count
     td = Time.now.next_month.next_month.monday.tomorrow.tomorrow
-    #创建训练，每个训练时长2小时
-    create_training(td, 1) #当前时间，落入未来24小时
-    create_training(td.tomorrow.ago(1), 1) #当前时间24小时之后前1秒，落入未来24小时
+    #创建训练, 每个训练时长2小时
+    create_training(td, 1) #当前时间, 落入未来24小时
+    create_training(td.tomorrow.ago(1), 1) #当前时间24小时之后前1秒, 落入未来24小时
     create_training(td.tomorrow, 1) #当前时间24小时之后
     assert_equal 2, t.trainings.in_later_hours(24, td).length
   end

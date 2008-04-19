@@ -40,7 +40,7 @@
           </tr>
           <tr>
             <td>
-              <%=link_to h(@another_team.shortname), team_view_path(@another_team)%>提出建议后，等待我队的回复
+              <%=link_to h(@another_team.shortname), team_view_path(@another_team)%>提出建议后, 等待我队的回复
             </td>
           </tr>
           <%msg = @team == @host_team ? @unmodified_match_invitation.guest_team_message: @unmodified_match_invitation.host_team_message%>

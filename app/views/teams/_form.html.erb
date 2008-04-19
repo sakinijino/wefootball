@@ -2,10 +2,10 @@
   <%= javascript_include_tag province_city_select_url %>
 <%end%>
 
-<p><label for="shortname">队名 (例如: 北京大学信科07)</label><br/>
+<p><label for="shortname">队名</label><br/>
 <%= f.text_field :shortname, :maxlength=>15, :size=>30 %></p>
 
-<p><label for="name">球队全称 (例如: 北京大学信息技术学院2007级代表队)</label><br/>
+<p><label for="name">球队全称 (可选, 详细的队名, 方便其他用户找到这只球队)</label><br/>
 <%= f.text_field :name, :maxlength=>50, :size=>30 %></p>
 
 <p><label for="found_time">建队日期</label><br/>
@@ -14,7 +14,7 @@
 <p><label for="city">所在地</label><br/>
 <%= f.province_city_select :city %>
 
-<p><label for="style">球队风格 (例如：全攻全守、防守反击)</label><br/>
+<p><label for="style">球队风格 (例如: 全攻全守, 防守反击)</label><br/>
 <%= f.text_field :style, :maxlength=>50, :size=>30 %></p>
 
 <p><label for="summary">球队简介</label><br/>

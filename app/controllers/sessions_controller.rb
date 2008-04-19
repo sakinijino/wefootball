@@ -17,6 +17,8 @@ class SessionsController < ApplicationController
       @user = self.current_user
       redirect_back_or_default(user_view_path(@user))
     else
+      @se = User.new
+      @se.errors.add_to_base('用户名或密码错误')
       render :action => 'new', :layout => default_layout  
     end
   end
@@ -25,7 +27,7 @@ class SessionsController < ApplicationController
     self.current_user.forget_me if logged_in?
     cookies.delete :auth_token
     reset_session
-    flash[:notice] = "您已经登出WeFootball"
+    flash[:notice] = "您已经退出WeFootball"
     redirect_with_back_uri_or_default new_session_path
   end
 end

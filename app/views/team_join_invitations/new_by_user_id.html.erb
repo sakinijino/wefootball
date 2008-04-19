@@ -1,7 +1,7 @@
 <div id="wide_left_content" class="sect">
 <h2><%=h @title%></h2>
 <%if @teams.empty?%>
-  <span>没有可以邀请加入的球队，可能这个用户已经加入了所有你管理的球队</span>
+  <span>没有可以邀请加入的球队, 可能这个用户已经加入了所有你管理的球队</span>
 <%else%>
   <% form_for :team_join_request, :url => team_join_invitations_path, :method=>"POST" do |f| %>
     <%= f.hidden_field :user_id,  :value=>@user.id%>    

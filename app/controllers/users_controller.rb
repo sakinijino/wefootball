@@ -9,7 +9,7 @@ class UsersController < ApplicationController
     self.current_user = params[:activation_code].blank? ? :false : User.find_by_activation_code(params[:activation_code])
     if logged_in? && !current_user.active?
       current_user.activate
-      flash[:notice] = "你的帐号已经激活，现在请设置一下个人信息"
+      flash[:notice] = "你的帐号已经激活, 现在请设置一下个人信息"
       redirect_to edit_user_path(current_user)
     else
       fake_params_redirect
@@ -22,7 +22,7 @@ class UsersController < ApplicationController
       if user        
         user.create_password_reset_code     
         UserMailer.deliver_forgot_password(user)        
-        flash[:notice] = "密码重设通知已经发送到了#{user.login}，请查收"       
+        flash[:notice] = "密码重设通知已经发送到了#{user.login}, 请查收"       
       else      
         flash[:notice] = "目前并无#{params[:user][:login]}所对应的帐户"  
       end     
@@ -85,7 +85,7 @@ class UsersController < ApplicationController
     end
     if @user.save
       UserMailer.deliver_signup_notification(@user)
-      flash[:notice] = "您的帐户已经注册成功，请登录您的注册邮箱（ #{@user.login}）激活帐户"    
+      flash[:notice] = "您的帐户已经注册成功, 请登录您注册的Email (#{@user.login})激活帐户"
       redirect_to(new_session_path)
     else
       render :action=>'new', :layout => 'unlogin_layout'  
@@ -145,7 +145,7 @@ class UsersController < ApplicationController
       @user.save!
       RegisterInvitation.destroy(@invitation)
       UserMailer.deliver_signup_notification(@user)
-      flash[:notice] = "您的帐户已经注册成功，请登录您的注册邮箱（ #{@user.login}）激活帐户"    
+      flash[:notice] = "您的帐户已经注册成功, 请登录您注册的Email (#{@user.login})激活帐户"
       redirect_to(new_session_path)
       return
     end
@@ -155,6 +155,7 @@ class UsersController < ApplicationController
   
   def edit
     @user = User.find(params[:id], :include=>[:positions])
+    @user.birthday = Date.new(1980, 1, 1) if @user.birthday == nil
     @positions = @user.positions_array
     @title = "修改我的信息"
     render :layout => "user_layout"
@@ -179,7 +180,7 @@ class UsersController < ApplicationController
       redirect_to edit_user_path(@user)
     else
       @positions = @user.positions_array
-      @user.errors.add_to_base('上传的必须是一张图片，而且大小不能超过2M') if !user_image.errors.empty?
+      @user.errors.add_to_base('上传的必须是一张图片, 而且大小不能超过2M') if !user_image.errors.empty?
       render :action => "edit", :layout => "user_layout"
     end
   end

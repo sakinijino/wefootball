@@ -23,7 +23,7 @@
             </tr>
             <tr>
               <td>
-                邀请发出，等待<%=link_to h(another_team.shortname), team_view_path(another_team)%>回复
+                邀请发出, 等待<%=link_to h(another_team.shortname), team_view_path(another_team)%>回复
               </td>
             </tr>
             <%msg = @team == mi.host_team ? mi.guest_team_message: mi.host_team_message%>

@@ -46,19 +46,19 @@ class User < ActiveRecord::Base
   
   has_many :posts, :dependent => :destroy
 
-  validates_presence_of     :login, :message=>'请填写E-mail'
+  validates_presence_of     :login, :message=>'请填写Email'
   validates_presence_of     :nickname, :message=>'请填写昵称'
   validates_format_of       :login, 
     :with=> /^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$/,
-    :message => '需要用E-mail注册'
+    :message => '需要用Email注册'
   validates_presence_of     :password,                   :if => :password_required?, :message=>'请填写密码'
   validates_presence_of     :password_confirmation,      :if => :password_required?, :message=>'请确认密码'
   validates_length_of     :password, :minimum =>4, :message => "密码最少需要填写4位", :if => :password_required?
   validates_length_of       :password, :maximum =>40, :message => "密码最长可以填40位", :if => :password_required?
   validates_confirmation_of :password,                   :if => :password_required?, :message=>'填写的密码不一致'
   validates_length_of        :login,    :minimum => 3, :message=>''
-  validates_length_of        :login,    :maximum => 40, :message=>'E-mail太长了吧'
-  validates_uniqueness_of   :login, :case_sensitive => false, :message=>'这个E-mail已经被注册过了'
+  validates_length_of        :login,    :maximum => 40, :message=>'Email太长了吧'
+  validates_uniqueness_of   :login, :case_sensitive => false, :message=>'这个Email已经被注册过了'
   
   validates_length_of       :nickname, :maximum => 15, :message=>'昵称最长可以填15个字'
   validates_inclusion_of    :birthday_display_type, :in => [0, #不显示生日

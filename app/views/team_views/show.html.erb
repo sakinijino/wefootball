@@ -65,7 +65,7 @@
       <%= "<span>球队风格: #{h @team.style}</span><br/>" unless @team.style.blank?%>
       <%= "<span>建队时间: #{@team.found_time}</span><br/>" unless @team.found_time.nil?%>
       <%if !@team.summary.blank?%>
-          <label>球队简介：</label>
+          <label>球队简介: </label>
           <p><%=simple_format auto_link(h(@team.summary), :urls)%></p>
       <%end%>
       </div>

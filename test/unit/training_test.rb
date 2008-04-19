@@ -54,10 +54,10 @@ class TrainingTest < ActiveSupport::TestCase
     assert !trainings(:training1).has_member?(users(:quentin)) #未加入
     
     assert trainings(:training1).can_be_joined_by?(users(:quentin)) #可以加入
-    assert !trainings(:training1).can_be_joined_by?(users(:saki)) #已加入，不能再加入
-    assert !trainings(:training1).can_be_joined_by?(users(:mike1)) #不是本队，不能加入
+    assert !trainings(:training1).can_be_joined_by?(users(:saki)) #已加入, 不能再加入
+    assert !trainings(:training1).can_be_joined_by?(users(:mike1)) #不是本队, 不能加入
     
-    assert !trainings(:training1).can_be_quited_by?(users(:quentin)) #未加入，不能退出
+    assert !trainings(:training1).can_be_quited_by?(users(:quentin)) #未加入, 不能退出
     assert trainings(:training1).can_be_quited_by?(users(:saki)) #可以退出
     assert !trainings(:training1).can_be_quited_by?(users(:mike1)) #不能退出
     
@@ -66,7 +66,7 @@ class TrainingTest < ActiveSupport::TestCase
 #    trainings(:training1).save_without_validation!
 #    
 #    assert !trainings(:training1).can_be_joined_by?(users(:quentin)) #已经结束不能加入
-#    assert !trainings(:training1).can_be_quited_by?(users(:saki)) #已经结束，不能退出
+#    assert !trainings(:training1).can_be_quited_by?(users(:saki)) #已经结束, 不能退出
 # 
 #    
 #    trainings(:training1).start_time = 4.days.ago
@@ -74,7 +74,7 @@ class TrainingTest < ActiveSupport::TestCase
 #    trainings(:training1).save_without_validation!
 #    
 #    assert !trainings(:training1).can_be_joined_by?(users(:quentin)) #结束3天不能加入
-#    assert !trainings(:training1).can_be_quited_by?(users(:saki)) #已经结束，不能退出
+#    assert !trainings(:training1).can_be_quited_by?(users(:saki)) #已经结束, 不能退出
   end
   
   def test_training_join_status

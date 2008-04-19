@@ -55,7 +55,7 @@ class TeamsController < ApplicationController
     if team_image.save
       redirect_to edit_team_path(@team)
     else
-      @team.errors.add_to_base('上传的必须是一张图片，而且大小不能超过2M') if !team_image.errors.empty?
+      @team.errors.add_to_base('上传的必须是一张图片, 而且大小不能超过2M') if !team_image.errors.empty?
       render :action => "edit", :layout => "team_layout"
     end
   end

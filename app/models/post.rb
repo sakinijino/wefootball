@@ -9,7 +9,7 @@ class Post < ActiveRecord::Base
   
   validates_presence_of     :title, :message => "标题不能为空"
   validates_length_of :title, :maximum =>100, :message => "标题最长为100个字"
-  validates_length_of :content, :minimum =>5, :message => "内容太短了，最少也写5个字吧"
+  validates_length_of :content, :minimum =>5, :message => "内容太短了, 最少也写5个字吧"
   
   attr_accessible :title, :content, :is_private
   

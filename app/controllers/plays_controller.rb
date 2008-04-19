@@ -12,7 +12,7 @@ class PlaysController < ApplicationController
 
   def players
     @play = Play.find(params[:id])    
-    @title = "#{@play.start_time.strftime('%Y-%m-%d %H:%M')}-#{@play.end_time.strftime('%H:%M')}，在#{@play.location}一起踢球"
+    @title = "#{@play.start_time.strftime('%Y-%m-%d %H:%M')}-#{@play.end_time.strftime('%H:%M')}, 在#{@play.location}一起踢球"
     @players = @play.users
     render :layout => default_layout    
   end

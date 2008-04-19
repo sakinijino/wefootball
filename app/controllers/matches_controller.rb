@@ -41,7 +41,7 @@ class MatchesController < ApplicationController
   def joined_users
     @match = Match.find(params[:id])
     @team = Team.find(params[:team_id])
-    @title = "#{@team.name}已决定参加的人"
+    @title = "#{@team.name}参加这场比赛的人"
     @users = @match.users.joined_with_team_id(@team)
     render :action=>'users', :layout=>'match_layout'    
   end
@@ -49,7 +49,7 @@ class MatchesController < ApplicationController
   def undetermined_users
     @match = Match.find(params[:id])
     @team = Team.find(params[:team_id])
-    @title = "#{@team.name}尚未决定是否参加的人"      
+    @title = "#{@team.name}没表态是否参加的人"      
     @users = @match.users.undetermined_with_team_id(@team)
     render :action=>'users', :layout=>'match_layout'    
   end   

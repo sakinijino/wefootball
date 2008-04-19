@@ -4,10 +4,10 @@
   <% form_for @user, :url => create_with_invitation_users_path, :method=>:post do |f| -%>
   <%= f.hidden_field :invitation_code, :value=>@invitation.invitation_code %>
   
-  <p><label for="email">你的邮箱</label><br/>
+  <p><label for="email">你的Email</label><br/>
   <%= f.text_field :login, :value=>@user.login %></p>
 
-  <p><label for="password">密码</label><br/>
+  <p><label for="password">设一下密码</label><br/>
   <%= f.password_field :password %></p>
 
   <p><label for="password_confirmation">确认密码</label><br/>

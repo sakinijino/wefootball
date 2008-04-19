@@ -8,7 +8,7 @@
 
   <% form_for @team,:html => { :class=>"tab"} do |f| %>
   <%= render :partial => "form", :locals=>{:f=> f}%>
-  <p><%= f.submit '保存' %></p>
+  <p><%= f.submit '保存基本信息' %></p>
   <% end %>
 
   <% form_for(:team, :url => update_image_team_path(@team),:html => { :method=>:put, :multipart => true, :class=>"tab" }) do |f| %>
@@ -20,7 +20,7 @@
     </p>
 
     <p>
-      <%= f.submit "保存" %>
+      <%= f.submit "上传队标" %>
     </p>
   <% end %>
   </div>

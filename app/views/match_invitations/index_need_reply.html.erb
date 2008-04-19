@@ -23,7 +23,7 @@
             </tr>
             <tr>
               <td>
-                <%=link_to h(another_team.shortname), team_view_path(another_team)%>提出建议后，等待我队的回复
+                <%=link_to h(another_team.shortname), team_view_path(another_team)%>提出建议后, 等待我队的回复
               </td>
             </tr>
             <%msg = @team == mi.host_team ? mi.guest_team_message: mi.host_team_message%>

@@ -1,19 +1,24 @@
 <div id="wide_left_content" class="sect">
   <h2>登录WeFootball</h2>
+  <%= error_messages_for :se %>
   <% form_tag sessions_path do -%>
-  <p><label for="email">你注册的邮箱</label><br/>
+  <p><label for="email">你的Email</label><br/>
   <%= text_field_tag 'login' %></p>
 
-  <p><label for="password">密码</label><br/>
+  <p><label for="password">你在WeFootball的密码</label><br/>
   <%= password_field_tag 'password' %>
   &nbsp;&nbsp;&nbsp;<%= link_to "忘记密码了",forgot_password_path%></p>
 
   <p><%= check_box_tag 'remember_me' %>
   <label for="remember_me">记住我</label></p>
 
-  <p><%= submit_tag '登录' %></p>
+  <p><%= submit_tag '登录' %>
+  &nbsp;&nbsp;&nbsp;<%= link_to "现在注册", new_user_path%>
+  </p>
 
   <% end -%>
+  
+  
 </div>
 
 <div class="clearBoth"></div>

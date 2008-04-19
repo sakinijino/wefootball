@@ -1,9 +1,9 @@
 <ul class="sidebar_menu">
   <li <%= selected_class_sidebar_menu_item(:action=>'joined_users', :controller=>'sided_matches')%>>
-    > <%= link_to("代表#{@team.name}参加这次比赛的人", joined_users_sided_match_path(@match,:team_id=>@team.id)) %>
+    > <%= link_to("代表#{h @team.shortname}参加这次比赛的人", joined_users_sided_match_path(@match,:team_id=>@team.id)) %>
   </li>
   <li <%= selected_class_sidebar_menu_item(:action=>'undetermined_users', :controller=>'sided_matches')%>>
-    > <%= link_to("尚未决定是否代表#{@team.name}参加这次比赛的人", undetermined_users_sided_match_path(@match,:team_id=>@team.id)) %>
+    > <%= link_to("没表态是否代表#{h @team.shortname}参加这次比赛的人", undetermined_users_sided_match_path(@match,:team_id=>@team.id)) %>
   </li>
   <li class='seperate'>
   </li>

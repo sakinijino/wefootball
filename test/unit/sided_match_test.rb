@@ -129,11 +129,11 @@ class SidedMatchTest < ActiveSupport::TestCase
     mj.status = SidedMatchJoin
     mj.save!
     
-    assert sided_matches(:one).can_be_joined_by?(users(:quentin)) #待定，可以加入
-    assert !sided_matches(:one).can_be_joined_by?(users(:saki)) #已加入，不能再加入
-    assert !sided_matches(:one).can_be_joined_by?(users(:mike1)) #不是本队，不能加入
+    assert sided_matches(:one).can_be_joined_by?(users(:quentin)) #待定, 可以加入
+    assert !sided_matches(:one).can_be_joined_by?(users(:saki)) #已加入, 不能再加入
+    assert !sided_matches(:one).can_be_joined_by?(users(:mike1)) #不是本队, 不能加入
     
-    assert sided_matches(:one).can_be_quited_by?(users(:quentin)) #待定，不能退出
+    assert sided_matches(:one).can_be_quited_by?(users(:quentin)) #待定, 不能退出
     assert sided_matches(:one).can_be_quited_by?(users(:saki)) #可以退出
     assert !sided_matches(:one).can_be_quited_by?(users(:mike1)) #不能退出
     
@@ -142,8 +142,8 @@ class SidedMatchTest < ActiveSupport::TestCase
 #    sided_matches(:one).rest_length = 10
 #    sided_matches(:one).save!
 #    
-#    assert !sided_matches(:one).can_be_joined_by?(users(:quentin)) #已经结束，不能加入
-#    assert !sided_matches(:one).can_be_quited_by?(users(:saki)) #已经结束，不能退出
+#    assert !sided_matches(:one).can_be_joined_by?(users(:quentin)) #已经结束, 不能加入
+#    assert !sided_matches(:one).can_be_quited_by?(users(:saki)) #已经结束, 不能退出
   end
   
   def test_can_edit_or_destroy

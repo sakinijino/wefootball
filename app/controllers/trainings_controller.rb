@@ -23,7 +23,7 @@ class TrainingsController < ApplicationController
   
   def joined_users
     @training = Training.find(params[:id])
-    @title = "#{@training.team.shortname} #{@training.start_time.strftime('%m.%d')}的训练"
+    @title = "参见#{@training.team.shortname} #{@training.start_time.strftime('%m.%d')}训练的人"
     @joined_users = @training.users.joined
     @team = @training.team
     render :layout=>'team_layout'    
@@ -31,7 +31,7 @@ class TrainingsController < ApplicationController
   
   def undetermined_users
     @training = Training.find(params[:id])
-    @title = "#{@training.team.shortname} #{@training.start_time.strftime('%m.%d')}的训练"
+    @title = "没表态是否参加#{@training.team.shortname} #{@training.start_time.strftime('%m.%d')}训练的人"
     @undetermined_users = @training.users.undetermined
     @team = @training.team
     render :layout=>'team_layout'    
