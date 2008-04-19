@@ -1,5 +1,5 @@
 <ul class="sidebar_menu">
-  <li <%= selected_class_sidebar_menu_item(:action=>'index')%>>
+  <li <%= selected_class_sidebar_menu_item(:action=>'index', :controller=>'team_joins')%>>
   > <%= link_to '球队成员', team_team_joins_path(@team) %>
   </li>
   <%if logged_in? && current_user.is_team_admin_of?(@team)%>
