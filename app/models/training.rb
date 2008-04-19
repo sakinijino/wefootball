@@ -32,7 +32,7 @@ class Training < ActiveRecord::Base
   def validate
     st = start_time.respond_to?(:to_datetime) ? start_time.to_datetime : start_time
     et = end_time.respond_to?(:to_datetime) ? end_time.to_datetime : end_time
-    errors.add(:start_time, "训练开始时间必须大于当前时间") if st < DateTime.now
+    #errors.add(:start_time, "训练开始时间必须大于当前时间") if st < DateTime.now
     errors.add(:end_time, "训练至少要进行15分钟") if (et - st)*24*60 < 15
     errors.add(:end_time, "训练时间最长可以填1天") if (et - st) > 1
   end

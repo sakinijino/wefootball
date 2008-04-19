@@ -34,7 +34,7 @@
   <%end%>
   
   <li <%= selected_class_sidebar_menu_item(:action=>'index', :boolean=>!@match && !@training && !@sided_match)%>>
-  > <%= link_to '队伍讨论区', team_posts_path(@team) %>
+  > <%= link_to '球队讨论区', team_posts_path(@team) %>
   </li>
     
   <li class="seperate">
@@ -49,6 +49,6 @@
     <%end%>
   </li>
   <li>
-    > <%= link_to '返回队伍首页', team_view_path(@team) %>
+    > <%= link_to '返回球队首页', team_view_path(@team) %>
   </li>
 </ul>

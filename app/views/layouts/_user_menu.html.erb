@@ -1,7 +1,7 @@
 <div id="header_menu">
 <%if logged_in? && user.id == current_user.id%>
 <div class="l1_menu">
-  <%= link_to("首页", user_view_path(user), :class=>is_selected_user_menu_item?(:user))%>
+  <%= link_to("我的首页", user_view_path(user), :class=>is_selected_user_menu_item?(:user))%>
   <%= link_to("朋友", user_friend_relations_path(user), :class=>is_selected_user_menu_item?(:friends))%>
   <%= link_to("球队", user_team_joins_path(user), :class=>is_selected_user_menu_item?(:teams))%>
   <%= day_calendar_link('活动', Time.now, user, :class=>is_selected_user_menu_item?(:activities))%>
@@ -14,6 +14,7 @@
   <ul>
     <li><%= link_to("我的朋友", user_friend_relations_path(user))%></li>
     <li><%= link_to("朋友邀请", friend_invitations_path)%></li>
+    <li><%= link_to("邀请朋友加入", invite_users_path)%></li>
   </ul>
   <ul>
     <li><%= link_to("我的球队", user_team_joins_path(user))%></li>
@@ -22,6 +23,7 @@
     <li><%= link_to("球队申请", team_join_requests_path)%></li>
   </ul>
   <ul>
+    <li><%= link_to "随便踢踢", new_play_path %></li>
     <li><%= day_calendar_link('今日活动', Time.now, user)%></li>
     <li><%= month_calendar_link('本月活动', Time.now, user)%></li>
   </ul>
@@ -33,7 +35,7 @@
 </div>
 <%else%>
 <div class="l1_menu">
-  <%= link_to("首页", user_view_path(user), :class=>is_selected_user_menu_item?(:user))%>
+  <%= link_to("个人首页", user_view_path(user), :class=>is_selected_user_menu_item?(:user))%>
   <%= link_to("朋友", user_friend_relations_path(user), :class=>is_selected_user_menu_item?(:friends))%>
   <%= link_to("球队", user_team_joins_path(user), :class=>is_selected_user_menu_item?(:teams))%>
   <%= day_calendar_link('活动', Time.now, user, :class=>is_selected_user_menu_item?(:activities))%>

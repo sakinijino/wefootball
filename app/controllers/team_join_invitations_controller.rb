@@ -22,7 +22,7 @@ class TeamJoinInvitationsController < ApplicationController
   end
   
   def index
-    if (params[:team_id]) # 显示队伍所有邀请的用户
+    if (params[:team_id]) # 显示球队所有邀请的用户
       @team = Team.find(params[:team_id])
       if (current_user.is_team_admin_of?(params[:team_id]))
         @requests = TeamJoinRequest.find_all_by_team_id_and_is_invitation(params[:team_id], true, :include=>[:user])
@@ -31,7 +31,7 @@ class TeamJoinInvitationsController < ApplicationController
       else
         fake_params_redirect
       end
-    else  # 显示所有邀请用户的队伍
+    else  # 显示所有邀请用户的球队
       @requests = TeamJoinRequest.find_all_by_user_id_and_is_invitation(self.current_user, true, :include=>[:team])
       @user = current_user
       @title = "邀请我加入的球队"

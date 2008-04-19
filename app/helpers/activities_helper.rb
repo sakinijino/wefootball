@@ -11,14 +11,11 @@ module ActivitiesHelper
         :time => nil,
         :joined => '我要去踢',
       },
-      :sided_match => {
+      :match => {
         :time => nil,
         :joined => '我打算去',
         :undetermined => '要去吗?',
         :unjoined => '我不打算去',
-      },
-      :match => {
-        :time => nil
       }
     },
     :in => {
@@ -32,14 +29,11 @@ module ActivitiesHelper
         :time => '正在进行',
         :joined => '我正在踢',
       },
-      :sided_match => {
+      :match => {
         :time => '比赛正在进行',
         :joined => '我正在比赛',
         :undetermined => '要去吗?',
         :unjoined => '我没去',
-      },
-      :match => {
-        :time => '比赛正在进行',
       }
     },
     :after => {
@@ -53,14 +47,11 @@ module ActivitiesHelper
         :time => '结束了',
         :joined => '我去了',
       },
-      :sided_match => {
+      :match => {
         :time => '比赛已结束',
         :joined => '我去了',
         :undetermined => '参加了吗?',
         :unjoined => '我没去',
-      },
-      :match => {
-        :time => '比赛已结束',
       }
     }
   }
@@ -76,7 +67,7 @@ module ActivitiesHelper
         :joined => ['---', '不去了'],
         :unjoined => ['要去', '---']
       },
-      :sided_match => {
+      :match => {
         :joined => ['---', '不去了'],
         :undetermined => ['要去', '不去'],
         :unjoined => ['打算去', '---']
@@ -92,7 +83,7 @@ module ActivitiesHelper
         :joined => ['---', '没去'],
         :unjoined => ['现在去', '---']
       },
-      :sided_match => {
+      :match => {
         :joined => ['---', '没去'],
         :undetermined => ['现在去', '不去'],
         :unjoined => ['现在去', '---']
@@ -108,7 +99,7 @@ module ActivitiesHelper
         :joined => ['---', '没去'],
         :unjoined => ['去了', '---']
       },
-      :sided_match => {
+      :match => {
         :joined => ['---', '没去'],
         :undetermined => ['我去了', '我没去'],
         :unjoined => ['去了', '---']
@@ -131,7 +122,7 @@ module ActivitiesHelper
     when Training
       :training
     when SidedMatch
-      :sided_match
+      :match
     when Play
       :play
     when Match
@@ -139,10 +130,18 @@ module ActivitiesHelper
     end
   end
   
-  def join_key(act)
+  def join_key(act, team=nil)
     if act.class == Play
       if act.has_member?(current_user)
         :joined
+      else
+        :unjoined
+      end
+    elsif act.class == Match
+      if act.has_joined_team_member?(current_user, team)
+        :joined
+      elsif act.has_team_member?(current_user, team)
+        :undetermined
       else
         :unjoined
       end
@@ -169,10 +168,10 @@ module ActivitiesHelper
     end
   end
     
-  def join_status_text(act)
+  def join_status_text(act, team=nil)
     time = time_key(act)
     type = type_key(act)
-    join = join_key(act)
+    join = join_key(act, team)
     STATUS_MATRIX[time][type][join]
   end
     
@@ -191,12 +190,12 @@ module ActivitiesHelper
     },
     :in => {
       :joined => "我正代表%s参赛",
-      :undetermined => "代表%s参赛?",
+      :undetermined => "我没说是否代表%s参赛",
       :unjoined => "我没代表%s参赛",
     },
     :after => {
-      :joined => "我代表%s去了",
-      :undetermined => "代表%s参赛了?",
+      :joined => "我代表%s参赛了",
+      :undetermined => "我没说是否代表%s参赛",
       :unjoined => "我没代表%s参赛",
     },
   }
@@ -219,25 +218,15 @@ module ActivitiesHelper
     },
   }
   
-  def match_join_key(act, team)
-    if act.has_joined_team_member?(current_user, team)
-      :joined
-    elsif act.has_team_member?(current_user, team)
-      :undetermined
-    else
-      :unjoined
-    end
-  end
-  
   def match_join_status_text(act, team, team_name=nil)
     time = time_key(act)
-    join = match_join_key(act, team)
+    join = join_key(act, team)
     MATCH_STATUS_MATRIX[time][join] % (team_name ? team_name : "#{link_to h(team.shortname), team_view_path(team)}")
   end
     
   def match_join_status_links(act, team)
     time = time_key(act)
-    join = match_join_key(act, team)
+    join = join_key(act, team)
     MATCH_LINKS_MATRIX[time][join]
   end
 end

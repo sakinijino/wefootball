@@ -27,7 +27,7 @@
       <%if @user_invitation_count > 0 ||  @team_invitation_count > 0%>
         你有<%= link_to "#{@user_invitation_count}个朋友邀请", friend_invitations_path if @user_invitation_count > 0 %>
         <%= ', ' if @user_invitation_count > 0 &&  @team_invitation_count > 0 %>
-        <%= link_to "#{@team_invitation_count}个队伍邀请", team_join_invitations_path if @team_invitation_count > 0%>
+        <%= link_to "#{@team_invitation_count}个球队邀请", team_join_invitations_path if @team_invitation_count > 0%>
       <%end%>
     </div>
     <%end%>

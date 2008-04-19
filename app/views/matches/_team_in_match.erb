@@ -3,7 +3,7 @@
   <%= small_team_image_link team, :class=>'icon title_icon'%>
   <div class="info">
     <%links = []%>
-    <%if logged_in? %>
+    <%if logged_in? && current_user.is_team_member_of?(team)%>
       <%links << link_to("编辑阵型", edit_match_join_path(0, :match_id=>match.id, :team_id=>team.id)) if @match.can_be_edited_formation_by?(current_user, team)%>
       <%links << link_to("填写比赛结果", edit_team_match_path(team, match)) if @match.can_be_edited_result_by?(current_user, team)%>
       <%links << link_to("取消比赛", match_path(@match), :method => :delete, :confirm => '真的要取消这场比赛吗？') if @match.can_be_destroyed_by?(current_user)%>

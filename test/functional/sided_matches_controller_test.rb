@@ -260,8 +260,8 @@ class SidedMatchesControllerTest < ActionController::TestCase
     match1.location = '一体'
     match1.save!
     SidedMatchJoin.create_joins(match1)   
-#    put :update_result, :id => match1.id, :team_id=>t1.id, :sided_match => {}, :mj => {}
-#    assert_redirected_to '/'
+    put :update_result, :id => match1.id, :team_id=>t1.id, :sided_match => {}, :mj => {}
+    assert_redirected_to '/'
 
     match1.start_time = 1.days.ago
     match1.save!

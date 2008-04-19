@@ -7,7 +7,7 @@
     :url=>search_users_path},
   :team => 
     {:image => team_img,
-    :link_to=>"#{link_to(team_img, search_teams_path)} #{link_to("队伍搜索", search_teams_path)}", 
+    :link_to=>"#{link_to(team_img, search_teams_path)} #{link_to("球队搜索", search_teams_path)}", 
     :url=>search_teams_path}
 }%>
 <% form_tag search_paths[default][:url], :method=>:post, :id=>"header_search" do%>

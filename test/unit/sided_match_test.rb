@@ -149,8 +149,21 @@ class SidedMatchTest < ActiveSupport::TestCase
   def test_can_edit_or_destroy
     user_teams(:aaron_milan).is_admin = true
     user_teams(:aaron_milan).save!
-
+    
     sided_matches(:one).start_time = Time.now.tomorrow
+    sided_matches(:one).half_match_length = 25
+    sided_matches(:one).rest_length = 10
+    sided_matches(:one).save!
+    assert sided_matches(:one).can_be_edited_by?(users(:saki))
+    assert sided_matches(:one).can_be_edited_formation_by?(users(:saki))
+    assert !sided_matches(:one).can_be_edited_result_by?(users(:saki))
+    assert sided_matches(:one).can_be_destroyed_by?(users(:saki))
+    assert !sided_matches(:one).can_be_edited_by?(users(:mike1))
+    assert !sided_matches(:one).can_be_edited_formation_by?(users(:mike1))
+    assert !sided_matches(:one).can_be_edited_result_by?(users(:mike1))
+    assert !sided_matches(:one).can_be_destroyed_by?(users(:mike1))
+    
+    sided_matches(:one).start_time = 6.days.ago
     sided_matches(:one).half_match_length = 25
     sided_matches(:one).rest_length = 10
     sided_matches(:one).save!
@@ -162,19 +175,6 @@ class SidedMatchTest < ActiveSupport::TestCase
     assert !sided_matches(:one).can_be_edited_formation_by?(users(:mike1))
     assert !sided_matches(:one).can_be_edited_result_by?(users(:mike1))
     assert !sided_matches(:one).can_be_destroyed_by?(users(:mike1))
-    
-#    sided_matches(:one).start_time = Time.now.tomorrow
-#    sided_matches(:one).half_match_length = 25
-#    sided_matches(:one).rest_length = 10
-#    sided_matches(:one).save!
-#    assert sided_matches(:one).can_be_edited_by?(users(:saki))
-#    assert sided_matches(:one).can_be_edited_formation_by?(users(:saki))
-#    assert !sided_matches(:one).can_be_edited_result_by?(users(:saki))
-#    assert sided_matches(:one).can_be_destroyed_by?(users(:saki))
-#    assert !sided_matches(:one).can_be_edited_by?(users(:mike1))
-#    assert !sided_matches(:one).can_be_edited_formation_by?(users(:mike1))
-#    assert !sided_matches(:one).can_be_edited_result_by?(users(:mike1))
-#    assert !sided_matches(:one).can_be_destroyed_by?(users(:mike1))
     
 #    sided_matches(:one).start_time = Time.now.ago(1800)
 #    sided_matches(:one).half_match_length = 25

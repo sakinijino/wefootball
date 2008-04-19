@@ -61,7 +61,7 @@ class MatchInvitationsControllerTest < ActionController::TestCase
   
   def test_should_not_create_match_invitation
     login_as :quentin    
-    assert_no_difference('MatchInvitation.count') do #host_team和guest_team是同一支队伍
+    assert_no_difference('MatchInvitation.count') do #host_team和guest_team是同一支球队
       post :create, :match_invitation => {
         :host_team_id => teams(:inter).id,:guest_team_id => teams(:inter).id,
         :new_location => "Beijing",

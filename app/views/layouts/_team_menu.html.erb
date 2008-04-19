@@ -1,12 +1,12 @@
 <div id="header_menu">
   <% is_admin = (logged_in? && current_user.is_team_admin_of?(team))%>
   <div class="l1_menu">
-    <%= link_to("首页", team_view_path(team), :class=>is_selected_team_menu_item?(:team))%>
+    <%= link_to("球队首页", team_view_path(team), :class=>is_selected_team_menu_item?(:team))%>
     <%= link_to("成员", team_team_joins_path(team), :class=>is_selected_team_menu_item?(:members))%>
-    <%= day_calendar_link('活动', Time.now, team, :class=>is_selected_team_menu_item?(:activities))%>
+    <%= link_to("阵型", formation_index_team_joins_path(:team_id => team), :class=>is_selected_team_menu_item?(:formation))%>
+    <%= month_calendar_link('活动', Time.now, team, :class=>is_selected_team_menu_item?(:activities))%>
     <%= link_to '讨论', team_posts_path(team), :class=>is_selected_team_menu_item?(:posts)%>
     <%if is_admin%>
-      <%= link_to("入队", team_team_join_requests_path(team), :class=>is_selected_team_menu_item?(:join))%>
       <%= link_to("设置", edit_team_path(team), :class=>is_selected_team_menu_item?(:setting))%>
     <%end%>
   </div>
@@ -14,30 +14,30 @@
   <div class="l2_menu_list">
     <ul></ul>
     <ul>
-      <li><%= link_to("队伍成员", team_team_joins_path(team))%></li>
-      <li><%= link_to '查看阵型', formation_index_team_joins_path(:team_id => team) %></li>
       <%if is_admin%>
-      <li><%= link_to("成员管理", admin_management_team_joins_path(:team_id => team))%></li>
-      <li><%= link_to("选拔队员", player_management_team_joins_path(:team_id => team))%></li>
-      <li><%= link_to("安排阵型", formation_management_team_joins_path(:team_id => team))%></li>
+        <li><%= link_to("球队成员", team_team_joins_path(team))%></li>
+        <li><%= link_to("成员管理", admin_management_team_joins_path(:team_id => team))%></li>
+        <li><%= link_to("入队申请", team_team_join_requests_path(team))%></li>
+        <li><%= link_to("入队邀请", team_team_join_invitations_path(team))%></li>
       <%end%>
     </ul>
     <ul>
-      <li><%= day_calendar_link('今日活动', Time.now, team)%></li>
-      <li><%= month_calendar_link('本月活动', Time.now, team)%></li>
+      <%if is_admin%>
+        <li><%= link_to '查看阵型', formation_index_team_joins_path(:team_id => team) %></li>
+        <li><%= link_to("选拔队员", player_management_team_joins_path(:team_id => team))%></li>
+        <li><%= link_to("安排阵型", formation_management_team_joins_path(:team_id => team))%></li>
+      <%end%>
+    </ul>
+    <ul>
       <%if is_admin%>
       <li><%= link_to("新建训练", new_team_training_path(team))%></li>
       <li><%= link_to("新建比赛", new_team_sided_match_path(team))%></li>
       <%end%>
       <li><%= link_to("比赛邀请", team_match_invitations_path(team))%></li>
+      <li><%= day_calendar_link('今日活动', Time.now, team)%></li>
+      <li><%= month_calendar_link('本月活动', Time.now, team)%></li>
     </ul>
+    <ul></ul>   
     <ul></ul>
-    <%if is_admin%>
-    <ul>
-      <li><%= link_to("入队申请", team_team_join_requests_path(team))%></li>
-      <li><%= link_to("入队邀请", team_team_join_invitations_path(team))%></li>
-    </ul>
-    <ul></ul>
-    <%end%>
   </div>
 </div>

@@ -1,6 +1,6 @@
 <div id="header_menu">
   <div class="l1_menu">
-    <%= link_to("首页", match_path(match), :class=>is_selected_match_menu_item?(:match))%>
+    <%= link_to("比赛首页", match_path(match), :class=>is_selected_match_menu_item?(:match))%>
     <%= link_to("主队", team_view_path(match.host_team_id), :class=> params[:team_id] == match.host_team_id.to_s ? 'selected' : '')%>
     <%= link_to("客队", team_view_path(match.guest_team_id), :class=> params[:team_id] == match.guest_team_id.to_s ? 'selected' : '')%>
   </div>

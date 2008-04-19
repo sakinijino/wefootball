@@ -8,26 +8,23 @@
     <h2>踢着玩的基本信息</h2>
     <div class="activities">
       <%=date_div_link @play.start_time, @user%>
-      <div style="float:left">
+      <div class="detail">
         <span>时间: </span><%= @play.start_time.strftime("%H:%M")%>-<%=@play.end_time.strftime("%H:%M")%><br />
         <span>地点: </span><%= location_link @play.location, @play.football_ground_id %><br />
+        <%if logged_in?%>
+          <br />
+          <span>我的状态: </span>
+          <%= join_status_text @play%>&nbsp;&nbsp;&nbsp;
+          <%links = []%>
+          <% links_text = join_status_links @play%>
+          <% links << link_to(links_text[0], play_play_joins_path(@play), :method=>'post') if @play.can_be_joined_by?(current_user)%>
+          <% links << link_to(links_text[1], play_play_join_path(@play, 0), :method=>'delete') if @play.can_be_quited_by?(current_user)%>
+          <%= links_with_sticks links%>
+        <%end%>
       </div>
       <div class="clearBoth"></div>
     </div>
-    <%if logged_in?%>
-      <div style="float:right">
-        <%links = []%>
-        <% if @play.can_be_joined_by?(current_user) %>
-          > <%links << "#{link_to '我也要去', play_play_joins_path(@play), :method=>:post}"%>     
-        <%end%>
-        <% if @play.can_be_quited_by?(current_user) %>           
-          > <%links << "#{link_to "我不去了",play_play_join_path(@play, 0), :method=>:delete}"%>        
-        <%end%>
-        <%= links_with_sticks links%>
-      </div>
-      <div class="clearBoth"></div>
-    <%end%>   
-    </div>
+  </div>
 </div>
 
 <div id="narrow_right_content">
@@ -43,8 +40,6 @@
     <div class="clearBoth"></div>
   </div>
 </div>
-
-
 
 <div class="clearBoth"></div>
 

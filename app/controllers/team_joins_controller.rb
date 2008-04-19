@@ -3,13 +3,13 @@ class TeamJoinsController < ApplicationController
   before_filter :before_edit, :only=>[:admin_management, :player_management, :formation_management, :update_formation]
   
   def index
-    if (params[:user_id]) # 显示用户参加的所有队伍
+    if (params[:user_id]) # 显示用户参加的所有球队
       @user = User.find(params[:user_id])
       @admin_teams = @user.teams.admin
       @other_teams = @user.teams.find(:all, :conditions => ['is_admin = ?', false])
       @title = "#{@user.nickname}的球队"
       render :action=>"index_team", :layout => 'user_layout'
-    else # 显示队伍的所有成员
+    else # 显示球队的所有成员
       @team = Team.find(params[:team_id])
       @admin = @team.users.admin
       @players = @team.users.players

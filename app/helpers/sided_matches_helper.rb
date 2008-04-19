@@ -8,5 +8,26 @@ module SidedMatchesHelper
   
   def win_rule_text(label)
    SidedMatchesHelper::WIN_RULE_TEXTS[label]
-  end  
+  end
+  
+  def sided_match_result_text(m)
+      hg = m.host_team_goal
+      gg = m.guest_team_goal
+      s = m.situation
+      if (hg.blank? && gg.blank?)
+        if s.nil?
+          "尚未填写赛果"
+        elsif s == 1 || s == 5
+          situation_text s
+        else
+          "我队#{situation_text s}"
+        end
+      elsif hg.blank?
+        "#{m.guest_team_name}进了#{gg}个球"
+      elsif gg.blank?
+        "我队进了#{hg}个球"
+      else
+        "#{hg} : #{gg}"
+      end
+    end
 end

@@ -104,8 +104,7 @@ class SidedMatch < ActiveRecord::Base
   end  
   
   def can_be_edited_result_by?(user)
-    #is_after_match? && user.is_team_admin_of?(self.host_team_id)
-    user.is_team_admin_of?(self.host_team_id)
+    is_after_match? && user.is_team_admin_of?(self.host_team_id)
   end
   
   def can_be_edited_formation_by?(user)

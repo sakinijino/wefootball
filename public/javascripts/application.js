@@ -22,11 +22,11 @@ j(function(){
         var l2_menu_list = j("#header_menu div.l2_menu_list ul")
         top_menu_items.each(function(i, item){
           item = j(item)
-          item.mouseover(function(){
+          item.mouseover(function(){ T=item
                            top_menu_items.removeClass('selected')
                            item.addClass('selected')
                            top_menu.css('background-image', 'url("/images/top_menu_hover.gif")')
-                                   .css('background-position', (item.position().left-20)+'px 0px')
+                                   .css('background-position', (item.position().left-(35-Math.round(item.outerWidth()/2)))+'px 0px')
 
                            l2_menu_list.hide();
                            var l2_ml = j(l2_menu_list[i])

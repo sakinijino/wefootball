@@ -2,7 +2,7 @@ class TeamJoinRequestsController < ApplicationController
   before_filter :login_required
   
   def index
-    if (params[:team_id]) # 显示所有请求加入队伍的用户
+    if (params[:team_id]) # 显示所有请求加入球队的用户
       @team = Team.find(params[:team_id])
       if (current_user.is_team_admin_of?(params[:team_id]))
         @requests = TeamJoinRequest.find_all_by_team_id_and_is_invitation(params[:team_id], false, :include=>[:user])
@@ -11,7 +11,7 @@ class TeamJoinRequestsController < ApplicationController
       else
         fake_params_redirect
       end
-    else # 显示所有用户请求加入队伍
+    else # 显示所有用户请求加入球队
       @requests = TeamJoinRequest.find_all_by_user_id_and_is_invitation(self.current_user, false, :include=>[:team])
       @user = current_user
       @title = "我申请加入的球队"

@@ -35,7 +35,7 @@ class TeamsController < ApplicationController
 
   def edit
     @team = Team.find(params[:id])
-    @title = "修改队伍信息"
+    @title = "修改球队信息"
     render :layout => "team_layout"
   end
   

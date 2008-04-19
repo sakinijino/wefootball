@@ -42,7 +42,7 @@ div.activities div.activity_list {
 
 div.activities div.activity{
   width: 428px;
-  height: 142px;
+  height: 107px;
   padding: 20px 0 0 25px;
   position:relative;
   float: left;
@@ -72,7 +72,7 @@ div.activities div.match_activity {
 div.activities div.match_activity div.activity_icon {
   position:absolute;
   left:346px;
-  top:22px;
+  top:21px;
   width: 100px;
   height:100px;
 }
@@ -85,40 +85,47 @@ div.activities div.match_activity div.activity_icon img.host_icon {
 
 div.activities div.match_activity div.activity_icon img.guest_icon {
   position:absolute;
-  top:40px;
-  left:34px;
+  top:41px;
+  left:33px;
 }
 
 div.activities div.match_activity div.activity_icon div.vs {
   background:transparent url(/images/vs.gif) no-repeat;
-  position:absolute;
-  top:33px;
-  left:27px;
-  width:28px;
-  height:22px;
-  z-index: 5;
-}
-
-div.activities div.training_activity_narrow,
-div.activities div.play_activity_narrow{
-  background:transparent url(/images/training_block_bg_old.gif) no-repeat;
-  height: 107px;
-}
-
-div.activities div.match_activity_narrow {
-  background:transparent url(/images/match_block_bg_old.gif) no-repeat;
-  height: 107px;
-}
-
-div.activities div.match_activity_narrow div.activity_icon img.guest_icon {
-  position:absolute;
-  top:40px;
-  left:33px;
-}
-
-div.activities div.match_activity_narrow div.activity_icon div.vs {
-  background:transparent url(/images/vs_old.gif) no-repeat;
   width:29px;
   height:21px;
   left:26px;
+  position:absolute;
+  top:34px;
+  z-index: 5;
+}
+
+div.activities div.match_activity_wide {
+  height: 142px;
+  background:transparent url(/images/match_block_bg_wide.gif) no-repeat;
+}
+
+div.activities div.match_activity_wide div.activity_icon img.host_icon {
+  top:1px;
+}
+
+div.activities div.match_activity_wide div.activity_icon img.guest_icon {
+  top:41px;
+  left:34px;
+}
+
+div.activities div.match_activity_wide div.activity_icon div.vs {
+  background:transparent url(/images/vs_wide.gif) no-repeat;
+  left:27px;
+  width:28px;
+  height:22px;
+}
+
+div.activities div.detail{
+    float:left;
+    margin: 8px 0 0 10px;
+    line-height:150%;
+}
+
+div.activities div.detail span{
+  color: #666666;
 }

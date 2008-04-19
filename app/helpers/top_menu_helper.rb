@@ -26,10 +26,14 @@ module TopMenuHelper
       p[:controller] == 'team_views'
     },
     :members => Proc.new { |p|
-      p[:controller] == 'team_joins'
-    },
-    :join => Proc.new { |p|
+      (p[:controller] == 'team_joins' && p[:action] == 'admin_management') || 
+      (p[:controller] == 'team_joins' && p[:action] == 'index') || 
         p[:controller] == 'team_join_invitations' || p[:controller] == 'team_join_requests'
+    },
+    :formation => Proc.new { |p|
+      (p[:controller] == 'team_joins' && p[:action] == 'formation_index') || 
+      (p[:controller] == 'team_joins' && p[:action] == 'player_management') ||
+      (p[:controller] == 'team_joins' && p[:action] == 'formation_management')
     },
     :activities => Proc.new { |p|
       p[:controller] == 'calendar' || p[:controller] == 'match_invitations' || 

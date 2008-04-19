@@ -19,10 +19,6 @@ ul.sidebar_menu li a{
     font-size: 12px;
 }
 
-ul.sidebar_menu li.selected{
-    display: none
-}
-
 div.icon {
     width:69px;
     height:70px;
