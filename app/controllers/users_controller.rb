@@ -48,8 +48,10 @@ class UsersController < ApplicationController
         UserMailer.deliver_reset_password(@user)          
         flash[:notice] = "帐户#{@user.login}的密码已经更改成功"    
         redirect_to user_view_path(@user)
+        return
       else   
         render :action => :reset_password, :layout=>'unlogin_layout'
+        return        
       end 
     end
     render :layout => 'unlogin_layout'
