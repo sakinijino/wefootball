@@ -9,7 +9,7 @@ class UsersController < ApplicationController
     self.current_user = params[:activation_code].blank? ? :false : User.find_by_activation_code(params[:activation_code])
     if logged_in? && !current_user.active?
       current_user.activate
-      flash[:notice] = "你的帐号已经激活，现在可以修改你的信息"
+      flash[:notice] = "你的帐号已经激活，现在请设置一下个人信息"
       redirect_to edit_user_path(current_user)
     else
       fake_params_redirect

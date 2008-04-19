@@ -58,7 +58,7 @@ class User < ActiveRecord::Base
   validates_confirmation_of :password,                   :if => :password_required?, :message=>'填写的密码不一致'
   validates_length_of        :login,    :minimum => 3, :message=>''
   validates_length_of        :login,    :maximum => 40, :message=>'E-mail太长了吧'
-  validates_uniqueness_of   :login, :case_sensitive => false, :message=>'这个E-mail已经注册过了'
+  validates_uniqueness_of   :login, :case_sensitive => false, :message=>'这个E-mail已经被注册过了'
   
   validates_length_of       :nickname, :maximum => 15, :message=>'昵称最长可以填15个字'
   validates_inclusion_of    :birthday_display_type, :in => [0, #不显示生日

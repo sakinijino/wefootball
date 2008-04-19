@@ -16,7 +16,6 @@ class SessionsController < ApplicationController
       end
       @user = self.current_user
       redirect_back_or_default(user_view_path(@user))
-      flash[:notice] = "Logged in successfully"
     else
       render :action => 'new', :layout => default_layout  
     end
@@ -26,7 +25,7 @@ class SessionsController < ApplicationController
     self.current_user.forget_me if logged_in?
     cookies.delete :auth_token
     reset_session
-    flash[:notice] = "You have been logged out."
+    flash[:notice] = "您已经登出WeFootball"
     redirect_with_back_uri_or_default new_session_path
   end
 end
