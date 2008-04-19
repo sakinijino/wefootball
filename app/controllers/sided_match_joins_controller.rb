@@ -2,7 +2,7 @@ class SidedMatchJoinsController < ApplicationController
   before_filter :login_required
   
   def create
-    @sided_match = SidedMatch.find(params[:match_id])
+    @sided_match = SidedMatch.find(params[:sided_match_id])
     @team = @sided_match.host_team
     if (@sided_match.has_joined_member?(current_user))
       redirect_to sided_match_path(@sided_match)
@@ -17,7 +17,7 @@ class SidedMatchJoinsController < ApplicationController
   end
   
   def destroy
-    @sided_match = SidedMatch.find(params[:match_id])
+    @sided_match = SidedMatch.find(params[:sided_match_id])
     if !@sided_match.can_be_quited_by?(current_user)
       fake_params_redirect      
       return

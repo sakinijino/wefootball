@@ -12,7 +12,7 @@ class SidedMatchJoinsControllerTest < ActionController::TestCase
     login_as :quentin
     assert_difference('SidedMatchJoin.find_all_by_user_id_and_match_id(users(:quentin), sided_matches(:one)).size') do
     assert_difference('SidedMatchJoin.count') do
-      post :create, :match_id=>sided_matches(:one).id
+      post :create, :sided_match_id=>sided_matches(:one).id
       assert_redirected_to sided_match_path(sided_matches(:one).id)
     end
     end
@@ -32,7 +32,7 @@ class SidedMatchJoinsControllerTest < ActionController::TestCase
     
     login_as :quentin
     assert_no_difference('SidedMatchJoin.count') do
-      post :create, :match_id=>sided_matches(:one).id
+      post :create, :sided_match_id=>sided_matches(:one).id
       assert_redirected_to sided_match_path(assigns(:sided_match).id)
       assert_equal SidedMatchJoin::JOIN, tj.reload.status
     end
@@ -56,7 +56,7 @@ class SidedMatchJoinsControllerTest < ActionController::TestCase
     sided_matches(:one).save!
     login_as :aaron
     assert_no_difference('SidedMatchJoin.count') do
-      post :create, :match_id=>sided_matches(:one).id
+      post :create, :sided_match_id=>sided_matches(:one).id
       assert_redirected_to '/'
     end
   end
@@ -74,7 +74,7 @@ class SidedMatchJoinsControllerTest < ActionController::TestCase
     
     login_as :saki
     assert_no_difference('SidedMatchJoin.count') do
-      post :create, :match_id=>sided_matches(:one).id
+      post :create, :sided_match_id=>sided_matches(:one).id
       assert_redirected_to sided_match_path(assigns(:sided_match).id)
     end
   end
@@ -92,7 +92,7 @@ class SidedMatchJoinsControllerTest < ActionController::TestCase
     
     login_as :saki
     assert_difference('SidedMatchJoin.count', -1) do
-      delete :destroy, :match_id => sided_matches(:one).id, :id=>0
+      delete :destroy, :sided_match_id => sided_matches(:one).id, :id=>0
       assert_redirected_to sided_match_path(sided_matches(:one).id)
     end
   end
@@ -110,7 +110,7 @@ class SidedMatchJoinsControllerTest < ActionController::TestCase
     
     login_as :quentin
     assert_difference('SidedMatchJoin.count', -1) do
-      delete :destroy, :match_id => sided_matches(:one).id, :id=>0
+      delete :destroy, :sided_match_id => sided_matches(:one).id, :id=>0
       assert_redirected_to sided_match_path(sided_matches(:one).id)
     end
   end
