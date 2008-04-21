@@ -17,8 +17,13 @@ class SessionsController < ApplicationController
       @user = self.current_user
       redirect_back_or_default(user_view_path(@user))
     else
-      @se = User.new
-      @se.errors.add_to_base('用户名或密码错误')
+      @se = User.new      
+      if User.correct_login_without_activation(params[:login], params[:password])
+        @se.errors.add_to_base('帐号还没有激活, 请登录Email完成激活操作')
+        @se.errors.add_to_base('如果尚未收到激活邮件, 请重新注册')
+      else
+        @se.errors.add_to_base('用户名或密码错误')
+      end
       render :action => 'new', :layout => default_layout  
     end
   end

@@ -37,16 +37,16 @@
     <p><label for="city">所在地</label><br/>
     <%= f.province_city_select :city %>
 
-    <p><label for="blog">我的blog</label><br/>
+    <p><label for="blog">我的blog <span class="optional">(可选)</span></label><br/>
     http://<%= f.text_field :blog, :size=>30, :maxlength=>256 %></p>
 
-    <p><label for="favorite_star">我喜欢球星</label><br/>
+    <p><label for="favorite_star">我喜欢的球星 <span class="optional">(可选)</span></label><br/>
     <%= f.text_field :favorite_star, :size=>30, :maxlength=>200 %></p>
 
-    <p><label for="favorite_team">我喜欢球队</label><br/>
+    <p><label for="favorite_team">我喜欢的球队 <span class="optional">(可选)</span></label><br/>
     <%= f.text_field :favorite_team, :size=>30, :maxlength=>200 %></p>
 
-    <p><label for="summary">自我介绍</label><br/>
+    <p><label for="summary">自我介绍 <span class="optional">(可选)</span></label><br/>
     <%= f.text_area :summary, :cols=>40, :rows=>15%></p>
 
     <p>
@@ -59,10 +59,10 @@
     <p><%= f.check_box :is_playable %>
     <label for="is_playable">我踢球</label></p>
 
-    <p><label for="height">身高(cm)</label><br/>
+    <p><label for="height">身高(cm) <span class="optional">(可选)</span></label><br/>
     <%= f.text_field :height, :size=>5, :maxlength=>3 %></p>
 
-    <p><label for="weight">体重(kg)</label><br/>
+    <p><label for="weight">体重(kg) <span class="optional">(可选)</span></label><br/>
     <%= f.text_field :weight, :size=>5, :maxlength=>3 %></p>
 
     <p><label for="fitfoot">惯用脚</label><br/>

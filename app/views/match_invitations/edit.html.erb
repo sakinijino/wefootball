@@ -159,12 +159,12 @@
     </table>
 
     <p>
-      比赛说明<br />
+      比赛说明 <span class="optional">(可选)</span><br />
       <%= f.text_area :new_description, :cols => 40, :rows => 10 %>
     </p>
 
     <p>
-      给对方管理员的留言<br />
+      给对方管理员的留言 <span class="optional">(可选)</span><br />
       <%if @unmodified_match_invitation.edit_by_host_team%>
         <%= f.text_area :host_team_message, :value=>'', :cols => 40, :rows => 3 %>
       <%else%>
