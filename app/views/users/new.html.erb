@@ -12,7 +12,8 @@
   <p><label for="password_confirmation">确认密码</label><br/>
   <%= f.password_field :password_confirmation, :size=>30, :maxlength=>40 %></p>
 
-  <p><%= submit_tag '注册' %></p>
+  <p><%= submit_tag '注册' %>
+  &nbsp;&nbsp;&nbsp;&nbsp;> <%= link_to "已经注册, 登录", new_session_path%></p>
   <% end -%>
 </div>
 

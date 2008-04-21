@@ -33,7 +33,7 @@
       <li><%= link_to("新建训练", new_team_training_path(team))%></li>
       <li><%= link_to("新建比赛", new_team_sided_match_path(team))%></li>
       <%end%>
-      <li><%= link_to("比赛邀请", team_match_invitations_path(team))%></li>
+      <li><%= link_to("约战邀请", team_match_invitations_path(team))%></li>
       <li><%= day_calendar_link('今日活动', Time.now, team)%></li>
       <li><%= month_calendar_link('本月活动', Time.now, team)%></li>
     </ul>

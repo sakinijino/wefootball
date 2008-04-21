@@ -23,8 +23,13 @@ div.calendar div.monthAndYearDiv {
     width:217px;
 }
 
-.todayDateDiv {
-  background:transparent url(/images/today.gif) no-repeat;
+/*.todayDateDiv {*/
+/*  background:transparent url(/images/today.gif) no-repeat;*/
+/*}*/
+
+.todayDateDiv .todaySpan {
+  color: #666666;
+  font-size: 9px;
 }
 
 .hasActivityDiv {

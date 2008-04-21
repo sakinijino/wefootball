@@ -42,6 +42,8 @@ class TeamsController < ApplicationController
   def update
     @team = Team.find(params[:id])
     if @team.update_attributes(params[:team])
+      @title = "修改球队信息"
+      flash[:notice] = "信息已保存"
       redirect_to edit_team_path(params[:id])
     else
       render :action=>"edit", :layout => "team_layout"
@@ -53,6 +55,8 @@ class TeamsController < ApplicationController
     team_image = TeamImage.find_or_initialize_by_team_id(@team.id)
     team_image.uploaded_data = params[:team][:uploaded_data]
     if team_image.save
+      @title = "修改球队信息"
+      flash[:notice] = "队标已上传, 如果队标一时没有更新, 多刷新几次页面"
       redirect_to edit_team_path(@team)
     else
       @team.errors.add_to_base('上传的必须是一张图片, 而且大小不能超过2M') if !team_image.errors.empty?

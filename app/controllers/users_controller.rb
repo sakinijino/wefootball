@@ -85,7 +85,7 @@ class UsersController < ApplicationController
     end
     if @user.save
       UserMailer.deliver_signup_notification(@user)
-      flash[:notice] = "您的帐户已经注册成功, 请登录您注册的Email (#{@user.login})激活帐户"
+      flash[:notice] = "激活帐户的邮件已发送, 请登录你的Email进行激活"
       redirect_to(new_session_path)
     else
       render :action=>'new', :layout => 'unlogin_layout'  
@@ -96,7 +96,7 @@ class UsersController < ApplicationController
     if request.post?
       user = User.find_by_login(params[:register_invitation][:login])
       if user        
-        @has_joined_notice = "您的好友已经使用#{user.login}注册过了WeFootball"
+        @has_joined_notice = true
         @has_joined_user_id = user.id
         @register_invitation = RegisterInvitation.new
       else      
@@ -165,8 +165,10 @@ class UsersController < ApplicationController
     @user=self.current_user
     @user.positions_array=params[:positions] if params[:user][:is_playable]=="1"
     if @user.update_attributes(params[:user])
+      flash[:notice] = "信息已保存"
       redirect_to edit_user_path(@user)
     else
+      @title = "修改我的信息"
       @positions = @user.positions_array
       render :action => "edit", :layout => "user_layout"
     end
@@ -177,8 +179,10 @@ class UsersController < ApplicationController
     user_image = UserImage.find_or_initialize_by_user_id(@user.id)
     user_image.uploaded_data = params[:user][:uploaded_data]
     if user_image.save
+      flash[:notice] = "头像已上传, 如果头像一时没有更新, 多刷新几次页面"
       redirect_to edit_user_path(@user)
     else
+      @title = "修改我的信息"
       @positions = @user.positions_array
       @user.errors.add_to_base('上传的必须是一张图片, 而且大小不能超过2M') if !user_image.errors.empty?
       render :action => "edit", :layout => "user_layout"

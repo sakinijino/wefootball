@@ -66,6 +66,15 @@ j(function(){
             return false;
         })
         
+        j("#header_search input.input").focus(function(){
+            this.default_value = this.value
+            this.value = ''
+            j(this).removeClass('blurinput')
+        }).blur(function(){
+            this.value = this.default_value
+            j(this).addClass('blurinput')
+        })
+        
         if (j.browser.msie && j.browser.version != '7.0')
           j("#header_search .dropdown_container div.dropdown div").mouseover(function(){j(this).addClass('hover')}).mouseout(function(){j(this).removeClass('hover')})
         

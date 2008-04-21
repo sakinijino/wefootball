@@ -4,11 +4,13 @@
   :user => 
     {:image => user_img,
     :link_to=>"#{link_to(user_img, search_users_path)} #{link_to('用户搜索', search_users_path)}", 
-    :url=>search_users_path},
+    :url=>search_users_path,
+    :text=>'搜索用户'},
   :team => 
     {:image => team_img,
     :link_to=>"#{link_to(team_img, search_teams_path)} #{link_to("球队搜索", search_teams_path)}", 
-    :url=>search_teams_path}
+    :url=>search_teams_path,
+    :text=>'搜索队伍'}
 }%>
 <% form_tag search_paths[default][:url], :method=>:post, :id=>"header_search" do%>
   <table><tr>
@@ -22,7 +24,7 @@
       <%end%>
     </div>
   </td>
-  <td><%= text_field_tag 'q', '', :size=>18 %></td>
+  <td><%= text_field_tag 'q', search_paths[default][:text], :size=>18, :class=>'input blurinput' %></td>
   <td><%= submit_tag '', :class=>"submit search", :title=>'搜索' %></td>
   </tr></table>
 <%end%>

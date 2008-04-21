@@ -236,6 +236,10 @@ form.button-to div {
     background: #fff;
 }
 
+#header_search input.blurinput {
+    color: #ccc;
+}
+
 #header_search input.submit {
     width: 32px;
     height: 30px;
@@ -271,7 +275,7 @@ div.flash{
 /*    font-weight: bold;*/
 /*    padding: 6px 10px;*/
 /*    margin: 10px 0px 15px 0px;*/
-/*    border:solid 2px #3D681A;*/
+    border:solid 1px #3D681A;
     background: #F2F7AB;
     padding: 6px 10px;
     margin: 10px 0px 15px 0px;
@@ -357,6 +361,10 @@ div.notification {
     background: #F2F7AB;
     padding: 6px 10px;
     margin: 10px 0px 15px 0px;
+}
+
+form span.optional {
+  color: #666666;
 }
 
 div.tab_container {

@@ -5,7 +5,7 @@
 <p><label for="shortname">队名</label><br/>
 <%= f.text_field :shortname, :maxlength=>15, :size=>30 %></p>
 
-<p><label for="name">球队全称<span class="optional">(可选, 详细的全称会让你的球队更容易被找到)</span></label><br/>
+<p><label for="name">球队全称 <span class="optional">(可选, 详细的全称会让你的球队更容易被找到)</span></label><br/>
 <%= f.text_field :name, :maxlength=>50, :size=>30 %></p>
 
 <p><label for="found_time">建队日期</label><br/>
@@ -17,5 +17,5 @@
 <p><label for="style">球队风格 <span class="optional">(可选, 如全攻全守, 防守反击)</span></label><br/>
 <%= f.text_field :style, :maxlength=>50, :size=>30 %></p>
 
-<p><label for="summary">球队简介<span class="optional">(可选)</span></label><br/>
+<p><label for="summary">球队简介 <span class="optional">(可选)</span></label><br/>
 <%= f.text_area :summary, :cols=>40, :rows=>15 %></p>

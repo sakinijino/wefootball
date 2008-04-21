@@ -38,6 +38,9 @@
         <span class="bigMonthDaySpan"><%=day_calendar_link(date.day, date, @user || @team)%></span>
         <span class="bigWeekDaySpan">
           <%=wday_text date.wday%></span>
+        <%if date.to_date == Date.today%>
+          <span class="todaySpan">- 今日</span>
+        <%end%>
       </div>
       <div class="dateContent">
         <% if act_a_day.length > 0 %>

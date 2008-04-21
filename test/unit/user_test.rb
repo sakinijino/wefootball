@@ -279,7 +279,7 @@ class UserTest < Test::Unit::TestCase
     ut1 = UserTeam.new
     ut1.user_id = u.id
     ut1.team_id = t1.id
-    ut1.is_admin = false #如果不是管理员则肯定不能发起比赛邀请
+    ut1.is_admin = false #如果不是管理员则肯定不能发起约战邀请
     ut1.save    
     assert_equal false, u.can_invite_team?(t1)    
     assert_equal false, u.can_invite_team?(t2)
