@@ -15,21 +15,22 @@
 <body>
 <%= render(:partial => 'layouts/qmd')%>
 <div id="main_content">
-<div id="header" class="match_header">
-  <%= link_to small_team_image_tag(@match.host_team, :class=>''), team_view_path(@match.host_team), :id=>"host_header_icon" %>
-  <%= link_to small_team_image_tag(@match.guest_team, :class=>''), team_view_path(@match.guest_team), :id=>"guest_header_icon" %>
-  <%= render(:partial => 'layouts/header_setting')%>
-  <%= render(:partial => 'layouts/match_menu', :locals => {:match => @match})%>
-  
-  <%= render(:partial => 'layouts/search_panel', :locals => {:default => :team})%>
-</div>
+  <div id="header" class="match_header">
+    <%= link_to small_team_image_tag(@match.host_team, :class=>''), team_view_path(@match.host_team), :id=>"host_header_icon" %>
+    <%= link_to small_team_image_tag(@match.guest_team, :class=>''), team_view_path(@match.guest_team), :id=>"guest_header_icon" %>
+    <%= render(:partial => 'layouts/header_setting')%>
+    <%= render(:partial => 'layouts/match_menu', :locals => {:match => @match})%>
 
-<div id="content">
-  <%if flash[:notice]%>
-    <div class="flash"><%= flash[:notice] %></div>
-  <%end%>
-  <%= yield  %>
+    <%= render(:partial => 'layouts/search_panel', :locals => {:default => :team})%>
+  </div>
+
+  <div id="content">
+    <%if flash[:notice]%>
+      <div class="flash"><%= flash[:notice] %></div>
+    <%end%>
+    <%= yield  %>
+  </div>
 </div>
-</div>
+<%= render(:partial => 'layouts/footer')%>
 </body>
 </html>

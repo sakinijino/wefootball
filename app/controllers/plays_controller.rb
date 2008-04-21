@@ -21,7 +21,7 @@ class PlaysController < ApplicationController
     @play = Play.new
     @play.start_time = 1.hour.since #默认开始和结束时间
     @play.end_time = @play.start_time.since(3600)
-    @title = "去随便踢踢"    
+    @title = "去随便踢踢"
     @user = current_user
     render :layout => "user_layout"
   end
@@ -35,6 +35,7 @@ class PlaysController < ApplicationController
     end
     rescue ActiveRecord::RecordInvalid => e
       @user = current_user
+      @title = "去随便踢踢"
       render :action => 'new', :layout => "user_layout"   
   end
   

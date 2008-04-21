@@ -15,19 +15,20 @@
 <body>
 <%= render(:partial => 'layouts/qmd')%>
 <div id="main_content">
-<div id="header">
-  <%= image_tag "footballboy3.jpg", :title=>"WeFootball", :id=>"header_icon" %>
-  
-  <%= render(:partial => 'layouts/header_setting')%>
-  <%= render(:partial => 'layouts/search_panel', :locals => {:default => :user})%>
-</div>
+  <div id="header">
+    <%= image_tag "footballboy3.jpg", :title=>"WeFootball", :id=>"header_icon" %>
 
-<div id="content">
-  <%if flash[:notice]%>
-    <div class="flash"><%= flash[:notice] %></div>
-  <%end%>
-  <%= yield  %>
+    <%= render(:partial => 'layouts/header_setting')%>
+    <%= render(:partial => 'layouts/search_panel', :locals => {:default => :user})%>
+  </div>
+
+  <div id="content">
+    <%if flash[:notice]%>
+      <div class="flash"><%= flash[:notice] %></div>
+    <%end%>
+    <%= yield  %>
+  </div>
 </div>
-</div>
+<%= render(:partial => 'layouts/footer')%>
 </body>
 </html>

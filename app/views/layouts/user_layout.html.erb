@@ -15,23 +15,23 @@
 <body>
 <%= render(:partial => 'layouts/qmd')%>
 <div id="main_content">
-<div id="header">
-  <%= link_to user_image_tag(@user), user_view_path(@user), :id=>"header_icon" %>
-  <%= link_to h(@user.nickname), user_view_path(@user), :id=>"header_name"%>
+  <div id="header">
+    <%= link_to user_image_tag(@user), user_view_path(@user), :id=>"header_icon" %>
+    <%= link_to h(@user.nickname), user_view_path(@user), :id=>"header_name"%>
 
-  <%= render(:partial => 'layouts/header_setting')%>
-  <%= render(:partial => 'layouts/user_menu', :locals => {:user => @user})%>
-  
-  <%= render(:partial => 'layouts/search_panel', :locals => {:default => :user})%>
-</div>
+    <%= render(:partial => 'layouts/header_setting')%>
+    <%= render(:partial => 'layouts/user_menu', :locals => {:user => @user})%>
 
-<div id="content">
-  <%if flash[:notice]%>
-    <div class="flash"><%= flash[:notice] %></div>
-  <%end%>
-  <%= yield  %>
-</div>
+    <%= render(:partial => 'layouts/search_panel', :locals => {:default => :user})%>
+  </div>
 
+  <div id="content">
+    <%if flash[:notice]%>
+      <div class="flash"><%= flash[:notice] %></div>
+    <%end%>
+    <%= yield  %>
+  </div>
 </div>
+<%= render(:partial => 'layouts/footer')%>
 </body>
 </html>

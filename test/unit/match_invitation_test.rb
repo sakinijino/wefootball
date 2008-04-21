@@ -2,6 +2,15 @@ require File.dirname(__FILE__) + '/../test_helper'
 
 class MatchInvitationTest < ActiveSupport::TestCase
   
+  def test_length_validation
+    m = match_invitations(:inv1)
+    assert m.valid?
+    m.new_start_time = 2.days.ago
+    m.new_half_match_length = 12*60
+    m.new_half_match_length = 10
+    assert !m.valid?
+  end
+  
   def test_outdated
     m = match_invitations(:inv1)
     m.new_start_time = 2.days.ago

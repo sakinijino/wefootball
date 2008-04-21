@@ -140,7 +140,10 @@ j(function(){
                     )
                 })
                 if (e.target.value == 0) city_select.hide()
-                else city_select.show()
+                else {
+                  city_select.show()
+                  city_select.change();
+                }
             })
             var tmp = span.id.split('-')
             if (tmp.length < 5 || tmp[4] == '') return

@@ -50,8 +50,8 @@ class SidedMatch < ActiveRecord::Base
   
   validates_numericality_of :half_match_length, :message => "半场时间需要填写数字"
   validates_numericality_of :rest_length, :message => "中场休息时间需要填写数字"
-  validates_inclusion_of    :half_match_length, :in => 0..60, :message => "半场时间必须在1小时之内"
-  validates_inclusion_of    :rest_length, :in => 0..60, :message => "中场休息时间必须在1小时之内"
+#  validates_inclusion_of    :half_match_length, :in => 0..60, :message => "半场时间必须在1小时之内"
+#  validates_inclusion_of    :rest_length, :in => 0..60, :message => "中场休息时间必须在1小时之内"
   
   validates_inclusion_of :match_type, :in => MATCH_TYPES, :message => "不要自己构造表单提交..."
   validates_inclusion_of :size, :in => MATCH_SIZES, :message => "不要自己构造表单提交..."
@@ -61,10 +61,15 @@ class SidedMatch < ActiveRecord::Base
    
   belongs_to :host_team, :class_name=>"Team", :foreign_key=>"host_team_id"
   
-  def before_save   
-    self.half_match_length = 0 if self.half_match_length.nil?
-    self.rest_length = 0 if self.rest_length.nil?    
+  def validate
     self.end_time = self.start_time.since(60 * self.full_match_length)
+    st = start_time.respond_to?(:to_datetime) ? start_time.to_datetime : start_time
+    et = end_time.respond_to?(:to_datetime) ? end_time.to_datetime : self.end_time
+    errors.add_to_base("比赛最长可以进行1天") if (et - st) > 1
+  end
+  
+  def before_save
+    self.end_time = self.start_time.since(60 * self.full_match_length) if self.end_time == nil
   end
   
   def full_match_length

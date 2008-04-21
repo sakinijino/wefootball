@@ -20,12 +20,15 @@ class MatchInvitation < ActiveRecord::Base
   attr_accessible :new_location, :new_football_ground_id
   
   validates_presence_of     :new_location, :message => "请填写或选择比赛场地"
+  
+  validates_presence_of     :new_start_time, :message => "请填写比赛开始时间"
+  
   validates_length_of        :new_location, :maximum => MAX_LOCATION_LENGTH, :message => "场地名称最长可以填#{MAX_LOCATION_LENGTH}个字"
   
   validates_numericality_of :new_half_match_length, :message => "半场时间需要填写数字"
   validates_numericality_of :new_rest_length, :message => "中场休息时间需要填写数字"
-  validates_inclusion_of    :new_half_match_length, :in => 0..60, :message => "半场时间必须在1小时之内"
-  validates_inclusion_of    :new_rest_length, :in => 0..60, :message => "中场休息时间必须在1小时之内"
+#  validates_inclusion_of    :new_half_match_length, :in => 0..60, :message => "半场时间必须在1小时之内"
+#  validates_inclusion_of    :new_rest_length, :in => 0..60, :message => "中场休息时间必须在1小时之内"
   
   validates_inclusion_of :new_match_type, :in => MATCH_TYPES, :message => "不要自己构造表单提交..."
   validates_inclusion_of :new_size, :in => MATCH_SIZES, :message => "不要自己构造表单提交..."
@@ -37,7 +40,10 @@ class MatchInvitation < ActiveRecord::Base
 
   def validate
     st = new_start_time.respond_to?(:to_datetime) ? new_start_time.to_datetime : new_start_time
+    et = st.since(60 * (self.new_half_match_length * 2 + self.new_rest_length))
+    et = et.respond_to?(:to_datetime) ? et.to_datetime : et
     errors.add(:start_time, "比赛开始时间必须大于当前时间") if st < DateTime.now
+    errors.add_to_base("比赛最长可以进行1天") if (et - st) > 1
   end
   
   def before_validation

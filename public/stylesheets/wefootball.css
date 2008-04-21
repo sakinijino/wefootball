@@ -59,7 +59,7 @@ form.button-to div {
 #main_content {
     width: 990px;
     margin: 0 auto;
-    padding-bottom:30px;
+    padding-bottom:15px;
     border:solid 1px #3D681A;
 }
 
@@ -267,6 +267,12 @@ form.button-to div {
 
 #content {
     margin: 20px 15px 20px 25px;
+}
+
+#footer {
+    width: 990px;
+    margin: 0 auto;
+    padding-top: 10px;
 }
 
 div.flash{

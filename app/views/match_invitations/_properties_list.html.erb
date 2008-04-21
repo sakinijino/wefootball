@@ -1,9 +1,17 @@
 <table class="match_invitation_list">
-  <tr>
-    <td style="width:60px">&nbsp;</td>
-    <td>对方提出的新建议</td>
-    <td>我队上次提出的建议</td>
-  </tr>
+  <%if need_reply%>
+    <tr>
+      <td style="width:60px">&nbsp;</td>
+      <td>对方提出的新建议</td>
+      <td>我队上次的建议</td>
+    </tr>
+  <%else%>
+    <tr>
+      <td style="width:60px">&nbsp;</td>
+      <td>我队提出的新建议</td>
+      <td>对方上次的建议</td>
+    </tr>
+  <%end%>
   <%= macth_invitation_comparison_tr(mi, '时间', :start_time){ |t| 
     %(#{t.strftime('%Y-%m-%d %H:%M')}
       #{"(已过期)" if mi.outdated?}

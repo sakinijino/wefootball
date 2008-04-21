@@ -2,6 +2,15 @@ require File.dirname(__FILE__) + '/../test_helper'
 
 class SidedMatchTest < ActiveSupport::TestCase
   
+  def test_length_validation
+    m = sided_matches(:one)
+    assert m.valid?
+    m.start_time = 2.days.ago
+    m.half_match_length = 12*60
+    m.rest_length = 10
+    assert !m.valid?
+  end
+  
   def test_host_team_and_guest_team #测试到host_team和guest_team的关联正确
     m = sided_matches(:one)
     m.host_team_id = teams(:inter).id
@@ -68,7 +77,7 @@ class SidedMatchTest < ActiveSupport::TestCase
   def test_match_related_time_section #测试和比赛相关的三个时间段函数
     m = sided_matches(:one)
     m.start_time = 9.days.since
-    m.save
+    m.save!
     assert_equal true,m.is_before_match?
     assert_equal false,m.is_after_match?
     
