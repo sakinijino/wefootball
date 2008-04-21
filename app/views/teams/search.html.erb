@@ -1,0 +1,26 @@
+<div id="narrow_right_content" class="sect">
+  <h2></h2>
+  <ul class="sidebar_menu">
+    <li>
+      > <%= link_to "新建球队", new_team_path %>
+    </li>
+  </ul>
+</div>
+
+<div id="wide_left_content">
+  <div class="sect">
+    <h2></h2>
+    <% form_tag search_teams_path do%>
+      <%= text_field_tag 'q', params[:q], :size=>55 %>
+      <%= submit_tag '搜索球队' %>
+    <%end%>
+  </div>
+
+  <div class="sect">
+    <h2><%=h @title%></h2>
+    <%= team_icon(@teams)%>
+    <div class="clearBoth"></div>
+  </div>
+</div>
+
+<div class="clearBoth"></div>

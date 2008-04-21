@@ -1,0 +1,40 @@
+<div id="narrow_right_content" class="sect">
+  <h2></h2>
+  <%=render :partial=>'sidebar_menus/team_view_formation'%>
+</div>
+
+<div id="wide_left_content">
+  <div class="sect">
+    <h2>队员名单</h2>
+    <%@player_uts.each do |ut| %>
+      <div class="icon_select">
+        <%= user_icon(ut.user)%>
+        <div>
+          <span>首选位置: <%= position_text ut.user.premier_position%></span><br/><br/>
+          <%=link_to("从队员名单去掉",team_join_path(ut, "ut[is_player]" => false, 
+                :back_uri => request.request_uri),:method=>:put) if ut.is_player%>
+        </div>
+      </div>
+    <%end%>
+    <div class="clearBoth"></div>
+  </div>
+
+  <div class="sect">
+    <h2>可选的队员</h2>
+    <%@other_uts.each do |ut| %>
+      <div class="icon_select">
+        <%= user_icon(ut.user)%>
+        <div>
+          <span>首选位置: <%= position_text ut.user.premier_position%></span><br/><br/>
+          <%if ut.user.is_playable%>
+            <%=link_to("加入队员名单",team_join_path(ut, "ut[is_player]" => true, 
+                :back_uri => request.request_uri),:method=>:put) if !ut.is_player%>  
+          <%end%>
+        </div>
+      </div>
+    <%end%>
+    <div class="clearBoth"></div>
+  </div>
+</div>
+
+<div class="clearBoth"></div>

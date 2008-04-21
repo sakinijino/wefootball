@@ -1,0 +1,50 @@
+<%start_date = Date.new(year, month)%>
+<div class="monthCalendar">
+<div class="monthAndYear">
+  <%= month_calendar_link image_tag('prev.jpg'), start_date.last_month, @user || @team%>
+  <span><%= start_date.strftime("%Y-%m")%></span>
+  <%= month_calendar_link image_tag('next.jpg'), start_date.next_month, @user || @team%>
+</div>
+<div class="clearBoth"></div>
+<div>
+  <div class="weekDayDiv"><span class="weekDaySpan">日</span></div>
+  <div class="weekDayDiv"><span class="weekDaySpan">一</span></div>
+  <div class="weekDayDiv"><span class="weekDaySpan">二</span></div>
+  <div class="weekDayDiv"><span class="weekDaySpan">三</span></div>
+  <div class="weekDayDiv"><span class="weekDaySpan">四</span></div>
+  <div class="weekDayDiv"><span class="weekDaySpan">五</span></div>
+  <div class="weekDayDiv"><span class="weekDaySpan">六</span></div>
+  <%end_date = start_date.next_month.yesterday%>
+  <%start_date = start_date.monday.yesterday if start_date.wday>0%>
+  <%end_date = end_date.monday.next_week.yesterday.yesterday if end_date.wday<6%>
+  <%date = start_date%>
+  <% while date<=end_date do %>
+    <div class="monthDayDiv <%= date == Date.today ? "currentDayDiv" : "" %>">
+      <div class="monthDayTopDiv">
+        <span class="monthDaySpan <%= date.month != month ? "otherMonthDaySpan" : "" %>">
+          <%= day_calendar_link(date.day, date, @user || @team)%>
+        </span>
+      </div>
+      <div class="monthDayBottomDiv">
+        <% das = activities[date.strftime("%Y-%m-%d")] %>
+        <% if !das.nil?%>
+        <% das.slice(0, 5).each do |act| %>
+          <%if act.class == Training
+              img_link = training_icon_link(act)
+            elsif act.class == Match
+              img_link = match_icon_link(act)
+            elsif act.class == SidedMatch
+              img_link = sided_match_icon_link(act)
+            elsif act.class == Play
+              img_link = play_icon_link(act)
+            end%>
+          <%= img_link%>
+        <%end%>
+        <%= day_calendar_link("更多", date, @user || @team, :class=>"more") if das.length > 5%>
+        <%end%>
+      </div>
+    </div>
+  <% date = date.tomorrow %>
+  <%end%>
+</div>
+</div>

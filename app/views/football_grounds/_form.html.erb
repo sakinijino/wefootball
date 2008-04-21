@@ -1,0 +1,25 @@
+<%content_for(:javascript) do%>
+  <%= javascript_include_tag province_city_select_url %>
+<%end%>
+
+<p>
+  球场名称<br />
+  <%= f.text_field :name, :maxlength=>50, :size=>30 %>
+</p>
+
+<p>
+  所在地<br />
+  <%= f.province_city_select :city %>
+</p>
+
+<p>
+  球场类型<br />
+  <%(1..5).each do |v| %>
+     <%= f.radio_button :ground_type, v %><%=ground_type_text(v)%>
+  <%end%>
+</p>
+
+<p>
+  描述<br />
+  <%= f.text_area :description %>
+</p>

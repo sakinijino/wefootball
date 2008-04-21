@@ -1,0 +1,212 @@
+div.calendar{
+    line-height: normal
+}
+
+/*Fix ie6 float double margin bug*/
+div.calendar div.normalDateDiv,
+div.calendar div.monthAndYearDiv {
+    display: inline;
+    overflow: hidden;
+}
+
+.normalDateDiv {
+    width:105px; 
+    height:100px; 
+    margin-left:5px; 
+    margin-bottom:5px; 
+    border:solid 1px #3D681A; 
+    background-color:#FCFDFE; 
+    float:left;
+}
+
+.bigDateDiv {
+    width:217px;
+}
+
+/*.todayDateDiv {*/
+/*  background:transparent url(/images/today.gif) no-repeat;*/
+/*}*/
+
+.todayDateDiv .todaySpan {
+  color: #666666;
+  font-size: 9px;
+}
+
+.hasActivityDiv {
+    background-color:#F2F7AB; 
+}
+
+.hasManyActivitiesDiv {
+    background-color:#ACBE33;
+}
+
+.monthAndYearDiv
+{
+    border:solid 1px White; 
+    padding-left:6px; 
+    font-family:Verdana; 
+    font-size:17px;
+    background-color:#FFFFFF; 
+}
+
+.monthAndYearDiv a {
+    color:#000;
+    background: transparent;
+}
+
+.bigMonthDaySpan
+{
+    margin-left:3px;
+    color:#111111;
+    font-family:Arial Narrow;
+    font-size:22px;
+    font-weight:lighter;
+}
+
+.bigMonthDaySpan a{
+    color:#000;
+    background: transparent;
+}
+
+.bigWeekDaySpan
+{
+    font-family:Verdana;
+    color:#333333;
+    font-size:11px;
+}
+
+.normalDateDiv .dateContent 
+{
+    width:100%;
+    height: 70px;
+    padding: 5px 5px 0 5px;
+    position:relative;
+}
+
+.normalDateDiv .dateContent .activityContent
+{
+    vertical-align: middle;
+}
+
+.normalDateDiv .dateContent .more
+{
+    margin-right: 10px;
+    position:absolute;
+    bottom: 5px;
+    right:5px;
+}
+
+/*------------------------------*/
+.monthCalendar {
+    width: 580px;
+}
+
+.monthCalendar .monthAndYear {
+    font-family:Segoe UI; 
+    font-size:24px;
+    font-weight: bold;
+    margin: 10px;
+    text-align: center;
+}
+
+.monthCalendar .monthAndYear img{
+    margin: -4px 20px;
+}
+
+.monthCalendar .monthAndYear a{
+    background: transparent;
+}
+
+/*Fix ie6 float double margin bug*/
+.monthCalendar .weekDayDiv,
+.monthCalendar .monthDayDiv,
+.monthCalendar .currentDayDiv{
+    display: inline;
+}
+
+.weekDayDiv
+{
+    width:31px;
+    height:40px;
+    margin:25px;
+    text-align:center;
+    float:left;
+}
+
+.weekDaySpan
+{
+    font-family:Verdana;
+    font-size:14px;
+    font-weight:bold;
+    color:#3D681A;
+}
+
+.monthDayDiv {
+    width:75px;
+    height:75px;
+    margin:2px;
+    border:solid 1px #FCFDFE;
+    text-align:center;
+    float:left;
+}
+
+.currentDayDiv {
+    background-color:#F2F7AB;
+    border:solid 1px #3D681A;
+}
+
+.monthDayTopDiv
+{
+    width:100%;
+    height:35%;
+}
+
+.monthDayBottomDiv
+{
+    width:100%;
+    height:65%;
+    text-align:left;
+    padding: 2px 5px;
+    overflow: hidden;
+}
+
+.monthDayBottomDiv a.more
+{
+    margin-left:2px;
+    font-size: 9px;
+}
+
+.monthDaySpan
+{
+    font-family:Verdana;
+    font-size:16px;
+    color:#333333;
+}
+
+.monthDaySpan a {
+    color: #333333;
+}
+
+.monthDaySpan a:hover {
+    background-color:#3D681A;
+    color: #fff;
+    font-weight: bold;
+}
+
+.otherMonthDaySpan {
+    color:#999999;
+}
+
+.otherMonthDaySpan a {
+    color: #999999;
+}
+
+.monthDayArragementSpan
+{
+    font-family:Calibri;
+    font-size:12px;
+}
+
+.otherMonthDayArragementSpan {
+    color:#999999;
+}

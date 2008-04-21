@@ -1,0 +1,19 @@
+<div class="sect">
+  <h2><%= h @title%></h2>
+  <table class="list">
+    <tr>
+      <th>名称</th>
+      <th>所在地</th>
+      <th>提交人</th>
+    </tr>
+
+  <% for football_ground in @football_grounds %>
+    <tr>
+      <td><%= link_to h(football_ground.name), football_ground_path(football_ground) %></td>
+      <td><%= h football_ground.city_text %></td>
+      <td><%= link_to h(football_ground.user.nickname), user_view_path(football_ground.user.id) %></td>
+      <td><%= link_to '编辑', edit_football_ground_path(football_ground) %></td>
+    </tr>
+  <% end %>
+  </table>
+</div>

@@ -1,0 +1,20 @@
+<div id="wide_left_content" class="sect">
+  <h2>注册我的WeFootball帐号</h2>
+  <%= error_messages_for :user %>
+  <% form_for :user, :url => users_path do |f| -%>
+
+  <p><label for="email">你的Email</label><br/>
+  <%= f.text_field :login, :size=>30, :maxlength=>40 %></p>
+
+  <p><label for="password">设一下密码</label><br/>
+  <%= f.password_field :password, :size=>30, :maxlength=>40 %></p>
+
+  <p><label for="password_confirmation">确认密码</label><br/>
+  <%= f.password_field :password_confirmation, :size=>30, :maxlength=>40 %></p>
+
+  <p><%= submit_tag '注册' %>
+  &nbsp;&nbsp;&nbsp;&nbsp;> <%= link_to "已经注册, 登录", new_session_path%></p>
+  <% end -%>
+</div>
+
+<div class="clearBoth"></div>

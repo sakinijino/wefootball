@@ -41,3 +41,10 @@ mike2_inter:
   team_id: 1
   apply_date: <%= 5.days.ago.to_s :db %>
   is_invitation: false
+
+aaron_juven:
+  id: 7
+  user_id: 2
+  team_id: 3
+  apply_date: <%= 5.days.ago.to_s :db %>
+  is_invitation: true

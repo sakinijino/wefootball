@@ -1,0 +1,23 @@
+<ul class="sidebar_menu">
+  <li <%= selected_class_sidebar_menu_item(:action=>'index', :controller=>'team_joins')%>>
+  > <%= link_to '球队成员', team_team_joins_path(@team) %>
+  </li>
+  <%if logged_in? && current_user.is_team_admin_of?(@team)%>
+    <li <%= selected_class_sidebar_menu_item(:action=>'admin_management')%>>
+      > <%= link_to '成员管理', admin_management_team_joins_path(:team_id => @team) %>
+    </li>
+    <li class="seperate">
+    </li>
+    <li <%= selected_class_sidebar_menu_item(:action=>'index', :controller=>'team_join_requests')%>>
+    > <%= link_to("申请加入球队的用户", team_team_join_requests_path(@team)) %>
+    </li>
+    <li <%= selected_class_sidebar_menu_item(:action=>'index', :controller=>'team_join_invitations')%>>
+      > <%= link_to("球队邀请加入的用户", team_team_join_invitations_path(@team)) %>
+    </li>
+  <%end%>
+  <li class='seperate'>
+  </li>
+  <li>
+    > <%= link_to '返回球队首页', team_view_path(@team) %>
+  </li>
+</ul>

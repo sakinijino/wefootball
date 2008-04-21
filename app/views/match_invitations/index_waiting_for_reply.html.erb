@@ -1,0 +1,49 @@
+<div id="narrow_right_content" class="sect">
+  <h2></h2>
+  <%=render :partial=>'sidebar_menu'%>
+</div>
+
+<div id="wide_left_content" class="sect">
+  <h2><%= h @title%></h2>
+  <table class="list">
+    <% @mis.each do |mi|%>
+      <%
+        self_team = @team
+        another_team = @team == mi.host_team ? mi.guest_team : mi.host_team
+      %>
+      <tr>
+        <td><%= team_icon(self_team)%></td>
+        <td style="width:100%">
+          <table class="match_invitation_list">
+            <tr>
+              <td>
+                <%= mi.host_team == @team ? '本队' : '对方'%>
+                <%=link_to h(mi.host_team.shortname), team_view_path(mi.host_team)%>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                邀请发出, 等待<%=link_to h(another_team.shortname), team_view_path(another_team)%>回复
+              </td>
+            </tr>
+            <%msg = @team == mi.host_team ? mi.guest_team_message: mi.host_team_message%>
+            <%if !msg.blank?%>
+            <tr>
+              <td>
+                我队的留言:
+                <%= h msg%>
+              </td>
+            </tr>
+          <%end%>
+          </table>
+          <br/>
+          <%= render :partial => 'properties_list', :locals => {:mi => mi, :need_reply => false}%>
+          <br/>
+        </td>
+        <td><%= team_icon(another_team)%></td>
+      </tr>
+    <%end%>
+  </table>
+</div>
+
+<div class="clearBoth"></div>

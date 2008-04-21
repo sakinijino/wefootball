@@ -1,0 +1,23 @@
+<ul class="sidebar_menu">
+  <li <%= selected_class_sidebar_menu_item(:action=>'index', :controller=>'team_joins')%>>
+    > <%= link_to "#{smart_nickname @user}的球队", user_team_joins_path(@user) %>
+  </li>  
+  <%if @user == current_user%>
+    <li <%= selected_class_sidebar_menu_item(:action=>'new', :controller=>'teams')%>>
+      > <%= link_to "新建球队", new_team_path %>
+    </li>
+    <li class='seperate'>
+    </li>
+    <li <%= selected_class_sidebar_menu_item(:action=>'index', :controller=>'team_join_invitations')%>>
+      > <%= link_to "邀请我加入的球队", team_join_invitations_path %>
+    </li>
+    <li <%= selected_class_sidebar_menu_item(:action=>'index', :controller=>'team_join_requests')%>>
+      > <%= link_to("我申请加入的球队", team_join_requests_path) %>
+    </li>
+  <%end%>
+  <li class='seperate'>
+  </li>
+  <li>
+    > <%= smart_return_user_view_menu_item @user %>
+  </li>
+</ul>

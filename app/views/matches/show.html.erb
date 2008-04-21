@@ -1,0 +1,95 @@
+<%content_for(:stylesheet) do%>
+  <%= stylesheet_link_tag 'match' %>
+<%end%>
+
+<table style="width:940px; margin-bottom:20px;">
+  <tr>
+    <td>
+     <%= @match.start_time.strftime("%Y-%m-%d %H:%M")%>
+    </td>
+    <td style="text-align:right">
+      <%= match_type_text @match.match_type%>
+    </td>
+  </tr>
+  <tr>
+    <td>
+        <%= location_link @match.location, @match.football_ground_id %>
+    </td>
+    <td style="text-align:right">
+      <%= @match.size%>人制
+    </td>
+  </tr>
+  <tr>
+    <td>
+      半场时长<%= @match.half_match_length%>分钟,
+      中场休息<%= @match.rest_length%>分钟
+    </td>
+    <td style="text-align:right">
+      <%= @match.has_judge ? '有' : '没有'%>裁判,
+      <%= @match.has_card ? '有' : '没有'%>红黄牌,
+      <%= @match.has_offside ? '有' : '没有'%>越位
+    </td>
+  </tr>
+  <tr>
+    <td>
+    </td>
+    <td style="text-align:right">
+      平局后<%= win_rule_text @match.win_rule%>
+    </td>
+  </tr>
+</table>
+
+<div id="match_blackboard">
+  <%if !@match.is_after_match? %>
+    <%= time_status_text @match%>
+  <%else%>
+    <%= match_result_text @match%>
+    <div class="host_result">
+      <%if @match.has_conflict%>
+        <span>主队认可的比赛结果: <%= match_result_text_by_host @match%></span>
+      <%end%>
+      <table class="goal_list">
+        <% (@host_team_goals).each do |ut| %>
+          <tr>
+            <td><%= link_to h(ut.user.nickname), user_view_path(ut.user)%></td>
+            <td><%=ut.goal%></td>
+          </tr>
+        <%end%>
+      </table>
+    </div>
+    <div class="guest_result">
+      <%if @match.has_conflict%>
+        <span>客队认可的比赛结果: <%= match_result_text_by_guest @match%></span>
+      <%end%>
+      <table class="goal_list">
+        <% (@guest_team_goals).each do |ut| %>
+          <tr>
+            <td><%=ut.goal%></td>
+            <td><%= link_to truncate(h(ut.user.nickname), 12), user_view_path(ut.user)%></td>
+          </tr>
+        <%end%>
+      </table>
+    </div>
+  <%end%>
+</div>
+
+
+<div id="host_team_div">
+<%= render(:partial => 'team_in_match', :locals => {:team_player_mjs => @host_team_player_mjs,
+                                                    :match => @match,
+                                                    :team => @match.host_team,
+                                                    :formation_array => @host_formation_array,
+                                                    :is_host_team => true,
+                                                    :posts => @host_posts})%>
+</div>
+
+<div id="guest_team_div">
+<%= render(:partial => 'team_in_match', :locals => {:team_player_mjs => @guest_team_player_mjs,
+                                                    :match => @match,
+                                                    :team => @match.guest_team,
+                                                    :formation_array => @guest_formation_array,
+                                                    :is_host_team => false,
+                                                    :posts => @guest_posts})%>
+</div>
+
+<div class="clearBoth"></div>

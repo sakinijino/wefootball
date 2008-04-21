@@ -1,0 +1,165 @@
+<%content_for(:javascript) do%>
+  <%= javascript_include_tag "ui.mouse.js" %>
+  <%= javascript_include_tag "ui.dialog.js" %>
+<%end%>
+
+<%content_for(:stylesheet) do%>
+  <%= stylesheet_link_tag 'calendar' %>
+  <%= stylesheet_link_tag 'activityitem' %>
+<%end%>
+
+<div id="left_content">
+  <div class="sect">
+    <h2><%=smart_nickname @user%>的信息</h2>
+
+    <%if @firend_request != nil || @firend_invitation != nil || @user_invitation_count > 0 ||  @team_invitation_count > 0%>
+    <div class="notification">
+      <%if @firend_request != nil%>
+        <span>你已邀请<%=h @user.nickname%>成为朋友, 等待对方邀请</span>
+      <%end%>
+
+      <%if @firend_invitation != nil%>
+        <span><%=h @user.nickname%>希望和你成为朋友</span>
+        <%= link_to '接受', friend_relations_path(:request_id=>@firend_invitation.id, :back_uri => request.request_uri), :method => :post %>
+        <%= link_to '拒绝', friend_invitation_path(@firend_invitation, :back_uri => request.request_uri), :method => :delete %>
+      <%end%>
+
+      <%if @user_invitation_count > 0 ||  @team_invitation_count > 0%>
+        你有<%= link_to "#{@user_invitation_count}个朋友邀请", friend_invitations_path if @user_invitation_count > 0 %>
+        <%= ', ' if @user_invitation_count > 0 &&  @team_invitation_count > 0 %>
+        <%= link_to "#{@team_invitation_count}个球队邀请", team_join_invitations_path if @team_invitation_count > 0%>
+      <%end%>
+    </div>
+    <%end%>
+    <div class="tab_container">
+    <%if logged_in? && @user.id != current_user.id %>
+      <span class="shortcut">
+      <%= link_to(image_tag("sendMail.gif", :title=>"给他发信"), 
+        new_message_path(:to=>@user.id))%>
+      <%= link_to(image_tag("breakUpFriendship.gif", :title=>"不和他玩"), 
+        friend_relation_path(0, :user_id=>@user.id),:method=>"delete") if @are_friends %>
+      <%= link_to(image_tag("inviteFriend.gif", :title=>"申请成为好友"), '#',
+        :onclick=>'wefootball.openDialog(event, "#send_friend_invitation_div");return false') if @can_send_invitation %>
+      <%= link_to(image_tag("inviteIntoTeam.gif", :title=>"邀请加入球队"),
+        new_user_team_join_invitation_path(@user)) %>
+      </span>
+    <%end%>
+
+    <span class="tab_link" style="margin-left: 10px;">个人信息</span>
+    <%if @user.is_playable%>
+    <span class="tab_link">球员信息</span>
+    <%end%>
+    <div class="tab">
+    <span>昵称: <%= h @user.nickname%></span>
+    <%#if @user.gender != 0%>
+      <%#= @user.gender == 1 ? '[♂]' : '[♀]'%>
+    <%#end%>
+    <br/>
+    <%= "<span>所在地: #{@user.city_text}</span><br/>" unless @user.city_text.nil?%>
+    <%= "<span>生日: #{@user.birthday_text}</span><br/>" unless @user.birthday_text.nil?%>
+    <%= "<span>年龄: #{@user.age}</span><br/>" unless @user.age.nil?%>
+    <%= "<span>喜欢的球星: #{h @user.favorite_star}</span><br/>" unless @user.favorite_star.blank?%>
+    <%= "<span>喜欢的球队: #{h @user.favorite_team}</span><br/>" unless @user.favorite_team.blank?%>
+    <%= "<span>blog地址: <a href='#{@user.full_blog_uri}' target='_blank'>#{word_wrap_with_wbr(h(@user.blog))}</a></span><br/>" unless @user.blog.blank?%>
+    <%if !@user.summary.blank?%>
+        <span>自我介绍: </span>
+        <p><%=simple_format auto_link(h(@user.summary), :urls)%></p>
+    <%end%>
+    </div>
+    <%if @user.is_playable%>
+    <div class="tab">
+      <div class="positions_small_field">
+        <%@user.positions_array.each do |p|%>
+          <%pos = small_position_icon_position p%>
+          <%= image_tag(p==@user.premier_position ? 'small_premier_position_icon.gif' : 'small_position_icon.gif',
+              :style=>"position:absolute;left:#{pos[0]}px;top:#{pos[1]}px;", :title=>position_text(p))%>
+        <%end%>
+      </div>
+      <div style="float:left;margin-left:20px;">
+        <br/>
+        <%= "<span>身高: #{@user.height}cm</span><br/>" unless @user.height.nil?%>
+        <%= "<span>体重: #{@user.weight}kg</span><br/>" unless @user.weight.nil?%>
+        <%= "<span>惯用脚: #{fitfoot_text @user.fitfoot}</span><br/>" unless @user.fitfoot.nil?%>
+        <br/><br/>
+        <%= image_tag('small_premier_position_icon.gif', :title=>"") %><span> 首选位置</span><br/>
+        <%= image_tag('small_position_icon.gif', :title=>"") %><span> 可以踢的位置</span>
+      </div>
+      <div class="clearBoth"></div>
+    </div>
+    <%end%>
+
+    <div style="margin: 10px 0 0 10px">
+      <%links = []%>
+      <%if logged_in? && @user.id != current_user.id %>
+      <%links << link_to("给他写信", new_message_path(:to=>@user.id))%>
+      <%if @are_friends%>
+        <%links << link_to("不和他玩", friend_relation_path(0, :user_id=>@user.id),:method=>"delete")  %>
+      <%elsif @can_send_invitation %>
+        <%links << link_to("申请成为朋友", '#',
+          :onclick=>'wefootball.openDialog(event, "#send_friend_invitation_div");return false') %>
+      <%end%>
+      <%links << link_to("邀请加入球队", new_user_team_join_invitation_path(@user)) %>
+      <%end%>
+      <%= links_with_sticks links%>
+    </div>
+  </div>
+
+    <%if @can_send_invitation%>
+    <div id="send_friend_invitation_div" class="jdialog">
+      <% form_for :friend_invitation, :url => friend_invitations_path, :method=>"POST" do |f| %>
+          <%= f.hidden_field :host_id,  :value=>@user.id%>
+          <span>给<%= @user.nickname%>留个言吧...</span><br />
+          <%= f.text_area :message, :cols => 30, :rows => 2%><br />
+          <%= f.submit "朋友邀请" %>
+          <%= f.submit "撤销", :onclick=>'j("#send_friend_invitation_div").dialog("close");return false;' %>
+      <% end %>  
+    </div>
+    <%end%>
+  </div>
+
+  <div class="sect">
+    <h2><%=smart_nickname @user%>参加的球队</h2>    
+    <%if @teams.length <= UserViewsController::TEAM_LIST_LENGTH%>
+        <%= team_icon(@teams)%>
+    <%else%>
+        <%@teams.pop%>
+        <%= team_icon(@teams)%>
+        <%= link_to "> 更多",user_team_joins_path(@user.id), :class=>"more" %>
+    <%end%>    
+    
+    <div class="clearBoth"></div>
+  </div>
+  
+  <div class="sect">
+    <h2><%=smart_nickname @user%>的朋友</h2>
+    <%if @friends.length <= UserViewsController::FRIEND_LIST_LENGTH%>
+        <%= user_icon(@friends)%>
+    <%else%>
+        <%@friends.pop%>
+        <%= user_icon(@friends)%>
+        <%= link_to "> 更多",user_friend_relations_path(@user.id), :class=>"more" %>
+    <%end%>
+    <div class="clearBoth"></div>
+  </div>
+</div>
+
+<div id="right_content">
+  <%if @recent_activity != nil%>
+    <div class="sect">
+      <h2><%=smart_nickname @user%>最近一次活动</h2>
+      <div class="activities">
+        <%=date_div_link @recent_activity.start_time, @user%>
+        <%= render :partial => 'shared/activity', :object => @recent_activity%>
+        <div class="clearBoth"></div>
+      </div>
+    </div>
+  <%end%>
+
+  <div class="sect">
+    <h2><%=smart_nickname @user%>近期的活动</h2>
+    <%= render(:partial => 'shared/highlight_calendar', 
+      :locals => {:date => @start_time, :days=> UserViewsController::DISPLAY_DAYS, :activities => @calendar_activities_hash})%>
+    <div class="clearBoth"></div>
+  </div>
+</div>
+<div class="clearBoth"></div>

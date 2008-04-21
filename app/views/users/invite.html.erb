@@ -1,0 +1,29 @@
+<%if @has_joined_notice%>
+<div class="flash">
+  <%=h @user.login %>已经在WeFootball注册<br />
+  <%=link_to "点击这里, 进入#{h @user.login}的个人主页", user_view_path(@has_joined_user_id)%>
+</div>
+<%end%>
+
+<div id="wide_left_content" class="sect">
+  <h2>邀请你的朋友使用WeFootball</h2>
+  <%= error_messages_for :register_invitation %>
+
+  <% form_for @register_invitation, :url=>invite_users_path do |f| -%>
+
+  <p><label for="login">朋友的Email</label><br/>
+  <%= f.text_field :login %></p>
+
+  <p><label for="message">留言(可选)</label><br/>
+  <%= f.text_area :message, :cols => 40, :rows => 3  %></p>
+
+  <p><%= submit_tag '邀请' %></p>
+  <% end -%>
+</div>
+
+<div id="narrow_right_content" class="sect">
+  <h2></h2>
+  <%=render :partial=>'sidebar_menus/user_view_friend'%>
+</div>
+  
+<div class="clearBoth"></div>

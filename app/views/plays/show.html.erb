@@ -1,0 +1,45 @@
+<%content_for(:stylesheet) do%>
+  <%= stylesheet_link_tag 'calendar' %>
+  <%= stylesheet_link_tag 'activityitem' %>
+<%end%>
+
+<div id="wide_left_content">
+  <div class="sect">
+    <h2>踢着玩的基本信息</h2>
+    <div class="activities">
+      <%=date_div_link @play.start_time, @user%>
+      <div class="detail">
+        <span>时间: </span><%= @play.start_time.strftime("%H:%M")%>-<%=@play.end_time.strftime("%H:%M")%><br />
+        <span>地点: </span><%= location_link @play.location, @play.football_ground_id %><br />
+        <%if logged_in?%>
+          <br />
+          <span>我的状态: </span>
+          <%= join_status_text @play%>&nbsp;&nbsp;&nbsp;
+          <%links = []%>
+          <% links_text = join_status_links @play%>
+          <% links << link_to(links_text[0], play_play_joins_path(@play), :method=>'post') if @play.can_be_joined_by?(current_user)%>
+          <% links << link_to(links_text[1], play_play_join_path(@play, 0), :method=>'delete') if @play.can_be_quited_by?(current_user)%>
+          <%= links_with_sticks links%>
+        <%end%>
+      </div>
+      <div class="clearBoth"></div>
+    </div>
+  </div>
+</div>
+
+<div id="narrow_right_content">
+  <div class="sect">
+    <h2>打算一起去踢的有...</h2>
+    <%if @players.length <= PlaysController::PLAYER_LIST_LENGTH%>
+        <%= user_icon(@players)%>
+    <%else%>
+        <%@players.pop%>
+        <%= user_icon(@players)%>
+        <%= link_to "> 更多",players_play_path(@play.id), :class=>"more" %>
+    <%end%>  
+    <div class="clearBoth"></div>
+  </div>
+</div>
+
+<div class="clearBoth"></div>
+

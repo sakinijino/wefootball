@@ -1,0 +1,13 @@
+inv1:
+  id: 1
+  new_start_time: <%= 1.day.since.to_s(:db)%>
+  new_location: Beijing, PKU
+  new_match_type: 1
+  new_size: 11
+  new_has_judge: false
+  new_has_card: false
+  new_has_offside: true
+  new_win_rule: 1
+  new_half_match_length: 30
+  new_rest_length: 10
+  new_description: Hello

@@ -1,0 +1,13 @@
+<ul class="sidebar_menu">
+  <li <%= selected_class_sidebar_menu_item(:action=>'index', :boolean=>params[:as]!='sender')%>>
+  > <%= link_to '我的收件箱', messages_path() %>
+  </li>
+  <li <%= selected_class_sidebar_menu_item(:action=>'index', :boolean=>params[:as]=='sender')%>>
+  > <%= link_to '我的发件箱', messages_path(:as => 'sender') %>
+  </li>
+  <li class='seperate'>
+  </li>
+  <li>
+    > <%= smart_return_user_view_menu_item(@user) %>
+  </li>
+</ul>

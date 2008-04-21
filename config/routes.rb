@@ -1,4 +1,7 @@
 ActionController::Routing::Routes.draw do |map|
+
+
+
   # The priority is based upon order of creation: first created -> highest priority.
   
   # Sample of regular route:
@@ -29,36 +32,96 @@ ActionController::Routing::Routes.draw do |map|
   # See how all your routes lay out with "rake routes"
   
   # Install the default routes as the lowest priority.
-  map.resources :users, :collection => { :search => :get } do |users|
-    users.resources :teams,:collection =>{:admin => :get} do |teams|
-      teams.resources :team_joins
-    end
-    users.resources :team_join_requests
+  map.resources :users, 
+    :collection => { :search => :post, :invite => :get, :create_with_invitation => :post }, 
+    :member => {:update_image => :put} do |users|
+    users.resources :friend_relations
     users.resources :team_join_invitations
-    users.resources :trainings
-    users.resources :training_joins
-  end
-  map.resources :teams, :collection => { :search => :get } do |teams|
-    teams.resources :users
-    teams.resources :team_join_requests
-    teams.resources :team_join_invitations
-    teams.resources :trainings
-    teams.resources :training_joins
-  end
-  
-  map.resources :trainings do |trainings|
-    trainings.resources :users
-  end
-  map.resources :training_joins
-  
-  map.resources :team_join_requests
-  map.resources :team_join_invitations
-  map.resources :team_joins
+    users.resources :team_joins
+  end 
+  map.resources :user_views
   
   map.resources :sessions
   map.resources :friend_relations
-  map.resources :pre_friend_relations, :collection => { :count => :get }
-  map.resources :messages
+  map.resources :friend_invitations
+  map.resources :messages, :collection => { :destroy_multi => :delete }
+  
+  map.resources :teams, :collection => { :search => :post }, :member => {:update_image => :put} do |teams|
+    teams.resources :team_joins
+    teams.resources :team_join_requests
+    teams.resources :team_join_invitations
+    teams.resources :trainings
+    teams.resources :posts
+    teams.resources :matches
+    teams.resources :sided_matches    
+    teams.resources :match_invitations    
+  end
+  map.resources :team_views
+  
+  map.resources :team_join_requests
+  map.resources :team_join_invitations
+  map.resources :team_joins, 
+    :collection => { 
+      :formation_index => :get,
+      :admin_management => :get, 
+      :player_management => :get, 
+      :formation_management => :get,
+      :update_formation => :put
+    }
+  
+  map.resources :trainings,
+    :member => {:undetermined_users=>:get, :joined_users=>:get} do |trainings|
+    trainings.resources :training_joins
+    trainings.resources :posts
+  end
+  
+  map.resources :match_invitations
+  map.resources :matches, :member => {:undetermined_users=>:get, :joined_users=>:get} do |matches|
+    matches.resources :team do |teams|
+      teams.resources :posts
+    end
+  end
+  map.resources :match_joins, :collection => { :update_formation => :put }
+
+  map.resources :sided_matches,
+    :member => {:edit_result =>:get, :update_result=>:put, :undetermined_users=>:get, :joined_users=>:get} do |sided_matches|
+    sided_matches.resources :sided_match_joins
+    sided_matches.resources :posts
+  end
+  map.resources :sided_match_joins, :collection => { :edit_formation => :get, :update_formation => :put }
+  
+  map.resources :plays, :member => {:players=>:get} do |plays|
+    plays.resources :play_joins
+  end  
+  
+  map.resources :posts do |posts|
+    posts.resources :replies
+  end
+  
+  map.resources :football_grounds, :collection => { :unauthorize => :get }
+  
+  map.user_month_calendar "users/:user_id/calendar/:year/:month", :controller=>"calendar", :action => "show_a_month",
+      :requirements => {:year => /(19|20)\d\d/, :month => /[01]?\d/}
+  map.user_day_calendar "users/:user_id/calendar/:year/:month/:day", :controller=>"calendar", :action => "show_a_day",
+      :requirements => {:year => /(19|20)\d\d/, :month => /[01]?\d/, :day => /[0-3]?\d/}
+  map.team_month_calendar "teams/:team_id/calendar/:year/:month", :controller=>"calendar", :action => "show_a_month",
+      :requirements => {:year => /(19|20)\d\d/, :month => /[01]?\d/}
+  map.team_day_calendar "teams/:team_id/calendar/:year/:month/:day", :controller=>"calendar", :action => "show_a_day",
+      :requirements => {:year => /(19|20)\d\d/, :month => /[01]?\d/, :day => /[0-3]?\d/}
+    
+  map.province_city_select "js/province_city_select.js", :controller=>"js", :action => "province_city_select"
+  map.football_ground_select "js/football_ground_select.js", :controller=>"js", :action => "football_ground_select"
+  
+  map.send_mail_to '/messages/to/:to', :controller => 'messages', :action => 'new'
+  
+  map.activate '/activate/:activation_code', :controller => 'users', :action=> 'activate', :activation_code => nil
+  map.activate '/signup_with_invitation/:invitation_code', :controller => 'users', :action=> 'new_with_invitation', :invitation_code => nil  
+  map.signup '/signup', :controller => 'users', :action => 'new'
+  map.login '/login', :controller => 'sessions', :action => 'new'
+  map.logout '/logout', :controller => 'sessions', :action => 'destroy'
+  map.forgot_password '/forgot_password', :controller => 'users', :action => 'forgot_password' 
+  map.reset_password '/reset_password/:password_reset_code', :controller => 'users', :action => 'reset_password', :password_reset_code => nil  
+  
   map.connect ':controller/:action/:id'
   map.connect ':controller/:action/:id.:format'
 end

@@ -1,0 +1,18 @@
+<ul class="sidebar_menu">
+  <li <%= selected_class_sidebar_menu_item(:action=>'index', :controller=>'friend_relations')%>>
+    > <%= link_to "#{smart_nickname @user}的朋友", user_friend_relations_path(@user) %>
+  </li>
+  <%if @user == current_user%>
+    <li <%= selected_class_sidebar_menu_item(:action=>'index', :controller=>'friend_invitations')%>>
+      > <%= link_to '朋友邀请', friend_invitations_path %>
+    </li>
+    <li <%= selected_class_sidebar_menu_item(:action=>'invite', :controller=>'users')%>>
+      > <%= link_to '邀请朋友使用WeFootball', invite_users_path %>
+    </li>
+  <%end%>
+  <li class='seperate'>
+  </li>
+  <li>
+    > <%=smart_return_user_view_menu_item @user%>
+  </li>
+</ul>

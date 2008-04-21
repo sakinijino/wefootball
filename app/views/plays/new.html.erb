@@ -1,0 +1,50 @@
+<%content_for(:javascript) do%>
+  <%= javascript_include_tag province_city_select_url %>
+  <%= javascript_include_tag football_ground_select_url %>
+<%end%>
+
+<div id="wide_left_content" class="sect">
+  <h2><%=h @title%></h2>
+  <%= error_messages_for :play %>
+  <% form_for @play do |f| %>
+    <p><label>哪天去</label><br/>
+    <%= select_date @play.start_time, :prefix => "start_time", :start_year => Date.today.year, :end_year => Date.today.year+1, :use_month_numbers => true %></p>
+
+    <p><label>几点去</label><br/>
+    <%= select_hour @play.start_time,:prefix => "start_time" %>
+    <%= select_minute @play.start_time,:prefix => "start_time", :minute_step=>15 %></p>
+
+    <p><label>几点走</label><br/>
+    <%= select_hour @play.end_time,:prefix => "end_time" %>
+    <%= select_minute @play.end_time,:prefix => "end_time", :minute_step=>15 %></p>
+
+    <div class="location_input">
+      <label for="football_ground_id">去哪踢</label><br/>
+      <div class="football_ground_input">
+        <%= f.football_ground_select :football_ground_id, 
+          @play.football_ground_id.nil?  ? 'city' : nil,
+          @play.football_ground_id.nil? ? current_user.city : nil%>
+        <a class="switch" href="javascript:void(0)">场地不在列表中, 点击此处填写</a>
+      </div>
+      <div class="location_text_input">
+        <%= f.text_field :location, :maxlength=>100, :size=>30, :value=> @play.football_ground_id.nil? ? @play.location : '' %>
+        &nbsp;&nbsp;<a class="switch" href="javascript:void(0)">从列表中选择场地</a>
+      </div>
+    </div>
+
+    <p><%= submit_tag '确认' %></p>
+  <% end %>
+</div>
+
+<div id="narrow_right_content">
+  <div class="sect">
+    <h2></h2>
+    <ul class="sidebar_menu">
+      <li>
+        > <%= smart_return_user_view_menu_item(@user) %>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="clearBoth"></div>

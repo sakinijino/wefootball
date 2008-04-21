@@ -1,0 +1,42 @@
+<div id="narrow_right_content" class="sect">
+  <h2></h2>
+  <%=render :partial=>'sidebar_menu'%>
+</div>
+
+<div id="wide_left_content" class="sect">
+  <h2><%=h @title%></h2>
+  <% form_tag destroy_multi_messages_path(:back_uri => request.request_uri), :method=>:delete do%>
+  <div>
+    <table class="list">
+    <tr>
+      <%if params[:as]!='sender' %>
+          <th>发件人</th>
+      <%else%>
+          <th>收件人</th>
+      <%end%>
+      <th>主题</th>
+      <th>发件时间</th>
+      <th>删除</th>
+    </tr>
+      <%@messages.each do |m|%>
+        <tr <%= "class='highlight'" if !m.is_receiver_read && params[:as]!='sender'%>>
+           <%if params[:as]!='sender' %>
+              <td><%=h(m.sender.nickname)%></td>
+          <%else%>
+              <td><%=h(m.receiver.nickname)%></td>
+          <%end%>
+          <td><%=link_to m.subject, message_path(m.id)%></td>
+          <td><%=h m.created_at.to_s(:db)%></td>
+          <td><%=check_box_tag "messages[]", m.id %></td>
+        </tr>
+      <%end%>
+    </table>
+    <div style="float:right;">
+      <%= submit_tag '删除' %>
+      <%= submit_tag '选定全部', :onclick => 'wefootball.checkAllInputs();return false;'%>
+      <%= submit_tag '取消选定', :onclick => 'wefootball.checkAllInputs(false);return false;'%>
+    </div>
+  </div>
+  <%end%>
+</div>
+<div class="clearBoth"></div>

@@ -1,0 +1,25 @@
+<table class="list" style="width:100%">
+  <tr>
+    <th style="width:15px">&nbsp;</th>
+    <th style="width:48px">作者</th>
+    <th style="width:222px">话题</th>
+  </tr>
+
+<% for post in narrow_post_list %>
+  <tr>
+    <td>
+      <%if !post.training_id.nil?%>
+        <%= training_icon_link(post.training_id)%>
+      <%elsif !post.match_id.nil?%>
+        <%= match_icon_link(post.match_id)%>
+      <%elsif !post.sided_match_id.nil?%>
+        <%= sided_match_icon_link(post.sided_match_id)%>
+      <%else%>
+        <%= "&nbsp;"%>
+      <%end%>
+    </td>
+    <td><%=h post.user.nickname %></td>
+    <td><%=link_to h(post.title), post  %></td>
+  </tr>
+<% end %>
+</table>

@@ -1,0 +1,33 @@
+<div id="wide_left_content" class="sect">
+<h2><%=h @title%></h2>
+<%if @teams.empty?%>
+  <span>没有可以邀请加入的球队, 可能这个用户已经加入了所有你管理的球队</span>
+<%else%>
+  <% form_for :team_join_request, :url => team_join_invitations_path, :method=>"POST" do |f| %>
+    <%= f.hidden_field :user_id,  :value=>@user.id%>    
+
+    <%@teams.each do |team|%>
+      <div class="icon_select">
+        <%= team_icon(team)%>
+        <div class="input"><%= check_box_tag "teams_id[]", team.id%></div>
+      </div>
+    <%end%>
+    <div class="clearBoth"></div>
+
+    <span>留言</span><br />
+    <%= f.text_area :message, :cols => 40, :rows => 3 %><br />
+    <%= f.submit "邀请" %><br />
+  <% end %>
+<%end%>
+</div>
+
+<div id="narrow_right_content" class="sect">
+  <h2></h2>
+  <ul class="sidebar_menu">
+    <li>
+      > <%= smart_return_user_view_menu_item @user %>
+    </li>
+  </ul>
+</div>
+
+<div class="clearBoth"></div>

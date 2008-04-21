@@ -1,0 +1,21 @@
+<div id="wide_left_content">
+  <%if @admin_teams.length > 0%>
+  <div class="sect">
+    <h2>管理的球队</h2>
+    <%= team_icon(@admin_teams)%>
+    <div class="clearBoth"></div>
+  </div>
+  <%end%>
+
+  <div class="sect">
+    <h2>参加的球队</h2>
+    <%= team_icon(@other_teams)%>
+    <div class="clearBoth"></div>
+  </div>
+</div>
+
+<div id="narrow_right_content" class="sect">
+  <h2></h2>
+  <%=render :partial=>'sidebar_menus/user_view_team'%>
+</div>
+<div class="clearBoth"></div>

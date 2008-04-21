@@ -1,19 +1,27 @@
 class TeamJoinRequest < ActiveRecord::Base
+  include ModelHelper
+  
   belongs_to :user
   belongs_to :team
   
-  validates_length_of       :message, :maximum => 500
+  attr_protected :user_id, :team_id  
+  
+  validates_length_of  :message, :maximum => 150, :allow_nil=>true, :message => "消息最长可以填150个字"
+
+  def before_validation
+    attribute_slice(:message, 150)
+  end
   
   def before_create
     self.apply_date = Date.today
   end
   
   def can_destroy_by?(user)
-    return (self.user == user) || (self.team.users.admin.include?(user))
+    return (self.user == user) || (user.is_team_admin_of?(self.team))
   end
   
   def can_accept_by?(user)
     return (self.is_invitation && user==self.user) || 
-      (!self.is_invitation && self.team.users.admin.include?(user))
+      (!self.is_invitation && user.is_team_admin_of?(self.team))
   end
 end

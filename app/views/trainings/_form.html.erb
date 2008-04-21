@@ -1,0 +1,32 @@
+<%content_for(:javascript) do%>
+  <%= javascript_include_tag province_city_select_url %>
+  <%= javascript_include_tag football_ground_select_url %>
+<%end%>
+
+<p><label>日期</label><br/>
+<%= select_date @training.start_time.nil? ? nil : @training.start_time.to_date, :prefix => "start_time", :start_year => Date.today.year, :end_year => 1.year.since.year, :use_month_numbers => true %></p>
+
+<p><label>开始时间</label><br/>
+<%= select_hour @training.start_time.nil? ? nil : @training.start_time.hour, :prefix => "start_time" %>
+<%= select_minute @training.start_time.nil? ? nil : @training.start_time.min, :prefix => "start_time", :minute_step=>15 %></p>
+
+<p><label>结束时间</label><br/>
+<%= select_hour @training.end_time.nil? ? nil : @training.end_time.hour, :prefix => "end_time" %>
+<%= select_minute @training.end_time.nil? ? nil : @training.end_time.min, :prefix => "end_time", :minute_step=>15 %></p>
+
+<div class="location_input">
+  <label for="football_ground_id">场地</label><br/>
+  <div class="football_ground_input">
+    <%= f.football_ground_select :football_ground_id, 
+      @training.football_ground_id.nil?  ? 'city' : nil,
+      @training.football_ground_id.nil? ? @team.city : nil%>
+    <a class="switch" href="javascript:void(0)">场地不在列表中, 点击此处填写</a>
+  </div>
+  <div class="location_text_input">
+    <%= f.text_field :location, :maxlength=>100, :size=>30, :value=> @training.football_ground_id.nil? ? @training.location : '' %>
+    &nbsp;&nbsp;<a class="switch" href="javascript:void(0)">从列表中选择场地</a>
+  </div>
+</div>
+  
+  <p><label for="summary">训练说明 <span class="optional">(可选)</span></label><br/>
+<%= f.text_area :summary %></p>

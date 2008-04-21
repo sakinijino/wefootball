@@ -1,0 +1,36 @@
+<div id="narrow_right_content" class="sect">
+  <h2></h2>
+  <%=render :partial=>'sidebar_menu'%>
+</div>
+
+<div id="wide_left_content" class="sect">
+  <%= error_messages_for :message %>
+  <br/>
+  <% form_for @message do |f| %>
+    <table class="form">
+      <tr>
+        <td>写给:</td>
+        <td>
+          <%= small_user_image_link @receiver, :style=>"margin:0;float:right" %>
+          <%= link_to h(@receiver.nickname), user_view_path(@receiver)%>
+       </td>
+      </tr>
+      <tr>
+        <td><label for="subject">标题: </label></td>
+        <td><%= f.text_field :subject, :size=>30, :maxlength=>50 %></td>
+      </tr>
+      <tr>
+        <td><label for="content">内容: </label></td>
+        <td><%= f.text_area :content %></td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          <%= f.hidden_field :receiver_id %>
+          <%= submit_tag '发送' %>
+        </td>
+      </tr>
+    </table>
+  <%end%>
+</div>
+<div class="clearBoth"></div>

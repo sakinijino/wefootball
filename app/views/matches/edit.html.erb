@@ -1,0 +1,62 @@
+<div id="narrow_right_content" class="sect">
+  <h2></h2>
+  <ul class="sidebar_menu">
+    <li>
+    > <%= link_to '返回比赛详情', match_path(@match)%>
+    </li>
+  </ul>
+</div>
+
+<div id="wide_left_content" class="sect">
+  <h2><%= h @title%></h2>
+
+  <%= error_messages_for :match %>
+  <br/>
+  <% form_for @match do |f| %>
+
+    <%= hidden_field_tag :team_id, @team.id%>  
+
+    <%if @editing_by_host_team%>
+      <%= render :partial => 'result_form', :locals => {:f => f, :is_host_team => true}%>
+    <%else%>
+      <%= render :partial => 'result_form', :locals => {:f => f, :is_host_team => false}%>
+    <%end%>
+    <br />
+
+    进球数和得牌情况: <br/>
+    <table class='list' style="width: <%= @match.has_card ? '400px' : '290px'%>">
+      <th>&nbsp;</th>
+      <th style="width:80px">昵称</th>
+      <th style="width:60px">位置</th>
+      <th>进球数</th>
+      <%if @match.has_card%>
+        <th>红黄牌</th>
+      <%end%>
+
+      <%for mj in @player_mjs%>
+        <tr>
+          <td><%= tiny_user_image_link(mj.user)%></td>
+          <td style="width:80px"><%= link_to h(mj.user.nickname), user_view_path(mj.user)%></td>
+          <td style="width:60px"><%= formation_position_text mj.position %></td>
+          <td>
+            <%= text_field_tag "mj[#{mj.id}][goal]", 
+                @match_join_hash && @match_join_hash[mj.id.to_s] ? @match_join_hash[mj.id.to_s][:goal] : mj.goal,
+                :maxlength => 2, :size=>1%></td>
+          <%if @match.has_card%>
+            <td>
+              <%= select_tag "mj[#{mj.id}][cards]", 
+                  options_for_select(
+                      MatchJoin::CARDS.map {|c| [card_text(c), c]},
+                      @match_join_hash && @match_join_hash[mj.id.to_s] ? @match_join_hash[mj.id.to_s][:cards].to_i : mj.cards)
+              %>
+            </td>
+          <%end%>
+        </tr>
+      <%end%>
+    </table>
+
+    <p><%= f.submit "提交比赛结果" %></p>
+  <% end %>
+</div>
+
+<div class="clearBoth"></div>

@@ -9,7 +9,7 @@ saki_mike1:
   is_delete_by_sender: false
   is_delete_by_receiver: false
   is_receiver_read: false
-  created_at: <%= DateTime.now%>
+  created_at: <%= DateTime.now.to_s(:db)%>
 
 saki_mike1_2:
   id: 2
@@ -20,7 +20,7 @@ saki_mike1_2:
   is_delete_by_sender: true
   is_delete_by_receiver: false
   is_receiver_read: false
-  created_at: <%= DateTime.now%>
+  created_at: <%= DateTime.now.to_s(:db)%>
 
 saki_mike1_3:
   id: 3
@@ -31,7 +31,7 @@ saki_mike1_3:
   is_delete_by_sender: false
   is_delete_by_receiver: true
   is_receiver_read: false
-  created_at: <%= DateTime.now%>
+  created_at: <%= DateTime.now.to_s(:db)%>
 
 mike2_saki:
   id: 4
@@ -42,7 +42,7 @@ mike2_saki:
   is_delete_by_sender: false
   is_delete_by_receiver: false
   is_receiver_read: false
-  created_at: <%= DateTime.now%>
+  created_at: <%= DateTime.now.to_s(:db)%>
 
 mike2_saki_2:
   id: 5
@@ -53,4 +53,4 @@ mike2_saki_2:
   is_delete_by_sender: false
   is_delete_by_receiver: true
   is_receiver_read: false
-  created_at: <%= DateTime.now%>
+  created_at: <%= DateTime.now.to_s(:db)%>

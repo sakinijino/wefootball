@@ -1,0 +1,36 @@
+<div id="wide_left_content" class="sect">
+  <h2><%=h @title%></h2>
+  <table class="list">
+    <tr>
+      <th style="width:70px">&nbsp;</th>
+      <th style="width:70px">邀请时间</th>
+      <th style="width:300px">留言</th>
+      <th style="width:100px">&nbsp;</th>
+    </tr>
+    <% for req in @requests %>
+      <tr>
+        <td><%= small_team_image_link req.team%></td>
+        <td><%=req.apply_date.to_s(:db) %></td>
+        <td>
+          <%= link_to h(req.team.shortname), team_view_path(req.team) %>邀请你加入
+          <br/><br/>
+          <%if !req.message.blank?%>
+            管理员留言:
+            <%= h(req.message) %>
+            <br/><br/>
+          <%end%>
+        </td>
+        <td>
+          <%= button_to '接受', team_joins_path(:id=>req.id, :back_uri => request.request_uri), :method => :post %>
+          <%= button_to '拒绝', team_join_invitation_path(req.id), :method => :delete %>
+        </td>
+      </tr>
+    <% end %>
+  </table>
+</div>
+
+<div id="narrow_right_content" class="sect">
+  <h2></h2>
+  <%=render :partial=>'sidebar_menus/user_view_team'%>
+</div>
+<div class="clearBoth"></div>

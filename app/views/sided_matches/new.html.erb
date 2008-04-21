@@ -1,0 +1,14 @@
+<div id="wide_left_content" class="sect">
+  <h2><%= h @title%></h2>
+  <%= error_messages_for :sided_match %>
+  <br/>
+  <% form_for @sided_match do |f| %>
+    <%= f.hidden_field :host_team_id,  :value=>@team.id%>
+    <%= render :partial => "form", :locals => {:f => f}%>  
+    <p>
+      <%= f.submit "创建" %>
+    </p>
+  <% end %>
+</div>
+
+<div class="clearBoth"></div>

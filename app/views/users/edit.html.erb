@@ -1,0 +1,124 @@
+<%content_for(:javascript) do%>
+  <%= javascript_include_tag province_city_select_url %>
+<%end%>
+
+<div id="narrow_right_content" class="sect">
+  <h2></h2>
+  <ul class="sidebar_menu">
+    <li>
+      > <%= smart_return_user_view_menu_item(@user) %>
+    </li>
+  </ul>
+</div>
+
+<div id="wide_left_content" class="sect">
+  <h2><%=h @title%></h2>
+  <%= error_messages_for :user %>
+  <br/>
+  <div class="tab_container" style="margin:10px 0 20px 0">
+  <span class="tab_link" style="margin-left: 10px;">修改个人信息</span>
+  <span class="tab_link <%= "tabSelected" if params[:tab_index] == '1'%>">修改球员信息</span>
+  <span class="tab_link <%= "tabSelected" if params[:tab_index] == '2'%>">修改头像</span>
+  <span class="tab_link <%= "tabSelected" if params[:tab_index] == '3'%>">修改密码</span>
+
+  <% form_for(@user,:html => { :class=>"tab"}) do |f| %>
+    <p><label for="nickname">昵称</label><br/>
+    <%= f.text_field :nickname, :size=>30, :maxlength=>15 %></p>
+
+    <p><label for="birthday">生日</label><br/>
+    <%= f.date_select :birthday, :start_year=>1900, :end_year=>Date.today.year, :use_month_numbers => true %></p>
+
+    <p><label for="birthday_display_type">生日显示方式</label><br/>
+    <%= f.select :birthday_display_type, [["不显示", 0], ["显示年月日", 1], ["显示月日", 2], ["显示年", 3]] %>
+
+    <p><label for="gender">性别</label><br/>
+    <%= f.select :gender, [["----", 0], ["男", 1], ["女", 2]] %>
+
+    <p><label for="city">所在地</label><br/>
+    <%= f.province_city_select :city %>
+
+    <p><label for="blog">我的blog <span class="optional">(可选)</span></label><br/>
+    http://<%= f.text_field :blog, :size=>30, :maxlength=>256 %></p>
+
+    <p><label for="favorite_star">我喜欢的球星 <span class="optional">(可选)</span></label><br/>
+    <%= f.text_field :favorite_star, :size=>30, :maxlength=>200 %></p>
+
+    <p><label for="favorite_team">我喜欢的球队 <span class="optional">(可选)</span></label><br/>
+    <%= f.text_field :favorite_team, :size=>30, :maxlength=>200 %></p>
+
+    <p><label for="summary">自我介绍 <span class="optional">(可选)</span></label><br/>
+    <%= f.text_area :summary, :cols=>40, :rows=>15%></p>
+
+    <p>
+      <%= f.submit "保存个人信息" %>
+    </p>
+  <% end %>
+
+  <% form_for(@user,:html => { :class=>"tab"}) do |f| %>
+    <%= hidden_field_tag :tab_index, 1%>
+    <p><%= f.check_box :is_playable %>
+    <label for="is_playable">我踢球</label></p>
+
+    <p><label for="height">身高(cm) <span class="optional">(可选)</span></label><br/>
+    <%= f.text_field :height, :size=>5, :maxlength=>3 %></p>
+
+    <p><label for="weight">体重(kg) <span class="optional">(可选)</span></label><br/>
+    <%= f.text_field :weight, :size=>5, :maxlength=>3 %></p>
+
+    <p><label for="fitfoot">惯用脚</label><br/>
+    <%= f.select :fitfoot, User::FITFOOT.map {|ft| [fitfoot_text(ft), ft]} %></p>
+
+    <p><label for="premier_position">首选位置</label><br/>
+    <%= f.select :premier_position, Position::POSITIONS.map {|p| [position_text(p), p]} %></p>
+
+    <p>
+      <label for="positions">可以踢的位置</label><br/>
+      <table>
+      <!--Position::POSITIONS-->
+      <%[[0],(1..4),(5..9),[10, 13, 11, 12]].each do |category|%>
+        <tr>
+        <%category.each do |pos|%>
+          <td>
+          <%=check_box_tag 'positions[]', pos, @positions.index(pos)!=nil %>
+          <%= position_text(pos)%>
+          </td>
+        <%end%>
+        </tr>
+      <%end%>
+      </table>
+    </p>
+
+    <p>
+      <%= f.submit "保存球员信息" %>
+    </p>
+  <% end %>
+
+  <% form_for(:user, :url => update_image_user_path(@user),:html => { :method=>:put, :multipart => true, :class=>"tab" }) do |f| %>
+    <%= hidden_field_tag :tab_index, 2%>
+    <%= user_image_tag @user, {:class=>'icon', :style=>"margin:20px 0 0 0"} %>
+    <p>
+      <label>更改头像</label><br/>
+      <%= f.file_field  :uploaded_data %>
+    </p>
+
+    <p>
+      <%= f.submit "上传头像" %>
+    </p>
+  <% end %>
+
+  <% form_for(@user,:html => { :class=>"tab" }) do |f| %>
+    <%= hidden_field_tag :tab_index, 3%>
+    <p><label for="password">密码</label><br/>
+    <%= f.password_field :password, :size=>30, :maxlength=>40 %></p>
+
+    <p><label for="password_confirmation">确认密码</label><br/>
+    <%= f.password_field :password_confirmation, :size=>30, :maxlength=>40 %></p>
+
+    <p>
+      <%= f.submit "修改密码" %>
+    </p>
+  <% end %>
+  </div>
+</div>
+
+<div class="clearBoth"></div>

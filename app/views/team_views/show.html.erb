@@ -1,0 +1,154 @@
+<%content_for(:javascript) do%>
+  <%= javascript_include_tag "ui.mouse.js" %>
+  <%= javascript_include_tag "ui.dialog.js" %>
+<%end%>
+
+<%content_for(:stylesheet) do%>
+  <%= stylesheet_link_tag 'calendar' %>
+  <%= stylesheet_link_tag 'activityitem' %>
+<%end%>
+
+<div id="left_content">
+  <div class="sect">
+    <h2><%=h @team.shortname%>的信息</h2>
+
+    <%if @team_join_request != nil || @team_join_invitation != nil || @team_join_request_count > 0 || @match_invitation_count > 0%>
+    <div class="notification">
+      <%if @team_join_request != nil%>
+        <span>等待确认<%=h @team.shortname%>加入申请</span>
+      <%end%>
+
+      <%if @team_join_invitation != nil%>
+        <span><%=h @team.shortname%>邀请你加入</span>
+        <%= link_to '接受', team_joins_path(:id=>@team_join_invitation.id, :back_uri => request.request_uri), :method => :post %>
+        <%= link_to '拒绝', team_join_invitation_path(@team_join_invitation.id, :back_uri => request.request_uri), :method => :delete %>
+      <%end%>
+
+      <%if @team_join_request_count > 0 || @match_invitation_count > 0%>
+        球队有
+      <%end%>
+      <%if @team_join_request_count > 0%>
+        <%= link_to "#{@team_join_request_count}个加入申请", team_team_join_requests_path(@team) %>, 
+        <%#*<br />%>
+      <%end%>
+      
+      <%if @match_invitation_count > 0%>
+        <%#= '&nbsp;'*13 if @team_join_request_count > 0%>
+        <%= link_to "#{@match_invitation_count}个需要处理的约战邀请", team_match_invitations_path(@team)%>
+      <%end%>  
+    </div>
+    <%end%>
+
+    <div class="tab_container">
+      <%if logged_in? %>
+        <span class="shortcut">
+        <%if @can_quit%>
+          <%= link_to(image_tag("quitFromTeam.gif", :title=>"退出球队"), team_join_path(@user_team.id),:method=>:delete)%>
+        <%elsif @can_request%>
+          <%= link_to(image_tag("inviteIntoTeam.gif", :title=>"申请加入球队"), '#', 
+                :onclick=>'wefootball.openDialog(event, "#send_team_join_request_div");return false;')%>
+        <%end%>
+        <%if current_user.is_team_admin_of?(@team)%>
+          <%= link_to(image_tag("inviteIntoTeam.gif", :title=>"邀请朋友加入"), new_team_team_join_invitation_path(@team))%>
+        <%end%>
+        <%=link_to(image_tag("inviteMacth.gif", :title=>"向该队发出约战邀请"), new_match_invitation_path(:guest_team_id=>@team))%>
+        </span>
+      <%end%>
+
+      <span class="tab_link" style="margin-left: 10px;">球队信息</span>
+      <span class="tab_link">球队阵型</span>
+      <% f_text = formation_text @formation_array%>
+      <div class="tab">
+      <%= "<span>球队全名: #{h @team.name}</span><br/>" unless @team.name.blank?%>
+      <%= "<span>所在地: #{@team.city_text}</span><br/>" unless @team.city_text.nil?%>
+      <%= "<span>惯用阵型: #{f_text}</span><br/>" unless f_text.blank?%>
+      <%= "<span>球队风格: #{h @team.style}</span><br/>" unless @team.style.blank?%>
+      <%= "<span>建队时间: #{@team.found_time}</span><br/>" unless @team.found_time.nil?%>
+      <%if !@team.summary.blank?%>
+          <label>球队简介: </label>
+          <p><%=simple_format auto_link(h(@team.summary), :urls)%></p>
+      <%end%>
+      </div>
+      <div class="tab">
+        <%= "<span style='float:left;margin-left:5px;'>阵型: #{f_text}</span>" unless f_text.blank?%>
+        <%= link_to '查看详细', formation_index_team_joins_path(:team_id => @team), :style=>"float:right; margin-right:15px;"%>
+        <div class="clearBoth"></div>
+        <div class="small_field">
+          <%@formation_uts.each do |ut|%>
+            <% pos = team_field_position(ut.position, @formation_array) %>
+            <%= link_to small_user_image_tag(ut.user,
+              :style=>"left:#{pos[:left]}px;top:#{pos[:top]}px;",
+              :title=>ut.user.nickname), user_view_path(ut.user), :class=>"resize_small_icon" %>
+          <%end%>
+        </div>
+      </div>
+
+      <div style="margin: 10px 0 0 10px">
+        <%links = []%>
+        <%if logged_in? %>
+          <%if @can_quit%>
+            <%links << link_to("退出球队", team_join_path(@user_team.id),:method=>:delete)%>
+          <%elsif @can_request%>
+            <%links << link_to("申请加入球队", '#', 
+                :onclick=>'wefootball.openDialog(event, "#send_team_join_request_div");;return false;')%>
+          <%end%>
+          <%if current_user.is_team_admin_of?(@team)%>
+            <%links << link_to("邀请朋友加入", new_team_team_join_invitation_path(@team))%>
+          <%end%>
+          <%links << link_to("向该队发出约战邀请", new_match_invitation_path(:guest_team_id=>@team))%>
+        <%end%>
+        <%= links_with_sticks links%>
+      </div>
+    </div>
+
+    <%if @can_request%>
+    <div id="send_team_join_request_div" class="jdialog">
+      <% form_for :team_join_request, :url => team_join_requests_path, :method=>"POST" do |f| %>
+        <%= f.hidden_field :team_id,  :value=>@team.id%> 
+        <span>给球队管理员留个言吧...</span><br />
+        <%= f.text_area :message, :cols => 30, :rows => 2%><br />
+        <%= f.submit "入队申请" %>
+        <%= f.submit "撤销", :onclick=>'j("#send_team_join_request_div").dialog("close");return false;' %>
+      <% end %>  
+    </div>
+    <%end%>
+  </div>
+
+  <div class="sect">        
+    <h2><%=h @team.shortname%>的成员</h2>
+    <%= user_icon(@users)%>
+    <div class="clearBoth"></div>
+  </div>
+
+  <div class="sect">   
+    <h2><%=h @team.shortname%>下的讨论</h2>
+    <%= render :partial=>'posts/narrow_post_list', :object=>@posts%>
+    <div style="margin: 10px 0  0 10px;float:right;">
+      <%links = []%>
+      <%links << "> #{link_to '发言', new_team_post_path(@team)}" if logged_in? && current_user.is_team_member_of?(@team)%>
+      <%links << "> #{link_to '更多', team_posts_path(@team)}"%>
+      <%= links_with_sticks links%>
+    </div>
+  </div>
+</div>
+
+<div id="right_content">
+  <%if @recent_activity != nil%>
+    <div class="sect">
+      <h2><%=h @team.shortname%>最近一次活动</h2>
+      <div class="activities">
+        <%=date_div_link @recent_activity.start_time, @team%>
+        <%= render :partial => 'shared/activity', :object => @recent_activity%>
+        <div class="clearBoth"></div>
+      </div>
+    </div>
+  <%end%>
+  
+  <div class="sect">
+    <h2><%=h @team.shortname%>近期的活动</h2>
+    <%= render(:partial => 'shared/highlight_calendar', 
+      :locals => {:date => @start_time, :days=> TeamViewsController::DISPLAY_DAYS, :activities => @calendar_activities_hash})%>
+    <div class="clearBoth"></div>
+  </div>
+</div>
+<div class="clearBoth"></div>

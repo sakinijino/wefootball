@@ -1,0 +1,616 @@
+body { 
+    background-color: #fff;
+    font-family: Arial,Helvetica,sans-serif;
+    font-size: 12px;
+    margin-top: 5px;
+    margin-left: 5px;
+    line-height: 1.5em;
+}
+
+h1 {font-size:18px; color:#333333; font-family:Verdana;font-weight:normal;margin:0}
+h2 {font-size:14px;font-weight:normal;margin:0}
+
+form { margin: 0; padding: 0; border: 0px; }
+textarea{ overflow:auto; }
+a { color: #006666; text-decoration: none;}
+a:hover { color: #FFFFFF; text-decoration: none; background: #006666; }
+a img { border-width:0; }
+table {}
+table th{ text-align: left; }
+
+form.button-to {
+    display: inline;
+    margin: 0 10px 0 0;
+}
+
+form.button-to div {
+    display: inline;
+}
+
+#qmd {
+    height: 25px;
+    width:992px;
+    margin: 0 auto;
+    padding: 0;
+}
+
+#qmd .left {
+    background:url(/images/qmd_left.gif) no-repeat;
+    width:139px;
+    height: 25px;
+    float:right;
+}
+
+#qmd .center {
+    color: #333333;
+    background:url(/images/qmd_middle2.gif) repeat-x;
+    float:right;
+    padding-top: 7px;
+    height: 25px;
+}
+
+#qmd .right {
+    background:url(/images/qmd_right.gif) no-repeat;
+    width:19px;
+    height: 25px;
+    float:right;
+}
+
+#main_content {
+    width: 990px;
+    margin: 0 auto;
+    padding-bottom:15px;
+    border:solid 1px #3D681A;
+}
+
+* html #main_content {
+   margin-top: -7px;
+}
+
+#header {
+    width:100%;
+    height:131px;
+    background:url(/images/head.gif) no-repeat;
+    position: relative;
+    line-height: normal;
+    z-index: 20;
+}
+
+#header.match_header {
+  background:url(/images/match_head.gif) no-repeat;
+}
+
+#header a {
+  background: transparent;
+}
+
+#header .dropdown_container {
+    position:relative;
+}
+
+#header .dropdown_container div.dropdown {
+    border: 1px solid #3D681A;
+    margin: 0px;
+    padding: 3px;
+    background: #fff;
+    display:none;
+    position:absolute;
+    list-style-type: none;
+}
+
+#header_icon {
+    position: absolute;
+    left: 48px;
+    top: 10px;
+}
+
+#host_header_icon {
+    position: absolute;
+    left: 30px;
+    top: 24px;
+}
+
+#guest_header_icon {
+    position: absolute;
+    left: 122px;
+    top: 24px;
+}
+
+
+#header_name {
+    color: #fff;
+    font-size: 22px;
+    font-weight: bold;
+    position: absolute;
+    left: 160px;
+    top: 26px;
+}
+
+#header_name a{
+    color: #fff;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+#header_setting {
+    color: #fff;
+    float: left;
+    position: relative;
+    top: 100px;
+    width: 175px;
+    text-align:center;
+}
+
+#header_setting img.my_down {
+    margin-bottom:2px;
+}
+
+#header_setting a {
+    color: #fff;
+}
+
+#header_setting .dropdown_container div.dropdown a{
+    display: block;
+    padding: 5px;
+    background: #fff;
+    color: #006666;
+}
+
+#header_setting .dropdown_container div.dropdown a:hover{
+    background: #F2F7AB;
+}
+
+#header_menu {
+    position: absolute;
+    top: 74px;
+    left: 220px;
+    width: 507px;
+    text-align: center;
+}
+
+#header_menu a{
+    color: #333333;
+}
+
+#header_menu a:hover{
+  text-decoration: underline;
+}
+
+#header_menu div.l2_menu_list a {
+  color: #666666;
+}
+
+#header_menu div.l1_menu{
+    margin: 0 0 1px 0;
+    font-size: 14px;
+    background: repeat-y;
+    height: 20px;
+    padding-top: 2px;
+}
+
+#header_menu div.l1_menu a{
+    margin: 0 15px;
+}
+
+#header_menu div.l2_menu_list {
+    margin: 0 5px;
+    padding: 2px 0 0 0;
+    text-align: center;
+    height: 20px;
+    background: repeat-y ;
+}
+
+#header_menu div.l2_menu_list ul{
+    margin: 2px 10px 0 10px;
+    padding: 0;
+    display: none;
+    float:left;
+    position:relative;
+}
+
+#header_menu div.l2_menu_list ul li{
+    font-size: 12px;
+    display: inline;
+    margin: 0 15px 0 15px;
+    list-style-type: none;
+}
+
+#header_search {
+    margin: 0;
+    padding: 0;
+    position: absolute;
+    top: 85px;
+    left: 781px;
+}
+
+#header_search table {
+    vertical-align: middle;
+    margin: 0;
+    padding: 0;
+}
+
+#header_search input {
+    margin: -2px 5px 0 0;
+    padding: 0;
+    border: none;
+    background: #fff;
+}
+
+#header_search input.blurinput {
+    color: #ccc;
+}
+
+#header_search input.submit {
+    width: 32px;
+    height: 30px;
+    cursor: pointer;
+    background: transparent;
+}
+
+#header_search .dropdown_container div.dropdown div{
+  padding: 1px 2px;
+}
+
+#header_search .dropdown_container div.dropdown div.hover,
+#header_search .dropdown_container div.dropdown div:hover{
+    background: #F2F7AB;
+}
+
+#header_search .dropdown_container div.dropdown img{
+  margin: 0;
+  padding: 0;
+}
+
+#header_search .dropdown_container div.dropdown a{
+    color: #333333;
+}
+
+#content {
+    margin: 20px 15px 20px 25px;
+}
+
+#footer {
+    width: 990px;
+    margin: 0 auto;
+    padding-top: 10px;
+}
+
+div.flash{
+/*    background: #ACBE33;*/
+/*    color: #fff;*/
+/*    font-weight: bold;*/
+/*    padding: 6px 10px;*/
+/*    margin: 10px 0px 15px 0px;*/
+    border:solid 1px #3D681A;
+    background: #F2F7AB;
+    padding: 6px 10px;
+    margin: 10px 0px 15px 0px;
+    width: 500px;
+}
+
+#left_content {
+    width:310px; float:left;
+}
+
+#right_content {
+    width:580px; float:right;
+}
+
+#wide_left_content {
+    width:580px; float:left;
+}
+
+#narrow_right_content {
+    width:330px; float:right;
+}
+
+div.sect {
+    padding-left:5px;
+    margin-bottom: 30px;
+}
+
+div.sect h2 {
+    margin: 0 0 5px -5px;
+    padding: 5px;
+}
+
+div.clearBoth {
+    clear:both;
+}
+
+div.icon {
+    background: #fff;
+    width:72px;
+    height:110px;
+    text-align:center;
+    margin:3px 10px 3px 10px;
+    float:left;
+    overflow: hidden;
+}
+
+img.icon {
+    background: #fff;
+    border:solid 1px #3D681A;
+    margin:0px auto;
+    padding: 2px;
+    display: block;
+}
+
+table.list {
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+table.list tr.highlight {
+    font-weight:bold
+}
+
+table.list th,
+table.list td{
+    border-bottom:dashed 1px #3D681A;
+    padding: 5px;
+    vertical-align: top;
+}
+
+table.list td p{
+    margin: 5px;
+    padding: 0px;
+    text-indent: 2em;
+}
+
+table.form td{
+    vertical-align: top;
+    padding-bottom: 8px;
+}
+
+div.notification {
+    background: #F2F7AB;
+    padding: 6px 10px;
+    margin: 10px 0px 15px 0px;
+}
+
+form span.optional {
+  color: #666666;
+}
+
+div.tab_container {
+    margin-top:10px;
+    margin-bottom:10px;
+}
+
+div.tab_container div.tab h2{
+    margin: 0;
+    height: auto;
+    background:transparent;
+}
+
+.tab {
+    padding: 20px 10px 20px 20px;
+    border:solid 1px #3D681A;
+    background-color:#FCFDFE;
+}
+
+form.tab {
+    margin: 0;
+    padding: 10px 20px 10px 20px;
+}
+
+.tab_link {
+    margin-right: 5px;
+    padding:5px 10px 0 10px;
+    border:solid 1px #3D681A;
+    border-bottom:solid 1px #ACBE33;
+    background-color:#ACBE33;
+    font-size:12px;
+    color:#000; 
+    cursor:pointer;
+}
+
+a.tab_link {
+    color:#000;
+}
+
+.tab_link:hover {
+    background-color:#FCFDFE;
+}
+
+.tabSelected {
+    border-bottom: 2px solid #FCFDFE;
+    background-color:#FCFDFE; 
+}
+
+div.tab_container span.shortcut {
+    float:right;
+    margin-right: 5px;
+    height: 17px;
+}
+
+div.tab_container span.shortcut img {
+    margin-left: 2px;
+}
+
+div.small_field {
+  position:relative;
+  background:url(/images/team_small_field.jpg) no-repeat;
+  width:260px;
+  height:363px
+}
+
+div.positions_small_field {
+  float:left;
+  position:relative;
+  background:url(/images/small_field.jpg) no-repeat;
+  width:160px;
+  height:222px
+}
+
+div.post {
+    padding:10px;
+    margin-bottom: 10px;
+}
+
+div.post img {
+    float:left; margin:0 15px 10px 0;
+}
+
+div.post p{
+    text-indent: 2em;
+}
+
+div.post .title {
+    background-color:#FCFDFE; 
+    padding: 2px 10px 2px 10px;
+    width: 80%;
+    display: -moz-inline-box;/*firefox hack*/
+    display: inline-block;
+}
+
+div.post .title .name{
+    margin-left:50px;
+}
+
+div.post .control {
+    float:right; margin-right:20px
+}
+
+ul.sidebar_menu {
+    padding : 0px;
+    margin : 10px 0px;
+}
+
+ul.sidebar_menu li{
+    list-style-type: none;
+    margin-bottom: 15px;
+    padding: 5px;
+}
+
+ul.sidebar_menu li.seperate{
+    border-top:dashed 1px #3D681A;
+    margin: 0;
+    padding: 0;
+    height: 15px;
+    width: 70%;
+}
+
+ul.sidebar_menu li,
+ul.sidebar_menu li a{
+    font-size: 14.8px;
+    padding-left: 5px;
+}
+
+ul.sidebar_menu li.selected a{
+    color: #000;
+    cursor: default;
+    background: transparent;
+}
+
+div.icon_select {
+    float:left
+}
+div.icon_select div.icon {
+    margin-right:0px
+}
+div.icon_select div.input {
+    padding-top:40px;
+    float:left
+}
+
+div.ui-dialog {
+    background: #fff;
+    padding: 12px 10px 15px 10px;
+    border:solid 2px #3D681A;
+}
+
+div.ui-dialog div.ui-dialog-titlebar{
+    text-align: right;
+    position: relative;
+}
+
+div.ui-dialog div.ui-dialog-titlebar .ui-dialog-titlebar-close {
+    font-weight: bold;
+    color: #3D681A;
+    position: absolute;
+    right: 0;
+}
+
+div.ui-dialog form{
+    padding: 0px;
+    margin: 0px;
+}
+
+a.resize_small_icon img {
+    width: 22px;
+    height: 22px;
+    position: absolute;
+}
+
+table.match_invitation_list {
+    width: 100%;
+}
+
+table.match_invitation_list th,
+table.match_invitation_list td{
+    border: none;
+    vertical-align: top;
+}
+
+table.match_invitation_list td.conflict {
+    background: #F2F7AB;
+}
+
+table.form td.conflict {
+    padding: 3px;
+}
+
+div.errorExplanation ul{
+    list-style-type: none;
+    list-style-image: none;
+    border: 1px solid red;
+    background: rgb(255, 197, 190);
+    color: rgb(204, 0, 0);
+    padding: 3px 7px 3px 7px;
+    margin: 5px 0 0 0;
+    width: 60%;
+}
+
+div.fieldWithErrors,
+div.fieldWithErrorsWhenFocus{
+    display:inline;
+}
+
+div.fieldWithErrors input,
+div.fieldWithErrors textarea,
+div.fieldWithErrors select{
+   background: rgb(255, 197, 190);
+}
+
+div.message {
+    padding-top:20px
+}
+
+div.message div.icon {
+    margin-right:20px;
+    float:left;
+    width:60px
+}
+
+div.message div.content {
+    float:left;width:400px
+}
+
+div.message div.content p {
+    padding-bottom: 20px;
+}
+
+div.message div.title {
+    font-size:14px;border-bottom: dashed 1px #3D681A; padding-bottom:15px;
+}
+
+div.result_block {
+  border: 1px solid #333333;padding:0 10px
+}
+
+div.result_block span.another_result {
+  font-weight: bold;
+  color: #333333;
+}

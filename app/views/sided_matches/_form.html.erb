@@ -1,0 +1,80 @@
+<%content_for(:javascript) do%>
+  <%= javascript_include_tag province_city_select_url %>
+  <%= javascript_include_tag football_ground_select_url %>
+<%end%>
+
+<table class="form">
+  <tr ><td>
+    对方球队名称:
+  </td><td>
+    <%= f.text_field :guest_team_name %>
+  </td></tr>
+  <tr><td>
+    开始时间:
+  </td><td>
+    <%= f.datetime_select :start_time,  :start_year => Date.today.year, :end_year => 1.year.since.year, :use_month_numbers => true, :minute_step=>15 %>
+  </td></tr>
+  <tr><td>
+    场地:
+  </td><td>
+  <div class="location_input">
+    <div class="football_ground_input">
+      <%= f.football_ground_select :football_ground_id, 
+          @sided_match.football_ground_id.nil?  ? 'city' : nil,
+          @sided_match.football_ground_id.nil? ? @team.city : nil%><br/>
+      <a class="switch" href="javascript:void(0)">场地不在列表中, 点击此处填写</a>
+    </div>
+    <div class="location_text_input">
+      <%= f.text_field :location, :value=> @sided_match.football_ground_id.nil? ? @sided_match.location : '' %>
+      <br/><a class="switch" href="javascript:void(0)">从列表中选择场地</a>
+    </div>
+  </div>
+  </td></tr>
+  <tr><td>
+    比赛性质:
+  </td><td>
+    <%= f.select :match_type, SidedMatch::MATCH_TYPES.map {|t| [match_type_text(t), t]} %> 
+  </td></tr>
+  <tr><td>
+    人数:
+  </td><td>
+    <%= f.select :size, SidedMatch::MATCH_SIZES %>人制 
+  </td></tr>
+  <tr><td>
+    半场时间:
+  </td><td>
+    <%= f.text_field :half_match_length, :size=>1 %>分钟 
+  </td></tr>
+  <tr><td>
+    中场休息:
+  </td><td>
+    <%= f.text_field :rest_length, :size=>1 %>分钟
+  <tr><td>
+      裁判:
+    </td><td>
+      <%= f.radio_button :has_judge, true%>有
+      <%= f.radio_button :has_judge, false%>没有
+  </td></tr>
+  <tr><td>
+      红黄牌:
+    </td><td>
+      <%= f.radio_button :has_card, true%>有
+      <%= f.radio_button :has_card, false%>没有
+  </td></tr>
+  <tr><td>
+      越位:
+    </td><td>
+      <%= f.radio_button :has_offside, true%>有
+      <%= f.radio_button :has_offside, false%>没有
+  </td></tr>
+  <tr><td>
+    常规时间平局后:
+  </td><td>
+    <%= f.select :win_rule, MatchInvitation::WIN_RULES.map {|r| [win_rule_text(r), r]} %>
+  </td></tr>
+</table>
+
+<p>
+  比赛说明 <span class="optional">(可选)</span><br />
+  <%= f.text_area :description, :cols => 40, :rows => 10 %>
+</p>

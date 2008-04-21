@@ -1,0 +1,56 @@
+<div id="narrow_right_content" class="sect">
+  <h2></h2>
+  <%=render :partial=>'sidebar_menu'%>
+</div>
+
+<div id="wide_left_content" class="sect">
+  <h2><%= h @title%></h2>
+  <table class="list">
+    <% @mis.each do |mi|%>
+      <%
+        self_team = @team
+        another_team = @team == mi.host_team ? mi.guest_team : mi.host_team
+      %>
+      <tr>
+        <td><%= team_icon(another_team)%></td>
+        <td style="width:100%">
+          <table class="match_invitation_list">
+            <tr>
+              <td>
+                <%= mi.host_team == @team ? '本队' : '对方'%>
+                <%=link_to h(mi.host_team.shortname), team_view_path(mi.host_team)%>发起的邀请
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <%=link_to h(another_team.shortname), team_view_path(another_team)%>提出建议后, 等待我队的回复
+              </td>
+            </tr>
+            <%msg = @team == mi.host_team ? mi.guest_team_message: mi.host_team_message%>
+            <%if !msg.blank?%>
+            <tr>
+              <td>
+                对方的留言: 
+                <%= h(msg)%>
+              </td>
+            </tr>
+            <%end%>
+          </table>
+          <br/>
+          <%= render :partial => 'properties_list', :locals => {:mi => mi, :need_reply => true}%>
+
+          <div style="margin: 10px 0 10px 10px">
+            <%links = []%>
+            <%links << link_to('接受对方的建议', matches_path(:id=>mi.id), :method=>:post) if current_user.can_accpet_match_invitation?(mi)%>
+            <%links << link_to("拒绝对方的建议", match_invitation_path(mi),:method=>:delete) if current_user.can_reject_match_invitation?(mi)%>
+            <%links << link_to('提出新建议', edit_match_invitation_path(mi)) if current_user.can_edit_match_invitation?(mi)%>
+            <%= links_with_sticks links%>
+          </div>
+        </td>
+        <td><%= team_icon(self_team)%></td>
+      </tr>
+    <%end%>
+  </table>
+</div>
+
+<div class="clearBoth"></div>

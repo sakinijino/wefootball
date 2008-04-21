@@ -1,0 +1,7 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+ play1:
+   id: 1
+   football_ground_id: 1
+   location: '北大第一体育场'
+   

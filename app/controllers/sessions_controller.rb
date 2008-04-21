@@ -1,30 +1,30 @@
-# This controller handles the login/logout function of the site.  
 class SessionsController < ApplicationController
-  # Be sure to include AuthenticationSystem in Application Controller instead
+
+  skip_before_filter :store_current_location
+  
+  def new
+    render :layout => default_layout  
+  end
   
   def create
     self.current_user = User.authenticate(params[:login], params[:password])
     if logged_in?
       if params[:remember_me] == "1"
         self.current_user.remember_me
-        cookies[:auth_token] = { :value => self.current_user.remember_token , :expires => self.current_user.remember_token_expires_at }
+        cookies[:auth_token] = { :value => self.current_user.remember_token , 
+          :expires => self.current_user.remember_token_expires_at }
       end
-      respond_to do |format|
-        @user = self.current_user
-        proc = Proc.new { |options| 
-            options[:builder].tag!('is_my_friend', false)
-        }
-        format.xml {render :xml=>@user.to_xml({
-          :dasherize=>false,
-          :except=>[:crypted_password, :salt, :created_at, :updated_at, :remember_token, :remember_token_expires_at],
-          :include => [:positions],
-          :procs => proc
-        }) }
-      end  
+      @user = self.current_user
+      redirect_back_or_default(user_view_path(@user))
     else
-      respond_to do |format|
-        format.xml { head 401 }
+      @se = User.new      
+      if User.correct_login_without_activation(params[:login], params[:password])
+        @se.errors.add_to_base('帐号还没有激活, 请登录Email完成激活操作')
+        @se.errors.add_to_base('如果尚未收到激活邮件, 请重新注册')
+      else
+        @se.errors.add_to_base('用户名或密码错误')
       end
+      render :action => 'new', :layout => default_layout  
     end
   end
   
@@ -32,8 +32,7 @@ class SessionsController < ApplicationController
     self.current_user.forget_me if logged_in?
     cookies.delete :auth_token
     reset_session
-    respond_to do |format|
-      format.xml { head 200}
-    end
+    flash[:notice] = "您已经退出WeFootball"
+    redirect_with_back_uri_or_default new_session_path
   end
 end

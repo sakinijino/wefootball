@@ -1,0 +1,42 @@
+<table class="match_invitation_list">
+  <%if need_reply%>
+    <tr>
+      <td style="width:60px">&nbsp;</td>
+      <td>对方提出的新建议</td>
+      <td>我队上次的建议</td>
+    </tr>
+  <%else%>
+    <tr>
+      <td style="width:60px">&nbsp;</td>
+      <td>我队提出的新建议</td>
+      <td>对方上次的建议</td>
+    </tr>
+  <%end%>
+  <%= macth_invitation_comparison_tr(mi, '时间', :start_time){ |t| 
+    %(#{t.strftime('%Y-%m-%d %H:%M')}
+      #{"(已过期)" if mi.outdated?}
+    )
+  }%>
+  <%
+    is_modified = mi.has_attribute_been_modified?(:location)
+    cssklass = "class=\"conflict\""
+  %>
+  <tr>
+    <td style="width:60px">场地</td>
+    <td <%=cssklass if is_modified%>>
+      <%=location_link(mi.new_location, mi.new_football_ground_id)%>
+    </td>
+    <td <%=cssklass if is_modified%>>
+      <%= mi.location.nil? && mi.football_ground_id.nil? ? '无' : 
+        is_modified ? location_link(mi.location, mi.football_ground_id) : '一致'%>
+    </td>
+  </tr>
+  <%= macth_invitation_comparison_tr(mi, '比赛性质', :match_type){ |t| match_type_text t}%>
+  <%= macth_invitation_comparison_tr(mi, '人数', :size){ |t| "#{t}人制"}%>
+  <%= macth_invitation_comparison_tr(mi, '半场时长', :half_match_length){ |t| "#{t}分钟"}%>
+  <%= macth_invitation_comparison_tr(mi, '中间休息', :rest_length){ |t| "#{t}分钟"}%>
+  <%= macth_invitation_comparison_tr(mi, '裁判', :has_judge){ |t| t ? '有' : '没有'}%>
+  <%= macth_invitation_comparison_tr(mi, '红黄牌', :has_card){ |t| t ? '有' : '没有'}%>
+  <%= macth_invitation_comparison_tr(mi, '越位', :has_offside){ |t| t ? '有' : '没有'}%>
+  <%= macth_invitation_comparison_tr(mi, '平局后', :win_rule){ |t| win_rule_text t}%>
+</table>

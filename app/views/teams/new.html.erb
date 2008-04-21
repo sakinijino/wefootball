@@ -1,0 +1,17 @@
+<div id="wide_left_content" class="sect">
+  <h2><%=h @title%></h2>
+  <%= error_messages_for :team %>
+  <% form_for @team do |f| -%>
+
+  <%= render :partial => "form", :locals=>{:f=> f}%>
+      <%= hidden_field_tag :back_uri, params[:back_uri] if !params[:back_uri].nil?%>
+  <p><%= submit_tag '创建' %></p>
+  <% end -%>
+</div>
+
+<div id="narrow_right_content" class="sect">
+  <h2></h2>
+  <%=render :partial=>'sidebar_menus/user_view_team'%>
+</div>
+  
+<div class="clearBoth"></div>

@@ -1,0 +1,87 @@
+<%content_for(:stylesheet) do%>
+  <%= stylesheet_link_tag 'calendar' %>
+  <%= stylesheet_link_tag 'activityitem' %>
+<%end%>
+
+<div id="wide_left_content">
+  <div class="sect">
+    <h2>训练基本信息</h2>
+    <div class="activities">
+      <%=date_div_link @training.start_time, @team%>
+      <div class="detail">
+        <span>时间: </span><%= @training.start_time.strftime("%H:%M")%>-<%=@training.end_time.strftime("%H:%M")%><br />
+        <span>地点: </span><%= location_link @training.location, @training.football_ground_id %><br />
+        <%if logged_in? && current_user.is_team_member_of?(@training.team)%>
+          <br />
+          <span>我的状态: </span>
+          <%= join_status_text @training%>&nbsp;&nbsp;&nbsp;
+          <%links = []%>
+          <% links_text = join_status_links @training%>
+          <% links << link_to(links_text[0], training_training_joins_path(@training), :method=>'post') if @training.can_be_joined_by?(current_user)%>
+          <% links << link_to(links_text[1], training_training_join_path(@training, 0), :method=>'delete') if @training.can_be_quited_by?(current_user)%>
+          <%= links_with_sticks links%>
+        <%end%>
+      </div>
+      <div class="clearBoth"></div>
+    </div>
+    <%if logged_in?%> 
+      <div style="float:right">
+        <%links = []%>
+        <%if @training.can_be_modified_by?(current_user)%>
+          <%links << "#{link_to '修改', edit_training_path(@training)}"%>
+        <%end%>
+        <% if @training.can_be_destroyed_by?(current_user) %>
+          <%links << "#{link_to '取消', training_path(@training), :method=>'delete', :confirm=>'真的要取消这次训练吗？'}"%>
+        <%end%>
+        <%= links_with_sticks links%>
+      </div>
+      <div class="clearBoth"></div>
+    <%end%>   
+  </div>
+
+  <%if !@training.summary.blank?%>
+  <div class="sect">
+    <h2>训练说明</h2>
+    <p><%=simple_format auto_link(h(@training.summary), :urls)%></p>
+  </div>  
+  <%end%>       
+
+  <div class="sect">
+    <h2>关于本次训练的讨论</h2>
+    <%= render(:partial => 'posts/post_list', :object => @posts)%>
+    <div style="margin: 5px 10px  0 10px;float:right">
+      <%links = []%>
+      <%links << "#{link_to '针对本次训练发言', new_training_post_path(@training)}" if logged_in? && current_user.is_team_member_of?(@training.team)%>
+      <%links << "#{link_to '更多', training_posts_path(@training)}"%>
+      <%= links_with_sticks links%>
+    </div>
+  </div>
+</div>
+
+<div id="narrow_right_content">
+  <div class="sect">
+    <h2>参加这次训练的人</h2>
+    <%if @joined_users.length <= TrainingsController::JOINED_USER_LIST_LENGTH%>
+        <%= user_icon(@joined_users)%>
+    <%else%>
+        <%@joined_users.pop%>
+        <%= user_icon(@joined_users)%>
+        <%= link_to "> 更多",joined_users_training_path(@training.id), :class=>"more" %>
+    <%end%>
+    <div class="clearBoth"></div>
+  </div>
+         
+  <div class="sect">
+    <h2>没表态是否参加的人</h2>
+    <%if @undetermined_users.length <= TrainingsController::UNDETERMINED_USER_LIST_LENGTH%>
+        <%= user_icon(@undetermined_users)%>
+    <%else%>
+        <%@undetermined_users.pop%>
+        <%= user_icon(@undetermined_users)%>
+        <%= link_to "> 更多",undetermined_users_training_path(@training.id), :class=>"more" %>
+    <%end%>
+    <div class="clearBoth"></div>
+  </div>
+</div>
+
+<div class="clearBoth"></div>

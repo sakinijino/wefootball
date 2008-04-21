@@ -1,0 +1,30 @@
+<%content_for(:stylesheet) do%>
+  <%= stylesheet_link_tag 'calendar' %>
+<%end%>
+
+<div id="wide_left_content" class="sect">
+    <%= render(:partial => 'calendar', 
+        :locals => {:year => @date.year, :month => @date.month,
+        :activities => @calendar_activities_hash})%>
+</div>
+
+<div id="narrow_right_content" class="sect">
+  <h2>查看其它活动</h2>
+  <ul class="sidebar_menu">
+    <% tmp = 6.months.ago%>
+    <%(1..12).each do%>
+      <li>
+        > <%= month_calendar_link "#{tmp.strftime('%Y年%m月')}", tmp, @user || @team%>
+        <% tmp = tmp.next_month %>
+      </li>
+    <%end%>
+    <li class="seperate">
+    </li>
+    <li>
+      > <%= smart_return_user_view_menu_item(@user) if @user%>
+      <%= link_to "返回球队首页", team_view_path(@team) if @team%>
+    </li>
+  </ul>
+</div>
+
+<div class="clearBoth"></div>

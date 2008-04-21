@@ -1,0 +1,33 @@
+<%content_for(:stylesheet) do%>
+  <%= stylesheet_link_tag 'activityitem' %>
+<%end%>
+
+<div id="wide_left_content" class="sect">
+  <h2><%= h @title%></h2>
+  <%= render :partial => 'shared/activities', :object => @activities, :locals=>{:start_date=> @date, :end_date=> @date.tomorrow}%>
+</div>
+
+<div id="narrow_right_content" class="sect">
+  <h2>查看其它活动</h2>
+  <ul class="sidebar_menu">
+    <li>
+      > <%= day_calendar_link "上一天的活动", @date.yesterday, @user || @team%>
+    </li>
+    <li>
+      > <%= day_calendar_link "下一天的活动", @date.tomorrow, @user || @team%>
+    </li>
+    <li class="seperate">
+    </li>
+    <li>
+      > <%= month_calendar_link "本月的活动", @date, @user || @team%>
+    </li>
+    <li class="seperate">
+    </li>
+    <li>
+      > <%= smart_return_user_view_menu_item(@user) if @user%>
+      <%= link_to "返回球队首页", team_view_path(@team) if @team%>
+    </li>
+  </ul>
+</div>
+
+<div class="clearBoth"></div>

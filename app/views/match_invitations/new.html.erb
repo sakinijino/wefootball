@@ -1,0 +1,117 @@
+<%content_for(:javascript) do%>
+  <%= javascript_include_tag province_city_select_url %>
+  <%= javascript_include_tag football_ground_select_url %>
+<%end%>
+
+<div id="narrow_right_content" class="sect">
+  <h2></h2>
+  <ul class="sidebar_menu">
+    <li>
+      > <%= link_to "重新选择发起邀请的球队", new_match_invitation_path(:guest_team_id => @guest_team.id) %>
+    </li>
+    <li>
+      > <%= link_to "返回#{h @host_team.shortname}首页", team_view_path(@host_team) %>
+    </li>
+    <li>
+      > <%= link_to "返回#{h @guest_team.shortname}首页", team_view_path(@guest_team) %>
+    </li>
+  </ul>
+</div>
+
+<div id="wide_left_content" class="sect">
+  <h2><%= h @title%></h2>
+  <%= error_messages_for :match_invitation %>
+  <br/>
+  <% form_for @match_invitation do |f| %>
+    <%= f.hidden_field :guest_team_id,  :value=>@guest_team.id%>
+    <%= f.hidden_field :host_team_id,  :value=>@host_team.id%>
+    <table class="form">
+      <tr ><td>
+        邀请的球队:
+      </td><td>
+        <%= small_team_image_link @guest_team, :style=>"margin:0;float:right"%>
+        <span><%=link_to h(@guest_team.shortname), team_view_path(@guest_team.id)%></span>
+      </td></tr>
+      <tr><td>
+        开始时间:
+      </td><td>
+        <%= f.datetime_select :new_start_time,  :start_year => Date.today.year, :end_year => 1.year.since.year, :use_month_numbers => true, :minute_step=>15 %>
+      </td></tr>
+      <tr><td>
+        场地:
+      </td><td>
+      <div class="location_input">
+        <div class="football_ground_input">
+          <%= f.football_ground_select :new_football_ground_id,
+              @match_invitation.new_football_ground_id.nil?  ? 'city' : nil,
+              @match_invitation.new_football_ground_id.nil? ? @host_team.city : nil%><br/>    
+          <a class="switch" href="javascript:void(0)">场地不在列表中, 点击此处填写</a>
+        </div>
+        <div class="location_text_input">
+          <%= f.text_field :new_location, :maxlength => 100, :size => 30,
+            :value=> @match_invitation.new_football_ground_id.nil? ? @match_invitation.new_location : '' %>
+          <br/><a class="switch" href="javascript:void(0)">从列表中选择场地</a>
+        </div>
+      </div>
+      </td></tr>
+      <tr><td>
+        比赛性质:
+      </td><td>
+        <%= f.select :new_match_type, MatchInvitation::MATCH_TYPES.map {|t| [match_type_text(t), t]} %> 
+      </td></tr>
+      <tr><td>
+        人数:
+      </td><td>
+        <%= f.select :new_size, MatchInvitation::MATCH_SIZES %>人制 
+      </td></tr>
+      <tr><td>
+        半场时间:
+      </td><td>
+        <%= f.text_field :new_half_match_length, :maxlength => 2, :size=>1 %>分钟 
+      </td></tr>
+      <tr><td>
+        中场休息:
+      </td><td>
+        <%= f.text_field :new_rest_length, :maxlength => 2, :size=>1 %>分钟
+      <tr><td>
+        裁判:
+      </td><td>
+        <%= f.radio_button :new_has_judge, true%>有
+        <%= f.radio_button :new_has_judge, false%>没有
+      </td></tr>
+      <tr><td>
+        红黄牌:
+      </td><td>
+        <%= f.radio_button :new_has_card, true%>有
+        <%= f.radio_button :new_has_card, false%>没有
+      </td></tr>
+      <tr><td>
+        越位:
+      </td><td>
+        <%= f.radio_button :new_has_offside, true%>有
+        <%= f.radio_button :new_has_offside, false%>没有
+      </td></tr>
+      <tr><td>
+        常规时间平局后:
+      </td><td>
+        <%= f.select :new_win_rule, MatchInvitation::WIN_RULES.map {|r| [win_rule_text(r), r]} %>
+      </td></tr>
+    </table>
+
+    <p>
+      比赛说明 <span class="optional">(可选)</span><br />
+      <%= f.text_area :new_description, :cols => 40, :rows => 10 %>
+    </p>
+
+    <p>
+      给对方管理员的留言 <span class="optional">(可选)</span><br />
+      <%= f.text_area :host_team_message, :cols => 40, :rows => 3 %>
+    </p>
+
+    <p>
+      <%= f.submit "创建邀请" %>
+    </p>
+  <% end %>
+</div>
+
+<div class="clearBoth"></div>

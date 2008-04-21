@@ -1,0 +1,36 @@
+<div id="wide_left_content" class="sect">
+  <h2><%=h @title%></h2>
+  <table class="list">
+  <tr>
+    <th style="width:70px">&nbsp;</th>
+    <th style="width:70px">申请时间</th>
+    <th style="width:300px">留言</th>
+    <th style="width:100px">&nbsp;</th>
+  </tr>
+  <% for friend_inv in @friend_invitations %>
+    <tr>
+      <td><%= small_user_image_link friend_inv.applier%></td>
+      <td><%=friend_inv.apply_date.to_s(:db) %></td>
+      <td>
+        <%= link_to h(friend_inv.applier.nickname), user_view_path(friend_inv.applier) %>希望和你成为朋友
+        <br/><br/>
+        <%if !friend_inv.message.blank?%>
+          <%= friend_inv.applier.gender == 2 ? '她' : '他'%>的留言:
+          <%= h(friend_inv.message) %>
+          <br/><br/>
+        <%end%>
+      </td>
+      <td>
+        <%= button_to '接收', friend_relations_path(:request_id=>friend_inv.id), :method => :post %>
+        <%= button_to '拒绝', friend_invitation_path(friend_inv), :method => :delete %>
+      </td>
+    </tr>
+  <% end %>
+</table>
+</div>
+
+<div id="narrow_right_content" class="sect">
+  <h2></h2>
+  <%=render :partial=>'sidebar_menus/user_view_friend'%>
+</div>
+<div class="clearBoth"></div>

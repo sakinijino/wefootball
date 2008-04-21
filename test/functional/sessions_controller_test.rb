@@ -3,49 +3,34 @@ require 'sessions_controller'
 
 # Re-raise errors caught by the controller.
 class SessionsController; def rescue_action(e) raise e end; end
-class SessionsController; def new() render :text=>'new' end; end
 
 class SessionsControllerTest < Test::Unit::TestCase
-  # Be sure to include AuthenticatedTestHelper in test/test_helper.rb instead
-  # Then, you can remove it from this and the units test.
   include AuthenticatedTestHelper
-
-  fixtures :users
 
   def setup
     @controller = SessionsController.new
     @request    = ActionController::TestRequest.new
-    @request.env["HTTP_ACCEPT"] = "application/xml"
     @response   = ActionController::TestResponse.new
   end
 
   def test_should_login
     post :create, :login => 'sakinijino0725@163.com', :password => 'test'
     assert session[:user_id]
-    assert_select 'login', 'sakinijino0725@163.com'
-    assert_select 'weight', '62.0'
-    assert_select 'height', '172.0'
-    assert_select 'nickname', 'saki'
-    assert_select 'fitfoot', 'R'
-    assert_select 'birthday', '03/10/1984'
-    assert_select 'summary', 'weFootball!'
-    assert_select 'position', 'CB'
-    assert_select 'position', :count=>3
-    assert_select 'is_my_friend', 'false'
-    assert_nil find_tag(:tag=>'password')
+    assert 'sakinijino0725@163.com', assigns["user"].login
+    assert_redirected_to user_view_path(assigns["user"])
   end
 
   def test_should_fail_login_and_not_redirect
     post :create, :login => 'quire@example.com', :password => 'bad password'
     assert_nil session[:user_id]
-    assert_response 401
+    assert_template "new"
   end
 
   def test_should_logout
     login_as :quentin
     delete :destroy
     assert_nil session[:user_id]
-    assert_response 200
+    assert_redirected_to new_session_path
   end
 
   def test_should_remember_me

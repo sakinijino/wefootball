@@ -2,14 +2,29 @@ require File.dirname(__FILE__) + '/../test_helper'
 
 class TeamsControllerTest < ActionController::TestCase
   include AuthenticatedTestHelper
-
-  fixtures :users
-
-  def setup
-    @controller = TeamsController.new
-    @request    = ActionController::TestRequest.new
-    @request.env["HTTP_ACCEPT"] = "application/xml"
-    @response   = ActionController::TestResponse.new
+  
+  def test_admin_limit_check
+    UserTeam.destroy_all
+    Team.destroy_all
+    teams_array = []
+    (1..21).each do |i|
+       teams_array << Team.create(:name => 'Test', :shortname => 'test')
+    end
+    assert_equal 0, UserTeam.count
+    assert_equal 21, Team.count
+    (0..19).each do |i|
+      ut = UserTeam.new(:is_admin => true)
+      ut.user_id = users(:saki).id
+      ut.team_id = teams_array[i].id
+      ut.save!
+    end
+    login_as :saki
+    get :new
+    assert_redirected_to user_view_path(users(:saki).id)
+    assert_no_difference('users(:saki).teams.admin.length') do
+      post :create, :team => { :name=>'Inter Milan', :shortname=>'inter'}
+      assert_redirected_to user_view_path(users(:saki).id)
+    end   
   end
   
   def test_create_team
@@ -17,101 +32,45 @@ class TeamsControllerTest < ActionController::TestCase
       assert_difference('users(:saki).teams.admin.length') do
         login_as :saki
         post :create, :team => { :name=>'Inter Milan', :shortname=>'inter'}
-        assert_select "name", "Inter Milan"
+        assert_redirected_to team_view_path(assigns(:team).id)
       end      
     end
   end
   
-  def test_should_login_before_create_team
+  def test_should_not_create_team_unlogined
     post :create, :team => { :name=>'Inter Milan', :shortname=>'inter'}
-    assert_response 401
-  end
-  
-  def test_create_team_error
-    assert_no_difference('Team.count') do
-      assert_no_difference('users(:saki).teams.admin.length') do
-        login_as :saki
-        post :create, :team => { :name=>'Inter Milan'*100, :shortname=>'inter'}
-        assert_not_nil find_tag(:tag=>"error", :attributes=>{:field=>"name"})
-        assert_response 200
-      end      
-    end
-  end
-  
-  def test_should_show_team
-    get :show, :id => teams(:inter).id
-    assert_select "found_time", "01/21/2008"
-    assert_select "name", "Inter Milan"
-    assert_response :success
-  end
-  
-  def test_show_team_error
-    get :show, :id => -1
-    assert_response 404
+    assert_redirected_to new_session_path
   end
   
   def test_should_update_team
     login_as :saki
     put :update, :id => teams(:inter).id, :team => {:name => "Inter"}
-    assert_select "name", "Inter"
-    assert_response :success
+    assert_equal "Inter", assigns(:team).name
+    assert_redirected_to edit_team_path(teams(:inter).id)
   end
   
-  def test_should_update_team_error
+  def test_update_team_with_long_style
     login_as :saki
-    put :update, :id => teams(:inter).id, :team => {:name=>'Inter Milan'*100}
-    assert_not_nil find_tag(:tag=>"error", :attributes=>{:field=>"name"})
-    assert_response 400
+    put :update, :id => teams(:inter).id, :team => {:style=>'Inter Milan'*100}
+    assert_equal 50, assigns(:team).style.length
+    assert_redirected_to edit_team_path(teams(:inter).id)
   end
   
- def test_update_unfound_team
-    login_as :saki
-    put :update, :id => -1, :team => {:name => "Inter"}
-    assert_response 404
+  def test_should_not_get_edit_if_user_is_not_admin
+    login_as :aaron
+    get :edit, :id => teams(:inter).id
+    assert_redirected_to '/'
   end
   
-  def test_should_be_admin_update_team
+  def test_should_not_update_team_if_user_is_not_admin
     login_as :aaron
     put :update, :id => teams(:inter).id, :team => {:name => "Inter"}
-    assert_response 401
+    assert_redirected_to '/'
   end
   
-  def test_should_get_user_teams_index
-    get :index, :user_id => users(:saki).id
-    assert_response 200
-    assert_select "team", :count=>2
+  def test_should_not_update_image_if_user_is_not_admin
+    login_as :aaron
+    put :update_image, :id => teams(:inter).id, :team => {}
+    assert_redirected_to '/'
   end
-  
-  def test_should_get_user_admin_teams
-    get :admin, :user_id => users(:saki).id
-    assert_response 200
-    assert_select "team", :count=>2
-    get :admin, :user_id => users(:aaron).id
-    assert_response 200
-    assert_select "team", :count=>0
-  end
-  
-  def test_search
-    login_as :saki
-    create_team({:name => 'Beijing Guo An', :shortname=>'BGA'})
-    get :search, :query => "BGA"
-    assert_response 200
-    assert_select "team", 1
-    create_team({:name => 'Beijing Kuan Li', :shortname=>'BKL'})
-    get :search, :query => "Beijing"
-    assert_response 200
-    assert_select "team", 2
-  end
-#
-#  def test_should_destroy_team
-#    assert_difference('Team.count', -1) do
-#      delete :destroy, :id => teams(:one).id
-#    end
-#
-#    assert_redirected_to teams_path
-#  end
-  protected
-    def create_team(options = {})
-      post :create, :team => options
-    end
 end

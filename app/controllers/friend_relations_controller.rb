@@ -1,57 +1,39 @@
 class FriendRelationsController < ApplicationController
-  before_filter :login_required
-  # GET /friend_relations
-  # GET /friend_relations.xml
-  def index
-    @friendsList = User.find_by_id(params[:user_id]).friends
+  before_filter :login_required, :except => [:index]
 
-    respond_to do |format|
-      format.xml  { render :status=>200}   
-    end
+  def index
+    @user = User.find(params[:user_id])
+    @friendsList = @user.friends
+    @title = "#{@user.nickname}的朋友"
+    render :layout => 'user_layout'
   end
 
-  # POST /friend_relations
-  # POST /friend_relations.xml
   def create
-    @req = PreFriendRelation.find(params[:request_id],:include=>[:applier])    
+    @req = FriendInvitation.find(params[:request_id],:include=>[:applier])
+    if(@req.host_id != current_user.id)
+      fake_params_redirect
+      return
+    end
     
     if (FriendRelation.are_friends?(@req.applier_id, @req.host_id))
-      PreFriendRelation.delete(params[:request_id])
-      head 200
-      return
-    end
-    
-    if(@req.host_id != current_user.id)
-      head 401
+      FriendInvitation.delete(params[:request_id])
+      redirect_to friend_invitations_path
       return
     end
 
-    @friend_relation = FriendRelation.new
-    @friend_relation.user1_id = @req.applier_id
-    @friend_relation.user2_id = @req.host_id
-    if @friend_relation.save
-      PreFriendRelation.delete(params[:request_id])
-      respond_to do |format|
-        format.xml {render :status => 200}
-      end
-    else
-      respond_to do |format|
-        format.xml  { render :xml => @friend_relation.errors.to_xml_full, :status => 200 }
-      end
+    FriendRelation.transaction do
+      @friend_relation = FriendRelation.new
+      @friend_relation.user1_id = @req.applier_id
+      @friend_relation.user2_id = @req.host_id
+      @friend_relation.save!
+      @req.destroy
     end
-  rescue ActiveRecord::RecordInvalid
-    respond_to do |format|
-      format.xml { head 404 }
-    end
+    redirect_with_back_uri_or_default friend_invitations_path
   end
 
-  # DELETE /friend_relations/1
-  # DELETE /friend_relations/1.xml
   def destroy
     FriendRelation.destroy_all(["(user1_id = ? and user2_id = ?) or (user1_id = ? and user2_id = ?)", 
       current_user.id, params[:user_id], params[:user_id], current_user.id] )
-    respond_to do |format|
-      format.xml  { head :ok }
-    end
+    redirect_to user_view_path(params[:user_id])
   end
 end

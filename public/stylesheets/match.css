@@ -1,0 +1,96 @@
+#content {
+    position: relative;
+}
+
+#match_blackboard {
+    position: absolute;
+    left: 250px;
+    width: 450px;
+    margin-top: -50px;
+    text-align: center;
+}
+
+#match_blackboard div.host_result,
+#match_blackboard div.guest_result{
+  width: 190px;
+  height:100%;
+/*  border: 1px solid #333333;*/
+  padding: 5px
+}
+
+#match_blackboard div.host_result {
+  float:left;
+  padding-left:20px;
+  text-align: right;
+}
+
+#match_blackboard div.guest_result{
+  float:right;
+  padding-right: 20px;
+  text-align: left;
+}
+
+table.goal_list{
+  width: 100%;
+}
+
+table.goal_list td img.icon{
+  width:22px;
+  height:22px;
+}
+
+#host_team_div { 
+    float: left;
+    width: 465px;
+}
+
+#guest_team_div {
+    float: right;
+    margin-right: 15px;  
+    width: 465px;
+    text-align: right;
+}
+
+#host_team_div img.title_icon,
+#host_team_div div.info{
+    float: left;
+    margin-right: 20px;
+}
+
+#guest_team_div div.info,
+#guest_team_div img.title_icon{
+    float: right;
+    margin-left: 20px;
+}
+
+table.player_list {
+  width:175px;
+}
+
+table.player_list td img.icon{
+  width:22px;
+  height:22px;
+}
+
+#host_team_div .player_list{
+  margin:0 5px 0 0;
+  float:left;
+}
+
+#host_team_div .small_field {
+  margin:25px 0 0 0;
+  float:left;
+}
+
+#guest_team_div .player_list {
+  float:right;
+}
+
+#guest_team_div .small_field {
+  margin:25px 5px 0 0;
+  float:right;
+}
+
+#guest_team_div table {
+    text-align: left;
+}

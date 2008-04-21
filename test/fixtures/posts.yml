@@ -1,0 +1,91 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+saki_1:
+  id: 1
+  title: Title1
+  content: Content1
+  team_id: 1
+  training_id: 1
+  user_id: 3
+
+saki_2:
+  title: Title1
+  content: Content1
+  team_id: 1
+  training_id: 1
+  user_id: 3
+
+saki_3:
+  title: Title1
+  content: Content1
+  team_id: 1
+  training_id: 1
+  is_private: true
+  user_id: 3
+
+saki_4:
+  title: Title1
+  content: Content1
+  team_id: 1
+  is_private: true
+  user_id: 3
+
+saki_5:
+  title: Title1
+  content: Content1
+  team_id: 1
+  match_id: 1
+  is_private: true
+  user_id: 3
+
+saki_6:
+  title: Title1
+  content: Content1
+  team_id: 1
+  match_id: 1
+  user_id: 3
+
+saki_7:
+  title: Title1
+  content: Content1
+  team_id: 2
+  match_id: 1
+  is_private: true
+  user_id: 3
+
+saki_8:
+  title: Title1
+  content: Content1
+  team_id: 2
+  match_id: 1
+  user_id: 3
+
+saki_9:
+  title: Title1
+  content: Content1
+  team_id: 1
+  sided_match_id: 1
+  user_id: 3
+
+saki_10:
+  title: Title1
+  content: Content1
+  team_id: 1
+  sided_match_id: 1
+  user_id: 3
+
+saki_11:
+  title: Title1
+  content: Content1
+  team_id: 1
+  sided_match_id: 1
+  is_private: true
+  user_id: 3
+
+quentin_2:
+  id: 2
+  title: Title2
+  content: Content2
+  team_id: 2
+  is_private: true
+  user_id: 1

@@ -1,0 +1,34 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+  <title><%=h @title ? @title : '没事踢踢球儿才是正经事~'%></title>
+  <%= javascript_include_tag "jquery-1.2.3.min.js" %>
+  <%= javascript_include_tag "jquery.dimensions.js" %>
+  <%= javascript_include_tag "application" %>
+  <%= yield :javascript%>
+  <%= stylesheet_link_tag 'wefootball' %>
+  <%= yield :stylesheet%>
+</head>
+<body>
+<%= render(:partial => 'layouts/qmd')%>
+<div id="main_content">
+  <div id="header">
+    <%= image_tag "footballboy3.jpg", :title=>"WeFootball", :id=>"header_icon" %>
+
+    <%= render(:partial => 'layouts/header_setting')%>
+    <%= render(:partial => 'layouts/search_panel', :locals => {:default => :user})%>
+  </div>
+
+  <div id="content">
+    <%if flash[:notice]%>
+      <div class="flash"><%= flash[:notice] %></div>
+    <%end%>
+    <%= yield  %>
+  </div>
+</div>
+<%= render(:partial => 'layouts/footer')%>
+</body>
+</html>
