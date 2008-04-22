@@ -91,6 +91,18 @@ class UsersControllerTest < Test::Unit::TestCase
     assert_redirected_to "/"
   end
   
+  def test_should_not_update_image_of_other_user
+    login_as :quentin
+    put :update_image, :id=>2, :user=>{}
+    assert_redirected_to "/"
+  end
+  
+  def test_should_not_get_edit_page_of_other_user
+    login_as :quentin
+    get :edit, :id=>2
+    assert_redirected_to "/"
+  end
+  
   def test_should_sign_up_user_with_activation_code
     create_user
     assigns(:user).reload
@@ -113,19 +125,147 @@ class UsersControllerTest < Test::Unit::TestCase
   def test_should_not_activate_user_with_blank_key
     get :activate, :activation_code => ''
     assert_redirected_to "/"
-  end  
-  
-  def test_should_not_update_image_of_other_user
-    login_as :quentin
-    put :update_image, :id=>2, :user=>{}
-    assert_redirected_to "/"
+  end 
+     
+  def test_should_not_invite_without_login
+    get :invite
+    assert_redirected_to new_session_path 
+    post :invite
+    assert_redirected_to new_session_path     
   end
   
-  def test_should_not_get_edit_page_of_other_user
-    login_as :quentin
-    get :edit, :id=>2
-    assert_redirected_to "/"
+  def test_should_not_invite #测试邀请一个已注册且已激活用户的情况
+    login_as :saki
+    post :invite, :register_invitation=>{:login=>users(:quentin).login}
+    assert_equal true, assigns(:has_joined_notice)
+    assert_equal users(:quentin).id, assigns(:has_joined_user_id)    
   end
+
+  def test_should_invite
+    login_as :saki
+    t1 = Team.create(:shortname=>'test1',:city=>1)
+    t2 = Team.create(:shortname=>'test2',:city=>2)
+    assert_not_nil t1
+    assert_not_nil t2    
+    #在夹具中，saki参加了3支队，其中在2支队中为管理员
+    assert_no_difference('UnRegTeamInv.count',users(:saki).teams.admin.length) do
+      post :invite, :register_invitation=>{:login=>"aa@bb.cc"}, :teams_id=>[t1.id,t2.id]
+    end
+    assert_difference('UnRegTeamInv.count',users(:saki).teams.admin.length) do
+      post :invite, :register_invitation=>{:login=>"aa@bb.cc"}, :teams_id=>(users(:saki).teams.admin.map{|item| item.id}+[t1.id,t2.id])
+    end    
+    assert_difference('UnRegTeamInv.count',users(:saki).teams.admin.length) do
+      post :invite, :register_invitation=>{:login=>"aa@bb.cc"}, :teams_id=>(users(:saki).teams.admin.map{|item| item.id})
+    end
+    assert_difference('UnRegTeamInv.count',users(:saki).teams.admin.length-1) do
+      post :invite, :register_invitation=>{:login=>"aa@bb.cc"}, :teams_id=>(users(:saki).teams.admin.map{|item| item.id}[1..users(:saki).teams.admin.length-1])
+    end    
+    post :invite, :register_invitation=>{:login=>"aa@bb.cc"}, :teams_id=>(users(:saki).teams.admin.map{|item| item.id})    
+    reg_inv = RegisterInvitation.find(assigns(:register_invitation))
+    assert_equal users(:saki).id, reg_inv.host_id
+    assert_equal "aa@bb.cc", reg_inv.login   
+    assert_redirected_to invite_users_path
+    
+    #测试邀请一个已注册但尚未激活用户的情况
+    users(:quentin).activated_at = nil
+    users(:quentin).save!
+    post :invite, :register_invitation=>{:login=>users(:quentin).login}, :teams_id=>(users(:saki).teams.admin.map{|item| item.id})    
+    reg_inv = RegisterInvitation.find(assigns(:register_invitation))
+    assert_equal users(:saki).id, reg_inv.host_id
+    assert_equal users(:quentin).login, reg_inv.login   
+    assert_redirected_to invite_users_path    
+  end
+  
+  #未邀请未注册未激活
+  def test_invite_a_not_invited_and_not_created_and_not_activated_user
+    login_as :saki
+    friend_email = "aa@bb.cc"
+    friend_password = "111111"
+    initial_friend_inv_count = FriendInvitation.count
+    post :invite, :register_invitation=>{:login=>friend_email}, :teams_id=>(users(:saki).teams.admin.map{|item| item.id})
+    inv_code = assigns(:register_invitation).invitation_code
+    post :create_with_invitation, :user=>{:invitation_code=>inv_code, :login=>friend_email, :password=>friend_password, :password_confirmation=>friend_password}
+    act_code = assigns(:user).activation_code
+    assert_nil User.authenticate(friend_email, friend_password)    
+    get :activate, :activation_code=>act_code
+    
+    assert_redirected_to edit_user_path(assigns(:current_user))
+    assert_not_nil User.authenticate(friend_email, friend_password)
+    assert_equal assigns(:current_user).teams.sort_by{|item| item.id}, users(:saki).teams.admin.sort_by{|item| item.id}
+    assert_equal assigns(:current_user).friends, [users(:saki)]
+    assert_equal 0, RegisterInvitation.count
+    assert_equal initial_friend_inv_count, FriendInvitation.count
+    assert_equal 0, UnRegTeamInv.count    
+  end
+
+  #已邀请未注册未激活  
+  def test_invite_a_invited_and_not_created_and_not_activated_user
+    login_as :saki
+    friend_email = "aa@bb.cc"
+    friend_password = "111111"
+    initial_friend_inv_count = FriendInvitation.count
+    post :invite, :register_invitation=>{:login=>friend_email}, :teams_id=>(users(:saki).teams.admin.map{|item| item.id})
+    
+    initial_reg_inv_count = RegisterInvitation.count
+    initial_un_reg_team_inv_count = UnRegTeamInv.count
+    
+    #这里再次邀请，用新的队伍集合（只取两支队，而不是saki所管理的队伍全集）
+    post :invite, :register_invitation=>{:login=>friend_email}, :teams_id=>(users(:saki).teams.admin.map{|item| item.id}[1..users(:saki).teams.admin.length-1])    
+    inv_code = assigns(:register_invitation).invitation_code
+    post :create_with_invitation, :user=>{:invitation_code=>inv_code, :login=>friend_email, :password=>friend_password, :password_confirmation=>friend_password}
+    act_code = assigns(:user).activation_code
+    assert_nil User.authenticate(friend_email, friend_password)    
+    
+    get :activate, :activation_code=>act_code
+    
+    assert_redirected_to edit_user_path(assigns(:current_user))
+    assert_not_nil User.authenticate(friend_email, friend_password)
+    assert_not_equal assigns(:current_user).teams.sort_by{|item| item.id}, users(:saki).teams.admin.sort_by{|item| item.id}
+    assert_equal assigns(:current_user).teams.sort_by{|item| item.id}, 
+                   users(:saki).teams.admin[1..users(:saki).teams.admin.length-1].sort_by{|item| item.id}    
+    assert_equal assigns(:current_user).friends, [users(:saki)]
+    assert_equal initial_reg_inv_count, RegisterInvitation.count
+    assert_equal initial_friend_inv_count, FriendInvitation.count
+    assert_equal initial_un_reg_team_inv_count, UnRegTeamInv.count    
+  end
+
+  #已邀请已注册未激活  
+  def test_invite_a_invited_and_created_and_not_activated_user
+    login_as :saki
+    friend_email = "aa@bb.cc"
+    friend_password_old = "111111"
+    friend_password_new = "222222"
+
+    initial_friend_inv_count = FriendInvitation.count    
+
+    post :invite, :register_invitation=>{:login=>friend_email}, :teams_id=>(users(:saki).teams.admin.map{|item| item.id})
+    inv_code_old = assigns(:register_invitation).invitation_code
+    post :create_with_invitation, :user=>{:invitation_code=>inv_code_old, :login=>friend_email, :password=>friend_password_old, :password_confirmation=>friend_password_old}
+    assert_nil User.authenticate(friend_email, friend_password_old)   
+    
+    #这里再次邀请，用新的队伍集合（只取两支队，而不是saki所管理的队伍全集）
+    post :invite, :register_invitation=>{:login=>friend_email}, :teams_id=>(users(:saki).teams.admin.map{|item| item.id}[1..users(:saki).teams.admin.length-1])        
+    inv_code_new = assigns(:register_invitation).invitation_code
+    #这里再次注册,使用了新的密码
+    post :create_with_invitation, :user=>{:invitation_code=>inv_code_new, :login=>friend_email, :password=>friend_password_new, 
+                                                                       :password_confirmation=>friend_password_new}    
+    act_code_new = assigns(:user).activation_code
+    assert_nil User.authenticate(friend_email, friend_password_new)    
+    get :activate, :activation_code=>act_code_new
+    
+    assert_redirected_to edit_user_path(assigns(:current_user))
+    assert_not_nil User.authenticate(friend_email, friend_password_new)
+    #注意!!这里是由于邀请的叠加效应(第一次邀请时的队伍全集覆盖了第二次邀请的子集)
+    assert_not_equal assigns(:current_user).teams.sort_by{|item| item.id}, 
+                   users(:saki).teams.admin[1..users(:saki).teams.admin.length-1].sort_by{|item| item.id}        
+    assert_equal assigns(:current_user).teams.sort_by{|item| item.id}, users(:saki).teams.admin.sort_by{|item| item.id}
+    assert_equal assigns(:current_user).friends, [users(:saki)]
+    assert_equal 0, RegisterInvitation.count
+    assert_equal initial_friend_inv_count, FriendInvitation.count
+    assert_equal 0, UnRegTeamInv.count    
+  end   
+  
+    
 
   protected
     def create_user(options = {})

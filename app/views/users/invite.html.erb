@@ -15,8 +15,20 @@
   <%= f.text_field :login %></p>
 
   <p><label for="message">留言 <span class="optional">(可选)</span></label><br/>
-  <%= text_area_tag :message, nil, :cols => 40, :rows => 3  %></p>
+  <%= text_area_tag :message, nil, :cols => 40, :rows => 3  %></p>   
 
+  <%if !@teams.empty?%>
+    <label for="team_join_invitation">选择邀请朋友加入的球队 <span class="optional">(可选)</span></label><br/><br/>
+    <%@teams.each do |team|%>
+      <div class="icon_select">
+        <%= team_icon(team)%>
+        <div class="input"><%= check_box_tag "teams_id[]", team.id%></div>
+      </div>
+    <%end%>
+    <div class="clearBoth"></div>
+  <%end%>
+
+      
   <p><%= submit_tag '邀请' %></p>
   <% end -%>
 </div>

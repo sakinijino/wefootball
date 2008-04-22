@@ -8,18 +8,30 @@ class UsersController < ApplicationController
   def activate
     self.current_user = params[:activation_code].blank? ? :false : User.find_by_activation_code(params[:activation_code])
     if logged_in? && !current_user.active?
-      current_user.activate
-      
-      @req = FriendInvitation.find_by_applier_id(current_user)
-      if @req
-        FriendRelation.transaction do
-          @friend_relation = FriendRelation.new
-          @friend_relation.user1_id = @req.applier_id
-          @friend_relation.user2_id = @req.host_id
-          @friend_relation.save!
-          @req.destroy
+      User.transaction do      
+        current_user.activate 
+        
+        for req in FriendInvitation.find_all_by_applier_id(current_user.id)
+            @friend_relation = FriendRelation.new
+            @friend_relation.user1_id = req.applier_id
+            @friend_relation.user2_id = req.host_id
+            @friend_relation.save!
         end
+        FriendInvitation.destroy_all(["applier_id = ?", current_user.id])
+      
+        urtis = UnRegTeamInv.find_all_by_user_id(current_user.id)
+        temp_hash = {}
+        urtis.each{|item| temp_hash[item.team_id]=item}
+        for rti in temp_hash.values
+          @user_team = UserTeam.new
+          @user_team.user_id = rti.user_id
+          @user_team.team_id = rti.team_id
+          @user_team.save!
+        end
+        UnRegTeamInv.destroy_all(["user_id = ?", current_user.id])
+#        UnRegTeamInv.destroy_all
       end
+      
       flash[:notice] = "你的帐号已经激活, 现在请设置一下个人信息"
       redirect_to edit_user_path(current_user)
     else
@@ -106,15 +118,23 @@ class UsersController < ApplicationController
   def invite
     if request.post?
       @has_joined_user = User.find_by_login(params[:register_invitation][:login], :conditions=>"activated_at is not null")
-      if @has_joined_user        
+      if @has_joined_user   #如果被邀请者已经在使用     
         @has_joined_notice = true
         @has_joined_user_id = @has_joined_user.id
         @register_invitation = RegisterInvitation.new
       else      
         @register_invitation = RegisterInvitation.new(params[:register_invitation])
         @register_invitation.host_id = current_user.id
-        if @register_invitation.save
+        User.transaction do
+          @register_invitation.save!          
           @register_invitation.create_invitation_code
+          if params[:teams_id]
+            params[:teams_id].each do |team_id| #验证post过来的表单项确实是所管理球队的子集
+              if current_user.is_team_admin_of?(team_id)
+                UnRegTeamInv.create!(:invitation_id=>@register_invitation.id,:team_id=>team_id)
+              end
+            end
+          end           
           UserMailer.deliver_invite_notification(current_user, @register_invitation, params[:message])
           flash[:notice] = "您发给#{@register_invitation.login}的邀请已送出"
           redirect_to invite_users_path
@@ -124,6 +144,7 @@ class UsersController < ApplicationController
     else
       @register_invitation = RegisterInvitation.new
     end
+    @teams = current_user.teams.admin    
     @user = current_user
     render :layout => 'user_layout'    
   end
@@ -153,11 +174,19 @@ class UsersController < ApplicationController
     else
       @user = User.new(params[:user])
       @user.login = params[:user][:login]
-      fi = FriendInvitation.new(:host_id=>@register_invitation.host_id, :applier_id=>@user.id)      
+      fi = FriendInvitation.new    
     end
     User.transaction do
       @user.save!
-      fi.save! if fi
+      if fi
+        fi.host_id = @register_invitation.host_id
+        fi.applier_id = @user.id
+        fi.save!
+      end        
+      for rti in UnRegTeamInv.find_all_by_invitation_id(@register_invitation.id)
+        rti.user_id = @user.id
+        rti.save!
+      end
       RegisterInvitation.destroy(@register_invitation)
       UserMailer.deliver_signup_notification(@user)
       flash[:notice] = "您的帐户已经注册成功, 请登录您注册的Email (#{@user.login})激活帐户"
