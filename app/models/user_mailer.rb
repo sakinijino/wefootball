@@ -7,12 +7,13 @@ class UserMailer < ActionMailer::Base
   
   end
   
-  def invite_notification(host, invitation)   
+  def invite_notification(host, invitation, message)   
     setup_invitation_email(invitation)
     @subject    += "#{host.nickname}邀请您使用WeFootball"
     @body[:signup_url]  = "#{HOST}/signup_with_invitation/#{invitation.invitation_code}"    
     @body[:host_url]  = "#{HOST}/user_views/#{host.id}"
     @body[:host] = host
+    @body[:message] = message    
   end  
   
   def activation(user)

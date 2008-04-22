@@ -29,14 +29,14 @@ class MessagesController < ApplicationController
   
   def new
     @user = current_user
-    @receiver = User.find(params[:to])
+    @receiver = User.find(params[:to], :conditions=>"activated_at is not null")
     @message = Message.new
     @message.receiver = @receiver
     @title = "给#{@receiver.nickname}写信"
   end
 
   def create
-    @receiver = User.find(params[:message][:receiver_id])
+    @receiver = User.find(params[:message][:receiver_id], :conditions=>"activated_at is not null")
     @message = Message.new(params[:message])
     @message.receiver = @receiver
     @message.sender = self.current_user

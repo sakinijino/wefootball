@@ -16,7 +16,7 @@ class FriendInvitationsController < ApplicationController
     end    
     
     @applier = current_user
-    @host = User.find(params[:friend_invitation][:host_id])
+    @host = User.find(params[:friend_invitation][:host_id], :conditions=>"activated_at is not null")
     if (FriendRelation.are_friends?(current_user.id, @host.id))
       redirect_to user_view_path(@host.id)
       return

@@ -2,7 +2,7 @@ class FriendRelationsController < ApplicationController
   before_filter :login_required, :except => [:index]
 
   def index
-    @user = User.find(params[:user_id])
+    @user = User.find(params[:user_id], :conditions=>"activated_at is not null")
     @friendsList = @user.friends
     @title = "#{@user.nickname}的朋友"
     render :layout => 'user_layout'

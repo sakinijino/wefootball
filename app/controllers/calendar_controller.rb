@@ -3,7 +3,7 @@ class CalendarController < ApplicationController
   def show_a_day
     @date = Date.new(params[:year].to_i, params[:month].to_i, params[:day].to_i)
     if (params[:user_id])
-      @user = User.find(params[:user_id])
+      @user = User.find_by_id(params[:user_id], :conditions=>"activated_at is not null")
       @activities = 
         (@user.trainings.in_a_day(@date) +
          @user.matches.in_a_day(@date) +
@@ -25,7 +25,7 @@ class CalendarController < ApplicationController
   def show_a_month
     @date = Date.new(params[:year].to_i, params[:month].to_i)
     if (params[:user_id])
-      @user = User.find(params[:user_id])
+      @user = User.find(params[:user_id], :conditions=>"activated_at is not null")
       @calendar_activities_hash = 
         (@user.trainings.in_an_extended_month(@date)+
          @user.matches.in_an_extended_month(@date) +

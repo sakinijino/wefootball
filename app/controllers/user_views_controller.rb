@@ -10,7 +10,7 @@ class UserViewsController < ApplicationController
   DISPLAY_DAYS = 14
   
   def show
-    @user = User.find(params[:id], :include=>[:positions])
+    @user = User.find(params[:id], :include=>[:positions], :conditions=>"activated_at is not null")
     @friends = @user.friends(FRIEND_LIST_LENGTH + 1)
     @teams = @user.teams.find(:all, :limit => TEAM_LIST_LENGTH+1)
     

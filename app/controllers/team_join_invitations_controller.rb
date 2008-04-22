@@ -3,7 +3,7 @@ class TeamJoinInvitationsController < ApplicationController
   
   def new
     if (params[:user_id] != nil)
-      @user = User.find(params[:user_id])
+      @user = User.find(params[:user_id], :conditions=>"activated_at is not null")
       @teams = (current_user.teams.admin - @user.teams)
       @title = "邀请#{@user.nickname}加入你管理的球队"
       render :action => 'new_by_user_id', :layout => "user_layout"
@@ -44,7 +44,7 @@ class TeamJoinInvitationsController < ApplicationController
     if (params[:users_id])
       @team = Team.find(params[:team_join_request][:team_id])
       params[:users_id].each do |user_id|
-        @user = User.find(user_id)
+        @user = User.find(user_id, :conditions=>"activated_at is not null")
         if !create_an_invitation(@user, @team)
           fake_params_redirect
           return
@@ -52,7 +52,7 @@ class TeamJoinInvitationsController < ApplicationController
       end
       redirect_to team_team_join_invitations_path(@team)
     elsif (params[:teams_id])
-      @user = User.find(params[:team_join_request][:user_id])
+      @user = User.find(params[:team_join_request][:user_id], :conditions=>"activated_at is not null")
       params[:teams_id].each do |team_id|
         @team = Team.find(team_id)
         if !create_an_invitation(@user, @team)
@@ -63,7 +63,7 @@ class TeamJoinInvitationsController < ApplicationController
       redirect_to user_view_path(@user)
     else
       @team = Team.find(params[:team_join_request][:team_id])
-      @user = User.find(params[:team_join_request][:user_id])
+      @user = User.find(params[:team_join_request][:user_id], :conditions=>"activated_at is not null")
       if create_an_invitation(@user, @team)
         redirect_to team_team_join_invitations_path(@team)
       else

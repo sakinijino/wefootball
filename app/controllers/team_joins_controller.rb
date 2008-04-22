@@ -4,7 +4,7 @@ class TeamJoinsController < ApplicationController
   
   def index
     if (params[:user_id]) # 显示用户参加的所有球队
-      @user = User.find(params[:user_id])
+      @user = User.find(params[:user_id], :conditions=>"activated_at is not null")
       @admin_teams = @user.teams.admin
       @other_teams = @user.teams.find(:all, :conditions => ['is_admin = ?', false])
       @title = "#{@user.nickname}的球队"
