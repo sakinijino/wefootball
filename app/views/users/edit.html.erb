@@ -59,35 +59,36 @@
     <p><%= f.check_box :is_playable %>
     <label for="is_playable">我踢球</label></p>
 
-    <p><label for="height">身高(cm) <span class="optional">(可选)</span></label><br/>
-    <%= f.text_field :height, :size=>5, :maxlength=>3 %></p>
+    <div id="playable_info">
+      <p><label for="height">身高(cm) <span class="optional">(可选)</span></label><br/>
+      <%= f.text_field :height, :size=>5, :maxlength=>5 %></p>
 
-    <p><label for="weight">体重(kg) <span class="optional">(可选)</span></label><br/>
-    <%= f.text_field :weight, :size=>5, :maxlength=>3 %></p>
+      <p><label for="weight">体重(kg) <span class="optional">(可选)</span></label><br/>
+      <%= f.text_field :weight, :size=>5, :maxlength=>5 %></p>
 
-    <p><label for="fitfoot">惯用脚</label><br/>
-    <%= f.select :fitfoot, User::FITFOOT.map {|ft| [fitfoot_text(ft), ft]} %></p>
+      <p><label for="fitfoot">惯用脚</label><br/>
+      <%= f.select :fitfoot, User::FITFOOT.map {|ft| [fitfoot_text(ft), ft]} %></p>
 
-    <p><label for="premier_position">首选位置</label><br/>
-    <%= f.select :premier_position, Position::POSITIONS.map {|p| [position_text(p), p]} %></p>
+      <p><label for="premier_position">首选位置</label><br/>
+      <%= f.select :premier_position, Position::POSITIONS.map {|p| [position_text(p), p]} %></p>
 
-    <p>
-      <label for="positions">可以踢的位置</label><br/>
-      <table>
-      <!--Position::POSITIONS-->
-      <%[[0],(1..4),(5..9),[10, 13, 11, 12]].each do |category|%>
-        <tr>
-        <%category.each do |pos|%>
-          <td>
-          <%=check_box_tag 'positions[]', pos, @positions.index(pos)!=nil %>
-          <%= position_text(pos)%>
-          </td>
+      <p>
+        <label for="positions">可以踢的位置</label><br/>
+        <table>
+        <!--Position::POSITIONS-->
+        <%[[0],(1..4),(5..9),[10, 13, 11, 12]].each do |category|%>
+          <tr>
+          <%category.each do |pos|%>
+            <td>
+            <%=check_box_tag 'positions[]', pos, @positions.index(pos)!=nil %>
+            <%= position_text(pos)%>
+            </td>
+          <%end%>
+          </tr>
         <%end%>
-        </tr>
-      <%end%>
-      </table>
-    </p>
-
+        </table>
+      </p>
+    </div>
     <p>
       <%= f.submit "保存球员信息" %>
     </p>

@@ -1,0 +1,26 @@
+<div id="wide_left_content" class="sect">
+  <h2><%=h @title%></h2>
+  <table class="list">
+    <tr>
+      <th>话题</th>
+      <th>作者</th>
+      <th style="width:30px">回复</th>
+      <th style="width:100px; text-align:right">最后回复</th>
+    </tr>
+
+  <% for post in @site_posts %>
+    <tr>
+      <td><%=link_to h(post.title), post  %></td>
+      <td><%=post.user_id ? h(post.user.nickname) : '匿名' %></td>
+      <td><%= post.site_replies.size %></td>
+      <td><%= post.updated_at.strftime('%Y-%m-%d %H:%M') %></td>
+    </tr>
+  <% end %>
+  </table>
+</div>
+
+<div id="narrow_right_content" class="sect">
+  <h2></h2>
+  <%=render :partial=>'sidebar_menu'%>
+</div>
+<div class="clearBoth"></div>

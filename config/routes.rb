@@ -1,7 +1,4 @@
 ActionController::Routing::Routes.draw do |map|
-
-
-
   # The priority is based upon order of creation: first created -> highest priority.
   
   # Sample of regular route:
@@ -99,6 +96,10 @@ ActionController::Routing::Routes.draw do |map|
   end
   
   map.resources :football_grounds, :collection => { :unauthorize => :get }
+  
+  map.resources :site_posts do |site_posts|
+    site_posts.resources :site_replies
+  end
   
   map.user_month_calendar "users/:user_id/calendar/:year/:month", :controller=>"calendar", :action => "show_a_month",
       :requirements => {:year => /(19|20)\d\d/, :month => /[01]?\d/}

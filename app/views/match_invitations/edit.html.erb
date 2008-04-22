@@ -122,11 +122,11 @@
       %>
       <%= macth_invitation_comparison_form_tr(@unmodified_match_invitation, '半场时间', :half_match_length, 
         Proc.new{ |t| "#{t}分钟"}, 
-        Proc.new{ "#{f.text_field :new_half_match_length, :maxlength => 2, :size=>1}分钟"})
+        Proc.new{ "#{f.text_field :new_half_match_length, :maxlength => 3, :size=>2}分钟"})
       %>
       <%= macth_invitation_comparison_form_tr(@unmodified_match_invitation, '中场休息', :rest_length, 
         Proc.new{ |t| "#{t}分钟"}, 
-        Proc.new{ "#{f.text_field :new_rest_length, :maxlength => 2, :size=>1}分钟"})
+        Proc.new{ "#{f.text_field :new_rest_length, :maxlength => 3, :size=>2}分钟"})
       %>
       <%= macth_invitation_comparison_form_tr(@unmodified_match_invitation, '裁判', :has_judge, 
         Proc.new{ |t| t ? '有' : '没有'}, 

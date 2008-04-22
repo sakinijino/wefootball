@@ -47,7 +47,7 @@ class MessagesControllerTest < ActionController::TestCase
       assert assigns(:message).errors.on(:content)
     end
     assert_no_difference('Message.count') do
-      post :create, :message => {:receiver_id=>users(:mike1).id, :subject=>'', :content=>'123' }
+      post :create, :message => {:receiver_id=>users(:mike1).id, :subject=>'', :content=>'1' }
       assert_template 'new'
       assert assigns(:message).errors.on(:subject)
       assert assigns(:message).errors.on(:content)

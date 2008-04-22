@@ -43,12 +43,12 @@
   <tr><td>
     半场时间:
   </td><td>
-    <%= f.text_field :half_match_length, :size=>1 %>分钟 
+    <%= f.text_field :half_match_length, :maxlength => 3, :size=>3 %>分钟 
   </td></tr>
   <tr><td>
     中场休息:
   </td><td>
-    <%= f.text_field :rest_length, :size=>1 %>分钟
+    <%= f.text_field :rest_length, :maxlength => 3, :size=>3 %>分钟
   <tr><td>
       裁判:
     </td><td>

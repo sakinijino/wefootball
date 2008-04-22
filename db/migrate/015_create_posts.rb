@@ -3,7 +3,6 @@ class CreatePosts < ActiveRecord::Migration
     create_table :posts do |t|
       t.string :title, :limit => 100
       t.text :content
-      t.integer :parent_id
       t.integer :team_id
       t.integer :training_id
       t.integer :match_id

@@ -1,0 +1,13 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+saki_1:
+  id: 1
+  title: Title1
+  content: Content1
+  user_id: 3
+
+ano_1:
+  id: 2
+  title: Title1
+  content: Content1
+  email: 123@456.com

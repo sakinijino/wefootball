@@ -25,8 +25,8 @@ class MatchInvitation < ActiveRecord::Base
   
   validates_length_of        :new_location, :maximum => MAX_LOCATION_LENGTH, :message => "场地名称最长可以填#{MAX_LOCATION_LENGTH}个字"
   
-  validates_numericality_of :new_half_match_length, :message => "半场时间需要填写数字"
-  validates_numericality_of :new_rest_length, :message => "中场休息时间需要填写数字"
+  validates_numericality_of :new_half_match_length, :message => "半场时间需要填写整数", :only_integer => true
+  validates_numericality_of :new_rest_length, :message => "中场休息时间需要填写整数", :only_integer => true
 #  validates_inclusion_of    :new_half_match_length, :in => 0..60, :message => "半场时间必须在1小时之内"
 #  validates_inclusion_of    :new_rest_length, :in => 0..60, :message => "中场休息时间必须在1小时之内"
   
@@ -43,7 +43,7 @@ class MatchInvitation < ActiveRecord::Base
     et = st.since(60 * (self.new_half_match_length * 2 + self.new_rest_length))
     et = et.respond_to?(:to_datetime) ? et.to_datetime : et
     errors.add(:start_time, "比赛开始时间必须大于当前时间") if st < DateTime.now
-    errors.add_to_base("比赛最长可以进行1天") if (et - st) > 1
+    errors.add_to_base("比赛最长不能超过1天") if (et - st) > 1
   end
   
   def before_validation

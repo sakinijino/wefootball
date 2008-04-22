@@ -269,12 +269,6 @@ form.button-to div {
     margin: 20px 15px 20px 25px;
 }
 
-#footer {
-    width: 990px;
-    margin: 0 auto;
-    padding-top: 10px;
-}
-
 div.flash{
 /*    background: #ACBE33;*/
 /*    color: #fff;*/
@@ -613,4 +607,22 @@ div.result_block {
 div.result_block span.another_result {
   font-weight: bold;
   color: #333333;
+}
+
+#footer {
+    width: 990px;
+    margin: 0 auto;
+    padding-top: 10px;
+}
+
+#footer span.arrd{
+    float: left
+}
+
+#footer span.links{
+    float: right
+}
+
+#footer span.links a{
+    text-decoration: underline;
 }

@@ -45,6 +45,8 @@ class User < ActiveRecord::Base
   has_many :sided_matches, :through=>:sided_match_joins, :extend => ActivityCalendar
   
   has_many :posts, :dependent => :destroy
+  
+  has_many :site_posts, :dependent => :destroy
 
   validates_presence_of     :login, :message=>'请填写Email'
   validates_presence_of     :nickname, :message=>'请填写昵称'
@@ -57,7 +59,7 @@ class User < ActiveRecord::Base
   validates_length_of       :password, :maximum =>40, :message => "密码最长可以填40位", :if => :password_required?
   validates_confirmation_of :password,                   :if => :password_required?, :message=>'填写的密码不一致'
   validates_length_of        :login,    :minimum => 3, :message=>''
-  validates_length_of        :login,    :maximum => 40, :message=>'Email太长了吧'
+  validates_length_of        :login,    :maximum => 100, :message=>'Email太长了吧'
   validates_uniqueness_of   :login, :case_sensitive => false, :message=>'这个Email已经被注册过了'
   
   validates_length_of       :nickname, :maximum => 15, :message=>'昵称最长可以填15个字'

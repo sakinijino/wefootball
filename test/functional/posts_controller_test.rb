@@ -142,6 +142,12 @@ class PostsControllerTest < ActionController::TestCase
     assert_equal '123456', assigns(:post).content
     assert_redirected_to post_path(assigns(:post))
   end
+  
+  def test_update_noauth
+    login_as :quentin
+    put :update, :id => posts(:saki_1).id, :post => { :content => '123456' }
+    assert_redirected_to '/'
+  end
 
   def test_should_destroy_post
     login_as :quentin
@@ -149,5 +155,13 @@ class PostsControllerTest < ActionController::TestCase
       delete :destroy, :id => posts(:saki_1).id
     end
     assert_redirected_to team_posts_url(posts(:saki_1).team_id)
+  end
+  
+  def test_destroy_post_unauth
+    login_as :aaron
+    assert_no_difference('Post.count') do
+      delete :destroy, :id => posts(:saki_1).id
+    end
+    assert_redirected_to '/'
   end
 end

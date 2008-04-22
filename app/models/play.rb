@@ -19,7 +19,7 @@ class Play < ActiveRecord::Base
     elsif time_span < 15
       errors.add(:end_time, "至少要进行15分钟") 
     end
-    errors.add(:end_time, "随便踢踢最长可以进行1天") if (et - st) > 1
+    errors.add(:end_time, "随便踢踢最长不能超过1天") if (et - st) > 1
   end
   
   def before_validation

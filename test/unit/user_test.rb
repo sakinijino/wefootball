@@ -249,7 +249,9 @@ class UserTest < Test::Unit::TestCase
     assert_difference 'UserTeam.count', -(UserTeam.find_all_by_user_id(users(:saki)).size) do
     assert_difference 'TeamJoinRequest.count', -(TeamJoinRequest.find_all_by_user_id(users(:saki)).size) do
     assert_difference 'Post.count', -(Post.find_all_by_user_id(users(:saki)).size) do
+    assert_difference 'SitePost.count', -(SitePost.find_all_by_user_id(users(:saki)).size) do
       users(:saki).destroy
+    end
     end
     end
     end

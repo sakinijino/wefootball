@@ -17,3 +17,12 @@ config.action_view.cache_template_loading            = true
 
 # Disable delivery errors, bad email addresses will be ignored
 # config.action_mailer.raise_delivery_errors = false
+
+config.action_mailer.default_charset = "utf-8"
+config.action_mailer.delivery_method = :smtp
+config.action_mailer.smtp_settings = {
+  :domain => "wefootball.org",
+}
+
+HOST = 'http://www.wefootball.org'
+

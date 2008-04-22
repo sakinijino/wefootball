@@ -35,7 +35,7 @@
         <div class="clearBoth"></div>
     </div>
     <%if logged_in?%>
-      <div style="float:right">
+      <div class="control">
         <%links = []%>
         <%if @match.can_be_edited_by?(current_user)%>
           <%links << " #{link_to '修改', edit_sided_match_path(@match)}"%>

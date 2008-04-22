@@ -1,0 +1,25 @@
+<div id="wide_left_content" class="sect">
+  <h2><%=h @title%></h2>
+  <%= error_messages_for :site_post%>
+  <% form_for @site_post do |f| %>
+    <p>
+      标题 <%= f.text_field :title, :size=>30, :maxlength=>100 %>
+    </p>
+    <%if !logged_in?%>
+      <p><label for="email">Email <span class="optional">(可选, 方便WeFootball联系你)</span></label><br/>
+      <%= f.text_field :email, :size=>30, :maxlength=>100 %></p>
+    <%end%>
+    <p>
+      <%= f.text_area :content, :cols=>50, :rows=>20 %>
+    </p>
+    <p>
+      <%= f.submit "发言" %>
+    </p>
+  <% end %>
+</div>
+
+<div id="narrow_right_content" class="sect">
+  <h2></h2>
+  <%=render :partial=>'sidebar_menu'%>
+</div>
+<div class="clearBoth"></div>

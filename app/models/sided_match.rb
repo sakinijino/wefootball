@@ -44,12 +44,12 @@ class SidedMatch < ActiveRecord::Base
   
   validates_length_of        :guest_team_name, :maximum => 15, :message => "球队名称最长可以填15个字"
   validates_inclusion_of   :situation, :in => SITUATIONS, :allow_nil=>true, :message => "不要自己构造表单提交..."
-  validates_numericality_of :host_team_goal, :guest_team_goal, :allow_nil=>true, :message => "进球数需要填写数字"
+  validates_numericality_of :host_team_goal, :guest_team_goal, :allow_nil=>true, :message => "进球数需要填写整数", :only_integer => true
   validates_inclusion_of    :host_team_goal, :guest_team_goal, 
       :allow_nil=>true, :in => 0..99, :message => "真的进了这么多球吗？"
   
-  validates_numericality_of :half_match_length, :message => "半场时间需要填写数字"
-  validates_numericality_of :rest_length, :message => "中场休息时间需要填写数字"
+  validates_numericality_of :half_match_length, :message => "半场时间需要填写整数", :only_integer => true
+  validates_numericality_of :rest_length, :message => "中场休息时间需要填写整数", :only_integer => true
 #  validates_inclusion_of    :half_match_length, :in => 0..60, :message => "半场时间必须在1小时之内"
 #  validates_inclusion_of    :rest_length, :in => 0..60, :message => "中场休息时间必须在1小时之内"
   
@@ -65,7 +65,7 @@ class SidedMatch < ActiveRecord::Base
     self.end_time = self.start_time.since(60 * self.full_match_length)
     st = start_time.respond_to?(:to_datetime) ? start_time.to_datetime : start_time
     et = end_time.respond_to?(:to_datetime) ? end_time.to_datetime : self.end_time
-    errors.add_to_base("比赛最长可以进行1天") if (et - st) > 1
+    errors.add_to_base("比赛最长不能超过1天") if (et - st) > 1
   end
   
   def before_save
