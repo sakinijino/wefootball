@@ -1,32 +1,30 @@
 module MatchesHelper
-   SITUATION_TEXTS = {1=>'不好说',2=>'狂胜', 3=>'完胜', 4=>'小胜', 5=>'势均力敌',
+   SITUATION_TEXTS = {1=>'无所谓',2=>'狂胜', 3=>'完胜', 4=>'小胜', 5=>'势均力敌',
                       6=>'惜败', 7=>'完败', 8=>'被虐'}
   
   def situation_text(label)
    MatchesHelper::SITUATION_TEXTS[label]
   end
   
-  def match_result_text(m)
+  def display_match_result(m)
     if (m.has_conflict)
-      "结果有争议"
+      image_tag "match_result/conflict.gif"
     else
       hg = !m.host_team_goal_by_host.blank? ? m.host_team_goal_by_host : m.host_team_goal_by_guest
       gg = !m.guest_team_goal_by_guest.blank? ? m.guest_team_goal_by_guest : m.guest_team_goal_by_host
       if (hg.blank? && gg.blank?)
         s = m.situation_by_host || m.situation_by_guest
-        if s.nil?
-          "比赛已结束"
-        elsif s == 1
-          situation_text s
+        if s.nil? || s == 1
+          ""
+        elsif s == 5
+          image_tag "match_result/#{s}.gif"
         else
-          %(#{link_to h(m.host_team.shortname), team_view_path(m.host_team)}
-            #{situation_text s}
-            #{link_to h(m.guest_team.shortname), team_view_path(m.guest_team)})
+          %(#{image_tag "match_result/#{s}.gif"}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#{image_tag "match_result/#{10-s}.gif"})
         end
       elsif hg.blank?
-        "比赛已结束"
+        "? : #{gg}"
       elsif gg.blank?
-        "比赛已结束"
+        "#{hg} : ?"
       else
         "#{hg} : #{gg}"
       end
@@ -40,11 +38,17 @@ module MatchesHelper
     if (!hg.blank? && !gg.blank?)
       "#{hg} : #{gg}"
     elsif (!hg.blank?)
-      "主队进球数: #{hg}"
+      "本队进#{hg}个球"
     elsif (!gg.blank?)
-      "客队进球数: #{hg}"
+      "对方进#{gg}个球"
     elsif (!s.blank?)
-      "主队#{situation_text s}"
+      if s == 1 
+        situation_text s
+      elsif s == 5
+        "比赛#{situation_text s}" 
+      else
+        "本队#{situation_text s}" 
+      end
     end
   end
   
@@ -55,11 +59,17 @@ module MatchesHelper
     if (!hg.blank? && !gg.blank?)
       "#{hg} : #{gg}"
     elsif (!hg.blank?)
-      "主队进球数: #{hg}"
+      "对方进#{hg}个球"
     elsif (!gg.blank?)
-      "客队进球数: #{hg}"
+      "本队进#{gg}个球"
     elsif (!s.blank?)
-      "主队#{situation_text s}"
+      if s == 1 
+        situation_text s
+      elsif s == 5
+        "比赛#{situation_text s}" 
+      else
+        "本队#{situation_text 10-s}" 
+      end
     end
   end
 end

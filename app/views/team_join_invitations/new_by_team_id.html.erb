@@ -1,10 +1,11 @@
 <div id="wide_left_content" class="sect">
   <h2><%=h @title%></h2>
   <%if @friends.empty?%>
-    <span>没有可以邀请加入的朋友, 可能你的朋友都已经加入了这只球队</span>
+    <div class="notification">没有可以邀请加入的朋友。<br/><br/>可能你还没有一个朋友，或者你的朋友都已经加入了这只球队</div>
   <%else%>
     <% form_for :team_join_request, :url => team_join_invitations_path, :method=>"POST" do |f| %>
       <%= f.hidden_field :team_id,  :value=>@team.id%>
+      <%= hidden_field_tag 'users_id[]', ''%>
 
       <%@friends.each do |user|%>
         <div class="icon_select">
@@ -14,9 +15,11 @@
       <%end%>
       <div class="clearBoth"></div>
 
-      <span>留言</span><br />
+      <span>留言 <span class="optional">(可选)</span></span><br />
       <%= f.text_area :message, :cols => 40, :rows => 3 %><br />
-      <%= f.submit "邀请" %><br />
+      <%= f.submit "邀请" %>&nbsp;&nbsp;&nbsp;&nbsp;
+      <%= submit_tag '选定全部', :onclick => 'wefootball.checkAllInputs();return false;'%>
+      <%= submit_tag '取消选定', :onclick => 'wefootball.checkAllInputs(false);return false;'%>
     <% end %>
   <%end%>
 </div>

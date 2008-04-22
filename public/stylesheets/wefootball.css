@@ -312,6 +312,10 @@ div.clearBoth {
     clear:both;
 }
 
+.control {
+    float:right; margin-right:20px
+}
+
 div.icon {
     background: #fff;
     width:72px;
@@ -461,10 +465,6 @@ div.post .title {
 
 div.post .title .name{
     margin-left:50px;
-}
-
-div.post .control {
-    float:right; margin-right:20px
 }
 
 ul.sidebar_menu {

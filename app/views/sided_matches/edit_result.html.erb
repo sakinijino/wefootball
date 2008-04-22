@@ -13,7 +13,49 @@
   <%= error_messages_for :sided_match %>
   <br/>
   <% form_for @sided_match, :url=>update_result_sided_match_path(@sided_match) do |f| %>
-    <%= render :partial => 'result_form', :locals => {:f => f}%>
+
+<%
+goal_checked = true
+sit_checked = false
+dnc_checked = false
+
+if !@sided_match.host_team_goal.blank? || !@sided_match.guest_team_goal.blank?
+  goal_checked = true
+  sit_checked = false
+  dnc_checked = false
+elsif !@sided_match.situation.blank?
+    if @sided_match.situation == 1
+        goal_checked = false
+        sit_checked = false
+        dnc_checked = true
+    else
+        goal_checked = false
+        sit_checked = true
+        dnc_checked = false
+    end
+end%>
+
+    <div class="result_input">
+      <input type="radio" class="goal_input_switch switch" value="goal" name="result_type" <%= 'checked' if goal_checked%>>填写具体比分</input>
+      <input type="radio" class="situation_input_switch switch" value="situation" name="result_type" <%= 'checked' if sit_checked%>>填写赛况</input>
+      <input type="radio" class="donotcare_input_switch switch" value="donotcare" name="result_type" <%= 'checked' if dnc_checked%>>比赛结果无所谓</input><br/><br/>
+      <div class="goal_input result_block">
+        <div style="margin: 10px 0">
+          <%=@sided_match.host_team.shortname%>
+          <%= f.text_field :host_team_goal, :maxlength => 2, :size=>1 %>
+          :
+          <%= f.text_field :guest_team_goal, :maxlength => 2, :size=>1 %>
+          <%=@sided_match.guest_team_name%>
+        </div>
+      </div>
+      <div class="situation_input result_block">
+        <p>
+          <%for s in SidedMatch::SITUATIONS[1..-1]%>
+            <%= f.radio_button(:situation, s)%><%=situation_text(s)%>
+          <%end%>
+        </p>
+      </div>
+    </div>
     <br />
 
     进球数和得牌情况: <br/>

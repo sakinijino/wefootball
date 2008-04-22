@@ -9,7 +9,7 @@ class SitePost < ActiveRecord::Base
   
   validates_format_of       :email, 
     :with=> /^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$/,
-    :message => '需要填写Email', :allow_nil => true
+    :message => '填写的必须是一个Email地址', :allow_nil => true
   validates_length_of        :email,    :maximum => 100, :message=>'Email太长了吧', :allow_nil => true
   
   attr_accessible :title, :content, :email

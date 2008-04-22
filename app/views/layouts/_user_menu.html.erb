@@ -35,7 +35,7 @@
 </div>
 <%else%>
 <div class="l1_menu">
-  <%= link_to("个人首页", user_view_path(user), :class=>is_selected_user_menu_item?(:user))%>
+  <%= link_to("#{user.gender_text}的首页", user_view_path(user), :class=>is_selected_user_menu_item?(:user))%>
   <%= link_to("朋友", user_friend_relations_path(user), :class=>is_selected_user_menu_item?(:friends))%>
   <%= link_to("球队", user_team_joins_path(user), :class=>is_selected_user_menu_item?(:teams))%>
   <%= day_calendar_link('活动', Time.now, user, :class=>is_selected_user_menu_item?(:activities))%>

@@ -15,7 +15,7 @@
           <%= link_to h(req.user.nickname), user_view_path(req.user) %>申请加入<%= link_to h(req.team.shortname), team_view_path(req.team) %>
           <br/><br/>
           <%if !req.message.blank?%>
-            <%= req.user.gender == 2 ? '她' : '他'%>的留言:
+            <%= req.user.gender_text%>的留言:
             <%= h(req.message) %>
             <br/><br/>
           <%end%>

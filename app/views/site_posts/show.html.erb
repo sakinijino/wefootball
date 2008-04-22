@@ -11,7 +11,7 @@
     <br/>
     <% form_for :reply, :url => site_post_site_replies_path(@site_post) do |f| %>
       <%if !logged_in?%>
-        <p><label for="email">Email <span class="optional">(可选, 方便WeFootball联系你)</span></label><br/>
+        <p><label for="email">你的Email <span class="optional">(可选, 方便WeFootball联系你)</span></label><br/>
         <%= f.text_field :email, :size=>30, :maxlength=>100 %></p>
       <%end%>
       <%= f.text_area :content, :rows=>10, :cols=>50 %>

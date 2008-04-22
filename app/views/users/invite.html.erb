@@ -14,7 +14,7 @@
   <p><label for="login">朋友的Email</label><br/>
   <%= f.text_field :login %></p>
 
-  <p><label for="message">留言(可选)</label><br/>
+  <p><label for="message">留言 <span class="optional">(可选)</span></label><br/>
   <%= text_area_tag :message, nil, :cols => 40, :rows => 3  %></p>
 
   <p><%= submit_tag '邀请' %></p>

@@ -45,8 +45,7 @@ j(function(){
         j(".dropdown_container").each(function(i, item){
             item = j(item)
             var ul = item.find('div.dropdown')
-            item.mouseover(function(){ul.show()})
-                .mouseout(function(){ul.hide()})
+            item.hover(function(){ul.show()}, function(){ul.hide()})
         })
         
         if (j.browser.opera) { // fix opera absolute div in span bug
@@ -70,17 +69,16 @@ j(function(){
             return false;
         })
         
-        j("#header_search input.input").focus(function(){
-            this.default_value = this.value
+        j("#header_search input.blurinput").one('focus' ,function(){
             this.value = ''
             j(this).removeClass('blurinput')
-        }).blur(function(){
-            this.value = this.default_value
-            j(this).addClass('blurinput')
         })
         
         if (j.browser.msie && j.browser.version != '7.0')
-          j("#header_search .dropdown_container div.dropdown div").mouseover(function(){j(this).addClass('hover')}).mouseout(function(){j(this).removeClass('hover')})
+          j("#header_search .dropdown_container div.dropdown div").hover(
+            function(){j(this).addClass('hover')}, 
+            function(){j(this).removeClass('hover')}
+          )
         
         j("div.fieldWithErrors").each(function (i, item){
              item = j(item)
@@ -95,10 +93,12 @@ j(function(){
             modal:true, overlay:{opacity:0.7, background:'#fff'},
             draggable:false, resizable:false, width:"auto", height:"auto"}).dialog('close');
          
-        j("a.resize_small_icon img").mouseover(function(){
+        j("a.resize_small_icon img").hover(
+          function(){
             j(this).css("z-index", "10")
             j(this).animate({marginLeft:"-12px", marginTop:"-12px", width:"48px", height:"48px"}, 300)
-        }).mouseout(function(){
+          }, 
+          function(){
             j(this).css("z-index", "0")
             j(this).animate({marginLeft:"0px", marginTop:"0px", width:"22px", height:"22px"})
         })
@@ -228,28 +228,55 @@ j(function(){
           var gi = j(div.find(".goal_input")[0])
           var si = j(div.find(".situation_input")[0])
           
-          gi.find("a.fill_result").click(function(){
-            var goals = this.id.split('-')
-            if (goals[1]!='') gi.find('input')[0].value = goals[1]
-            if (goals[2]!='') gi.find('input')[1].value = goals[2]
-          })
-          si.find("a.fill_result").click(function(){
-            var situs = this.id.split('-')
-            if (situs[1]!='') {
-              si.find('input')[parseInt(situs[1])-1].checked = 'checked'
+          div.find("a.fill_result").click(function(){
+            var results = this.id.split('-')
+            if (results[0] == 'goal') {
+              var goals = results
+              if (goals[1]!='') gi.find('input')[0].value = goals[1]
+              if (goals[2]!='') gi.find('input')[1].value = goals[2]
+              var sw = div.find("input.goal_input_switch")
+              sw.attr('checked', 'checked')
+              sw.change()
+            }
+            else if (results[0] == 'situation') {
+              var situs = results
+              if (situs[1]=='1') {
+                var sw = div.find("input.donotcare_input_switch")
+                sw.attr('checked', 'checked')
+                sw.change()
+              }
+              else if (situs[1]!='') {
+                si.find('input[@value='+situs[1]+']').attr('checked', 'checked')
+                var sw = div.find("input.situation_input_switch")
+                sw.attr('checked', 'checked')
+                sw.change()
+              }
             }
           })
           
-          gi.find("a.switch").click(function(){
-            gi.slideUp();
-            si.slideDown();
-            gi.find('input').attr('value', '')
+          div.find("input.situation_input_switch").change(function(){
+            if (this.checked) {
+              gi.slideUp();
+              si.slideDown();
+            }
           })
-          si.find("a.switch").click(function(){
-            si.slideUp();
-            gi.slideDown();
-            si.find('input')[0].checked = 'checked'
+          div.find("input.goal_input_switch").change(function(){
+            if (this.checked) {
+              si.slideUp();
+              gi.slideDown();
+            }
           })
-          si.hide();
+          div.find("input.donotcare_input_switch").change(function(){
+            if (this.checked) {
+              si.slideUp();
+              gi.slideUp();
+            }
+          })
+          if (j.browser.msie) {
+            div.find("input.situation_input_switch").click(function(){this.blur()})
+            div.find("input.goal_input_switch").click(function(){this.blur()})
+            div.find("input.donotcare_input_switch").click(function(){this.blur()})
+          }
+          div.find("input.switch[@checked]").change();
         })
 })

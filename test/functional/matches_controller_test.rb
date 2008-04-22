@@ -213,22 +213,21 @@ class MatchesControllerTest < ActionController::TestCase
 
     mj1 = MatchJoin.find_by_user_id_and_team_id_and_match_id(u1.id,t1.id,match1.id)
     mj2 = MatchJoin.find_by_user_id_and_team_id_and_match_id(u2.id,t1.id,match1.id)     
-    put :update, :id => match1.id, :team_id=>t1.id, :match => {:host_team_goal_by_host => 2,
+    put :update, :id => match1.id, :team_id=>t1.id, :result_type => "goal",
+                                   :match => {:host_team_goal_by_host => 2,
                                               :guest_team_goal_by_host => 2,
                                               :host_team_goal_by_guest => 2,
                                               :guest_team_goal_by_guest => 2,
                                               :situation_by_host => 1
                                               },
                                     :mj => {mj1.id=>{:goal=>1,:cards=>2},
-                                            mj2.id=>{:goal=>1,:cards=>3}
-                                           }
+                                            mj2.id=>{:goal=>1,:cards=>3}}
     new_match1 = Match.find(match1)
     assert_equal 2, new_match1.guest_team_goal_by_host
     assert_equal 2, new_match1.host_team_goal_by_host
     assert_equal nil, new_match1.guest_team_goal_by_guest
     assert_equal nil, new_match1.host_team_goal_by_guest
-    assert_not_equal 0, new_match1.situation_by_host
-    assert_equal Match.calculate_situation(new_match1.host_team_goal_by_host,new_match1.guest_team_goal_by_host), new_match1.situation_by_host
+    assert_equal 5, new_match1.situation_by_host
     new_mj1 = MatchJoin.find_by_user_id_and_team_id_and_match_id(u1.id,t1.id,match1.id)
     new_mj2 = MatchJoin.find_by_user_id_and_team_id_and_match_id(u2.id,t1.id,match1.id)     
     assert_equal 1, new_mj1.goal
@@ -237,12 +236,27 @@ class MatchesControllerTest < ActionController::TestCase
     assert_equal 3, new_mj2.cards    
     assert_redirected_to match_path(new_match1)
 
-    put :update, :id => match1.id, :team_id=>t1.id, :match => {:host_team_goal_by_host => "",
-                                              :guest_team_goal_by_host => "",
-                                              :situation_by_host => 5},
-                                    :mj => {}#ceshi
-    new_match1 = Match.find(match1)                              
-    assert_equal 5, new_match1.situation_by_host
+    put :update, :id => match1.id, :team_id=>t1.id, :result_type => "situation",
+                                   :match => {:host_team_goal_by_host => 2,
+                                              :guest_team_goal_by_host => 2,
+                                              :situation_by_host => 6},
+                                    :mj => {mj1.id=>{:goal=>3,:cards=>2},
+                                            mj2.id=>{:goal=>3,:cards=>3}}
+    new_match1 = Match.find(match1)
+    assert_equal nil, new_match1.guest_team_goal_by_host
+    assert_equal nil, new_match1.host_team_goal_by_host
+    assert_equal nil, new_match1.guest_team_goal_by_guest
+    assert_equal nil, new_match1.host_team_goal_by_guest
+    assert_equal 6, new_match1.situation_by_host
+    new_mj1 = MatchJoin.find_by_user_id_and_team_id_and_match_id(u1.id,t1.id,match1.id)
+    new_mj2 = MatchJoin.find_by_user_id_and_team_id_and_match_id(u2.id,t1.id,match1.id)     
+    assert_equal 3, new_mj1.goal
+    assert_equal 3, new_mj2.goal
+    assert_redirected_to match_path(new_match1)
+    
+    put :update, :id => match1.id, :team_id=>t1.id, :result_type => "donotcare"
+    new_match1 = Match.find(match1)
+    assert_equal 1, new_match1.situation_by_host
     assert_redirected_to match_path(new_match1)
   end
   
@@ -280,7 +294,8 @@ class MatchesControllerTest < ActionController::TestCase
 
     mj1 = MatchJoin.find_by_user_id_and_team_id_and_match_id(u1.id,t1.id,match1.id)
     mj2 = MatchJoin.find_by_user_id_and_team_id_and_match_id(u2.id,t1.id,match1.id)     
-    put :update, :id => match1.id, :team_id=>t1.id, :match => {:host_team_goal_by_guest => 2,
+    put :update, :id => match1.id, :team_id=>t1.id, :result_type => "goal",
+                                   :match => {:host_team_goal_by_guest => 2,
                                               :guest_team_goal_by_guest => 2,
                                               :host_team_goal_by_host => 2,
                                               :guest_team_goal_by_host => 2,
@@ -294,8 +309,7 @@ class MatchesControllerTest < ActionController::TestCase
     assert_equal 2, new_match1.host_team_goal_by_guest
     assert_equal nil, new_match1.guest_team_goal_by_host
     assert_equal nil, new_match1.host_team_goal_by_host
-    assert_not_equal 0, new_match1.situation_by_guest
-    assert_equal Match.calculate_situation(new_match1.host_team_goal_by_guest,new_match1.guest_team_goal_by_guest), new_match1.situation_by_guest
+    assert_equal 5, new_match1.situation_by_guest
     new_mj1 = MatchJoin.find_by_user_id_and_team_id_and_match_id(u1.id,t1.id,match1.id)
     new_mj2 = MatchJoin.find_by_user_id_and_team_id_and_match_id(u2.id,t1.id,match1.id)     
     assert_equal 1, new_mj1.goal
@@ -304,12 +318,28 @@ class MatchesControllerTest < ActionController::TestCase
     assert_equal 3, new_mj2.cards
     assert_redirected_to match_path(new_match1)
 
-    put :update, :id => match1.id, :team_id=>t1.id, :match => {:host_team_goal_by_guest => "",
+    put :update, :id => match1.id, :team_id=>t1.id, :result_type => "situation",
+                                   :match => {:host_team_goal_by_guest => 2,
                                               :guest_team_goal_by_guest => "",
-                                              :situation_by_guest => 5},
-                                    :mj => {}#ceshi
-    new_match1 = Match.find(match1)                              
-    assert_equal 5, new_match1.situation_by_guest
+                                              :situation_by_guest => 6},
+                                    :mj => {mj1.id=>{:goal=>3,:cards=>2},
+                                            mj2.id=>{:goal=>3,:cards=>3}
+                                           }
+    new_match1 = Match.find(match1)
+    assert_equal nil, new_match1.guest_team_goal_by_guest
+    assert_equal nil, new_match1.host_team_goal_by_guest
+    assert_equal nil, new_match1.guest_team_goal_by_host
+    assert_equal nil, new_match1.host_team_goal_by_host
+    assert_equal 6, new_match1.situation_by_guest
+    new_mj1 = MatchJoin.find_by_user_id_and_team_id_and_match_id(u1.id,t1.id,match1.id)
+    new_mj2 = MatchJoin.find_by_user_id_and_team_id_and_match_id(u2.id,t1.id,match1.id)     
+    assert_equal 3, new_mj1.goal    
+    assert_equal 3, new_mj2.goal
+    assert_redirected_to match_path(new_match1)
+    
+    put :update, :id => match1.id, :team_id=>t1.id, :result_type => "donotcare"
+    new_match1 = Match.find(match1)
+    assert_equal 1, new_match1.situation_by_guest
     assert_redirected_to match_path(new_match1)
   end
 
@@ -352,7 +382,7 @@ class MatchesControllerTest < ActionController::TestCase
                                               },
                                     :mj => {mj1.id=>{:goal=>1},
                                             mj2.id=>{:goal=>1}
-                                           }
+                                           }, :result_type => "goal"
     new_match1 = Match.find(match1)                              
     assert_equal 2, new_match1.guest_team_goal_by_host
     assert_equal 2, new_match1.guest_team_goal_by_host
@@ -368,7 +398,7 @@ class MatchesControllerTest < ActionController::TestCase
                                               },
                                     :mj => {mj1.id=>{:goal=>1},
                                             mj2.id=>{}
-                                           }
+                                           }, :result_type => "goal"
     new_match1 = Match.find(match1)                              
     assert_equal 2, new_match1.guest_team_goal_by_host
     assert_equal 2, new_match1.guest_team_goal_by_host
@@ -384,7 +414,7 @@ class MatchesControllerTest < ActionController::TestCase
                                               },
                                     :mj => {mj1.id=>{:goal=>2},
                                             mj2.id=>{:goal=>1}
-                                           }
+                                           }, :result_type => "goal"
     new_match1 = Match.find(match1)                              
     assert_equal 2, new_match1.guest_team_goal_by_host
     assert_equal 2, new_match1.guest_team_goal_by_host
@@ -435,7 +465,7 @@ class MatchesControllerTest < ActionController::TestCase
                                               },
                                     :mj => {mj1.id=>{:goal=>1},
                                             mj2.id=>{:goal=>1}
-                                           }
+                                           }, :result_type => "goal"
     new_match1 = Match.find(match1)                              
     assert_equal 2, new_match1.guest_team_goal_by_guest
     assert_equal 2, new_match1.guest_team_goal_by_guest
@@ -451,7 +481,7 @@ class MatchesControllerTest < ActionController::TestCase
                                               },
                                     :mj => {mj1.id=>{:goal=>1},
                                             mj2.id=>{}
-                                           }
+                                           }, :result_type => "goal"
     new_match1 = Match.find(match1)                              
     assert_equal 2, new_match1.guest_team_goal_by_guest
     assert_equal 2, new_match1.guest_team_goal_by_guest
@@ -467,7 +497,7 @@ class MatchesControllerTest < ActionController::TestCase
                                               },
                                     :mj => {mj1.id=>{:goal=>2},
                                             mj2.id=>{:goal=>1}
-                                           }
+                                           }, :result_type => "goal"
     new_match1 = Match.find(match1)                              
     assert_equal 2, new_match1.guest_team_goal_by_guest
     assert_equal 2, new_match1.guest_team_goal_by_guest
@@ -510,17 +540,17 @@ class MatchesControllerTest < ActionController::TestCase
     match1.location = '一体'
     match1.save!
     MatchJoin.create_joins(match1)   
-    put :update, :id => match1.id, :team_id=>t1.id, :match => {}, :mj => {}
+    put :update, :id => match1.id, :team_id=>t1.id, :match => {}, :mj => {}, :result_type => "goal"
     assert_redirected_to '/'
 
     match1.start_time = 1.days.ago #复位为正常时间
     match1.save!    
-    put :update, :id => match1.id, :team_id=>t2.id, :match => {}, :mj => {}#处理user_id和team_id可能不匹配的情况     
+    put :update, :id => match1.id, :team_id=>t2.id, :result_type => "goal", :match => {}, :mj => {}#处理user_id和team_id可能不匹配的情况     
     assert_redirected_to '/'
     
     tmp = MatchJoin.find_by_user_id_and_team_id_and_match_id(u2.id,t2.id,match1.id)
     assert_not_nil tmp
-    put :update, :id => match1.id, :team_id=>t1.id, :match => {:host_team_goal_by_guest => 2,
+    put :update, :id => match1.id, :team_id=>t1.id, :result_type => "goal", :match => {:host_team_goal_by_guest => 2,
                                               :guest_team_goal_by_guest => 2,
                                               :situation_by_guest => 0
                                               },
@@ -546,7 +576,7 @@ class MatchesControllerTest < ActionController::TestCase
           },
             :mj => {mj1.id=>{:goal=>5,:cards=>2},
             mj2.id=>{:goal=>3,:cards=>3}
-          }
+          }, :result_type => "goal"
     assert_template 'edit'
   end  
 

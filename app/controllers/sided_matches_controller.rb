@@ -25,9 +25,11 @@ class SidedMatchesController < ApplicationController
 
   def show
     @match = SidedMatch.find(params[:id])  
-    @host_team_player_mjs = SidedMatchJoin.find(:all,
+    @player_mjs = SidedMatchJoin.find(:all,
         :conditions => ["match_id=? and position is not null",@match.id])    
-    @host_formation_array = @host_team_player_mjs.map {|ut| ut.position}  
+    @formation_array = @player_mjs.map {|ut| ut.position}  
+    @team_goals = SidedMatchJoin.find_all_by_match_id(@match, :conditions => ["goal > 0"], :order => 'goal desc')
+    
     @team = @match.host_team
     @joined_users = @match.users.joined(JOINED_USER_LIST_LENGTH+1)
     @undetermined_users = @match.users.undetermined(UNDETERMINED_USER_LIST_LENGTH+1)
@@ -35,7 +37,7 @@ class SidedMatchesController < ApplicationController
       @posts = @match.posts.find(:all, :limit=>POSTS_LENGTH)
     else
       @posts = @match.posts.public :limit=>POSTS_LENGTH
-    end
+    end    
     render :layout=>'team_layout'    
   end
   
@@ -106,7 +108,9 @@ class SidedMatchesController < ApplicationController
       fake_params_redirect
       return      
     end
-    @player_mjs = SidedMatchJoin.players(@sided_match)
+    @player_mjs = SidedMatchJoin.players(@sided_match) + 
+      SidedMatchJoin.find(:all, :conditions => ["match_id = ? and (goal > 0 or position is not null)", @sided_match.id])
+    @player_mjs.uniq!
     @team = @sided_match.host_team
     @title = "填写比赛结果"
     render :layout=>'team_layout'     
@@ -120,7 +124,9 @@ class SidedMatchesController < ApplicationController
       return      
     end
 
-    @player_mjs = SidedMatchJoin.players(@sided_match)
+    @player_mjs = SidedMatchJoin.players(@sided_match) + 
+      SidedMatchJoin.find(:all, :conditions => ["match_id = ? and (goal > 0 or position is not null)", @sided_match.id])
+    @player_mjs.uniq!
     player_mjs_hash = @player_mjs.group_by{|mj| mj.id}
     @match_join_hash = {}
     filled_goal_sum = 0
@@ -135,11 +141,21 @@ class SidedMatchesController < ApplicationController
       end
     end
 
-    @sided_match.host_team_goal = params[:sided_match][:host_team_goal]    
-    @sided_match.guest_team_goal = params[:sided_match][:guest_team_goal]      
-    @sided_match.situation = params[:sided_match][:situation]
+    if params[:result_type] == "goal"
+      @sided_match.host_team_goal = params[:sided_match][:host_team_goal]    
+      @sided_match.guest_team_goal = params[:sided_match][:guest_team_goal]
+      @sided_match.situation = ""
+    elsif params[:result_type] == "situation"
+      @sided_match.host_team_goal = ""
+      @sided_match.guest_team_goal = ""
+      @sided_match.situation = params[:sided_match][:situation]
+    elsif params[:result_type] == "donotcare"
+      @sided_match.host_team_goal = ""
+      @sided_match.guest_team_goal = ""
+      @sided_match.situation = 1
+    end
 
-    if (!@sided_match.host_team_goal.blank? && @sided_match.host_team_goal<filled_goal_sum)
+    if (params[:result_type] == "goal" && !@sided_match.host_team_goal.blank? && @sided_match.host_team_goal<filled_goal_sum)
      @sided_match.errors.add_to_base("队员入球总数不能超过本队入球数")
      render :action => "edit_result", :layout=>'team_layout' 
      return

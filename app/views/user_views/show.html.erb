@@ -15,7 +15,7 @@
     <%if @firend_request != nil || @firend_invitation != nil || @user_invitation_count > 0 ||  @team_invitation_count > 0%>
     <div class="notification">
       <%if @firend_request != nil%>
-        <span>你已邀请<%=h @user.nickname%>成为朋友, 等待对方邀请</span>
+        <span>你已邀请<%=h @user.nickname%>成为朋友, 等待对方确认</span>
       <%end%>
 
       <%if @firend_invitation != nil%>
@@ -34,13 +34,13 @@
     <div class="tab_container">
     <%if logged_in? && @user.id != current_user.id %>
       <span class="shortcut">
-      <%= link_to(image_tag("sendMail.gif", :title=>"给他发信"), 
+      <%= link_to(image_tag("sendMail.gif", :title=>"给#{@user.gender_text}发信"), 
         new_message_path(:to=>@user.id))%>
-      <%= link_to(image_tag("breakUpFriendship.gif", :title=>"不和他玩"), 
+      <%= link_to(image_tag("breakUpFriendship.gif", :title=>"不和#{@user.gender_text}玩"), 
         friend_relation_path(0, :user_id=>@user.id),:method=>"delete") if @are_friends %>
       <%= link_to(image_tag("inviteFriend.gif", :title=>"申请成为好友"), '#',
         :onclick=>'wefootball.openDialog(event, "#send_friend_invitation_div");return false') if @can_send_invitation %>
-      <%= link_to(image_tag("inviteIntoTeam.gif", :title=>"邀请加入球队"),
+      <%= link_to(image_tag("inviteIntoTeam.gif", :title=>"邀请#{@user.gender_text}加入球队"),
         new_user_team_join_invitation_path(@user)) %>
       </span>
     <%end%>
@@ -51,9 +51,6 @@
     <%end%>
     <div class="tab">
     <span>昵称: <%= h @user.nickname%></span>
-    <%#if @user.gender != 0%>
-      <%#= @user.gender == 1 ? '[♂]' : '[♀]'%>
-    <%#end%>
     <br/>
     <%= "<span>所在地: #{@user.city_text}</span><br/>" unless @user.city_text.nil?%>
     <%= "<span>生日: #{@user.birthday_text}</span><br/>" unless @user.birthday_text.nil?%>
@@ -91,14 +88,14 @@
     <div style="margin: 10px 0 0 10px">
       <%links = []%>
       <%if logged_in? && @user.id != current_user.id %>
-      <%links << link_to("给他写信", new_message_path(:to=>@user.id))%>
+      <%links << link_to("给#{@user.gender_text}写信", new_message_path(:to=>@user.id))%>
       <%if @are_friends%>
-        <%links << link_to("不和他玩", friend_relation_path(0, :user_id=>@user.id),:method=>"delete")  %>
+        <%links << link_to("不和#{@user.gender_text}玩", friend_relation_path(0, :user_id=>@user.id),:method=>"delete")  %>
       <%elsif @can_send_invitation %>
         <%links << link_to("申请成为朋友", '#',
           :onclick=>'wefootball.openDialog(event, "#send_friend_invitation_div");return false') %>
       <%end%>
-      <%links << link_to("邀请加入球队", new_user_team_join_invitation_path(@user)) %>
+      <%links << link_to("邀请#{@user.gender_text}加入球队", new_user_team_join_invitation_path(@user)) %>
       <%end%>
       <%= links_with_sticks links%>
     </div>

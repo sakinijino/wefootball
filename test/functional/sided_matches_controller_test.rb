@@ -123,33 +123,51 @@ class SidedMatchesControllerTest < ActionController::TestCase
 
     mj1 = SidedMatchJoin.find_by_user_id_and_match_id(u1.id, match1.id)
     mj2 = SidedMatchJoin.find_by_user_id_and_match_id(u2.id, match1.id)     
-    put :update_result, :id => match1.id, :sided_match => {:host_team_goal => 2,
-                                              :guest_team_goal => 2,
-                                              :situation => 1
-                                              },
-                                    :mj => {mj1.id=>{:goal=>1,:cards=>2},
-                                            mj2.id=>{:goal=>1,:cards=>3}
-                                           }
+    put :update_result, :id => match1.id, :result_type => "goal", 
+      :sided_match => {:host_team_goal => "2",
+        :guest_team_goal => "2",
+        :situation => "1"
+      },
+      :mj => {
+        mj1.id=>{:goal=>1,:cards=>2},
+        mj2.id=>{:goal=>1,:cards=>3}
+      }
     new_match1 = SidedMatch.find(match1)
     assert_equal 2, new_match1.guest_team_goal
     assert_equal 2, new_match1.host_team_goal
-    assert_not_equal 0, new_match1.situation
-    assert_equal Match.calculate_situation(new_match1.host_team_goal, new_match1.guest_team_goal), new_match1.situation
+    assert_equal 5, new_match1.situation
     new_mj1 = SidedMatchJoin.find_by_user_id_and_match_id(u1.id, match1.id)
     new_mj2 = SidedMatchJoin.find_by_user_id_and_match_id(u2.id, match1.id)     
     assert_equal 1, new_mj1.goal
     assert_equal 2, new_mj1.cards    
     assert_equal 1, new_mj2.goal
-    assert_equal 3, new_mj2.cards    
+    assert_equal 3, new_mj2.cards
     assert_redirected_to sided_match_path(match1)
 
-    put :update_result, :id => match1.id, :team_id=>t1.id, :sided_match => {
-        :host_team_goal => "",
-        :guest_team_goal => "",
-        :situation => 5},
-                                    :mj => {}#ceshi
-    new_match1 = SidedMatch.find(match1)
-    assert_equal 5, new_match1.situation
+    put :update_result, :id => match1.id, :result_type => "situation", 
+        :sided_match => {
+          :host_team_goal => "1",
+          :guest_team_goal => "3",
+          :situation => "6"},
+        :mj => {mj1.id=>{:goal=>2,:cards=>2},
+                mj2.id=>{:goal=>2,:cards=>3}
+        }
+    assert_nil new_match1.reload.guest_team_goal
+    assert_nil new_match1.reload.host_team_goal
+    assert_equal 6, new_match1.reload.situation   
+    assert_equal 2, new_mj1.reload.goal  
+    assert_equal 2, new_mj2.reload.goal
+    assert_redirected_to sided_match_path(match1)
+    
+    put :update_result, :id => match1.id, :result_type => "donotcare",
+      :sided_match => {
+        :host_team_goal => "3",
+        :guest_team_goal => "1",
+        :situation => "5"},
+      :mj => {}#ceshi
+    assert_nil new_match1.reload.guest_team_goal
+    assert_nil new_match1.reload.host_team_goal
+    assert_equal 1, new_match1.reload.situation
     assert_redirected_to sided_match_path(match1)
   end
   
@@ -185,13 +203,15 @@ class SidedMatchesControllerTest < ActionController::TestCase
     mj2 = SidedMatchJoin.find_by_user_id_and_match_id(u2.id,match1.id)
     assert_equal 0, mj1.goal
     assert_equal 0, mj2.goal    
-    put :update_result, :id => match1.id, :sided_match => {
-                                              :host_team_goal => 2,
-                                              :guest_team_goal => 2,
-                                              },
-                                    :mj => {mj1.id=>{:goal=>1},
-                                            mj2.id=>{:goal=>1}
-                                           }
+    put :update_result, :id => match1.id, :result_type => "goal", 
+      :sided_match => {
+        :host_team_goal => 2,
+        :guest_team_goal => 2,
+      },
+      :mj => {
+        mj1.id=>{:goal=>1},
+        mj2.id=>{:goal=>1}
+      }
     new_match1 = SidedMatch.find(match1)                              
     assert_equal 2, new_match1.guest_team_goal
     assert_equal 2, new_match1.guest_team_goal
@@ -201,13 +221,15 @@ class SidedMatchesControllerTest < ActionController::TestCase
     assert_equal 1, new_mj2.goal
     assert_redirected_to sided_match_path(new_match1)
 
-    put :update_result, :id => match1.id, :sided_match => {
-                                              :host_team_goal => 2,
-                                              :guest_team_goal => 2,
-                                              },
-                                    :mj => {mj1.id=>{:goal=>1},
-                                            mj2.id=>{}
-                                           }
+    put :update_result, :id => match1.id, :result_type => "goal", 
+      :sided_match => {
+        :host_team_goal => 2,
+        :guest_team_goal => 2,
+      },
+      :mj => {
+        mj1.id=>{:goal=>1},
+        mj2.id=>{}
+      }
     new_match1 = SidedMatch.find(match1)                              
     assert_equal 2, new_match1.guest_team_goal
     assert_equal 2, new_match1.guest_team_goal
@@ -217,13 +239,14 @@ class SidedMatchesControllerTest < ActionController::TestCase
     assert_equal 0, new_mj2.goal
     assert_redirected_to sided_match_path(new_match1)   
 
-    put :update_result, :id => match1.id, :sided_match => {
-                                              :host_team_goal => 2,
-                                              :guest_team_goal => 2,
-                                              },
-                                    :mj => {mj1.id=>{:goal=>2},
-                                            mj2.id=>{:goal=>1}
-                                           }
+    put :update_result, :id => match1.id, :result_type => "goal", 
+      :sided_match => {
+        :host_team_goal => 2,
+        :guest_team_goal => 2,
+      },
+      :mj => {mj1.id=>{:goal=>2},
+              mj2.id=>{:goal=>1}
+             }
     new_match1 = SidedMatch.find(match1)                              
     assert_equal 2, new_match1.guest_team_goal
     assert_equal 2, new_match1.guest_team_goal
@@ -260,22 +283,22 @@ class SidedMatchesControllerTest < ActionController::TestCase
     match1.location = '一体'
     match1.save!
     SidedMatchJoin.create_joins(match1)   
-    put :update_result, :id => match1.id, :team_id=>t1.id, :sided_match => {}, :mj => {}
+    put :update_result, :id => match1.id, :sided_match => {}, :mj => {}
     assert_redirected_to '/'
 
     match1.start_time = 1.days.ago
     match1.save!
     ut1.is_admin = false
     ut1.save!
-    put :update_result, :id => match1.id, :team_id=>t1.id, :sided_match => {}, :mj => {}#处理不是管理员的情况  
+    put :update_result, :id => match1.id, :sided_match => {}, :mj => {}#处理不是管理员的情况  
     assert_redirected_to '/'
     
     SidedMatchJoin.create_joins(matches(:one))
     tmp = SidedMatchJoin.find_by_user_id_and_match_id(u1.id, matches(:one))
     assert_not_nil tmp
-    put :update, :id => match1.id, :team_id=>t1.id, :match => {:host_team_goal => 2,
+    put :update, :id => match1.id, :result_type => "goal", :match => {:host_team_goal => 2,
                                               :guest_team_goal => 2,
-                                              :situation => 0
+                                              :situation => 0,
                                               },
                                     :mj => {tmp.id=>{:goal=>1,:cards=>2}}#处理match_join不是本场比赛的情况
     assert_redirected_to '/'
@@ -285,9 +308,9 @@ class SidedMatchesControllerTest < ActionController::TestCase
 
     mj1 = SidedMatchJoin.find_by_user_id_and_match_id(u1.id, match1.id)
     mj2 = SidedMatchJoin.find_by_user_id_and_match_id(u2.id, match1.id)
-    put :update_result, :id => match1.id, :sided_match => {:host_team_goal => 2,
+    put :update_result, :id => match1.id, :result_type => "goal", :sided_match => {:host_team_goal => 2,
                                               :guest_team_goal => 2,
-                                              :situation => 0
+                                              :situation => 0,
                                               },
                                     :mj => {mj1.id=>{:goal=>5,:cards=>2},
                                             mj2.id=>{:goal=>3,:cards=>3}

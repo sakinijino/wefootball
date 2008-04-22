@@ -168,6 +168,16 @@ class UserTest < Test::Unit::TestCase
     assert_equal ProvinceCity::LIST[1], u.city_text
   end
   
+  def test_gender_text
+    u = User.new
+    u.gender = 0
+    assert_equal '他', u.gender_text
+    u.gender = 1
+    assert_equal '他', u.gender_text
+    u.gender = 2
+    assert_equal '她', u.gender_text
+  end
+  
   def test_birthday_type
     u = users(:saki)
     u.birthday_display_type = 0

@@ -96,7 +96,7 @@ class UsersController < ApplicationController
     end
     if @user.save
       UserMailer.deliver_signup_notification(@user)
-      flash[:notice] = "激活帐户的邮件已发送, 请登录你的Email进行激活"
+      flash[:notice] = "激活帐户的邮件已发送, 请到你的邮箱激活"
       redirect_to(new_session_path)
     else
       render :action=>'new', :layout => 'unlogin_layout'  

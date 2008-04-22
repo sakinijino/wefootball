@@ -42,6 +42,7 @@ class TeamJoinInvitationsController < ApplicationController
   def create
     params[:team_join_request][:is_invitation] = true;
     if (params[:users_id])
+      params[:users_id].delete("")
       @team = Team.find(params[:team_join_request][:team_id])
       params[:users_id].each do |user_id|
         @user = User.find(user_id, :conditions=>"activated_at is not null")
@@ -52,6 +53,7 @@ class TeamJoinInvitationsController < ApplicationController
       end
       redirect_to team_team_join_invitations_path(@team)
     elsif (params[:teams_id])
+      params[:teams_id].delete("")
       @user = User.find(params[:team_join_request][:user_id], :conditions=>"activated_at is not null")
       params[:teams_id].each do |team_id|
         @team = Team.find(team_id)
@@ -61,7 +63,7 @@ class TeamJoinInvitationsController < ApplicationController
         end
       end
       redirect_to user_view_path(@user)
-    else
+    elsif
       @team = Team.find(params[:team_join_request][:team_id])
       @user = User.find(params[:team_join_request][:user_id], :conditions=>"activated_at is not null")
       if create_an_invitation(@user, @team)

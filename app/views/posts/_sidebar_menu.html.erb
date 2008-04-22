@@ -9,7 +9,7 @@
         <%= link_to '针对本场比赛发言', new_sided_match_post_path(@sided_match) %>
     <% elsif @match && current_user.is_team_member_of?(@team)%>
         <%= link_to '针对本场比赛发言', new_match_team_post_path(@match, @team) %>
-    <%else%>
+    <% elsif current_user.is_team_member_of?(@team) %>
         <%= link_to '发言', new_team_post_path(@team) %>
     <%end%>
     </li>

@@ -330,6 +330,10 @@ class User < ActiveRecord::Base
     end
   end
   
+  def gender_text
+    self.gender == 2 ? '她' : '他'
+  end
+  
   def age
     return nil if self.birthday.nil?
     case self.birthday_display_type

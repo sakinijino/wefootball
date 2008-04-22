@@ -3,10 +3,10 @@
   <%= error_messages_for :site_post%>
   <% form_for @site_post do |f| %>
     <p>
-      标题 <%= f.text_field :title, :size=>30, :maxlength=>100 %>
+      标题<br/><%= f.text_field :title, :size=>30, :maxlength=>100 %>
     </p>
     <%if !logged_in?%>
-      <p><label for="email">Email <span class="optional">(可选, 方便WeFootball联系你)</span></label><br/>
+      <p><label for="email">你的Email <span class="optional">(可选, 方便WeFootball联系你)</span></label><br/>
       <%= f.text_field :email, :size=>30, :maxlength=>100 %></p>
     <%end%>
     <p>

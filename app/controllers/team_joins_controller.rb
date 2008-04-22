@@ -77,6 +77,7 @@ class TeamJoinsController < ApplicationController
       @tu = UserTeam.new
       @tu.team_id = @tjs.team_id
       @tu.user_id = @tjs.user_id
+      @tu.is_player = @user.is_playable
       @tu.save!
     end
     redirect_with_back_uri_or_default team_view_path(@tjs.team_id)
@@ -90,7 +91,7 @@ class TeamJoinsController < ApplicationController
     end    
     @user =@tj.user
     @team = @tj.team
-    params[:ut][:is_player] = false if !@user.is_playable
+    params[:ut][:is_player] = params[:ut][:is_player] && @user.is_playable
     tmp = UserTeam.new(:is_admin => params[:ut][:is_admin])
     params[:ut][:is_admin] = @tj.is_admin if(
       tmp.is_admin && !@tj.can_promote_as_admin_by?(current_user)||

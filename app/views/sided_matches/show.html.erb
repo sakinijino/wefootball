@@ -1,7 +1,6 @@
 <%content_for(:stylesheet) do%>
   <%= stylesheet_link_tag 'calendar' %>
   <%= stylesheet_link_tag 'activityitem' %>  
-  <%= stylesheet_link_tag 'match' %>
 <%end%>
 
 <div id="wide_left_content">
@@ -10,6 +9,12 @@
     <div class="activities">
         <%=date_div_link @match.start_time, @match.host_team%>
         <div class="detail">
+          <%if @match.is_after_match?%>
+            <% tmp = display_sided_match_result @match%>
+            <%if !tmp.nil?%>
+              <div class="sided_match_result"><%=tmp%></div>
+            <%end%>
+          <%end%>
           <span>对阵球队: </span><%= @match.guest_team_name%><br />
           <%if @match.is_after_match?%>
             <span>比赛结果: </span><%=sided_match_result_text @match%><br />
@@ -47,7 +52,7 @@
           <%links << " #{link_to '填写比赛结果', edit_result_sided_match_path(@match)}"%>
         <%end%>
         <% if @match.can_be_destroyed_by?(current_user) %>
-          <%links << " #{link_to '取消', sided_match_path(@match), :method=>:delete}"%>
+          <%links << " #{link_to '取消', sided_match_path(@match), :method=>:delete, :confirm=>'真的要取消这场比赛吗？'}"%>
         <%end%>
         <%= links_with_sticks links%>
       </div>
@@ -60,16 +65,50 @@
       <p><%=simple_format auto_link(h(@match.description), :urls)%></p>
   </div>
   <%end%>
+  
+  <%if !@team_goals.empty?%>
+  <div class="sect">
+    <h2>进球</h2>
+    <%@team_goals.each do |ut|%>
+      <%= link_to h(ut.user.nickname), user_view_path(ut.user)%>进了<%= ut.goal%>个球, 
+    <%end%>
+  </div>
+  <%end%>
+          
   <div class="sect">        
-    <div id="host_team_div">
-    <%= render(:partial => 'team_in_match', :locals => {:team_player_mjs => @host_team_player_mjs,
-                                                    :match => @match,
-                                                    :team => @match.host_team,
-                                                    :formation_array => @host_formation_array,
-                                                    :is_host_team => true})%>
+    <h2>首发名单</h2>
+    <table class="list" style="float:left;width:175px;margin-right:10px;">
+      <tr>
+        <th>&nbsp;</th>
+        <th style="width:80px">昵称</th>
+        <th style="width:60px">位置</th>
+      </tr>
+      <% (@player_mjs).each do |ut| %>
+        <tr>
+          <td><%= tiny_user_image_link ut.user%></td>
+          <td style="width:80px"><%= link_to h(ut.user.nickname), user_view_path(ut.user)%></td>
+          <td style="width:60px"><%= formation_position_text ut.position %></td>
+        </tr>
+      <%end%>
+      <%(@match.size - @player_mjs.size).times do%>
+       <tr>
+          <td>&nbsp;</td>
+          <td style="width:80px">尚未选定</td>
+          <td>?</td>
+        </tr>
+      <%end%>
+    </table>
+    <div class="small_field" style="float:left;margin-top:25px">
+      <%@player_mjs.each do |ut|%>
+        <% pos = team_field_position(ut.position, @formation_array) %>
+        <%= link_to small_user_image_tag(ut.user,
+          :style=>"left:#{pos[:left]}px;top:#{pos[:top]}px;",
+          :title=>ut.user.nickname), user_view_path(ut.user), :class=>"resize_small_icon" %>
+      <%end%>
+      <div class="clearBoth"></div>
     </div>
     <div class="clearBoth"></div>
-  </div>  
+  </div>
 </div>
 
         
@@ -112,7 +151,3 @@
 </div>
 
 <div class="clearBoth"></div>
-
-<%#*<div id="match_blackboard">%>
-  <%#*！！各种状态！！%>
-<%#*</div>%>

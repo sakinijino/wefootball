@@ -15,7 +15,7 @@
         <%= link_to h(friend_inv.applier.nickname), user_view_path(friend_inv.applier) %>希望和你成为朋友
         <br/><br/>
         <%if !friend_inv.message.blank?%>
-          <%= friend_inv.applier.gender == 2 ? '她' : '他'%>的留言:
+          <%= friend_inv.applier.gender_text%>的留言:
           <%= h(friend_inv.message) %>
           <br/><br/>
         <%end%>

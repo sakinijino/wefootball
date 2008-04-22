@@ -77,7 +77,9 @@ class MatchesController < ApplicationController
       return
     end
     @editing_by_host_team = (@team.id == @match.host_team_id)
-    @player_mjs = MatchJoin.players(@match.id,@team.id)
+    @player_mjs = MatchJoin.players(@match.id,@team.id) + 
+      MatchJoin.find(:all, :conditions => ["match_id = ? and team_id = ? and (goal > 0 or position is not null)", @match.id, @team.id])
+    @player_mjs.uniq!
     
     @title = "填写比赛结果"
     render :layout=>'match_layout'
@@ -92,7 +94,9 @@ class MatchesController < ApplicationController
       return
     end
     
-    @player_mjs = MatchJoin.players(@match.id,@team.id)
+    @player_mjs = MatchJoin.players(@match.id,@team.id) + 
+      MatchJoin.find(:all, :conditions => ["match_id = ? and team_id = ? and (goal > 0 or position is not null)", @match.id, @team.id])
+    @player_mjs.uniq!
     player_mjs_hash = @player_mjs.group_by{|mj| mj.id}
     @match_join_hash = {}
     filled_goal_sum = 0
@@ -109,17 +113,38 @@ class MatchesController < ApplicationController
     
     @editing_by_host_team = (@team.id == @match.host_team_id)
     if @editing_by_host_team
-      @match.host_team_goal_by_host = params[:match][:host_team_goal_by_host]       
-      @match.guest_team_goal_by_host = params[:match][:guest_team_goal_by_host]     
-      @match.situation_by_host = params[:match][:situation_by_host]
+      if params[:result_type] == "goal"
+        @match.host_team_goal_by_host = params[:match][:host_team_goal_by_host]
+        @match.guest_team_goal_by_host = params[:match][:guest_team_goal_by_host]
+        @match.situation_by_host = ""
+      elsif params[:result_type] == "situation"
+        @match.host_team_goal_by_host = ""
+        @match.guest_team_goal_by_host = ""
+        @match.situation_by_host = params[:match][:situation_by_host]
+      elsif params[:result_type] == "donotcare"
+        @match.host_team_goal_by_host = ""
+        @match.guest_team_goal_by_host = ""
+        @match.situation_by_host = 1
+      end
     else
-      @match.host_team_goal_by_guest = params[:match][:host_team_goal_by_guest]      
-      @match.guest_team_goal_by_guest = params[:match][:guest_team_goal_by_guest]
-      @match.situation_by_guest = params[:match][:situation_by_guest]  
+      if params[:result_type] == "goal"
+        @match.host_team_goal_by_guest = params[:match][:host_team_goal_by_guest]
+        @match.guest_team_goal_by_guest = params[:match][:guest_team_goal_by_guest]
+        @match.situation_by_guest = ""
+      elsif params[:result_type] == "situation"
+        @match.host_team_goal_by_guest = ""
+        @match.guest_team_goal_by_guest = ""
+        @match.situation_by_guest = params[:match][:situation_by_guest]
+      elsif params[:result_type] == "donotcare"
+        @match.host_team_goal_by_guest = ""
+        @match.guest_team_goal_by_guest = ""
+        @match.situation_by_guest = 1
+      end
     end
     
-    if ((@editing_by_host_team && !@match.host_team_goal_by_host.blank? && (@match.host_team_goal_by_host<filled_goal_sum)) ||
-          (!@editing_by_host_team && !@match.guest_team_goal_by_guest.blank? && (@match.guest_team_goal_by_guest<filled_goal_sum)))
+    if (params[:result_type] == "goal" && 
+        (@editing_by_host_team && !@match.host_team_goal_by_host.blank? && (@match.host_team_goal_by_host<filled_goal_sum)) ||
+        (!@editing_by_host_team && !@match.guest_team_goal_by_guest.blank? && (@match.guest_team_goal_by_guest<filled_goal_sum)))
       @match.errors.add_to_base("队员入球总数不能超过本队入球数")
       @title = "填写比赛结果"
       render :action => "edit", :layout=>'match_layout'

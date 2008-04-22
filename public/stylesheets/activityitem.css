@@ -18,7 +18,7 @@ div.activities div.date div.day {
     padding-top:14%;
     color:White;
     background-color:#3D681A;
-    font-family:Segoe UI;
+    font-family:Segoe UI,"Times New Roman",Times,serif;
     font-size:24px;
     font-weight:bold;
 }
@@ -124,8 +124,19 @@ div.activities div.detail{
     float:left;
     margin: 8px 0 0 10px;
     line-height:150%;
+    position: relative;
+    width: 420px;
 }
 
 div.activities div.detail span{
   color: #666666;
+}
+
+div.sided_match_result {
+  position: absolute;
+  right: 20px;
+  font-size: 48px;
+  line-height: 60px;
+  color: #7E3E0B;
+  font-family: Georgia,"Times New Roman",Times,serif;
 }

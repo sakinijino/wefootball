@@ -142,12 +142,13 @@ wefootball.player = function(options){
     this.tiny_img = j("<div style='width:40px;height:40px'>"+this.tiny_image_tag+"</div>")
         .addClass('player_drag_handle')
         .append(this.small_img)
-        .mouseover(function(){
+        .hover(
+          function(){
             _this.small_img.css('display', 'block')
                 .css('top', -10)
                 .css('left', -17)
-        })
-        .mouseout(function(){
+          },
+          function(){
             _this.small_img.css('display', 'none')
                 .css('top', 0)
                 .css('left', 0)
