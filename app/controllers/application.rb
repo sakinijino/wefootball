@@ -27,8 +27,12 @@ class ApplicationController < ActionController::Base
     if (tmp.length >0)
       @start_time = tmp[0].start_time.yesterday
       @end_time = tmp[-1].end_time.tomorrow
+      @activities = tmp.group_by{|t| t.start_time.strftime("%Y-%m-%d")}
+    else
+      @start_time = Time.now
+      @end_time = Time.now
+      @activities = {}
     end
-    @activities = tmp.group_by{|t| t.start_time.strftime("%Y-%m-%d")}
     render :template => 'shared/index', :layout =>default_layout
   end
   
