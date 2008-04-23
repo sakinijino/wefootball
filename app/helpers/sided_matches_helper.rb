@@ -37,7 +37,7 @@ module SidedMatchesHelper
     s = m.situation
     if (hg.blank? && gg.blank?)
       if !s.nil? && s != 1
-        image_tag "match_result/#{s}.gif"
+        image_tag "match_result/#{s}.gif", :title=>""
       end
     elsif hg.blank?
       "? : #{gg}"

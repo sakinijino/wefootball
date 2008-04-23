@@ -112,7 +112,7 @@ class UsersController < ApplicationController
   
   def search
     if !params[:q].blank?
-      @users = User.find_by_contents(params[:q], :conditions=>"activated_at is not null")
+      @users = User.find_by_contents(params[:q])
       @title = "搜索“#{params[:q]}”的结果"
     end
     render :layout=>default_layout
@@ -227,7 +227,7 @@ class UsersController < ApplicationController
     end
   rescue ActiveRecord::RecordInvalid => e
     @invitation = @register_invitation
-    render :action=>"new_with_invitation/#{params[:user][:invitation_code]}", :layout => default_layout    
+    render :action=>"new_with_invitation", :layout => 'unlogin_layout' 
   end  
   
   def edit

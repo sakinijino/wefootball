@@ -12,10 +12,31 @@ class ApplicationController < ActionController::Base
   # TODO - this will be uncommented once we explain sessions
   # in iteration 5.
   # protect_from_forgery
-  # :secret => 'dd92c128b5358a710545b5e755694d57' 
+  # :secret => 'dd92c128b5358a710545b5e755694d57'
+  
+  
+  def index
+    @users = User.find(:all, :limit => 9, :order => 'id desc')
+    @teams = Team.find(:all, :limit => 9, :order => 'id desc')
+    tmp = []
+    tmp += Training.find(:all, :limit => 2, :order => 'id desc')
+    tmp += Match.find(:all, :limit => 2, :order => 'id desc')
+    tmp += SidedMatch.find(:all, :limit => 2, :order => 'id desc')
+    tmp += Play.find(:all, :limit => 2, :order => 'id desc')
+    tmp = tmp.sort_by{|act| act.start_time}
+    if (tmp.length >0)
+      @start_time = tmp[0].start_time.yesterday
+      @end_time = tmp[-1].end_time.tomorrow
+    end
+    @activities = tmp.group_by{|t| t.start_time.strftime("%Y-%m-%d")}
+    render :template => 'shared/index', :layout =>default_layout
+  end
+  
+  
   class FakeParametersError < StandardError
   end
   
+protected
   def store_current_location #记录页面位置，登录后跳转回该页面
     store_location if !logged_in? && request.get?
   end

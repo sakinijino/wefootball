@@ -13,19 +13,19 @@
   <ul></ul>
   <ul>
     <li><%= link_to("我的朋友", user_friend_relations_path(user))%></li>
-    <li><%= link_to("朋友邀请", friend_invitations_path)%></li>
+    <li><%= link_to("待处理的申请", friend_invitations_path)%></li>
     <li><%= link_to("邀请朋友使用WeFootball", invite_users_path)%></li>
   </ul>
   <ul>
     <li><%= link_to("我的球队", user_team_joins_path(user))%></li>
     <li><%= link_to("新建球队", new_team_path)%></li>
-    <li><%= link_to("球队邀请", team_join_invitations_path)%></li>
-    <li><%= link_to("球队申请", team_join_requests_path)%></li>
+    <li><%= link_to("待处理的邀请", team_join_invitations_path)%></li>
+    <li><%= link_to("我发出的申请", team_join_requests_path)%></li>
   </ul>
   <ul>
     <li><%= link_to "随便踢踢", new_play_path %></li>
-    <li><%= day_calendar_link('今日活动', Time.now, user)%></li>
     <li><%= month_calendar_link('本月活动', Time.now, user)%></li>
+    <li><%= day_calendar_link('今日活动', Time.now, user)%></li>
   </ul>
   <ul>
     <li><%= link_to("收件箱", messages_path(:as=>'receiver'))%></li>

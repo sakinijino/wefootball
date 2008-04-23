@@ -26,7 +26,7 @@
 
       <%if @team_join_request_count > 0 || @match_invitation_count > 0%>
         球队有<%= link_to("#{@team_join_request_count}个加入申请", team_team_join_requests_path(@team)) if @team_join_request_count > 0 %><%= ',' if @team_join_request_count > 0 && @match_invitation_count > 0%>
-        <%= link_to("#{@match_invitation_count}个需要处理的约战邀请", team_match_invitations_path(@team)) if @match_invitation_count > 0%>
+        <%= link_to("#{@match_invitation_count}个需要处理的约战", team_match_invitations_path(@team)) if @match_invitation_count > 0%>
       <%end%>
     </div>
     <%end%>
@@ -43,7 +43,7 @@
         <%if current_user.is_team_admin_of?(@team)%>
           <%= link_to(image_tag("inviteIntoTeam.gif", :title=>"邀请朋友加入"), new_team_team_join_invitation_path(@team))%>
         <%end%>
-        <%=link_to(image_tag("inviteMacth.gif", :title=>"向该队发出约战邀请"), new_match_invitation_path(:guest_team_id=>@team))%>
+        <%=link_to(image_tag("inviteMacth.gif", :title=>"向该队提出约战"), new_match_invitation_path(:guest_team_id=>@team))%>
         </span>
       <%end%>
 
@@ -87,7 +87,7 @@
           <%if current_user.is_team_admin_of?(@team)%>
             <%links << link_to("邀请朋友加入", new_team_team_join_invitation_path(@team))%>
           <%end%>
-          <%links << link_to("向该队发出约战邀请", new_match_invitation_path(:guest_team_id=>@team))%>
+          <%links << link_to("向该队提出约战", new_match_invitation_path(:guest_team_id=>@team))%>
         <%end%>
         <%= links_with_sticks links%>
       </div>

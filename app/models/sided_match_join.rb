@@ -17,7 +17,10 @@ class SidedMatchJoin < ActiveRecord::Base
   
   def before_validation
     self.position = nil if self.position==""
-    if self.position!=nil
+    if self.position!=nil && 
+       (self.goal.nil? || self.goal.zero?) && 
+       (self.yellow_card.nil? || self.yellow_card.zero?) && 
+       (self.red_card.nil? || self.red_card.zero?)
       ut = UserTeam.find_by_user_id_and_team_id(self.user_id, self.sided_match.host_team_id)
       self.position = nil if ut.nil? || !ut.is_player
     end
@@ -40,7 +43,7 @@ class SidedMatchJoin < ActiveRecord::Base
     match_id = match.id
     SidedMatchJoin.find(:all,
                    :select => 'mj.*',
-                   :conditions => ["mj.match_id=? and ut.is_player=true",match_id],
+                   :conditions => ["mj.match_id=? and (mj.position is not null or mj.goal>0 or mj.yellow_card>0 or mj.red_card>0 or ut.is_player=true)",match_id],
                    :joins => "as mj inner join user_teams as ut on ut.team_id=#{team_id} and mj.user_id=ut.user_id"
                    )
   end

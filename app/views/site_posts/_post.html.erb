@@ -2,7 +2,7 @@
 <%if post.user_id%>
   <%=small_user_image_link(post.user)%>
 <%else%>
-  <image src="/images/default_user_small.gif" class="icon"></image>
+  <%= image_tag 'default_user_small.gif', :class=>"icon", :title=>''%>
 <%end%>
 
 <span class="title">
@@ -21,9 +21,9 @@
 <%if logged_in?%>
 <div class="control">
 <%if post.is_a?(SitePost)%>
-  > <%= link_to('删除',  site_post_path(post.id), :method=>"delete") if post.can_be_destroyed_by?(current_user)%>
+  <%= "> #{link_to('删除',  site_post_path(post.id), :method=>"delete")}" if post.can_be_destroyed_by?(current_user)%>
 <%elsif post.is_a?(SiteReply)%>
-  > <%= link_to "删除", site_post_site_reply_path(parent, post.id), :method=>"delete" if post.can_be_destroyed_by?(current_user) %>
+  <%= "> #{link_to "删除", site_post_site_reply_path(parent, post.id), :method=>"delete"}" if post.can_be_destroyed_by?(current_user) %>
 <%end%>
 </div>
 <%end%>

@@ -53,6 +53,14 @@ module ActivitiesHelper
         :undetermined => '参加了吗?',
         :unjoined => '我没去',
       }
+    },
+    :closed => {
+      :match => {
+        :time => '比赛已结束',
+        :joined => '我去了',
+        :undetermined => '',
+        :unjoined => '我没去',
+      }
     }
   }
     
@@ -105,6 +113,13 @@ module ActivitiesHelper
         :unjoined => ['去了', '---']
       },
     },
+    :closed => {
+      :match => {
+        :joined => ['---', '---'],
+        :undetermined => ['---', '---'],
+        :unjoined => ['---', '---']
+      }
+    }
   }
   
   def time_key(act)
@@ -113,7 +128,15 @@ module ActivitiesHelper
     elsif (act.start_time < Time.now && act.end_time > Time.now)
        :in
     else
-      :after
+      if (act.class == Match) 
+        if act.is_after_match_and_before_match_close?
+          :after
+        else
+          :closed
+        end
+      else
+        :after
+      end
     end
   end
   
@@ -198,6 +221,11 @@ module ActivitiesHelper
       :undetermined => "我没说是否代表%s参赛",
       :unjoined => "我没代表%s参赛",
     },
+    :closed => {
+      :joined => "我代表%s参赛了",
+      :undetermined => "我没说是否代表%s参赛",
+      :unjoined => "我没代表%s参赛",
+    }
   }
     
   MATCH_LINKS_MATRIX = {
@@ -216,6 +244,11 @@ module ActivitiesHelper
       :undetermined => ['去了', '没去'],
       :unjoined => ['去了', '---']
     },
+    :closed =>{
+      :joined => ['---', '---'],
+      :undetermined => ['---', '---'],
+      :unjoined => ['---', '---']
+    }
   }
   
   def match_join_status_text(act, team, team_name=nil)

@@ -7,13 +7,13 @@ class MatchInvitationsController < ApplicationController
       @mis = MatchInvitation.find :all,
         :conditions=>["(host_team_id = ? and edit_by_host_team = ?) or (guest_team_id = ? and edit_by_host_team = ?)", @team, false, @team, true],
         :order => 'updated_at desc'
-      @title = "等待对方回复的约战邀请"
+      @title = "等待对方回复的约战"
       render :action=>'index_waiting_for_reply', :layout=>"team_layout"
     else
       @mis = MatchInvitation.find :all,
         :conditions=>["(host_team_id = ? and edit_by_host_team = ?) or (guest_team_id = ? and edit_by_host_team = ?)", @team, true, @team, false],
         :order => 'updated_at desc'
-      @title = "需要处理的约战邀请"
+      @title = "需要处理的约战"
       render :action=>'index_need_reply', :layout=>"team_layout"
     end
   end
@@ -23,7 +23,7 @@ class MatchInvitationsController < ApplicationController
     if params[:host_team_id].nil?
       @host_teams = current_user.teams.admin - [@guest_team]
       @team = @guest_team
-      @title = "从你管理的球队中选择发起约战邀请的球队"
+      @title = "从你管理的球队中选择提出约战的球队"
       render :action=>"select_host_team", :layout=>"team_layout"
     else
       if !current_user.is_team_admin_of?(params[:host_team_id])
@@ -32,7 +32,7 @@ class MatchInvitationsController < ApplicationController
       end
       @host_team = Team.find(params[:host_team_id])
       @team = @host_team
-      @title = "约战邀请: #{@host_team.shortname} V.S. #{@guest_team.shortname}"
+      @title = "约战: #{@host_team.shortname} V.S. #{@guest_team.shortname}"
       @match_invitation = MatchInvitation.new
       @match_invitation.new_start_time = 1.day.since
       @match_invitation.new_half_match_length = 45
@@ -62,7 +62,7 @@ class MatchInvitationsController < ApplicationController
       redirect_to team_match_invitations_path(@host_team, :as => 'send')
     else
       @team = @host_team
-      @title = "约战邀请: #{@host_team.shortname} V.S. #{@guest_team.shortname}"
+      @title = "约战: #{@host_team.shortname} V.S. #{@guest_team.shortname}"
       render :action=>"new", :layout=>"team_layout"
     end
   end
@@ -75,7 +75,7 @@ class MatchInvitationsController < ApplicationController
     end
     @unmodified_match_invitation = @match_invitation
     set_teams
-    @title = "提出新比赛建议: #{@host_team.shortname} V.S. #{@guest_team.shortname}"
+    @title = "继续商议: #{@host_team.shortname} V.S. #{@guest_team.shortname}"
     render :layout=>"team_layout"
   end
   
@@ -98,7 +98,7 @@ class MatchInvitationsController < ApplicationController
     else
       @unmodified_match_invitation = MatchInvitation.find(params[:id])
       set_teams
-      @title = "提出新的比赛建议: #{@host_team.shortname} V.S. #{@guest_team.shortname}"  
+      @title = "继续商议: #{@host_team.shortname} V.S. #{@guest_team.shortname}"  
       render :action => "edit", :layout=>"team_layout"
     end
   end

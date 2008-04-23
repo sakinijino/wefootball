@@ -69,9 +69,11 @@
   <%if !@team_goals.empty?%>
   <div class="sect">
     <h2>进球</h2>
+    <%links = []%>
     <%@team_goals.each do |ut|%>
-      <%= link_to h(ut.user.nickname), user_view_path(ut.user)%>进了<%= ut.goal%>个球, 
+      <%links << "#{link_to h(ut.user.nickname), user_view_path(ut.user)}进了#{ut.goal}个球"%>
     <%end%>
+    <%= links_with_sticks links, ', '%>
   </div>
   <%end%>
           

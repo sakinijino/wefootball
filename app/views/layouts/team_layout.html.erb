@@ -4,7 +4,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
   <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
-  <title><%=h @title ? @title : h(@team.name)%></title>
+  <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+  <title><%=h @title ? @title : h(@team.shortname)%></title>
   <%= javascript_include_tag "jquery-1.2.3.min.js" %>
   <%= javascript_include_tag "jquery.dimensions.js" %>
   <%= javascript_include_tag "application" %>

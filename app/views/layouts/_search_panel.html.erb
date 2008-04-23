@@ -1,5 +1,5 @@
-<% team_img = image_tag('teamIcon.gif', :title=>'搜索球队') 
-   user_img = image_tag('peopleIcon.gif', :title=>'搜索用户')
+<% team_img = image_tag('team_search_icon.gif', :title=>'搜索球队') 
+   user_img = image_tag('people_search_icon.gif', :title=>'搜索用户')
   search_paths = {
   :user => 
     {:image => user_img,
@@ -15,7 +15,7 @@
 <% form_tag search_paths[default][:url], :method=>:post, :id=>"header_search" do%>
   <table><tr>
   <td class="dropdown_container">
-    <%= search_paths[default][:image]%>
+    <%= search_paths[default][:image]%><%=image_tag 'search_down.gif', :title=>''%>
     <div class="dropdown" style="top:20px;left:0px;width:90px">
       <%search_paths.values.each do |v|%>
         <div>
@@ -24,7 +24,7 @@
       <%end%>
     </div>
   </td>
-  <td><%= text_field_tag 'q', search_paths[default][:text], :size=>18, :class=>'input blurinput' %></td>
+  <td><%= text_field_tag 'q', search_paths[default][:text], :size=>17, :class=>'input blurinput' %></td>
   <td><%= submit_tag '', :class=>"submit search", :title=>'搜索' %></td>
   </tr></table>
 <%end%>

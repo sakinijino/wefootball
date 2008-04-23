@@ -21,15 +21,18 @@ class TeamsController < ApplicationController
 
   def create
     @team = Team.new(params[:team])
-    if @team.save
-      ut = UserTeam.new({:is_admin=>true});
-      ut.user = current_user; ut.team = @team
-      ut.save
-      redirect_with_back_uri_or_default team_view_path(@team.id)
-    else
-      @user = current_user
-      @title = "新建球队"
-      render :action=>"new", :layout => "user_layout"
+    Team.transaction do
+      if @team.save
+        ut = UserTeam.new({:is_admin=>true});
+        ut.user = current_user; ut.team = @team
+        ut.is_player = current_user.is_playable;
+        ut.save!
+        redirect_with_back_uri_or_default team_view_path(@team.id)
+      else
+        @user = current_user
+        @title = "新建球队"
+        render :action=>"new", :layout => "user_layout"
+      end
     end
   end
 

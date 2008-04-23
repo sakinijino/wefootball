@@ -17,9 +17,9 @@ module MatchesHelper
         if s.nil? || s == 1
           ""
         elsif s == 5
-          image_tag "match_result/#{s}.gif"
+          image_tag "match_result/#{s}.gif", :title=>''
         else
-          %(#{image_tag "match_result/#{s}.gif"}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#{image_tag "match_result/#{10-s}.gif"})
+          %(#{image_tag "match_result/#{s}.gif", :title=>''}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#{image_tag "match_result/#{10-s}.gif", :title=>''})
         end
       elsif hg.blank?
         "? : #{gg}"

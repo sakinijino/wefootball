@@ -3,12 +3,11 @@
   <%= error_messages_for :se %>
   <% form_tag sessions_path do -%>
   <p><label for="email">你的Email</label><br/>
-  <%= text_field_tag 'login' %>
-&nbsp;&nbsp;&nbsp;<%= link_to "重新发送激活邮件",resend_activate_mail_path%></p>
+  <%= text_field_tag 'login' %></p>
 
   <p><label for="password">你在WeFootball的密码</label><br/>
   <%= password_field_tag 'password' %>
-  &nbsp;&nbsp;&nbsp;<%= link_to "找回密码",forgot_password_path%></p>
+  &nbsp;&nbsp;&nbsp;<%= link_to "找回密码",forgot_password_path%>&nbsp;&nbsp;|&nbsp;&nbsp;<%= link_to "重新发送激活邮件",resend_activate_mail_path%></p>
 
   <p><%= check_box_tag 'remember_me' %>
   <label for="remember_me">记住我</label></p>

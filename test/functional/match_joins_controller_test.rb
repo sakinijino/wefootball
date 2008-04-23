@@ -151,7 +151,7 @@ class MatchJoinsControllerTest < ActionController::TestCase
     ut.save!
     login_as :saki
     put :update_formation, :match_id=> matches(:one), :team_id=>teams(:inter).id, :formation => {'3'=>ut.id}
-    assert_redirected_to match_path(matches(:one))
+    assert_redirected_to edit_match_join_path(0,:match_id=>matches(:one).id,:team_id=>teams(:inter).id)
     assert_equal 3, ut.reload.position
     
     users(:mike1).update_attributes!(:is_player => true, :fitfoot => 'R', :premier_position=>1)
@@ -166,17 +166,17 @@ class MatchJoinsControllerTest < ActionController::TestCase
     ut2.match = matches(:one)
     ut2.save!
     put :update_formation, :match_id=> matches(:one), :team_id=>teams(:inter).id, :formation => {'3'=>ut2.id}
-    assert_redirected_to match_path(matches(:one))
+    assert_redirected_to edit_match_join_path(0,:match_id=>matches(:one).id,:team_id=>teams(:inter).id)
     assert_nil ut.reload.position
     assert_equal 3, ut2.reload.position
     
     put :update_formation, :match_id=> matches(:one), :team_id=>teams(:inter).id, :formation => {'2'=>ut2.id, '20'=>ut.id}
-    assert_redirected_to match_path(matches(:one))
+    assert_redirected_to edit_match_join_path(0,:match_id=>matches(:one).id,:team_id=>teams(:inter).id)
     assert_equal 20, ut.reload.position
     assert_equal 2, ut2.reload.position
     
     put :update_formation, :match_id=> matches(:one), :team_id=>teams(:inter).id, :formation => {'2'=>ut2.id, '27'=>ut.id}
-    assert_redirected_to match_path(matches(:one))
+    assert_redirected_to edit_match_join_path(0,:match_id=>matches(:one).id,:team_id=>teams(:inter).id)
     assert_nil ut.reload.position
     assert_equal 2, ut2.reload.position
   end

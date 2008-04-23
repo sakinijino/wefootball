@@ -35,12 +35,12 @@
           <tr>
             <td>
               <%= @host_team == @team ? '本队' : '对方'%>
-              <%=link_to h(@host_team.shortname), team_view_path(@host_team)%>发起的邀请
+              <%=link_to h(@host_team.shortname), team_view_path(@host_team)%>提出约战
             </td>
           </tr>
           <tr>
             <td>
-              <%=link_to h(@another_team.shortname), team_view_path(@another_team)%>提出建议后, 等待我队的回复
+              <%=link_to h(@another_team.shortname), team_view_path(@another_team)%>提出方案后, 等待我队的回复
             </td>
           </tr>
           <%msg = @team == @host_team ? @unmodified_match_invitation.guest_team_message: @unmodified_match_invitation.host_team_message%>
@@ -67,9 +67,9 @@
     <table class="form match_invitation_list">
       <tr>
         <td style="width:60px">&nbsp;</td>
-        <td>提出新建议</td>
-        <td>对方提出的建议</td>
-        <td>我队上次提出的建议</td>
+        <td>提出新方案</td>
+        <td>对方提出的方案</td>
+        <td>我队上次提出的方案</td>
       </tr>
       <%= macth_invitation_comparison_form_tr(@unmodified_match_invitation, '时间', :start_time, 
         Proc.new{ |t| 
@@ -173,7 +173,7 @@
     </p>
 
     <p>
-      <%= f.submit "提出新建议" %>
+      <%= f.submit "提交" %>
     </p>
   <% end %>
   </div>

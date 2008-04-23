@@ -28,7 +28,8 @@ class SidedMatchesController < ApplicationController
     @player_mjs = SidedMatchJoin.find(:all,
         :conditions => ["match_id=? and position is not null",@match.id])    
     @formation_array = @player_mjs.map {|ut| ut.position}  
-    @team_goals = SidedMatchJoin.find_all_by_match_id(@match, :conditions => ["goal > 0"], :order => 'goal desc')
+    @team_goals = SidedMatchJoin.find_all_by_match_id(@match, 
+      :conditions => ["goal > 0"], :order => 'goal desc') if @match.is_after_match?
     
     @team = @match.host_team
     @joined_users = @match.users.joined(JOINED_USER_LIST_LENGTH+1)
@@ -108,9 +109,7 @@ class SidedMatchesController < ApplicationController
       fake_params_redirect
       return      
     end
-    @player_mjs = SidedMatchJoin.players(@sided_match) + 
-      SidedMatchJoin.find(:all, :conditions => ["match_id = ? and (goal > 0 or position is not null)", @sided_match.id])
-    @player_mjs.uniq!
+    @player_mjs = SidedMatchJoin.players(@sided_match)
     @team = @sided_match.host_team
     @title = "填写比赛结果"
     render :layout=>'team_layout'     
@@ -124,9 +123,7 @@ class SidedMatchesController < ApplicationController
       return      
     end
 
-    @player_mjs = SidedMatchJoin.players(@sided_match) + 
-      SidedMatchJoin.find(:all, :conditions => ["match_id = ? and (goal > 0 or position is not null)", @sided_match.id])
-    @player_mjs.uniq!
+    @player_mjs = SidedMatchJoin.players(@sided_match)
     player_mjs_hash = @player_mjs.group_by{|mj| mj.id}
     @match_join_hash = {}
     filled_goal_sum = 0

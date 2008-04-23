@@ -1,9 +1,9 @@
 <ul class="sidebar_menu">
   <li <%= selected_class_sidebar_menu_item(:action=>'index', :boolean=>params[:as]!='send')%>>
-  > <%=link_to '需要处理的约战邀请', team_match_invitations_path(@team)%>
+  > <%=link_to '需要处理的约战', team_match_invitations_path(@team)%>
   </li>
   <li <%= selected_class_sidebar_menu_item(:action=>'index', :boolean=>params[:as]=='send')%>>
-  > <%=link_to '等待对方回复的约战邀请', team_match_invitations_path(@team, :as => 'send')%>
+  > <%=link_to '等待对方回复的约战', team_match_invitations_path(@team, :as => 'send')%>
   </li>
   <li class='seperate'>
   </li>

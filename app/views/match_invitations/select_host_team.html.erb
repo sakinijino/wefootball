@@ -16,7 +16,7 @@
   <%else%>
     
     <div class="notification">
-       选定球队后, 你会以该队管理员的身份向<%=link_to h(@guest_team.shortname), team_view_path(@guest_team)%>发出约战邀请
+       选定球队后, 你会以该队管理员的身份向<%=link_to h(@guest_team.shortname), team_view_path(@guest_team)%>提出约战
     </div>
     <%for t in @host_teams%>
       <div class="icon">

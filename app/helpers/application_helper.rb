@@ -9,8 +9,8 @@ module ApplicationHelper
     return tmp.join('<wbr/>')
   end
   
-  def links_with_sticks(links)
-    links.join('&nbsp;&nbsp;|&nbsp;&nbsp;')
+  def links_with_sticks(links, seperator='&nbsp;&nbsp;|&nbsp;&nbsp;')
+    links.join(seperator)
   end
   
   def distance_of_time_in_words(from_time, to_time = 0, include_seconds = false)

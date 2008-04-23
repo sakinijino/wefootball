@@ -7,7 +7,7 @@
   <h2></h2>
   <ul class="sidebar_menu">
     <li>
-      > <%= link_to "重新选择发起邀请的球队", new_match_invitation_path(:guest_team_id => @guest_team.id) %>
+      > <%= link_to "重新选择提出约战的球队", new_match_invitation_path(:guest_team_id => @guest_team.id) %>
     </li>
     <li>
       > <%= link_to "返回#{h @host_team.shortname}首页", team_view_path(@host_team) %>
@@ -27,7 +27,7 @@
     <%= f.hidden_field :host_team_id,  :value=>@host_team.id%>
     <table class="form">
       <tr ><td>
-        邀请的球队:
+        对方:
       </td><td>
         <%= small_team_image_link @guest_team, :style=>"margin:0;float:right"%>
         <span><%=link_to h(@guest_team.shortname), team_view_path(@guest_team.id)%></span>

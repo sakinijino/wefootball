@@ -45,7 +45,7 @@ class SidedMatchJoinTest < ActiveSupport::TestCase
     SidedMatchJoin.create_joins(m)    
     host_team_players_from_match_joins = SidedMatchJoin.players(m).map{|mj| mj.user}.sort_by{|u| u.id} 
     host_team_players_from_team = m.host_team.users.players.sort_by{|u| u.id} 
-    assert_equal host_team_players_from_match_joins,host_team_players_from_team 
+    assert_equal host_team_players_from_match_joins,host_team_players_from_team    
   end
   
   def test_cards #测试红黄牌的赋值和读取是正确的

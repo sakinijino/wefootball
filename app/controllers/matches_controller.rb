@@ -29,11 +29,11 @@ class MatchesController < ApplicationController
     @host_team_goals = MatchJoin.find_all_by_team_id_and_match_id(
       @match.host_team, @match,
       :conditions => ["goal > 0"]
-    )
+    ) if @match.is_after_match?
     @guest_team_goals = MatchJoin.find_all_by_team_id_and_match_id(
       @match.guest_team, @match,
       :conditions => ["goal > 0"]
-    )
+    ) if @match.is_after_match?
 
     render :layout=>'match_layout'
   end
@@ -41,7 +41,7 @@ class MatchesController < ApplicationController
   def joined_users
     @match = Match.find(params[:id])
     @team = Team.find(params[:team_id])
-    @title = "#{@team.name}参加这场比赛的人"
+    @title = "#{@team.shortname}参加这场比赛的人"
     @users = @match.users.joined_with_team_id(@team)
     render :action=>'users', :layout=>'match_layout'    
   end
@@ -49,7 +49,7 @@ class MatchesController < ApplicationController
   def undetermined_users
     @match = Match.find(params[:id])
     @team = Team.find(params[:team_id])
-    @title = "#{@team.name}没表态是否参加的人"      
+    @title = "#{@team.shortname}没表态是否参加的人"      
     @users = @match.users.undetermined_with_team_id(@team)
     render :action=>'users', :layout=>'match_layout'    
   end   
@@ -77,9 +77,7 @@ class MatchesController < ApplicationController
       return
     end
     @editing_by_host_team = (@team.id == @match.host_team_id)
-    @player_mjs = MatchJoin.players(@match.id,@team.id) + 
-      MatchJoin.find(:all, :conditions => ["match_id = ? and team_id = ? and (goal > 0 or position is not null)", @match.id, @team.id])
-    @player_mjs.uniq!
+    @player_mjs = MatchJoin.players(@match.id,@team.id)
     
     @title = "填写比赛结果"
     render :layout=>'match_layout'
@@ -94,9 +92,7 @@ class MatchesController < ApplicationController
       return
     end
     
-    @player_mjs = MatchJoin.players(@match.id,@team.id) + 
-      MatchJoin.find(:all, :conditions => ["match_id = ? and team_id = ? and (goal > 0 or position is not null)", @match.id, @team.id])
-    @player_mjs.uniq!
+    @player_mjs = MatchJoin.players(@match.id,@team.id)
     player_mjs_hash = @player_mjs.group_by{|mj| mj.id}
     @match_join_hash = {}
     filled_goal_sum = 0

@@ -18,12 +18,12 @@
             <tr>
               <td>
                 <%= mi.host_team == @team ? '本队' : '对方'%>
-                <%=link_to h(mi.host_team.shortname), team_view_path(mi.host_team)%>发起的邀请
+                <%=link_to h(mi.host_team.shortname), team_view_path(mi.host_team)%>提出约战
               </td>
             </tr>
             <tr>
               <td>
-                <%=link_to h(another_team.shortname), team_view_path(another_team)%>提出建议后, 等待我队的回复
+                <%=link_to h(another_team.shortname), team_view_path(another_team)%>提出方案后, 等待我队的回复
               </td>
             </tr>
             <%msg = @team == mi.host_team ? mi.guest_team_message: mi.host_team_message%>
@@ -41,9 +41,9 @@
 
           <div style="margin: 10px 0 10px 10px">
             <%links = []%>
-            <%links << link_to('接受对方的建议', matches_path(:id=>mi.id), :method=>:post) if current_user.can_accpet_match_invitation?(mi)%>
-            <%links << link_to("拒绝对方的建议", match_invitation_path(mi),:method=>:delete) if current_user.can_reject_match_invitation?(mi)%>
-            <%links << link_to('提出新建议', edit_match_invitation_path(mi)) if current_user.can_edit_match_invitation?(mi)%>
+            <%links << link_to('接受对方的方案', matches_path(:id=>mi.id), :method=>:post) if current_user.can_accpet_match_invitation?(mi)%>
+            <%links << link_to("拒绝对方的方案", match_invitation_path(mi),:method=>:delete) if current_user.can_reject_match_invitation?(mi)%>
+            <%links << link_to('继续商议', edit_match_invitation_path(mi)) if current_user.can_edit_match_invitation?(mi)%>
             <%= links_with_sticks links%>
           </div>
         </td>

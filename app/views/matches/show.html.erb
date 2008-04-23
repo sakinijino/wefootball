@@ -35,27 +35,35 @@
 
 <div class="clearBoth"></div>
 
+<%if @match.is_after_match? %>
 <div class="host_team_div">
   <div class="sect">
     <h2>进球</h2>
     <%if !@host_team_goals.empty?%>
+      <%links = []%>
       <%@host_team_goals.each do |ut|%>
-        <%= link_to h(ut.user.nickname), user_view_path(ut.user)%>进了<%= ut.goal%>个球  
+        <%links << "#{link_to h(ut.user.nickname), user_view_path(ut.user)}进了#{ut.goal}个球"%>
       <%end%>
+      <%= links_with_sticks links, ', '%>
     <%end%>
   </div>
 </div>
+<%end%>
 
+<%if @match.is_after_match? %>
 <div class="guest_team_div">
   <div class="sect">
     <h2>进球</h2>
     <%if !@guest_team_goals.empty?%>
+      <%links = []%>
       <%@guest_team_goals.each do |ut|%>
-        <%= link_to h(ut.user.nickname), user_view_path(ut.user)%>进了<%= ut.goal%>个球 
+        <%links << "#{link_to h(ut.user.nickname), user_view_path(ut.user)}进了#{ut.goal}个球"%>
       <%end%>
+      <%= links_with_sticks links, ', '%>
     <%end%>
   </div>
 </div>
+<%end%>
 
 <div class="clearBoth"></div>
 

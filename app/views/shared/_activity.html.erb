@@ -61,7 +61,7 @@
 <%elsif activity.class == Play%>
 <div class="activity play_activity">
   <div class="content">
-    <%= smart_nickname @user if @user%>去<%= link_to_if !activity.football_ground_id.nil?, h(activity.location), football_ground_path(activity.football_ground_id)%>随便踢踢
+    去<%= link_to_if !activity.football_ground_id.nil?, h(activity.location), football_ground_path(activity.football_ground_id)%>随便踢踢
     <br/><br/>
     <%= activity.start_time.strftime('%H:%M')%>-<%= activity.end_time.strftime('%H:%M')%>
     <br/><br/>
@@ -78,7 +78,11 @@
     <%= links_with_sticks links%>
   </div>
   <div class="activity_icon">
-    <%= @user ? user_image_link(@user) : image_tag('default_user.gif', :title=>"") %>
+    <%if @user && activity.has_member?(@user)%>
+      <%= user_image_link(@user) %>
+    <%else%>
+      <%= user_image_link(activity.users.find(:first)) %>
+    <%end%>
   </div>
 </div>
 <%elsif activity.class == Match %>

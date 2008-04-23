@@ -31,7 +31,7 @@ class PostsController < ApplicationController
       else
         @posts = @team.posts.public
       end
-      @title = "#{@team.name}下的讨论"
+      @title = "#{@team.shortname}下的讨论"
       render :layout => "team_layout"
     elsif (params[:training_id])
       @training = Training.find(params[:training_id])

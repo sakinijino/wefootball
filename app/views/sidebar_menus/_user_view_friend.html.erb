@@ -4,7 +4,7 @@
   </li>
   <%if @user == current_user%>
     <li <%= selected_class_sidebar_menu_item(:action=>'index', :controller=>'friend_invitations')%>>
-      > <%= link_to '朋友邀请', friend_invitations_path %>
+      > <%= link_to '待处理的朋友申请', friend_invitations_path %>
     </li>
     <li <%= selected_class_sidebar_menu_item(:action=>'invite', :controller=>'users')%>>
       > <%= link_to '邀请朋友使用WeFootball', invite_users_path %>

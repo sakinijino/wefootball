@@ -1,5 +1,5 @@
 #content {
-    position: relative;
+    margin: 20px 25px;
 }
 
 div.rule {
@@ -21,7 +21,6 @@ div.host_team_div {
 
 div.guest_team_div {
     float: right;
-    margin-right: 15px;  
     width: 465px;
     text-align: right;
 }
@@ -40,7 +39,7 @@ div.guest_team_div img.title_icon{
 
 #match_blackboard {
   float: left;
-  width: 430px;
+  width: 440px;
   text-align: center;
   font-size: 48px;
   line-height: 60px;

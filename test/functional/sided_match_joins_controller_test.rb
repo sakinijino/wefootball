@@ -146,7 +146,7 @@ class SidedMatchJoinsControllerTest < ActionController::TestCase
     ut.save!
     login_as :saki
     put :update_formation, :match_id=> sided_matches(:one), :formation => {'3'=>ut.id}
-    assert_redirected_to sided_match_path(sided_matches(:one))
+    assert_redirected_to edit_formation_sided_match_joins_path(:match_id=>sided_matches(:one))
     assert_equal 3, ut.reload.position
     
     users(:mike1).update_attributes!(:is_player => true, :fitfoot => 'R', :premier_position=>1)
@@ -160,17 +160,17 @@ class SidedMatchJoinsControllerTest < ActionController::TestCase
     ut2.sided_match = sided_matches(:one)
     ut2.save!
     put :update_formation, :match_id=> sided_matches(:one), :formation => {'3'=>ut2.id}
-    assert_redirected_to sided_match_path(sided_matches(:one))
+    assert_redirected_to edit_formation_sided_match_joins_path(:match_id=>sided_matches(:one))
     assert_nil ut.reload.position
     assert_equal 3, ut2.reload.position
     
     put :update_formation, :match_id=> sided_matches(:one), :formation => {'2'=>ut2.id, '20'=>ut.id}
-    assert_redirected_to sided_match_path(sided_matches(:one))
+    assert_redirected_to edit_formation_sided_match_joins_path(:match_id=>sided_matches(:one))
     assert_equal 20, ut.reload.position
     assert_equal 2, ut2.reload.position
     
     put :update_formation, :match_id=> sided_matches(:one), :formation => {'2'=>ut2.id, '27'=>ut.id}
-    assert_redirected_to sided_match_path(sided_matches(:one))
+    assert_redirected_to edit_formation_sided_match_joins_path(:match_id=>sided_matches(:one))
     assert_nil ut.reload.position
     assert_equal 2, ut2.reload.position
   end
