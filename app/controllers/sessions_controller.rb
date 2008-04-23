@@ -19,8 +19,8 @@ class SessionsController < ApplicationController
     else
       @se = User.new      
       if User.correct_login_without_activation(params[:login], params[:password])
-        @se.errors.add_to_base('帐号还没有激活, 请登录Email完成激活操作')
-        @se.errors.add_to_base('如果尚未收到激活邮件, 请重新注册')
+        @se.errors.add_to_base('你的帐号还没有激活, 请先登录Email完成激活操作')
+        @se.errors.add_to_base(%(如果尚未收到激活邮件, 请<a href="/resend_activate_mail">点击这里</a>))
       else
         @se.errors.add_to_base('用户名或密码错误')
       end

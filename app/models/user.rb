@@ -174,6 +174,11 @@ class User < ActiveRecord::Base
     u && u.authenticated?(password) ? u : nil
   end
   
+  def self.authenticate_unactivated(login, password)
+    u = find :first, :conditions => ['login = ? and activated_at IS NULL', login] # need to get the salt
+    u && u.authenticated?(password) ? u : nil
+  end  
+  
   def self.correct_login_without_activation(login, password)
     u = find :first, :conditions => ['login = ? and activated_at IS NULL', login] # need to get the salt
     u && u.authenticated?(password) ? u : nil

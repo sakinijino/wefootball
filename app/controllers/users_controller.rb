@@ -29,7 +29,6 @@ class UsersController < ApplicationController
           @user_team.save!
         end
         UnRegTeamInv.destroy_all(["user_id = ?", current_user.id])
-#        UnRegTeamInv.destroy_all
       end
       
       flash[:notice] = "你的帐号已经激活, 现在请设置一下个人信息"
@@ -41,18 +40,24 @@ class UsersController < ApplicationController
   
   def forgot_password
     if request.post?
-      user = User.find_by_login(params[:user][:login], :conditions=>"activated_at is not null")
-      if user        
-        user.create_password_reset_code     
+      @user = User.find_by_login(params[:user][:login], :conditions=>"activated_at is not null")
+      if @user
+        @user.create_password_reset_code     
         UserMailer.deliver_forgot_password(user)        
-        flash[:notice] = "密码重设通知已经发送到了#{user.login}, 请查收"       
-      else      
-        flash[:notice] = "目前并无#{params[:user][:login]}所对应的帐户"  
+        flash[:notice] = "密码重设通知已经发送到了#{@user.login}, 请查收"
+        redirect_to new_session_path
+        return
+      else
+        @user = User.new
+        if User.find_by_login(params[:user][:login], :conditions=>"activated_at is null")
+          @user.errors.add_to_base('你的帐号还没有激活, 请先登录Email完成激活操作')
+          @user.errors.add_to_base(%(如果尚未收到激活邮件, 请<a href="/resend_activate_mail">点击这里</a>))          
+        else
+          @user.errors.add_to_base("目前并无#{params[:user][:login]}所对应的帐户")
+        end
       end     
-      redirect_to(new_session_path) 
-    else
-      render :layout => 'unlogin_layout'
     end
+    render :layout => 'unlogin_layout'
   end 
   
   def reset_password
@@ -78,10 +83,31 @@ class UsersController < ApplicationController
       end 
     end
     render :layout => 'unlogin_layout'
+  end
+
+  def resend_activate_mail
+    if request.post?
+      @user = User.authenticate_unactivated(params[:user][:login], params[:user][:password])
+      if @user
+        @user.password = params[:user][:password]
+        UserMailer.deliver_signup_notification(@user) 
+        flash[:notice] = "激活邮件已经再次发送到了#{@user.login}, 请查收"
+        redirect_to new_session_path
+        return
+      else
+        @user = User.new
+        if User.authenticate(params[:user][:login], params[:user][:password])      
+          @user.errors.add_to_base("刚才这个帐户已经激活，无需再接收激活邮件啦")          
+        else
+          @user.errors.add_to_base("用户名和密码好像不大对啊")
+        end
+      end     
+    end
+    render :layout => 'unlogin_layout'
   end  
   
   def new
-    render :layout => default_layout  
+    render :action=>'explain_register', :layout => default_layout  
   end
   
   def search
@@ -92,28 +118,28 @@ class UsersController < ApplicationController
     render :layout=>default_layout
   end
   
-  def create
-    cookies.delete :auth_token
-    # protects against session fixation attacks, wreaks havoc with 
-    # request forgery protection.
-    # uncomment at your own risk
-    # reset_session
-    @user = User.find_by_login_and_activated_at(params[:user][:login],nil)
-    if @user
-      @user.password = params[:user][:password]
-      @user.password_confirmation = params[:user][:password_confirmation]       
-    else
-      @user = User.new(params[:user])
-      @user.login = params[:user][:login]
-    end
-    if @user.save
-      UserMailer.deliver_signup_notification(@user)
-      flash[:notice] = "激活帐户的邮件已发送, 请到你的邮箱激活"
-      redirect_to(new_session_path)
-    else
-      render :action=>'new', :layout => 'unlogin_layout'  
-    end
-  end
+#  def create
+#    cookies.delete :auth_token
+#    # protects against session fixation attacks, wreaks havoc with 
+#    # request forgery protection.
+#    # uncomment at your own risk
+#    # reset_session
+#    @user = User.find_by_login_and_activated_at(params[:user][:login],nil)
+#    if @user
+#      @user.password = params[:user][:password]
+#      @user.password_confirmation = params[:user][:password_confirmation]       
+#    else
+#      @user = User.new(params[:user])
+#      @user.login = params[:user][:login]
+#    end
+#    if @user.save
+#      UserMailer.deliver_signup_notification(@user)
+#      flash[:notice] = "激活帐户的邮件已发送, 请到你的邮箱激活"
+#      redirect_to(new_session_path)
+#    else
+#      render :action=>'new', :layout => 'unlogin_layout'  
+#    end
+#  end
   
   def invite
     if request.post?
@@ -139,14 +165,20 @@ class UsersController < ApplicationController
           flash[:notice] = "您发给#{@register_invitation.login}的邀请已送出"
           redirect_to invite_users_path
           return
-        end
+        end        
       end
     else
       @register_invitation = RegisterInvitation.new
-    end
+    end    
+    
     @teams = current_user.teams.admin    
     @user = current_user
-    render :layout => 'user_layout'    
+    render :layout => 'user_layout'
+
+    rescue ActiveRecord::RecordInvalid => e
+      @teams = current_user.teams.admin    
+      @user = current_user
+      render :layout => 'user_layout'    
   end
 
   def new_with_invitation
@@ -189,12 +221,13 @@ class UsersController < ApplicationController
       end
       RegisterInvitation.destroy(@register_invitation)
       UserMailer.deliver_signup_notification(@user)
-      flash[:notice] = "您的帐户已经注册成功, 请登录您注册的Email (#{@user.login})激活帐户"
+      flash[:notice] = "激活帐户的邮件已发送, 请到你的邮箱激活"
       redirect_to(new_session_path)
       return
     end
   rescue ActiveRecord::RecordInvalid => e
-      render :action=>'new', :layout => default_layout    
+    @invitation = @register_invitation
+    render :action=>"new_with_invitation/#{params[:user][:invitation_code]}", :layout => default_layout    
   end  
   
   def edit

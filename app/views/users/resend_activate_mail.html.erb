@@ -1,0 +1,17 @@
+<div id="wide_left_content" class="sect">
+  <h2>重新发送激活邮件</h2>
+  <%= error_messages_for :user %>
+
+  <% form_for :user do |f| %>
+    
+    <p><label for="login">你注册时使用的Email</label><br/>
+    <%= f.text_field :login, :size=>30, :maxlength=>40 %></p>
+
+    <p><label for="password">你注册时设置的密码</label><br/>
+    <%= f.password_field :password, :size=>30, :maxlength=>40 %></p>  
+
+    <p><%= submit_tag '发送激活邮件' %></p>
+  <% end %>
+</div>
+
+<div class="clearBoth"></div>
