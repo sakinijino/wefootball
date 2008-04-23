@@ -270,6 +270,24 @@ form.button-to div {
     margin: 20px 15px 20px 25px;
 }
 
+#welcome {
+  color:#333;
+}
+
+#welcome h2{
+  font-size: 20px;
+}
+
+#welcome hr{
+  width: 98%;
+}
+
+#welcome p.exp{
+  padding: 0 5px;
+  font-size: 14px;
+  line-height: 150%;
+}
+
 div.flash{
 /*    background: #ACBE33;*/
 /*    color: #fff;*/

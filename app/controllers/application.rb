@@ -5,6 +5,8 @@ class ApplicationController < ActionController::Base
   
   before_filter :store_current_location
   
+  filter_parameter_logging "password"
+  
   helper :all # include all helpers, all the time
   include AuthenticatedSystem
   # See ActionController::RequestForgeryProtection for details
@@ -16,8 +18,8 @@ class ApplicationController < ActionController::Base
   
   
   def index
-    @users = User.find(:all, :limit => 9, :order => 'id desc')
-    @teams = Team.find(:all, :limit => 9, :order => 'id desc')
+    @users = User.find(:all, :limit => 12, :order => 'id desc')
+    @teams = Team.find(:all, :limit => 12, :order => 'id desc')
     tmp = []
     tmp += Training.find(:all, :limit => 2, :order => 'id desc')
     tmp += Match.find(:all, :limit => 2, :order => 'id desc')

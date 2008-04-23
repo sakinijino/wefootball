@@ -2,6 +2,14 @@
   <%= stylesheet_link_tag 'activityitem' %>
 <%end%>
 
+<div class="sect" id="welcome">
+	<h2>WeFootball - 让我们一起，以足球的名义</h2>
+	<hr />
+	<p class="exp">
+    WeFootball可以帮助你和你的球队方便地安排、记录比赛训练<br/><br/>你在这里也可以找到一块儿踢球的朋友
+  </p>
+  <hr />
+</div>
 
 <div id="left_content">
   <div class="sect">
@@ -19,7 +27,7 @@
 
 <div id="right_content">
   <div class="sect">
-    <h2>新添加的活动</h2>
+    <h2>最近添加的活动</h2>
     <%= render :partial => 'shared/activities', :object => @activities, :locals=>{:start_date=> @start_time, :end_date=> @end_time}%>
   </div>
 </div>
