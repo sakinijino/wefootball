@@ -42,7 +42,7 @@ class MatchJoinsController < ApplicationController
       end
     end
     @another_team = @team == @match.host_team ? @match.guest_team : @match.host_team
-    @title = "编辑首发阵型"
+    @title = "编辑#{@team.shortname}的首发阵型"
     render :layout => "match_layout"                       
   end
   
@@ -62,7 +62,8 @@ class MatchJoinsController < ApplicationController
           raise ApplicationController::FakeParametersError if current_formation_length > @match.size
         end
       end
-      redirect_to match_path(@match)
+      flash[:notice] = "阵型已保存"      
+      redirect_to edit_match_join_path(0,:match_id=>@match.id,:team_id=>@team.id)      
     end
   rescue ApplicationController::FakeParametersError
     fake_params_redirect

@@ -71,7 +71,8 @@ class SidedMatchJoinsController < ApplicationController
           raise ApplicationController::FakeParametersError if current_formation_length > @sided_match.size
         end
       end
-      redirect_to sided_match_path(@sided_match)
+      flash[:notice] = "阵型已保存"      
+      redirect_to edit_formation_sided_match_joins_path(:match_id=>@sided_match.id)
     end
   rescue ApplicationController::FakeParametersError
     fake_params_redirect

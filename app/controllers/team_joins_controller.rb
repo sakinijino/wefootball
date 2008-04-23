@@ -91,7 +91,7 @@ class TeamJoinsController < ApplicationController
     end    
     @user =@tj.user
     @team = @tj.team
-    params[:ut][:is_player] = params[:ut][:is_player] && @user.is_playable
+    params[:ut][:is_player] = false if !@user.is_playable
     tmp = UserTeam.new(:is_admin => params[:ut][:is_admin])
     params[:ut][:is_admin] = @tj.is_admin if(
       tmp.is_admin && !@tj.can_promote_as_admin_by?(current_user)||
@@ -123,6 +123,7 @@ class TeamJoinsController < ApplicationController
           raise ApplicationController::FakeParametersError if current_formation_length > UserTeam::FORMATION_MAX_LENGTH
         end
       end
+      flash[:notice] = "阵型已保存"
       redirect_to formation_management_team_joins_path(:team_id => @team)
     end
   rescue ApplicationController::FakeParametersError
