@@ -211,7 +211,7 @@ form.button-to div {
 #header_menu div.l2_menu_list ul li{
     font-size: 12px;
     display: inline;
-    margin: 0 15px 0 15px;
+    margin: 0 10px;
     list-style-type: none;
 }
 
@@ -234,6 +234,7 @@ form.button-to div {
     padding: 0;
     border: none;
     background: #fff;
+    font-size: 12px;
 }
 
 #header_search input.blurinput {
