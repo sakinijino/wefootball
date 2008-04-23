@@ -21,7 +21,7 @@
         <%end%>
       </td>
       <td>
-        <%= button_to '接收', friend_relations_path(:request_id=>friend_inv.id), :method => :post %>
+        <%= button_to '接受', friend_relations_path(:request_id=>friend_inv.id), :method => :post %>
         <%= button_to '拒绝', friend_invitation_path(friend_inv), :method => :delete %>
       </td>
     </tr>

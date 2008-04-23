@@ -6,7 +6,8 @@ class FriendInvitationsController < ApplicationController
     #only return the invitations of current user
     @user = current_user
     @title = "希望和我成为朋友的用户"
-    @friend_invitations = FriendInvitation.find_all_by_host_id(current_user.id,:include=>[:applier])
+    @friend_invitations = FriendInvitation.find_all_by_host_id(current_user.id,:conditions=>["users.activated_at is not null"],
+      :include=>[:applier])
   end
 
   def create
