@@ -224,8 +224,9 @@ class UsersControllerTest < Test::Unit::TestCase
     end    
     post :invite, :register_invitation=>{:login=>"aa@bb.cc"}, :teams_id=>(users(:saki).teams.admin.map{|item| item.id})    
     reg_inv = RegisterInvitation.find(assigns(:register_invitation))
-    assert_equal users(:saki).id, reg_inv.host_id
-    assert_equal "aa@bb.cc", reg_inv.login   
+    assert_equal "aa@bb.cc", reg_inv.login
+    un_reg_fri_inv = UnRegFriendInv.find_by_invitation_id(assigns(:register_invitation))
+    assert_equal users(:saki).id, un_reg_fri_inv.host_id    
     assert_redirected_to invite_users_path
     
     #测试邀请一个已注册但尚未激活用户的情况
@@ -233,8 +234,9 @@ class UsersControllerTest < Test::Unit::TestCase
     users(:quentin).save!
     post :invite, :register_invitation=>{:login=>users(:quentin).login}, :teams_id=>(users(:saki).teams.admin.map{|item| item.id})    
     reg_inv = RegisterInvitation.find(assigns(:register_invitation))
-    assert_equal users(:saki).id, reg_inv.host_id
-    assert_equal users(:quentin).login, reg_inv.login   
+    assert_equal users(:quentin).login, reg_inv.login
+    un_reg_fri_inv = UnRegFriendInv.find_by_invitation_id(assigns(:register_invitation))
+    assert_equal users(:saki).id, un_reg_fri_inv.host_id     
     assert_redirected_to invite_users_path    
   end
   
@@ -243,7 +245,6 @@ class UsersControllerTest < Test::Unit::TestCase
     login_as :saki
     friend_email = "aa@bb.cc"
     friend_password = "111111"
-    initial_friend_inv_count = FriendInvitation.count
     post :invite, :register_invitation=>{:login=>friend_email}, :teams_id=>(users(:saki).teams.admin.map{|item| item.id})
     inv_code = assigns(:register_invitation).invitation_code
     post :create_with_invitation, :user=>{:invitation_code=>inv_code, :login=>friend_email, :password=>friend_password, :password_confirmation=>friend_password}
@@ -256,7 +257,7 @@ class UsersControllerTest < Test::Unit::TestCase
     assert_equal assigns(:current_user).teams.sort_by{|item| item.id}, users(:saki).teams.admin.sort_by{|item| item.id}
     assert_equal assigns(:current_user).friends, [users(:saki)]
     assert_equal 0, RegisterInvitation.count
-    assert_equal initial_friend_inv_count, FriendInvitation.count
+    assert_equal 0, UnRegFriendInv.count     
     assert_equal 0, UnRegTeamInv.count    
   end
 
@@ -265,11 +266,11 @@ class UsersControllerTest < Test::Unit::TestCase
     login_as :saki
     friend_email = "aa@bb.cc"
     friend_password = "111111"
-    initial_friend_inv_count = FriendInvitation.count
     post :invite, :register_invitation=>{:login=>friend_email}, :teams_id=>(users(:saki).teams.admin.map{|item| item.id})
     
     initial_reg_inv_count = RegisterInvitation.count
     initial_un_reg_team_inv_count = UnRegTeamInv.count
+    initial_un_reg_friend_inv_count = UnRegFriendInv.count
     
     #这里再次邀请，用新的队伍集合（只取两支队，而不是saki所管理的队伍全集）
     post :invite, :register_invitation=>{:login=>friend_email}, :teams_id=>(users(:saki).teams.admin.map{|item| item.id}[1..users(:saki).teams.admin.length-1])    
@@ -287,7 +288,7 @@ class UsersControllerTest < Test::Unit::TestCase
                    users(:saki).teams.admin[1..users(:saki).teams.admin.length-1].sort_by{|item| item.id}    
     assert_equal assigns(:current_user).friends, [users(:saki)]
     assert_equal initial_reg_inv_count, RegisterInvitation.count
-    assert_equal initial_friend_inv_count, FriendInvitation.count
+    assert_equal initial_un_reg_friend_inv_count, UnRegFriendInv.count
     assert_equal initial_un_reg_team_inv_count, UnRegTeamInv.count    
   end
 
@@ -296,9 +297,7 @@ class UsersControllerTest < Test::Unit::TestCase
     login_as :saki
     friend_email = "aa@bb.cc"
     friend_password_old = "111111"
-    friend_password_new = "222222"
-
-    initial_friend_inv_count = FriendInvitation.count    
+    friend_password_new = "222222"    
 
     post :invite, :register_invitation=>{:login=>friend_email}, :teams_id=>(users(:saki).teams.admin.map{|item| item.id})
     inv_code_old = assigns(:register_invitation).invitation_code
@@ -323,7 +322,7 @@ class UsersControllerTest < Test::Unit::TestCase
     assert_equal assigns(:current_user).teams.sort_by{|item| item.id}, users(:saki).teams.admin.sort_by{|item| item.id}
     assert_equal assigns(:current_user).friends, [users(:saki)]
     assert_equal 0, RegisterInvitation.count
-    assert_equal initial_friend_inv_count, FriendInvitation.count
+    assert_equal 0, UnRegFriendInv.count
     assert_equal 0, UnRegTeamInv.count    
   end   
   

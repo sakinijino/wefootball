@@ -5,12 +5,13 @@ class CreateUnRegFriendInvs < ActiveRecord::Migration
       t.integer :invitation_id
       t.integer :host_id      
     end
-    #~ RegisterInvitation.find_all.each do |item|
-      #~ UnRegFriendInvs.create!(:invitation_id=>item.id,:host_id=>item.host_id)
-    #~ end
-    #~ FriendInvitation.find(:all, :conditions=>["users.activated_at is null"], :include=>[:applier].each do |item|
-      #~ UnRegFriendInvs.create!(:user_id=>item.applier_id,:host_id=>item.host_id)
-    #~ end    
+    RegisterInvitation.find(:all).each do |item|
+      UnRegFriendInv.create!(:invitation_id=>item.id,:host_id=>item.host_id)
+    end
+    FriendInvitation.find(:all, :conditions=>["users.activated_at is null"], :include=>[:applier]).each do |item|
+      UnRegFriendInv.create!(:user_id=>item.applier_id,:host_id=>item.host_id)
+      item.destroy
+    end    
     remove_column :register_invitations, :host_id     
   end
 

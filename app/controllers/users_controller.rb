@@ -30,15 +30,11 @@ class UsersController < ApplicationController
         end
         UnRegTeamInv.destroy_all(["user_id = ?", current_user.id])
         
-        urtis = UnRegTeamInv.find_by_user_id(current_user.id)
-        temp_hash = {}
-        urtis.each{|item| temp_hash[item.host_id]=item}
-        for rfi in temp_hash.values
-          @friend_relation = FriendRelation.new
-          @friend_relation.user1_id = rfi.host_id
-          @friend_relation.user2_id = rfi.user_id
-          @friend_relation.save!
-        end
+        rfi = UnRegFriendInv.find_by_user_id(current_user.id)
+        @friend_relation = FriendRelation.new
+        @friend_relation.user1_id = rfi.host_id
+        @friend_relation.user2_id = rfi.user_id
+        @friend_relation.save!
         UnRegFriendInv.destroy_all(["user_id = ?", current_user.id])        
       end
       
