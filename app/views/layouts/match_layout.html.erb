@@ -17,6 +17,7 @@
 <%= render(:partial => 'layouts/qmd')%>
 <div id="main_content">
   <div id="header" class="match_header">
+    <a id="site_link" href="/"></a>
     <%= link_to small_team_image_tag(@match.host_team, :class=>''), team_view_path(@match.host_team), :id=>"host_header_icon" %>
     <%= link_to small_team_image_tag(@match.guest_team, :class=>''), team_view_path(@match.guest_team), :id=>"guest_header_icon" %>
     <%= render(:partial => 'layouts/header_setting')%>

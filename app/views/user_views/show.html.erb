@@ -81,7 +81,7 @@
         <%= image_tag('small_premier_position_icon.gif', :title=>"") %><span> 首选位置</span><br/>
         <%= image_tag('small_position_icon.gif', :title=>"") %><span> 可以踢的位置</span>
       </div>
-      <div class="clearBoth"></div>
+      <div class="cb"></div>
     </div>
     <%end%>
 
@@ -124,7 +124,7 @@
         <%= link_to "> 更多",user_team_joins_path(@user.id), :class=>"more" %>
     <%end%>    
     
-    <div class="clearBoth"></div>
+    <div class="cb"></div>
   </div>
   
   <div class="sect">
@@ -136,7 +136,7 @@
         <%= user_icon(@friends)%>
         <%= link_to "> 更多",user_friend_relations_path(@user.id), :class=>"more" %>
     <%end%>
-    <div class="clearBoth"></div>
+    <div class="cb"></div>
   </div>
 </div>
 
@@ -147,7 +147,7 @@
       <div class="activities">
         <%=date_div_link @recent_activity.start_time, @user%>
         <%= render :partial => 'shared/activity', :object => @recent_activity%>
-        <div class="clearBoth"></div>
+        <div class="cb"></div>
       </div>
     </div>
   <%end%>
@@ -156,7 +156,7 @@
     <h2><%=smart_nickname @user%>近期的活动</h2>
     <%= render(:partial => 'shared/highlight_calendar', 
       :locals => {:date => @start_time, :days=> UserViewsController::DISPLAY_DAYS, :activities => @calendar_activities_hash})%>
-    <div class="clearBoth"></div>
+    <div class="cb"></div>
   </div>
 </div>
-<div class="clearBoth"></div>
+<div class="cb"></div>

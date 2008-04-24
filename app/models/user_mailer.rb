@@ -1,7 +1,7 @@
 class UserMailer < ActionMailer::Base
   def signup_notification(user)   
     setup_email(user)
-    @subject    += '请激活您的帐号'
+    @subject    += '请激活你的帐号'
   
     @body[:url]  = "#{HOST}/activate/#{user.activation_code}"
   
@@ -9,7 +9,7 @@ class UserMailer < ActionMailer::Base
   
   def invite_notification(host, invitation, message)   
     setup_invitation_email(invitation)
-    @subject    += "#{host.nickname}邀请您使用WeFootball"
+    @subject    += "#{host.nickname}邀请你使用WeFootball"
     @body[:signup_url]  = "#{HOST}/signup_with_invitation/#{invitation.invitation_code}"    
     @body[:host_url]  = "#{HOST}/user_views/#{host.id}"
     @body[:host] = host
@@ -18,20 +18,20 @@ class UserMailer < ActionMailer::Base
   
   def activation(user)
     setup_email(user)
-    @subject    += '您的帐号已经被激活！'
+    @subject    += '你的帐号已经被激活！'
     @body[:main_page_url]  = "#{HOST}/user_views/#{user.id}"
     @body[:edit_url]  = "#{HOST}/users/#{user.id}/edit"  
   end
   
   def forgot_password(user)
     setup_email(user)
-    @subject    += '您要求更改密码'
+    @subject    += '你要求更改密码'
     @body[:url]  = "#{HOST}/reset_password/#{user.password_reset_code}" 
   end
 
   def reset_password(user)
     setup_email(user)
-    @subject    += '您的密码已经被更改'
+    @subject    += '你的密码已经被更改'
     @body[:url]  = "#{HOST}/login"    
   end
   

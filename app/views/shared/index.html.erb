@@ -2,26 +2,28 @@
   <%= stylesheet_link_tag 'activityitem' %>
 <%end%>
 
-<div class="sect" id="welcome">
-	<h2>WeFootball - 让我们一起，以足球的名义</h2>
-	<hr />
-	<p class="exp">
+<%if !logged_in?%>
+<div id="welcome">
+  <%= image_tag('wf_light.gif', :title=>'wefootball')%>
+  <div class="title">&nbsp;&nbsp;- 让我们一起，以足球的名义</div>
+  <div class="cb"></div>
+	<div class="exp">
     WeFootball可以帮助你和你的球队方便地安排、记录比赛训练<br/><br/>你在这里也可以找到一块儿踢球的朋友
-  </p>
-  <hr />
+  </div>
 </div>
-
+<%end%>
+<div class="cb"></div>
 <div id="left_content">
   <div class="sect">
     <h2>最近建立的球队</h2>    
     <%= team_icon(@teams)%>
-    <div class="clearBoth"></div>
+    <div class="cb"></div>
   </div>
   
   <div class="sect">
     <h2>最近加入的用户</h2>    
     <%= user_icon(@users)%>
-    <div class="clearBoth"></div>
+    <div class="cb"></div>
   </div>
 </div>
 
@@ -31,4 +33,4 @@
     <%= render :partial => 'shared/activities', :object => @activities, :locals=>{:start_date=> @start_time, :end_date=> @end_time}%>
   </div>
 </div>
-<div class="clearBoth"></div>
+<div class="cb"></div>

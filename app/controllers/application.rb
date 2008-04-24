@@ -18,7 +18,7 @@ class ApplicationController < ActionController::Base
   
   
   def index
-    @users = User.find(:all, :limit => 12, :order => 'id desc')
+    @users = User.find(:all, :conditions=>"activated_at is not null", :limit => 12, :order => 'id desc')
     @teams = Team.find(:all, :limit => 12, :order => 'id desc')
     tmp = []
     tmp += Training.find(:all, :limit => 2, :order => 'id desc')

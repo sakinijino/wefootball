@@ -64,7 +64,7 @@
       <div class="tab">
         <%= "<span style='float:left;margin-left:5px;'>阵型: #{f_text}</span>" unless f_text.blank?%>
         <%= link_to '查看详细', formation_index_team_joins_path(:team_id => @team), :style=>"float:right; margin-right:15px;"%>
-        <div class="clearBoth"></div>
+        <div class="cb"></div>
         <div class="small_field">
           <%@formation_uts.each do |ut|%>
             <% pos = team_field_position(ut.position, @formation_array) %>
@@ -109,7 +109,7 @@
   <div class="sect">        
     <h2><%=h @team.shortname%>的成员</h2>
     <%= user_icon(@users)%>
-    <div class="clearBoth"></div>
+    <div class="cb"></div>
   </div>
 
   <div class="sect">   
@@ -131,7 +131,7 @@
       <div class="activities">
         <%=date_div_link @recent_activity.start_time, @team%>
         <%= render :partial => 'shared/activity', :object => @recent_activity%>
-        <div class="clearBoth"></div>
+        <div class="cb"></div>
       </div>
     </div>
   <%end%>
@@ -140,7 +140,7 @@
     <h2><%=h @team.shortname%>近期的活动</h2>
     <%= render(:partial => 'shared/highlight_calendar', 
       :locals => {:date => @start_time, :days=> TeamViewsController::DISPLAY_DAYS, :activities => @calendar_activities_hash})%>
-    <div class="clearBoth"></div>
+    <div class="cb"></div>
   </div>
 </div>
-<div class="clearBoth"></div>
+<div class="cb"></div>

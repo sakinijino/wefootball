@@ -12,7 +12,7 @@
 
 <div style="float:right;width:422px" class="sect">
   <%=render :partial=>'sidebar_menus/team_view_formation'%>
-  <div class="clearBoth"></div>
+  <div class="cb"></div>
   <div id="field_div">
     <%@starting_uts.each do |ut|%>
       <% tmp = formation_field_position(ut.position, @formation_array) %>
@@ -49,4 +49,4 @@
   </table>
 </div>
 
-<div class="clearBoth"></div>
+<div class="cb"></div>

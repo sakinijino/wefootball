@@ -32,7 +32,7 @@ class SessionsController < ApplicationController
     self.current_user.forget_me if logged_in?
     cookies.delete :auth_token
     reset_session
-    flash[:notice] = "您已经退出WeFootball"
+    flash[:notice] = "你已经退出WeFootball"
     redirect_with_back_uri_or_default new_session_path
   end
 end

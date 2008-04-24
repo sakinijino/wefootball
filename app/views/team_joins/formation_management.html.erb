@@ -13,7 +13,7 @@
 
 <div style="float:right;width:392px" class="sect">
   <%=render :partial=>'sidebar_menus/team_view_formation'%>
-  <div class="clearBoth"></div>
+  <div class="cb"></div>
   <div id="scroll_field">
     <div style="margin-bottom:5px;"><%= submit_tag "保存修改", :onclick => 'formation.submit();'%></div>
     <div id="field_div"></div>
@@ -29,7 +29,7 @@
       <% category.each_with_index do |item, i|%>
         <span class="tab_link" style="<%= i==0 ? "margin-left:10px" : ""%>"><%=item[0]%></span>
       <%end%>
-      <div class="clearBoth"></div>
+      <div class="cb"></div>
       <% category.each do |item|%>
         <div class="tab">
           <%item[1].each do |pos|%>
@@ -41,7 +41,7 @@
                   <span><%=link_to h(user.nickname), user_view_path(user.id)%></span>
                 </div>
               <%end%>
-              <div class="clearBoth"></div>
+              <div class="cb"></div>
             <%end%>
           <%end%>
         </div>
@@ -79,4 +79,4 @@
 
 <%end%>
 
-<div class="clearBoth"></div>
+<div class="cb"></div>

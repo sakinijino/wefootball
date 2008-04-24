@@ -22,7 +22,7 @@
           <%= links_with_sticks links%>
         <%end%>
       </div>
-      <div class="clearBoth"></div>
+      <div class="cb"></div>
     </div>
     <%if logged_in?%> 
       <div class="control">
@@ -35,7 +35,7 @@
         <%end%>
         <%= links_with_sticks links%>
       </div>
-      <div class="clearBoth"></div>
+      <div class="cb"></div>
     <%end%>   
   </div>
 
@@ -68,7 +68,7 @@
         <%= user_icon(@joined_users)%>
         <%= link_to "> 更多",joined_users_training_path(@training.id), :class=>"more" %>
     <%end%>
-    <div class="clearBoth"></div>
+    <div class="cb"></div>
   </div>
          
   <div class="sect">
@@ -80,8 +80,8 @@
         <%= user_icon(@undetermined_users)%>
         <%= link_to "> 更多",undetermined_users_training_path(@training.id), :class=>"more" %>
     <%end%>
-    <div class="clearBoth"></div>
+    <div class="cb"></div>
   </div>
 </div>
 
-<div class="clearBoth"></div>
+<div class="cb"></div>

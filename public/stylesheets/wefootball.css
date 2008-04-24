@@ -34,6 +34,11 @@ form.button-to div {
     padding: 0;
 }
 
+#qmd a{
+  color: #000;
+  background: transparent;
+}
+
 #qmd .left {
     background:url(/images/qmd_left.gif) no-repeat;
     width:139px;
@@ -74,6 +79,15 @@ form.button-to div {
     position: relative;
     line-height: normal;
     z-index: 20;
+}
+
+#header #site_link {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  height: 70px;
+  width: 280px;
+  background: transparent;
 }
 
 #header.match_header {
@@ -271,19 +285,28 @@ form.button-to div {
 }
 
 #welcome {
-  color:#333;
+  color:#666;
+  margin: 0 0 25px 5px;
 }
 
-#welcome h2{
+#welcome div,
+#welcome img {
+  float: left;
   font-size: 20px;
+  margin: 0;
+  padding: 0;
 }
 
-#welcome hr{
-  width: 98%;
+#welcome div.title {
+  padding-top: 13px;
 }
 
-#welcome p.exp{
-  padding: 0 5px;
+#welcome div.exp{
+  border-top: 1px solid #999;
+  border-bottom: 1px solid #999;
+  width: 900px;
+  padding: 15px 10px;
+  margin: 10px 0 25px 0;
   font-size: 14px;
   line-height: 150%;
 }
@@ -327,7 +350,7 @@ div.sect h2 {
     padding: 5px;
 }
 
-div.clearBoth {
+div.cb {
     clear:both;
 }
 

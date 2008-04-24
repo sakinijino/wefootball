@@ -17,6 +17,7 @@
 <%= render(:partial => 'layouts/qmd')%>
 <div id="main_content">
   <div id="header">
+    <a id="site_link" href="/"></a>
     <%= link_to team_image_tag(@team), team_view_path(@team), :id=>"header_icon" %>
     <%= link_to h(@team.shortname), team_view_path(@team), :id=>"header_name"%>
 

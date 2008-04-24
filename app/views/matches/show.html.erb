@@ -33,7 +33,7 @@
   <%= render(:partial => 'detail', :locals => {:team => @match.guest_team, :is_host => false})%>
 </div>
 
-<div class="clearBoth"></div>
+<div class="cb"></div>
 
 <%if @match.is_after_match? %>
 <div class="host_team_div">
@@ -65,7 +65,7 @@
 </div>
 <%end%>
 
-<div class="clearBoth"></div>
+<div class="cb"></div>
 
 <div class="host_team_div">
   <%= render(:partial => 'team_in_match', :locals => {
@@ -83,4 +83,4 @@
       :posts => @guest_posts})%>
 </div>
 
-<div class="clearBoth"></div>
+<div class="cb"></div>

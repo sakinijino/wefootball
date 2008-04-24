@@ -5,7 +5,7 @@
   <%= render(:partial => 'site_posts/post', :collection => @site_post.site_replies, :locals => {:parent => @site_post})%>
   </div>
 
-  <div class="sect clearBoth">
+  <div class="sect cb">
     <h2>回复</h2>
     <%= error_messages_for :reply %>
     <br/>
@@ -27,4 +27,4 @@
     <%=render :partial=>'site_posts/sidebar_menu'%>
   </div>
 </div>
-<div class="clearBoth"></div>
+<div class="cb"></div>

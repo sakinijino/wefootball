@@ -37,7 +37,7 @@
             <%= links_with_sticks links%>
           <%end%>
         </div>
-        <div class="clearBoth"></div>
+        <div class="cb"></div>
     </div>
     <%if logged_in?%>
       <div class="control">
@@ -57,7 +57,7 @@
         <%= links_with_sticks links%>
       </div>
     <%end%>
-    <div class="clearBoth"></div>
+    <div class="cb"></div>
   </div>
   <%if !@match.description.blank?%>
   <div class="sect">
@@ -107,9 +107,9 @@
           :style=>"left:#{pos[:left]}px;top:#{pos[:top]}px;",
           :title=>ut.user.nickname), user_view_path(ut.user), :class=>"resize_small_icon" %>
       <%end%>
-      <div class="clearBoth"></div>
+      <div class="cb"></div>
     </div>
-    <div class="clearBoth"></div>
+    <div class="cb"></div>
   </div>
 </div>
 
@@ -124,7 +124,7 @@
         <%= user_icon(@joined_users)%>
         ><%= link_to " 更多",joined_users_sided_match_path(@match.id), :class=>"more" %>
     <%end%>
-    <div class="clearBoth"></div>
+    <div class="cb"></div>
   </div>
          
   <div class="sect">
@@ -136,7 +136,7 @@
         <%= user_icon(@undetermined_users)%>
         ><%= link_to " 更多",undetermined_users_sided_match_path(@match.id), :class=>"more" %>
     <%end%>
-    <div class="clearBoth"></div>
+    <div class="cb"></div>
   </div>
 
   <div class="sect">   
@@ -148,8 +148,8 @@
       <%links << "#{link_to '更多', sided_match_posts_path(@match)}"%>
       <%= links_with_sticks links%>
     </div>
-    <div class="clearBoth"></div>
+    <div class="cb"></div>
   </div>                  
 </div>
 
-<div class="clearBoth"></div>
+<div class="cb"></div>

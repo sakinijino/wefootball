@@ -162,7 +162,7 @@ class UsersController < ApplicationController
             end
           end           
           UserMailer.deliver_invite_notification(current_user, @register_invitation, params[:message])
-          flash[:notice] = "您发给#{@register_invitation.login}的邀请已送出"
+          flash[:notice] = "你发给#{@register_invitation.login}的邀请已送出"
           redirect_to invite_users_path
           return
         end        
