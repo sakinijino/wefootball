@@ -26,6 +26,45 @@ class Message < ActiveRecord::Base
     elsif (self.receiver_id == user.id)
       self.is_delete_by_receiver = true
     end
-    (self.is_delete_by_sender && self.is_delete_by_receiver) ? self.destroy : self.save!
+    if (self.is_delete_by_sender && self.is_delete_by_receiver) 
+      self.destroy
+    else
+      Message.transaction do
+        if (user == self.receiver && !self.is_receiver_read)
+          self.is_receiver_read = true;
+          self.receiver.unread_messages_count -=1
+          self.receiver.unread_messages_count = 0 if self.receiver.unread_messages_count < 0 
+          self.receiver.save!
+        end
+        self.save!
+      end
+    end
+  end
+  
+  def receiver_read!
+    Message.transaction do
+      if (!self.is_receiver_read)
+        self.is_receiver_read = true;
+        self.save!
+        self.receiver.unread_messages_count -=1
+        self.receiver.unread_messages_count = 0 if self.receiver.unread_messages_count < 0 
+        self.receiver.save!
+      end
+    end
+  end
+  
+  def after_create
+    if (!self.is_receiver_read)
+      self.receiver.unread_messages_count +=1
+      self.receiver.save!
+    end
+  end
+  
+  def after_destroy
+    if (!self.is_receiver_read)
+      self.receiver.unread_messages_count -=1
+      self.receiver.unread_messages_count = 0 if self.receiver.unread_messages_count < 0 
+      self.receiver.save!
+    end
   end
 end

@@ -151,7 +151,7 @@ form.button-to div {
     float: left;
     position: relative;
     top: 100px;
-    width: 175px;
+    width: 180px;
     text-align:center;
 }
 
@@ -165,7 +165,7 @@ form.button-to div {
 
 #header_setting .dropdown_container div.dropdown a{
     display: block;
-    padding: 5px;
+    padding: 5px 0;
     background: #fff;
     color: #006666;
 }

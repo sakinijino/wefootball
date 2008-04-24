@@ -22,8 +22,7 @@ class MessagesController < ApplicationController
       return
     end
     if (!@message.is_receiver_read && @message.receiver_id == self.current_user.id)
-      @message.is_receiver_read = true
-      @message.save
+      @message.receiver_read!
     end
   end
   
