@@ -1,6 +1,8 @@
 class RegisterInvitation < ActiveRecord::Base
   has_many :team_invitations, :class_name=>"UnRegTeamInv", :foreign_key=>"invitation_id",
             :dependent => :nullify
+  has_one :friend_invitations, :class_name=>"UnRegFriendInv", :foreign_key=>"invitation_id",
+            :dependent => :nullify          
   validates_format_of       :login, 
     :with=> /^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$/,
     :message => '需要填写Email'

@@ -29,6 +29,17 @@ class UsersController < ApplicationController
           @user_team.save!
         end
         UnRegTeamInv.destroy_all(["user_id = ?", current_user.id])
+        
+        urtis = UnRegTeamInv.find_by_user_id(current_user.id)
+        temp_hash = {}
+        urtis.each{|item| temp_hash[item.host_id]=item}
+        for rfi in temp_hash.values
+          @friend_relation = FriendRelation.new
+          @friend_relation.user1_id = rfi.host_id
+          @friend_relation.user2_id = rfi.user_id
+          @friend_relation.save!
+        end
+        UnRegFriendInv.destroy_all(["user_id = ?", current_user.id])        
       end
       
       flash[:notice] = "你的帐号已经激活, 现在请设置一下个人信息"
@@ -150,17 +161,17 @@ class UsersController < ApplicationController
         @register_invitation = RegisterInvitation.new
       else      
         @register_invitation = RegisterInvitation.new(params[:register_invitation])
-        @register_invitation.host_id = current_user.id
         User.transaction do
           @register_invitation.save!          
           @register_invitation.create_invitation_code
+          UnRegFriendInv.create!(:invitation_id=>@register_invitation.id,:host_id=>current_user.id)          
           if params[:teams_id]
             params[:teams_id].each do |team_id| #验证post过来的表单项确实是所管理球队的子集
               if current_user.is_team_admin_of?(team_id)
                 UnRegTeamInv.create!(:invitation_id=>@register_invitation.id,:team_id=>team_id)
               end
             end
-          end           
+          end
           UserMailer.deliver_invite_notification(current_user, @register_invitation, params[:message])
           flash[:notice] = "你发给#{@register_invitation.login}的邀请已送出"
           redirect_to invite_users_path
@@ -205,16 +216,13 @@ class UsersController < ApplicationController
       @user.password_confirmation = params[:user][:password_confirmation]       
     else
       @user = User.new(params[:user])
-      @user.login = params[:user][:login]
-      fi = FriendInvitation.new    
+      @user.login = params[:user][:login]  
     end
     User.transaction do
       @user.save!
-      if fi
-        fi.host_id = @register_invitation.host_id
-        fi.applier_id = @user.id
-        fi.save!
-      end        
+      rfi = UnRegFriendInv.find_by_invitation_id(@register_invitation.id) 
+      rfi.user_id = @user.id
+      rfi.save!
       for rti in UnRegTeamInv.find_all_by_invitation_id(@register_invitation.id)
         rti.user_id = @user.id
         rti.save!
