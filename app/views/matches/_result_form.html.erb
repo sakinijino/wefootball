@@ -45,7 +45,7 @@ end%>
     <p>
       对方填写的比分: 
       <%if !host_team_goal_by_another_team.nil?%>
-        <%=@match.host_team.shortname%>
+        <%=h @match.host_team.shortname%>
         <span class="another_result"><%=host_team_goal_by_another_team%></span>
       <%end%>
 
@@ -53,11 +53,11 @@ end%>
 
       <%if !guest_team_goal_by_another_team.nil?%>
         <% if host_team_goal_by_another_team.nil?%>
-          <%= @match.guest_team.shortname %>
+          <%=h @match.guest_team.shortname %>
           <span class="another_result"><%= guest_team_goal_by_another_team%></span>
         <%else%>
           <span class="another_result"><%= guest_team_goal_by_another_team%></span>
-          <%= @match.guest_team.shortname %>
+          <%=h @match.guest_team.shortname %>
         <%end%>
       <%end%>&nbsp;&nbsp;
       <%fill_result_link = "> <a class='fill_result' id='goal-#{host_team_goal_by_another_team}-#{guest_team_goal_by_another_team}' href='javascript:void(0)'>认可对方填写的比分</a>"%>
@@ -79,11 +79,11 @@ end%>
   <br/><br/>
   <div class="goal_input result_block">
     <div style="margin: 10px 0">
-      <%=@match.host_team.shortname%>
+      <%=h @match.host_team.shortname%>
       <%= f.text_field host_team_goal_sym, :maxlength => 2, :size=>1 %>
       :
       <%= f.text_field guest_team_goal_sym, :maxlength => 2, :size=>1 %>
-      <%=@match.guest_team.shortname%>
+      <%=h @match.guest_team.shortname%>
     </div>
 
     <%if !host_team_goal_by_another_team.nil? || !guest_team_goal_by_another_team.nil?%>

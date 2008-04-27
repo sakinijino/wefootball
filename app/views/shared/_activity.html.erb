@@ -9,7 +9,7 @@
 <%if activity.class == Training%>
 <div class="activity training_activity">
   <div class="content">
-    <%= link_to activity.team.shortname, team_view_path(activity.team.id) %>训练
+    <%= link_to h(activity.team.shortname), team_view_path(activity.team.id) %>训练
     <br/><br/>
     <%= activity.start_time.strftime('%H:%M')%>-<%= activity.end_time.strftime('%H:%M')%>,
     <%= location_link activity.location, activity.football_ground_id %>
@@ -33,9 +33,9 @@
 <%elsif activity.class == SidedMatch%>
 <div class="activity match_activity">
   <div class="content">
-    <%= link_to(activity.host_team.shortname, team_view_path(activity.host_team_id))%>
+    <%= link_to(h(activity.host_team.shortname), team_view_path(activity.host_team_id))%>
     对阵
-    <%= activity.guest_team_name%>
+    <%=h activity.guest_team_name%>
     <br/><br/>
     <%= activity.start_time.strftime('%H:%M')%>-<%= activity.end_time.strftime('%H:%M')%>,
     <%= location_link activity.location, activity.football_ground_id%>
@@ -89,9 +89,9 @@
 <%belongs_to_both_teams = display_status && current_user.is_team_member_of?(activity.host_team_id) && current_user.is_team_member_of?(activity.guest_team_id)%>
 <div class="activity match_activity <%= 'match_activity_wide' if belongs_to_both_teams%>">
   <div class="content">
-    <%= link_to(activity.host_team.shortname, team_view_path(activity.host_team_id))%>
+    <%= link_to(h(activity.host_team.shortname), team_view_path(activity.host_team_id))%>
     对阵
-    <%= link_to(activity.guest_team.shortname, team_view_path(activity.guest_team_id))%>
+    <%= link_to(h(activity.guest_team.shortname), team_view_path(activity.guest_team_id))%>
     <br/><br/>
     <%= activity.start_time.strftime('%H:%M')%>-<%= activity.end_time.strftime('%H:%M')%>,
     <%= location_link activity.location, activity.football_ground_id%>

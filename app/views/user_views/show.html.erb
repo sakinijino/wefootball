@@ -3,11 +3,6 @@
   <%= javascript_include_tag "ui.dialog.js" %>
 <%end%>
 
-<%content_for(:stylesheet) do%>
-  <%= stylesheet_link_tag 'calendar' %>
-  <%= stylesheet_link_tag 'activityitem' %>
-<%end%>
-
 <div id="left_content">
   <div class="sect">
     <h2><%=smart_nickname @user%>的信息</h2>
@@ -37,7 +32,7 @@
       <%= link_to(image_tag("sendMail.gif", :title=>"给#{@user.gender_text}发信"), 
         new_message_path(:to=>@user.id))%>
       <%= link_to(image_tag("breakUpFriendship.gif", :title=>"不和#{@user.gender_text}玩"), 
-        friend_relation_path(0, :user_id=>@user.id),:method=>"delete") if @are_friends %>
+        friend_relation_path(0, :user_id=>@user.id),:method=>"delete", :confirm => '真的要取消朋友关系吗？') if @are_friends %>
       <%= link_to(image_tag("inviteFriend.gif", :title=>"申请成为好友"), '#',
         :onclick=>'wefootball.openDialog(event, "#send_friend_invitation_div");return false') if @can_send_invitation %>
       <%= link_to(image_tag("inviteIntoTeam.gif", :title=>"邀请#{@user.gender_text}加入球队"),
@@ -90,7 +85,7 @@
       <%if logged_in? && @user.id != current_user.id %>
       <%links << link_to("给#{@user.gender_text}写信", new_message_path(:to=>@user.id))%>
       <%if @are_friends%>
-        <%links << link_to("不和#{@user.gender_text}玩", friend_relation_path(0, :user_id=>@user.id),:method=>"delete")  %>
+        <%links << link_to("不和#{@user.gender_text}玩", friend_relation_path(0, :user_id=>@user.id),:method=>"delete", :confirm => '真的要取消朋友关系吗？')  %>
       <%elsif @can_send_invitation %>
         <%links << link_to("申请成为朋友", '#',
           :onclick=>'wefootball.openDialog(event, "#send_friend_invitation_div");return false') %>
@@ -105,7 +100,7 @@
     <div id="send_friend_invitation_div" class="jdialog">
       <% form_for :friend_invitation, :url => friend_invitations_path, :method=>"POST" do |f| %>
           <%= f.hidden_field :host_id,  :value=>@user.id%>
-          <span>给<%= @user.nickname%>留个言吧...</span><br />
+          <span>给<%=h @user.nickname%>留个言吧...</span><br />
           <%= f.text_area :message, :cols => 30, :rows => 2%><br />
           <%= f.submit "朋友邀请" %>
           <%= f.submit "撤销", :onclick=>'j("#send_friend_invitation_div").dialog("close");return false;' %>

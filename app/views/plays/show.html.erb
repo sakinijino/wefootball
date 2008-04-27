@@ -1,8 +1,3 @@
-<%content_for(:stylesheet) do%>
-  <%= stylesheet_link_tag 'calendar' %>
-  <%= stylesheet_link_tag 'activityitem' %>
-<%end%>
-
 <div id="wide_left_content">
   <div class="sect">
     <h2>踢着玩的基本信息</h2>
@@ -29,7 +24,7 @@
 
 <div id="narrow_right_content">
   <div class="sect">
-    <h2>打算一起去踢的有...</h2>
+    <h2>去踢的有...</h2>
     <%if @players.length <= PlaysController::PLAYER_LIST_LENGTH%>
         <%= user_icon(@players)%>
     <%else%>

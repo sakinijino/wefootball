@@ -59,7 +59,12 @@ class PostsController < ApplicationController
     @training = @post.training
     @match = @post.match
     @sided_match = @post.sided_match
-    @related_posts = @team.posts.find(:all, :limit => 20) - [@post]
+    
+    if (logged_in? && current_user.is_team_member_of?(@team))
+      @related_posts = @team.posts.find(:all, :limit => 20) - [@post]
+    else
+      @related_posts = @team.posts.find(:all, :conditions => ['is_private = ?', false], :limit => 20) - [@post]
+    end
 
     if @match
       render :layout => "match_layout"

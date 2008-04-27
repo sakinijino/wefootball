@@ -21,9 +21,9 @@
 <%if logged_in?%>
 <div class="control">
 <%if post.is_a?(SitePost)%>
-  <%= "> #{link_to('删除',  site_post_path(post.id), :method=>"delete")}" if post.can_be_destroyed_by?(current_user)%>
+  <%= "> #{link_to('删除',  site_post_path(post.id), :method=>"delete", :confirm => '真的删除帖子吗？')}" if post.can_be_destroyed_by?(current_user)%>
 <%elsif post.is_a?(SiteReply)%>
-  <%= "> #{link_to "删除", site_post_site_reply_path(parent, post.id), :method=>"delete"}" if post.can_be_destroyed_by?(current_user) %>
+  <%= "> #{link_to "删除", site_post_site_reply_path(parent, post.id), :method=>"delete", :confirm => '真的删除回复吗？'}" if post.can_be_destroyed_by?(current_user) %>
 <%end%>
 </div>
 <%end%>

@@ -3,11 +3,6 @@
   <%= javascript_include_tag "ui.dialog.js" %>
 <%end%>
 
-<%content_for(:stylesheet) do%>
-  <%= stylesheet_link_tag 'calendar' %>
-  <%= stylesheet_link_tag 'activityitem' %>
-<%end%>
-
 <div id="left_content">
   <div class="sect">
     <h2><%=h @team.shortname%>的信息</h2>
@@ -35,7 +30,7 @@
       <%if logged_in? %>
         <span class="shortcut">
         <%if @can_quit%>
-          <%= link_to(image_tag("quitFromTeam.gif", :title=>"退出球队"), team_join_path(@user_team.id),:method=>:delete)%>
+          <%= link_to(image_tag("quitFromTeam.gif", :title=>"退出球队"), team_join_path(@user_team.id),:method=>:delete, :confirm => '真的退出球队吗？')%>
         <%elsif @can_request%>
           <%= link_to(image_tag("inviteIntoTeam.gif", :title=>"申请加入球队"), '#', 
                 :onclick=>'wefootball.openDialog(event, "#send_team_join_request_div");return false;')%>
@@ -79,7 +74,7 @@
         <%links = []%>
         <%if logged_in? %>
           <%if @can_quit%>
-            <%links << link_to("退出球队", team_join_path(@user_team.id),:method=>:delete)%>
+            <%links << link_to("退出球队", team_join_path(@user_team.id),:method=>:delete, :confirm => '真的退出球队吗？')%>
           <%elsif @can_request%>
             <%links << link_to("申请加入球队", '#', 
                 :onclick=>'wefootball.openDialog(event, "#send_team_join_request_div");;return false;')%>

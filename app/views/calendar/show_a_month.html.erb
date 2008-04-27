@@ -1,7 +1,3 @@
-<%content_for(:stylesheet) do%>
-  <%= stylesheet_link_tag 'calendar' %>
-<%end%>
-
 <div id="wide_left_content" class="sect">
     <%= render(:partial => 'calendar', 
         :locals => {:year => @date.year, :month => @date.month,

@@ -1,8 +1,3 @@
-<%content_for(:stylesheet) do%>
-  <%= stylesheet_link_tag 'calendar' %>
-  <%= stylesheet_link_tag 'activityitem' %>  
-<%end%>
-
 <div id="wide_left_content">
   <div class="sect">
     <h2>比赛基本信息</h2>
@@ -15,7 +10,7 @@
               <div class="sided_match_result"><%=tmp%></div>
             <%end%>
           <%end%>
-          <span>对阵球队: </span><%= @match.guest_team_name%><br />
+          <span>对阵球队: </span><%=h @match.guest_team_name%><br />
           <%if @match.is_after_match?%>
             <span>比赛结果: </span><%=sided_match_result_text @match%><br />
           <%end%>
@@ -66,7 +61,7 @@
   </div>
   <%end%>
   
-  <%if !@team_goals.empty?%>
+  <%if @match.is_after_match? && !@team_goals.empty?%>
   <div class="sect">
     <h2>进球</h2>
     <%links = []%>

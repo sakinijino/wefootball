@@ -40,11 +40,13 @@
           <%= render :partial => 'properties_list', :locals => {:mi => mi, :need_reply => true}%>
 
           <div style="margin: 10px 0 10px 10px">
+          <%if logged_in? && current_user.is_team_admin_of?(@team)%>
             <%links = []%>
             <%links << link_to('接受对方的方案', matches_path(:id=>mi.id), :method=>:post) if current_user.can_accpet_match_invitation?(mi)%>
-            <%links << link_to("拒绝对方的方案", match_invitation_path(mi),:method=>:delete) if current_user.can_reject_match_invitation?(mi)%>
+            <%links << link_to("拒绝对方的方案", match_invitation_path(mi),:method=>:delete, :confirm => '真的要拒绝吗？') if current_user.can_reject_match_invitation?(mi)%>
             <%links << link_to('继续商议', edit_match_invitation_path(mi)) if current_user.can_edit_match_invitation?(mi)%>
             <%= links_with_sticks links%>
+          <%end%>
           </div>
         </td>
         <td><%= team_icon(self_team)%></td>

@@ -6,12 +6,12 @@
   <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
   <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
   <title><%=h @title ? @title : h(@team.shortname)%></title>
+  <%= stylesheet_link_tag 'wefootball' %>
+  <%= yield :stylesheet%>
   <%= javascript_include_tag "jquery-1.2.3.min.js" %>
   <%= javascript_include_tag "jquery.dimensions.js" %>
   <%= javascript_include_tag "application" %>
   <%= yield :javascript%>
-  <%= stylesheet_link_tag 'wefootball' %>
-  <%= yield :stylesheet%>
 </head>
 <body>
 <%= render(:partial => 'layouts/qmd')%>

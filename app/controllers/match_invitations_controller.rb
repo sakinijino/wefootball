@@ -1,5 +1,5 @@
 class MatchInvitationsController < ApplicationController
-  before_filter :login_required
+  before_filter :login_required, :except => [:index]
   
   def index
     @team = Team.find(params[:team_id])

@@ -25,7 +25,7 @@
           <%else%>
               <td><%=h(m.receiver.nickname)%></td>
           <%end%>
-          <td><%=link_to m.subject, message_path(m.id)%></td>
+          <td><%=link_to h(m.subject), message_path(m.id)%></td>
           <td><%=h m.created_at.to_s(:db)%></td>
           <td><%=check_box_tag "messages[]", m.id %></td>
         </tr>

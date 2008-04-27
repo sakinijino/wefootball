@@ -41,11 +41,11 @@ end%>
       <input type="radio" class="donotcare_input_switch switch" value="donotcare" name="result_type" <%= 'checked' if dnc_checked%>>比赛结果无所谓</input><br/><br/>
       <div class="goal_input result_block">
         <div style="margin: 10px 0">
-          <%=@sided_match.host_team.shortname%>
+          <%=h @sided_match.host_team.shortname%>
           <%= f.text_field :host_team_goal, :maxlength => 2, :size=>1 %>
           :
           <%= f.text_field :guest_team_goal, :maxlength => 2, :size=>1 %>
-          <%=@sided_match.guest_team_name%>
+          <%=h @sided_match.guest_team_name%>
         </div>
       </div>
       <div class="situation_input result_block">

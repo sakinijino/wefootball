@@ -244,7 +244,7 @@ form.button-to div {
 }
 
 #header_search input {
-    margin: -2px 5px 0 0;
+    margin: -2px 0 0 0;
     padding: 0;
     border: none;
     background: #fff;
@@ -256,6 +256,7 @@ form.button-to div {
 }
 
 #header_search input.submit {
+    margin-left: 5px;
     width: 32px;
     height: 30px;
     cursor: pointer;
@@ -457,6 +458,12 @@ a.tab_link {
 .tabSelected {
     border-bottom: 2px solid #FCFDFE;
     background-color:#FCFDFE; 
+}
+
+a.more {
+  clear: both;
+  float: right;
+  margin-right: 25px;
 }
 
 div.tab_container span.shortcut {
@@ -667,4 +674,365 @@ div.result_block span.another_result {
 
 #footer span.links a{
     text-decoration: underline;
+}
+
+/*---------------------activities------------------------------*/
+div.activities {
+    padding: 0px;
+    line-height: normal;
+}
+
+div.activities div.date {
+    width:78px;
+    height:78px;
+    text-align: center;
+    border:solid 1px #3D681A;
+    float: left;
+    margin-top:8px;
+    margin-right:10px;
+}
+
+div.activities div.date div.day {
+    height:56%;
+    padding-top:14%;
+    color:White;
+    background-color:#3D681A;
+    font-family:Segoe UI,"Times New Roman",Times,serif;
+    font-size:24px;
+    font-weight:bold;
+}
+
+div.activities div.date div.day a{
+    color:White;
+    background: transparent;
+}
+
+div.activities div.date div.week {
+    height:22%;
+    padding-top:7%;
+    font-size:12px;
+    background-color:#F2F7AB;
+    color:#333333;
+}
+
+div.activities div.activity_list {
+    float:left;
+}
+
+div.activities div.activity{
+  width: 428px;
+  height: 107px;
+  padding: 20px 0 0 25px;
+  position:relative;
+  float: left;
+  margin-bottom: 6px;
+}
+
+div.activities div.activity div.content {
+  width: 310px;
+}
+
+div.activities div.training_activity,
+div.activities div.play_activity{
+  background:transparent url(/images/training_block_bg.gif) no-repeat;
+}
+
+div.activities div.training_activity div.activity_icon,
+div.activities div.play_activity div.activity_icon {
+  position:absolute;
+  right:28px;
+  top:28px;
+}
+
+div.activities div.match_activity {
+  background:transparent url(/images/match_block_bg.gif) no-repeat;
+}
+
+div.activities div.match_activity div.activity_icon {
+  position:absolute;
+  left:346px;
+  top:21px;
+  width: 100px;
+  height:100px;
+}
+
+div.activities div.match_activity div.activity_icon img.host_icon {
+  position:absolute;
+  top:0px;
+  left:0px;
+}
+
+div.activities div.match_activity div.activity_icon img.guest_icon {
+  position:absolute;
+  top:41px;
+  left:33px;
+}
+
+div.activities div.match_activity div.activity_icon div.vs {
+  background:transparent url(/images/vs.gif) no-repeat;
+  width:29px;
+  height:21px;
+  left:26px;
+  position:absolute;
+  top:34px;
+  z-index: 5;
+}
+
+div.activities div.match_activity_wide {
+  height: 142px;
+  background:transparent url(/images/match_block_bg_wide.gif) no-repeat;
+}
+
+div.activities div.match_activity_wide div.activity_icon img.host_icon {
+  top:1px;
+}
+
+div.activities div.match_activity_wide div.activity_icon img.guest_icon {
+  top:41px;
+  left:34px;
+}
+
+div.activities div.match_activity_wide div.activity_icon div.vs {
+  background:transparent url(/images/vs_wide.gif) no-repeat;
+  left:27px;
+  width:28px;
+  height:22px;
+}
+
+div.activities div.detail{
+    float:left;
+    margin: 8px 0 0 10px;
+    line-height:150%;
+    position: relative;
+    width: 420px;
+}
+
+div.activities div.detail span{
+  color: #666666;
+}
+
+div.sided_match_result {
+  position: absolute;
+  right: 20px;
+  font-size: 48px;
+  line-height: 60px;
+  color: #7E3E0B;
+  font-family: Georgia,"Times New Roman",Times,serif;
+}
+
+/*---------------------calendar------------------------------*/
+div.calendar{
+    line-height: normal
+}
+
+/*Fix ie6 float double margin bug*/
+div.calendar div.normalDateDiv,
+div.calendar div.monthAndYearDiv {
+    display: inline;
+    overflow: hidden;
+}
+
+.normalDateDiv {
+    width:105px; 
+    height:100px; 
+    margin-left:5px; 
+    margin-bottom:5px; 
+    border:solid 1px #3D681A; 
+    background-color:#FCFDFE; 
+    float:left;
+}
+
+.bigDateDiv {
+    width:217px;
+}
+
+/*.todayDateDiv {*/
+/*  background:transparent url(/images/today.gif) no-repeat;*/
+/*}*/
+
+.todayDateDiv .todaySpan {
+  color: #666666;
+  font-size: 9px;
+}
+
+.hasActivityDiv {
+    background-color:#F2F7AB; 
+}
+
+.hasManyActivitiesDiv {
+    background-color:#ACBE33;
+}
+
+.monthAndYearDiv
+{
+    border:solid 1px White; 
+    padding-left:6px; 
+    font-family:Verdana; 
+    font-size:17px;
+    background-color:#FFFFFF; 
+}
+
+.monthAndYearDiv a {
+    color:#000;
+    background: transparent;
+}
+
+.bigMonthDaySpan
+{
+    margin-left:3px;
+    color:#111111;
+    font-family:Arial Narrow;
+    font-size:22px;
+    font-weight:lighter;
+}
+
+.bigMonthDaySpan a{
+    color:#000;
+    background: transparent;
+}
+
+.bigWeekDaySpan
+{
+    font-family:Verdana;
+    color:#333333;
+    font-size:11px;
+}
+
+.normalDateDiv .dateContent 
+{
+    width:100%;
+    height: 70px;
+    padding: 5px 5px 0 5px;
+    position:relative;
+}
+
+.normalDateDiv .dateContent .activityContent
+{
+    vertical-align: middle;
+}
+
+.normalDateDiv .dateContent .more
+{
+    margin-right: 10px;
+    position:absolute;
+    bottom: 5px;
+    right:5px;
+    float: none;
+}
+
+/*------------------------------*/
+.monthCalendar {
+    width: 580px;
+}
+
+.monthCalendar .monthAndYear {
+    font-family:Segoe UI; 
+    font-size:24px;
+    font-weight: bold;
+    margin: 10px;
+    text-align: center;
+}
+
+.monthCalendar .monthAndYear img{
+    margin: -4px 20px;
+}
+
+.monthCalendar .monthAndYear a{
+    background: transparent;
+}
+
+/*Fix ie6 float double margin bug*/
+.monthCalendar .weekDayDiv,
+.monthCalendar .monthDayDiv,
+.monthCalendar .currentDayDiv{
+    display: inline;
+}
+
+.weekDayDiv
+{
+    width:31px;
+    height:40px;
+    margin:25px;
+    text-align:center;
+    float:left;
+}
+
+.weekDaySpan
+{
+    font-family:Verdana;
+    font-size:14px;
+    font-weight:bold;
+    color:#3D681A;
+}
+
+.monthDayDiv {
+    width:75px;
+    height:75px;
+    margin:2px;
+    border:solid 1px #FCFDFE;
+    text-align:center;
+    float:left;
+}
+
+.currentDayDiv {
+    background-color:#F2F7AB;
+    border:solid 1px #3D681A;
+}
+
+.monthDayTopDiv
+{
+    width:100%;
+    height:35%;
+}
+
+.monthDayBottomDiv
+{
+    width:100%;
+    height:65%;
+    text-align:left;
+    padding: 2px 5px;
+    overflow: hidden;
+}
+
+.monthDayBottomDiv a.more
+{
+    margin-left:2px;
+    margin-right: 0px;
+    font-size: 9px;
+    float: none;
+}
+
+.monthDaySpan
+{
+    font-family:Verdana;
+    font-size:16px;
+    color:#333333;
+}
+
+.monthDaySpan a {
+    color: #333333;
+}
+
+.monthDaySpan a:hover {
+    background-color:#3D681A;
+    color: #fff;
+    font-weight: bold;
+}
+
+.otherMonthDaySpan {
+    color:#999999;
+}
+
+.otherMonthDaySpan a {
+    color: #999999;
+}
+
+.monthDayArragementSpan
+{
+    font-family:Calibri;
+    font-size:12px;
+}
+
+.otherMonthDayArragementSpan {
+    color:#999999;
 }
