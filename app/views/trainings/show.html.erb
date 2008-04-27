@@ -61,6 +61,7 @@
     <%else%>
         <%@joined_users.pop%>
         <%= user_icon(@joined_users)%>
+        <div class="cb"></div>
         <%= link_to "> 更多",joined_users_training_path(@training.id), :class=>"more" %>
     <%end%>
     <div class="cb"></div>
@@ -73,6 +74,7 @@
     <%else%>
         <%@undetermined_users.pop%>
         <%= user_icon(@undetermined_users)%>
+        <div class="cb"></div>
         <%= link_to "> 更多",undetermined_users_training_path(@training.id), :class=>"more" %>
     <%end%>
     <div class="cb"></div>

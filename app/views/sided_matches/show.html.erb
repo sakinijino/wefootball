@@ -117,7 +117,8 @@
     <%else%>
         <%@joined_users.pop%>
         <%= user_icon(@joined_users)%>
-        ><%= link_to " 更多",joined_users_sided_match_path(@match.id), :class=>"more" %>
+        <div class="cb"></div>
+        <%= link_to "> 更多",joined_users_sided_match_path(@match.id), :class=>"more" %>
     <%end%>
     <div class="cb"></div>
   </div>
@@ -129,7 +130,8 @@
     <%else%>
         <%@undetermined_users.pop%>
         <%= user_icon(@undetermined_users)%>
-        ><%= link_to " 更多",undetermined_users_sided_match_path(@match.id), :class=>"more" %>
+        <div class="cb"></div>
+        <%= link_to "> 更多",undetermined_users_sided_match_path(@match.id), :class=>"more" %>
     <%end%>
     <div class="cb"></div>
   </div>

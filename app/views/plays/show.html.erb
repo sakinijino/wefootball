@@ -30,6 +30,7 @@
     <%else%>
         <%@players.pop%>
         <%= user_icon(@players)%>
+        <div class="cb"></div>
         <%= link_to "> 更多",players_play_path(@play.id), :class=>"more" %>
     <%end%>  
     <div class="cb"></div>

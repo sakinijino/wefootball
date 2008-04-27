@@ -116,6 +116,7 @@
     <%else%>
         <%@teams.pop%>
         <%= team_icon(@teams)%>
+        <div class="cb"></div>
         <%= link_to "> 更多",user_team_joins_path(@user.id), :class=>"more" %>
     <%end%>    
     
@@ -129,6 +130,7 @@
     <%else%>
         <%@friends.pop%>
         <%= user_icon(@friends)%>
+        <div class="cb"></div>
         <%= link_to "> 更多",user_friend_relations_path(@user.id), :class=>"more" %>
     <%end%>
     <div class="cb"></div>
