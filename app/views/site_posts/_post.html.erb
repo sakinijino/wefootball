@@ -14,9 +14,11 @@
 <%end%>
 </span>
 
-<p>
+<div class="content">
   <%=simple_format auto_link(h(post.content), :urls) %>
-</p>
+</div>
+
+<div class="cb"></div>
 
 <%if logged_in?%>
 <div class="control">
