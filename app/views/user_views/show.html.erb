@@ -102,7 +102,7 @@
           <%= f.hidden_field :host_id,  :value=>@user.id%>
           <span>给<%=h @user.nickname%>留个言吧...</span><br />
           <%= f.text_area :message, :cols => 30, :rows => 2%><br />
-          <%= f.submit "朋友邀请" %>
+          <%= f.submit "申请成为朋友" %>
           <%= f.submit "撤销", :onclick=>'j("#send_friend_invitation_div").dialog("close");return false;' %>
       <% end %>  
     </div>
