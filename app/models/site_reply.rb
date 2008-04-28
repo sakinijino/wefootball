@@ -16,7 +16,7 @@ class SiteReply < ActiveRecord::Base
   end
   
   def can_be_destroyed_by?(user)
-    self.user_id == get_user_id(user)
+    self.user_id == get_user_id(user) || SitePostAdmin.is_an_admin?(user)
   end
 
 private

@@ -491,17 +491,18 @@ div.positions_small_field {
   height:222px
 }
 
+span.private {
+  color: #666;
+  font-size: 9px;
+}
+
 div.post {
     padding:10px;
-    margin-bottom: 10px;
+    margin-bottom: 15px;
 }
 
 div.post img {
     float:left; margin:0 15px 10px 0;
-}
-
-div.post p{
-    text-indent: 2em;
 }
 
 div.post .title {
@@ -514,6 +515,16 @@ div.post .title {
 
 div.post .title .name{
     margin-left:50px;
+}
+
+div.post div.content{
+  margin-top: 10px;
+  width: 80%;
+  float: left;
+}
+
+div.post p{
+    text-indent: 2em;
 }
 
 ul.sidebar_menu {

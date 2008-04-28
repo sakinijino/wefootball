@@ -1,6 +1,6 @@
 <%content_for(:javascript) do%>
-  <%= javascript_include_tag "ui.mouse.js" %>
-  <%= javascript_include_tag "ui.dialog.js" %>
+  <%= javascript_include_tag "jquery-1.2.3/ui.mouse.js" %>
+  <%= javascript_include_tag "jquery-1.2.3/ui.dialog.js" %>
 <%end%>
 
 <div id="left_content">
@@ -103,7 +103,14 @@
 
   <div class="sect">        
     <h2><%=h @team.shortname%>的成员</h2>
-    <%= user_icon(@users)%>
+    <%if @users.length <= TeamViewsController::USER_LIST_LENGTH%>
+        <%= user_icon(@users)%>
+    <%else%>
+        <%@users.pop%>
+        <%= user_icon(@users)%>
+        <div class="cb"></div>
+        <%= link_to "> 更多",team_team_joins_path(@team), :class=>"more" %>
+    <%end%>
     <div class="cb"></div>
   </div>
 

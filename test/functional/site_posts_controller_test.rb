@@ -56,6 +56,14 @@ class SitePostsControllerTest < ActionController::TestCase
     assert_redirected_to site_posts_path
   end
   
+  def test_should_destroy_post_by_admin
+    login_as :mike2
+    assert_difference('SitePost.count', -1) do
+      delete :destroy, :id => site_posts(:saki_1).id
+    end
+    assert_redirected_to site_posts_path
+  end
+  
   def test_destroy_post_unauth
     login_as :quentin
     assert_no_difference('SitePost.count') do

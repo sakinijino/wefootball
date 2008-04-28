@@ -10,7 +10,7 @@
 <%if post.user_id%>
   <span class="name">来自<%=link_to h(post.user.nickname), user_view_path(post.user.id) %></span>
 <%else%>
-  <span class="name">来自 匿名</span>
+  <span class="name">来自 <%= (!post.email.blank? && logged_in? && SitePostAdmin.is_an_admin?(current_user)) ? post.email : '未登录用户'%></span>
 <%end%>
 </span>
 

@@ -37,6 +37,15 @@ class SiteRepliesControllerTest < ActionController::TestCase
     assert_redirected_to site_post_path(site_posts(:saki_1))
   end
   
+  def test_should_destroy_reply_by_admin
+    login_as :mike2
+    SitePost.find(site_posts(:saki_1).id).site_replies(:refresh).size
+    assert_difference('SitePost.find(site_posts(:saki_1).id).site_replies.size', -1) do
+      delete :destroy, :id => site_replies(:saki_1_reply).id
+    end
+    assert_redirected_to site_post_path(site_posts(:saki_1))
+  end
+  
   def test_should_destroy_reply_no_auth
     login_as :aaron
     SitePost.find(site_posts(:saki_1).id).site_replies(:refresh).size

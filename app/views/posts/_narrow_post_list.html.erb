@@ -19,7 +19,7 @@
       <%end%>
     </td>
     <td><%=h post.user.nickname %></td>
-    <td><%=link_to h(post.title), post  %></td>
+    <td><%=link_to h(post.title), post  %><%="<span class='private'>&nbsp;&nbsp;-&nbsp;&nbsp;(仅队内可见)</span>" if post.is_private%></td>
   </tr>
 <% end %>
 </table>

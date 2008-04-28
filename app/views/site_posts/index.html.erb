@@ -11,7 +11,7 @@
   <% for post in @site_posts %>
     <tr>
       <td><%=link_to h(post.title), post  %></td>
-      <td><%=post.user_id ? h(post.user.nickname) : '匿名' %></td>
+      <td><%=post.user_id ? h(post.user.nickname) : '未登录用户' %></td>
       <td><%= post.site_replies.size %></td>
       <td><%= post.updated_at.strftime('%Y-%m-%d %H:%M') %></td>
     </tr>

@@ -8,8 +8,8 @@
   <title><%=h @title ? @title : 'WeFootball - 没事踢踢球儿才是正经事~'%></title>
   <%= stylesheet_link_tag 'wefootball' %>
   <%= yield :stylesheet%>
-  <%= javascript_include_tag "jquery-1.2.3.min.js" %>
-  <%= javascript_include_tag "jquery.dimensions.js" %>
+  <%= javascript_include_tag "jquery-1.2.3/jquery-1.2.3.min.js" %>
+  <%= javascript_include_tag "jquery-1.2.3/jquery.dimensions.js" %>
   <%= javascript_include_tag "application" %>
   <%= yield :javascript%>
 </head>

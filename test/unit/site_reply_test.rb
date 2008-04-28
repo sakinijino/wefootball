@@ -4,7 +4,9 @@ class SiteReplyTest < ActiveSupport::TestCase
   def test_destroy
     assert !site_replies(:saki_1_reply).can_be_destroyed_by?(users(:quentin))
     assert site_replies(:saki_1_reply).can_be_destroyed_by?(users(:saki))
+    assert site_replies(:saki_1_reply).can_be_destroyed_by?(users(:mike2))
     assert !site_replies(:ano_1_reply).can_be_destroyed_by?(users(:saki))
+    assert site_replies(:ano_1_reply).can_be_destroyed_by?(users(:mike2))
   end
   
   def test_replies_counter
