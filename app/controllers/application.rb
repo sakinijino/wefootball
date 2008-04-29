@@ -18,8 +18,8 @@ class ApplicationController < ActionController::Base
   
   
   def index
-    @users = User.find(:all, :conditions=>"activated_at is not null", :limit => 12, :order => 'id desc')
-    @teams = Team.find(:all, :limit => 12, :order => 'id desc')
+    @users = User.find(:all, :conditions=>"activated_at is not null", :limit => 9, :order => 'id desc')
+    @teams = Team.find(:all, :limit => 9, :order => 'id desc')
     tmp = []
     tmp += Training.find(:all, :limit => 2, :order => 'id desc')
     tmp += Match.find(:all, :limit => 2, :order => 'id desc')
@@ -36,6 +36,14 @@ class ApplicationController < ActionController::Base
       @activities = {}
     end
     render :template => 'shared/index', :layout =>default_layout
+  end
+  
+  def help
+    render :template => 'shared/help', :layout =>default_layout
+  end
+  
+  def faq
+    render :template => 'shared/faq', :layout =>default_layout
   end
   
   

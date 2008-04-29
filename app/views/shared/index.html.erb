@@ -11,14 +11,25 @@
 <div class="cb"></div>
 <div id="left_content">
   <div class="sect">
-    <h2>最近建立的球队</h2>    
-    <%= team_icon(@teams)%>
-    <div class="cb"></div>
+    <h2>WeFootball公告</h2>    
+    <div class="notification">
+      <%= link_to '了解一下WeFootball能做些什么？', site_help_path%>
+      <br/><br/>
+      WeFootball<%= link_to '帮助', site_help_path%>和<%= link_to '常见问题', site_faq_path%>上线 - 04.29
+      <br/><br/>
+      WeFootball上线内测 - 04.24
+    </div>
   </div>
-  
+
   <div class="sect">
     <h2>最近加入的用户</h2>    
     <%= user_icon(@users)%>
+    <div class="cb"></div>
+  </div>
+
+  <div class="sect">
+    <h2>最近建立的球队</h2>    
+    <%= team_icon(@teams)%>
     <div class="cb"></div>
   </div>
 </div>

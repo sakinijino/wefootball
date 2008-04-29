@@ -1,0 +1,8 @@
+<ul class="sidebar_menu">
+  <li <%= selected_class_sidebar_menu_item(:action=>'help', :controller=>'application')%>>
+    > <%= link_to "帮助", site_help_path %>
+  </li>  
+  <li <%= selected_class_sidebar_menu_item(:action=>'faq', :controller=>'application')%>>
+    > <%= link_to "常见问题", site_faq_path %>
+  </li>  
+</ul>
