@@ -102,7 +102,7 @@ ActionController::Routing::Routes.draw do |map|
   end
   
   map.site_index "/", :controller => 'application', :action => 'index'
-  map.site_help "/help", :controller => 'application', :action => 'help'
+  map.site_about "/about", :controller => 'application', :action => 'about'
   map.site_faq "/faq", :controller => 'application', :action => 'faq'
   
   map.user_month_calendar "users/:user_id/calendar/:year/:month", :controller=>"calendar", :action => "show_a_month",

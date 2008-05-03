@@ -18,7 +18,7 @@
 <div id="main_content">
   <div id="header">
     <a id="site_link" href="/"></a>
-    <%= image_tag "footballboy3.jpg", :title=>"WeFootball", :id=>"header_icon" %>
+    <%= link_to image_tag("footballboy3.jpg", :title=>"WeFootball"), "/", :id=>"header_icon" %>
 
     <%= render(:partial => 'layouts/header_setting')%>
     <%= render(:partial => 'layouts/search_panel', :locals => {:default => :user})%>

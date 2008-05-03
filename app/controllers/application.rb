@@ -38,8 +38,8 @@ class ApplicationController < ActionController::Base
     render :template => 'shared/index', :layout =>default_layout
   end
   
-  def help
-    render :template => 'shared/help', :layout =>default_layout
+  def about
+    render :template => 'shared/about', :layout =>default_layout
   end
   
   def faq
