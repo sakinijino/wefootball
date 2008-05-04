@@ -7,19 +7,19 @@
   <h2><%=h @title%></h2>
   <%= error_messages_for :play %>
   <% form_for @play do |f| %>
-    <p><label>哪天去</label><br/>
+    <p><label>日期</label><br/>
     <%= select_date @play.start_time, :prefix => "start_time", :start_year => Date.today.year, :end_year => Date.today.year+1, :use_month_numbers => true %></p>
 
-    <p><label>几点去</label><br/>
+    <p><label>开始时间</label><br/>
     <%= select_hour @play.start_time,:prefix => "start_time" %>
     <%= select_minute @play.start_time,:prefix => "start_time", :minute_step=>15 %></p>
 
-    <p><label>几点走</label><br/>
+    <p><label>结束时间</label><br/>
     <%= select_hour @play.end_time,:prefix => "end_time" %>
     <%= select_minute @play.end_time,:prefix => "end_time", :minute_step=>15 %></p>
 
     <div class="location_input">
-      <label for="football_ground_id">去哪踢</label><br/>
+      <label for="football_ground_id">场地</label><br/>
       <div class="football_ground_input">
         <%= f.football_ground_select :football_ground_id, 
           @play.football_ground_id.nil?  ? 'city' : nil,
@@ -32,7 +32,7 @@
       </div>
     </div>
 
-    <p><%= submit_tag '确认' %></p>
+    <p><%= submit_tag '创建' %></p>
   <% end %>
 </div>
 
