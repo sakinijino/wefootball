@@ -15,7 +15,7 @@ class SiteRepliesControllerTest < ActionController::TestCase
     SitePost.find(site_posts(:saki_1).id).site_replies(:refresh).size
     assert_no_difference('SitePost.find(site_posts(:saki_1).id).site_replies.size') do
       post :create, :site_post_id => site_posts(:saki_1).id, :reply => {:content=>""}
-      assert_equal 2, assigns(:site_post).site_replies.length
+      assert_equal 2, assigns(:replies).length
     end
     assert_template "site_posts/show"
   end

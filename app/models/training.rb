@@ -7,19 +7,20 @@ class Training < ActiveRecord::Base
   has_many :training_joins,
             :dependent => :destroy
   has_many :users, :through=>:training_joins do
-    def joined(limit=nil)
-      find(:all, :conditions => ['status = ?', TrainingJoin::JOIN],
-            :limit => limit)
+    def joined(options={})
+      q = {:conditions => ['status = ?', TrainingJoin::JOIN]}.merge(options)
+      options.has_key?(:page) ? paginate(:all, q) : find(:all, q)
     end
-    def undetermined(limit=nil)
-      find(:all, :conditions => ['status = ?', TrainingJoin::UNDETERMINED],
-            :limit => limit)
+    def undetermined(options={})
+      q = {:conditions => ['status = ?', TrainingJoin::UNDETERMINED]}.merge(options)
+      options.has_key?(:page) ? paginate(:all, q) : find(:all, q)
     end
   end
   
   has_many :posts, :dependent => :nullify, :order => "updated_at desc" do
     def public(options={})
-      find :all, {:conditions => ['is_private = ?', false]}.merge(options)
+      q = {:conditions => ['is_private = ?', false]}.merge(options)
+      options.has_key?(:page) ? paginate(:all, q) : find(:all, q)
     end
   end
   

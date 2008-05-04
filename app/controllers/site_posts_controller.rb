@@ -1,13 +1,14 @@
 class SitePostsController < ApplicationController
 
   def index
-    @site_posts = SitePost.find(:all)
+    @site_posts = SitePost.paginate(:page => params[:page], :per_page => 30)
     @title = "站务论坛"
     render :layout => default_layout
   end
 
   def show
     @site_post = SitePost.find(params[:id])
+    @replies = @site_post.site_replies.paginate(:page => params[:page], :per_page => 100)
     render :layout => default_layout
   end
 

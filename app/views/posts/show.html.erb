@@ -1,8 +1,11 @@
 <div id="wide_left_content">
   <div class="sect">
-  <h2><%=h @post.title %></h2>
-  <%= render(:partial => 'posts/post', :object => @post)%>
-  <%= render(:partial => 'posts/post', :collection => @post.replies, :locals => {:parent => @post})%>
+    <h2><%=h @post.title %></h2>
+    <%if @replies.current_page == 1%>
+      <%= render(:partial => 'posts/post', :object => @post)%>
+    <%end%>
+    <%= render(:partial => 'posts/post', :collection => @replies, :locals => {:parent => @post})%>
+    <%= will_paginate @replies %>
   </div>
 
 <%if @can_reply%>
@@ -10,7 +13,7 @@
     <h2>回复</h2>
     <%= error_messages_for :reply %>
     <br/>
-    <% form_for :reply, :url => post_replies_path(@post) do |f| %>
+    <% form_for :reply, :url => post_replies_path(@post, :page => @replies.current_page) do |f| %>
       <%= f.text_area :content, :rows=>10, :cols=>50 %>
       <br/><br/>
       <%= f.submit "提交" %>

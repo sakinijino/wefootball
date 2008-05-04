@@ -1,8 +1,11 @@
 <div id="wide_left_content">
   <div class="sect">
   <h2><%=h @site_post.title %></h2>
-  <%= render(:partial => 'site_posts/post', :object => @site_post)%>
-  <%= render(:partial => 'site_posts/post', :collection => @site_post.site_replies, :locals => {:parent => @site_post})%>
+  <%if @replies.current_page == 1%>
+    <%= render(:partial => 'site_posts/post', :object => @site_post)%>
+  <%end%>
+  <%= render(:partial => 'site_posts/post', :collection => @replies, :locals => {:parent => @site_post})%>
+  <%= will_paginate @replies %>
   </div>
 
   <div class="sect cb">

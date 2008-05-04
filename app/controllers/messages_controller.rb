@@ -8,10 +8,14 @@ class MessagesController < ApplicationController
     @user = current_user
     @title = params[:as]=='sender' ? "我的发件箱" : "我的收件箱"
     @messages = params[:as]=='sender' ? 
-      Message.find_all_by_sender_id_and_is_delete_by_sender(current_user.id, false, 
-        :include=>[:receiver], :order => 'messages.created_at desc') :
-      Message.find_all_by_receiver_id_and_is_delete_by_receiver(current_user.id, false, 
-        :include=>[:sender], :order => 'messages.created_at desc')
+      Message.paginate_all_by_sender_id_and_is_delete_by_sender(current_user.id, false, 
+        :include=>[:receiver], :order => 'messages.created_at desc',
+        :page => params[:page], 
+        :per_page => 20) :
+      Message.paginate_all_by_receiver_id_and_is_delete_by_receiver(current_user.id, false, 
+        :include=>[:sender], :order => 'messages.created_at desc',
+        :page => params[:page], 
+        :per_page => 20)
   end
 
   def show

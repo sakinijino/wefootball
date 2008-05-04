@@ -25,14 +25,24 @@ class TeamJoinInvitationsController < ApplicationController
     if (params[:team_id]) # 显示球队所有邀请的用户
       @team = Team.find(params[:team_id])
       if (current_user.is_team_admin_of?(params[:team_id]))
-        @requests = TeamJoinRequest.find_all_by_team_id_and_is_invitation(params[:team_id], true, :include=>[:user])
+        @requests = TeamJoinRequest.paginate_all_by_team_id_and_is_invitation(
+          params[:team_id], true, 
+          :include=>[:user],
+          :page => params[:page], 
+          :per_page => 20
+        )
         @title ="#{(@team.shortname)}邀请加入的用户"
         render :action=>"index_user", :layout => "team_layout"
       else
         fake_params_redirect
       end
     else  # 显示所有邀请用户的球队
-      @requests = TeamJoinRequest.find_all_by_user_id_and_is_invitation(self.current_user, true, :include=>[:team])
+      @requests = TeamJoinRequest.paginate_all_by_user_id_and_is_invitation(
+        self.current_user, true, 
+        :include=>[:team],
+        :page => params[:page], 
+        :per_page => 20
+      )
       @user = current_user
       @title = "邀请我加入的球队"
       render :action=>"index_team", :layout => "user_layout"

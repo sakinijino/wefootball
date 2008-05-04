@@ -7,7 +7,7 @@ class SiteRepliesController < ApplicationController
     if @site_post.save
       redirect_to(@site_post)
     else
-      @site_post.site_replies.reload
+      @replies = @site_post.site_replies.paginate(:page => params[:page], :per_page => 100)
       render :template => "site_posts/show", :layout => default_layout
     end
   end

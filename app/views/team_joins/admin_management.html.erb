@@ -4,6 +4,7 @@
 </div>
 
 <div id="wide_left_content">
+  <%if @other_uts.current_page == 1%>
   <div class="sect">
     <h2>管理员</h2>
     <%@admin_uts.each do |ut| %>
@@ -21,6 +22,7 @@
     <%end%>
     <div class="cb"></div>
   </div>
+  <%end%>
 
   <div class="sect">
     <h2>其他成员</h2>
@@ -36,6 +38,7 @@
       </div>
     <%end%>
     <div class="cb"></div>
+    <%= will_paginate @other_uts %>
   </div>
 </div>
 

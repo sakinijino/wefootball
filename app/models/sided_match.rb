@@ -17,19 +17,20 @@ class SidedMatch < ActiveRecord::Base
             :foreign_key => :match_id
           
   has_many :users, :through=>:sided_match_joins do
-    def joined(limit=nil)
-      find :all, :conditions => ['status = ?', SidedMatchJoin::JOIN],
-            :limit => limit
+    def joined(options={})
+      q = {:conditions => ['status = ?', SidedMatchJoin::JOIN]}.merge(options)
+      options.has_key?(:page) ? paginate(:all, q) : find(:all, q)
     end
-    def undetermined(limit=nil)
-      find :all, :conditions => ['status = ?', SidedMatchJoin::UNDETERMINED],
-            :limit => limit        
+    def undetermined(options={})
+      q = {:conditions => ['status = ?', SidedMatchJoin::UNDETERMINED]}.merge(options)
+      options.has_key?(:page) ? paginate(:all, q) : find(:all, q)      
     end
   end
   
   has_many :posts, :dependent => :nullify, :order => "updated_at desc" do
     def public(options={})
-      find :all, {:conditions => ['is_private = ?', false]}.merge(options)
+      q = {:conditions => ['is_private = ?', false]}.merge(options)
+      options.has_key?(:page) ? paginate(:all, q) : find(:all, q)
     end
   end
             

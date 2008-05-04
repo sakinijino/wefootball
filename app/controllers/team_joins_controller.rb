@@ -11,9 +11,16 @@ class TeamJoinsController < ApplicationController
       render :action=>"index_team", :layout => 'user_layout'
     else # 显示球队的所有成员
       @team = Team.find(params[:team_id])
-      @admin = @team.users.admin
-      @players = @team.users.players
-      @others = @team.users.find(:all, :conditions => ['is_admin = ? and is_player = ?', false, false])
+      @others = @team.users.paginate(
+        :all, 
+        :conditions => ['is_admin = ? and is_player = ?', false, false],
+        :page => params[:page], 
+        :per_page => 50
+      )
+      if @others.current_page == 1
+        @admin = @team.users.admin
+        @players = @team.users.players
+      end
       @title = "#{@team.shortname}的成员"
       render :action=>"index_user", :layout => "team_layout"
     end
@@ -30,17 +37,24 @@ class TeamJoinsController < ApplicationController
   end
   
   def admin_management
-    @admin_uts = UserTeam.find_all_by_team_id_and_is_admin(params[:team_id], true, :include=>[:user])
-    @other_uts = UserTeam.find_all_by_team_id_and_is_admin(params[:team_id], false, :include=>[:user])
+    @other_uts = UserTeam.paginate_all_by_team_id_and_is_admin(
+      params[:team_id], false, 
+      :include=>[:user],
+      :page => params[:page], 
+      :per_page => 50
+    )
+    @admin_uts = UserTeam.find_all_by_team_id_and_is_admin(params[:team_id], true, :include=>[:user]) if @other_uts.current_page == 1
     @title = "#{@team.shortname}的成员管理"
     render :layout => "team_layout"
   end
   
   def player_management
-    @player_uts = UserTeam.find_all_by_team_id_and_is_player(params[:team_id], true, :include=>[:user])
-    @other_uts = UserTeam.find :all, 
-        :conditions => ["team_id = ? and is_player = ? and users.is_playable = ?", params[:team_id], false, true],
-        :include=>[:user]
+    @other_uts = UserTeam.paginate :all, 
+      :conditions => ["team_id = ? and is_player = ? and users.is_playable = ?", params[:team_id], false, true],
+      :include=>[:user],
+      :page => params[:page], 
+      :per_page => 50
+    @player_uts = UserTeam.find_all_by_team_id_and_is_player(params[:team_id], true, :include=>[:user]) if @other_uts.current_page == 1
     @title = "#{@team.shortname}的队员名单管理"
     render :layout => "team_layout"
   end

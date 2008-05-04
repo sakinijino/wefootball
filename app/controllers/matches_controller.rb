@@ -42,7 +42,7 @@ class MatchesController < ApplicationController
     @match = Match.find(params[:id])
     @team = Team.find(params[:team_id])
     @title = "#{@team.shortname}参加这场比赛的人"
-    @users = @match.users.joined_with_team_id(@team)
+    @users = @match.users.joined_with_team_id(@team, {:page => params[:page], :per_page => 100})
     render :action=>'users', :layout=>'match_layout'    
   end
   
@@ -50,7 +50,7 @@ class MatchesController < ApplicationController
     @match = Match.find(params[:id])
     @team = Team.find(params[:team_id])
     @title = "#{@team.shortname}没表态是否参加的人"      
-    @users = @match.users.undetermined_with_team_id(@team)
+    @users = @match.users.undetermined_with_team_id(@team, {:page => params[:page], :per_page => 100})
     render :action=>'users', :layout=>'match_layout'    
   end   
   

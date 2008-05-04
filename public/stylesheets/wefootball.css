@@ -669,6 +669,20 @@ div.result_block span.another_result {
   color: #333333;
 }
 
+div.pagination {
+  background: #F2F7AB;
+  color: #666;
+  padding: 1px 0;
+  margin: 15px 0px 5px 0px;
+  text-align: center;
+  font: 14.8px normal Arial, Helvetica, sans-serif;
+  line-height: 150%;
+}
+
+div.pagination a, .current, .gap{ padding: 2px 4px; }
+div.pagination .prev_page { margin-right: 20px; }
+div.pagination .next_page { margin-left: 20px; }
+
 div.help {
     padding-left:5px;
     margin-bottom: 30px;

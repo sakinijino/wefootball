@@ -36,6 +36,8 @@
       <%= submit_tag '选定全部', :onclick => 'wefootball.checkAllInputs();return false;'%>
       <%= submit_tag '取消选定', :onclick => 'wefootball.checkAllInputs(false);return false;'%>
     </div>
+    <div class="cb"></div>
+    <%= will_paginate @messages %>
   </div>
   <%end%>
 </div>
