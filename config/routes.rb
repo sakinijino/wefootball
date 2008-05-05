@@ -114,6 +114,9 @@ ActionController::Routing::Routes.draw do |map|
   map.team_day_calendar "teams/:team_id/calendar/:year/:month/:day", :controller=>"calendar", :action => "show_a_day",
       :requirements => {:year => /(19|20)\d\d/, :month => /[01]?\d/, :day => /[0-3]?\d/}
     
+  map.user_icalendar "users/:id/icalendar", :controller=>"i_calendar", :action => "user"
+  map.team_icalendar "teams/:id/icalendar", :controller=>"i_calendar", :action => "team"
+    
   map.province_city_select "js/province_city_select.js", :controller=>"js", :action => "province_city_select"
   map.football_ground_select "js/football_ground_select.js", :controller=>"js", :action => "football_ground_select"
   
