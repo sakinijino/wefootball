@@ -249,6 +249,9 @@ class MatchTest < ActiveSupport::TestCase
     assert_equal 2, m.posts.team(2).length
     assert_equal 1, m.posts.team(2, :limit=>1).length
     assert_equal 1, m.posts.team_public(2).length
+    
+    assert_equal 1, m.posts.team(2, :page=>1, :per_page=>1).length
+    assert_equal 1, m.posts.team_public(2, :page=>1, :per_page=>1).current_page
   end
   
   def test_posts_dependency_nullify

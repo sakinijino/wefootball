@@ -24,6 +24,8 @@ class TeamTest < ActiveSupport::TestCase
     assert_equal 9, t.posts.length
     assert_equal 5, t.posts.public.length
     assert_equal 2, t.posts.public(:limit=>2).length
+    
+    assert_equal 3, t.posts.public(:page=>1, :per_page=>3).length
   end
   
   def test_before_validation
