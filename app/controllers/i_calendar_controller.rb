@@ -41,8 +41,8 @@ class ICalendarController < ApplicationController
     cal.custom_property("X-WR-TIMEZONE", "Asia/Shanghai")
     activities.each do |act|
       event = Icalendar::Event.new
-      event.dtstart act.start_time.strftime("%Y%m%dT%H%M%Z"), {:TZID => "Asia/Shanghai"}
-      event.dtend act.end_time.strftime("%Y%m%dT%H%M%Z"), {:TZID => "Asia/Shanghai"}
+      event.dtstart act.start_time.strftime("%Y%m%dT%H%M%S")
+      event.dtend act.end_time.strftime("%Y%m%dT%H%M%S")
       event.location act.location
       event.summary(case act
       when Play
