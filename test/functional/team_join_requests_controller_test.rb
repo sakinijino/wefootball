@@ -45,7 +45,7 @@ class TeamJoinRequestsControllerTest < ActionController::TestCase
         :team_id => teams(:inter).id,
         :message => 'hello'
       }
-      assert_redirected_to '/'
+      assert_fake_redirected
     end
   end
   
@@ -59,7 +59,7 @@ class TeamJoinRequestsControllerTest < ActionController::TestCase
         :team_id => teams(:inter).id,
         :message => 'hello'
       }
-      assert_redirected_to '/'
+      assert_fake_redirected
     end
   end
   
@@ -79,7 +79,7 @@ class TeamJoinRequestsControllerTest < ActionController::TestCase
     login_as :mike1
     assert_no_difference('TeamJoinRequest.count') do
       delete :destroy, :id => 6
-      assert_redirected_to '/'
+      assert_fake_redirected
     end
   end
   

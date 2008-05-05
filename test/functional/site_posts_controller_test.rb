@@ -69,6 +69,6 @@ class SitePostsControllerTest < ActionController::TestCase
     assert_no_difference('SitePost.count') do
       delete :destroy, :id => site_posts(:saki_1).id
     end
-    assert_redirected_to '/'
+    assert_fake_redirected
   end
 end

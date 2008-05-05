@@ -28,6 +28,30 @@ class MatchJoinTest < ActiveSupport::TestCase
     mj.position = 10
     mj.save!
     assert_nil mj.position
+    
+    mj.goal = 1;
+    mj.position = 11
+    mj.save!
+    assert_equal 11, mj.position
+    
+    mj.goal = 0
+    mj.yellow_card = 1
+    mj.position = 12
+    mj.save!
+    assert_equal 12, mj.position
+    
+    mj.yellow_card = 0
+    mj.red_card = 1
+    mj.position = 13
+    mj.save!
+    assert_equal 13, mj.position
+    
+    mj.goal = ""
+    mj.yellow_card = ""
+    mj.red_card = ""
+    mj.position = 14
+    mj.save!
+    assert_nil mj.position
   end
   
   def test_create_joins #测试create_joins是正确的
@@ -46,7 +70,28 @@ class MatchJoinTest < ActiveSupport::TestCase
     host_team_players_from_team = m.host_team.users.players.sort_by{|u| u.id}
     guest_team_players_from_team = m.guest_team.users.players.sort_by{|u| u.id}   
     assert_equal host_team_players_from_match_joins,host_team_players_from_team
-    assert_equal guest_team_players_from_match_joins,guest_team_players_from_team    
+    assert_equal guest_team_players_from_match_joins,guest_team_players_from_team
+    
+    mj = MatchJoin.find(:first, :conditions => ["user_id = ? and match_id = ? and team_id = ?", users(:saki), m, teams(:inter)])
+    mj.position = 12;
+    mj.save!
+    users(:saki).is_playable = false;
+    users(:saki).save!
+    assert MatchJoin.players(m.id,m.host_team_id).include?(mj)
+    
+    mj = MatchJoin.find(:first, :conditions => ["user_id = ? and match_id = ? and team_id = ?", users(:aaron), m, teams(:milan)])
+    assert !MatchJoin.players(m.id,m.guest_team_id).include?(mj)
+    mj.goal = 1;
+    mj.save!
+    assert MatchJoin.players(m.id,m.guest_team_id).include?(mj)
+    mj.goal = 0;
+    mj.yellow_card = 1;
+    mj.save!
+    assert MatchJoin.players(m.id,m.guest_team_id).include?(mj)
+    mj.yellow_card = 0;
+    mj.red_card = 1;
+    mj.save!
+    assert MatchJoin.players(m.id,m.guest_team_id).include?(mj)
   end
   
   def test_cards #测试红黄牌的赋值和读取是正确的

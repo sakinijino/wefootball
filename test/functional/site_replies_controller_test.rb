@@ -52,6 +52,6 @@ class SiteRepliesControllerTest < ActionController::TestCase
     assert_no_difference('SitePost.find(site_posts(:saki_1).id).site_replies.size') do
       delete :destroy, :id => site_replies(:saki_1_reply).id
     end
-    assert_redirected_to '/'
+    assert_fake_redirected
   end
 end

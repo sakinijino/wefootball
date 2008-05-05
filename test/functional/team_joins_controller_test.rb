@@ -16,7 +16,7 @@ class TeamJoinsControllerTest < ActionController::TestCase
   def test_admin_noauth
     login_as :mike3
     get :admin_management, :team_id => 1
-    assert_redirected_to '/'
+    assert_fake_redirected
   end
   
   def test_player
@@ -35,7 +35,7 @@ class TeamJoinsControllerTest < ActionController::TestCase
   def test_player_noauth
     login_as :mike3
     get :player_management, :team_id => 1
-    assert_redirected_to '/'
+    assert_fake_redirected
   end
   
   def test_accept_invitation
@@ -67,7 +67,7 @@ class TeamJoinsControllerTest < ActionController::TestCase
     assert_no_difference('UserTeam.count') do
       assert_no_difference('User.find(users(:mike1).id).teams.length') do
         post :create, :id=>5
-        assert_redirected_to '/'
+        assert_fake_redirected
       end
     end
   end
@@ -77,7 +77,7 @@ class TeamJoinsControllerTest < ActionController::TestCase
     assert_no_difference('UserTeam.count') do
       assert_no_difference('User.find(users(:mike2).id).teams.length') do
         post :create, :id=>6
-        assert_redirected_to '/'
+        assert_fake_redirected
       end
     end
   end
@@ -156,14 +156,14 @@ class TeamJoinsControllerTest < ActionController::TestCase
     login_as :mike2
     assert_no_difference('Team.find(teams(:milan)).users.admin.length') do
       put :update, :id=>UserTeam.find_by_user_id_and_team_id(users(:aaron).id, teams(:milan).id).id, :ut=>{:is_admin => true}
-      assert_redirected_to '/'
+      assert_fake_redirected
     end
   end
   
   def test_update_formation_unauth
     login_as :mike2
     put :update_formation, :team_id=>teams(:inter).id, :formation => {'3'=>user_teams(:saki_inter).id}
-    assert_redirected_to '/'
+    assert_fake_redirected
   end
   
   def test_update_formation_with_a_user_team_from_other_team
@@ -172,7 +172,7 @@ class TeamJoinsControllerTest < ActionController::TestCase
     user_teams(:saki_inter).save!
     put :update_formation, :team_id=>teams(:inter).id, :formation => {'13'=>user_teams(:saki_inter).id, '16'=>user_teams(:saki_milan).id}
     assert_equal 11, user_teams(:saki_inter).reload.position
-    assert_redirected_to '/'
+    assert_fake_redirected
   end
   
   def test_update_formation_with_too_many_positions
@@ -192,7 +192,7 @@ class TeamJoinsControllerTest < ActionController::TestCase
         :formation => uts
     end
     assert_equal 11, user_teams(:saki_inter).reload.position
-    assert_redirected_to '/'
+    assert_fake_redirected
   end
   
   def test_destroy_unauth

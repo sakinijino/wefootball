@@ -16,15 +16,15 @@ class SidedMatchJoin < ActiveRecord::Base
   validates_inclusion_of   :position, :in => Team::FORMATION_POSITIONS, :allow_nil => true, :message => "不要自己构造表单提交..."
   
   def before_validation
-    self.position = nil if self.position==""
+    self.position = nil if self.position.blank?
+    self.goal=0 if self.goal.blank?
     if self.position!=nil && 
-       (self.goal.nil? || self.goal.zero?) && 
-       (self.yellow_card.nil? || self.yellow_card.zero?) && 
-       (self.red_card.nil? || self.red_card.zero?)
+       (self.goal.blank? || self.goal.zero?) && 
+       (self.yellow_card.blank? || self.yellow_card.zero?) && 
+       (self.red_card.blank? || self.red_card.zero?)
       ut = UserTeam.find_by_user_id_and_team_id(self.user_id, self.sided_match.host_team_id)
       self.position = nil if ut.nil? || !ut.is_player
     end
-    self.goal=0 if self.goal.blank?    
   end
   
   def self.create_joins(match)

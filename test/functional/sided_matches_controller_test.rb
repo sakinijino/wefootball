@@ -18,7 +18,7 @@ class SidedMatchesControllerTest < ActionController::TestCase
     login_as :mike1
     assert_no_difference('SidedMatch.count') do
       post :create, :sided_match => { :host_team_id => teams(:inter).id, :guest_team_name=>'AC' }
-      assert_redirected_to '/'
+      assert_fake_redirected
     end
   end
   
@@ -42,7 +42,7 @@ class SidedMatchesControllerTest < ActionController::TestCase
     login_as :mike1
     t = Time.now
     put :update, :id => sided_matches(:one).id, :sided_match => { :start_time=> t}
-    assert_redirected_to '/'
+    assert_fake_redirected
   end
   
   def test_should_be_admin_before_update_sided_match
@@ -53,7 +53,7 @@ class SidedMatchesControllerTest < ActionController::TestCase
     login_as :mike1
     t = Time.now
     put :update, :id => sided_matches(:one).id, :sided_match => { :start_time=> t}
-    assert_redirected_to '/'
+    assert_fake_redirected
   end
 
   def test_should_destroy_sided_match
@@ -76,7 +76,7 @@ class SidedMatchesControllerTest < ActionController::TestCase
 #    login_as :mike1
 #    assert_no_difference('SidedMatch.count') do
 #      delete :destroy, :id => sided_matches(:one).id
-#      assert_redirected_to '/'
+#      assert_fake_redirected
 #    end
 #  end
   
@@ -88,7 +88,7 @@ class SidedMatchesControllerTest < ActionController::TestCase
     login_as :mike1
     assert_no_difference('SidedMatch.count') do
       delete :destroy, :id => sided_matches(:one).id
-      assert_redirected_to '/'
+      assert_fake_redirected
     end
   end
   
@@ -284,14 +284,14 @@ class SidedMatchesControllerTest < ActionController::TestCase
     match1.save!
     SidedMatchJoin.create_joins(match1)   
     put :update_result, :id => match1.id, :sided_match => {}, :mj => {}
-    assert_redirected_to '/'
+    assert_fake_redirected
 
     match1.start_time = 1.days.ago
     match1.save!
     ut1.is_admin = false
     ut1.save!
     put :update_result, :id => match1.id, :sided_match => {}, :mj => {}#处理不是管理员的情况  
-    assert_redirected_to '/'
+    assert_fake_redirected
     
     SidedMatchJoin.create_joins(matches(:one))
     tmp = SidedMatchJoin.find_by_user_id_and_match_id(u1.id, matches(:one))
@@ -301,7 +301,7 @@ class SidedMatchesControllerTest < ActionController::TestCase
                                               :situation => 0,
                                               },
                                     :mj => {tmp.id=>{:goal=>1,:cards=>2}}#处理match_join不是本场比赛的情况
-    assert_redirected_to '/'
+    assert_fake_redirected
     
     ut1.is_admin = true #复位为管理员
     ut1.save!

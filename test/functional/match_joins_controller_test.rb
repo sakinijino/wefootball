@@ -45,7 +45,7 @@ class MatchJoinsControllerTest < ActionController::TestCase
     login_as :quentin
     assert_no_difference('MatchJoin.count') do
       post :create, :match_id=>matches(:one).id, :team_id=>teams(:inter)
-      assert_redirected_to '/'
+      assert_fake_redirected
     end
   end
   
@@ -57,7 +57,7 @@ class MatchJoinsControllerTest < ActionController::TestCase
     login_as :aaron
     assert_no_difference('MatchJoin.count') do
       post :create, :match_id=>matches(:one).id, :team_id=>teams(:inter)
-      assert_redirected_to '/'
+      assert_fake_redirected
     end
   end
   
@@ -133,7 +133,7 @@ class MatchJoinsControllerTest < ActionController::TestCase
     login_as :saki
     assert_no_difference('MatchJoin.count', -1) do
       delete :destroy, :match_id => matches(:one).id, :team_id => teams(:inter).id, :id=>0
-      assert_redirected_to '/'
+      assert_fake_redirected
     end
   end
   
@@ -196,7 +196,7 @@ class MatchJoinsControllerTest < ActionController::TestCase
     
     login_as :mike2
     put :update_formation, :match_id=> matches(:one), :team_id=>teams(:inter).id, :formation => {'3'=>ut.id}
-    assert_redirected_to '/'
+    assert_fake_redirected
   end
   
   def test_update_formation_with_a_user_team_from_match_join_of_other_match
@@ -235,7 +235,7 @@ class MatchJoinsControllerTest < ActionController::TestCase
     assert_nil mj1.reload.position
     assert_nil mj2.reload.position
     assert_equal 11, ut.reload.position
-    assert_redirected_to '/'
+    assert_fake_redirected
   end
   
   def test_update_formation_with_a_user_team_from_match_join_of_other_team
@@ -269,7 +269,7 @@ class MatchJoinsControllerTest < ActionController::TestCase
     assert_nil mj1.reload.position
     assert_nil mj2.reload.position
     assert_equal 11, ut.reload.position
-    assert_redirected_to '/'
+    assert_fake_redirected
   end
   
   def test_update_formation_with_too_many_positions
@@ -305,7 +305,7 @@ class MatchJoinsControllerTest < ActionController::TestCase
     put :update_formation, :match_id=> matches(:one), :team_id=>teams(:inter).id, 
       :formation => uts
     assert_equal 11, ut.reload.position
-    assert_redirected_to '/'
+    assert_fake_redirected
   end
   
 protected

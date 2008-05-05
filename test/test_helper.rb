@@ -36,4 +36,8 @@ class Test::Unit::TestCase
   fixtures :all
 
   # Add more helper methods to be used by all tests here...
+  
+  def assert_fake_redirected
+    assert_response 403
+  end
 end

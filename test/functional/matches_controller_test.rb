@@ -75,7 +75,7 @@ class MatchesControllerTest < ActionController::TestCase
     assert_no_difference('Match.count') do
       post :create, :id => inv1.id
     end
-    assert_redirected_to '/'
+    assert_fake_redirected
     
     ut1.is_admin = true
     ut1.save!   
@@ -109,7 +109,7 @@ class MatchesControllerTest < ActionController::TestCase
     assert_no_difference('Match.count') do
       post :create, :id => inv.id
     end
-    assert_redirected_to '/'
+    assert_fake_redirected
   end 
 
 
@@ -162,7 +162,7 @@ class MatchesControllerTest < ActionController::TestCase
     match1.save!
     MatchJoin.create_joins(match1)   
     get :edit, :id => match1.id, :team_id=>t1.id   
-    assert_redirected_to '/'
+    assert_fake_redirected
 
     match1.start_time = 1.days.ago #复位为正常时间
     match1.save!
@@ -170,12 +170,12 @@ class MatchesControllerTest < ActionController::TestCase
     assert_response :success     
     
     get :edit, :id => match1.id, :team_id=>t2.id #处理user_id和team_id可能不匹配的情况  
-    assert_redirected_to '/'
+    assert_fake_redirected
 
     ut1.is_admin = false
     ut1.save!
     get :edit, :id => match1.id, :team_id=>t2.id #处理user_id和team_id可能不匹配的情况  
-    assert_redirected_to '/'      
+    assert_fake_redirected      
   end  
 
   
@@ -541,12 +541,12 @@ class MatchesControllerTest < ActionController::TestCase
     match1.save!
     MatchJoin.create_joins(match1)   
     put :update, :id => match1.id, :team_id=>t1.id, :match => {}, :mj => {}, :result_type => "goal"
-    assert_redirected_to '/'
+    assert_fake_redirected
 
     match1.start_time = 1.days.ago #复位为正常时间
     match1.save!    
     put :update, :id => match1.id, :team_id=>t2.id, :result_type => "goal", :match => {}, :mj => {}#处理user_id和team_id可能不匹配的情况     
-    assert_redirected_to '/'
+    assert_fake_redirected
     
     tmp = MatchJoin.find_by_user_id_and_team_id_and_match_id(u2.id,t2.id,match1.id)
     assert_not_nil tmp
@@ -555,12 +555,12 @@ class MatchesControllerTest < ActionController::TestCase
                                               :situation_by_guest => 0
                                               },
                                     :mj => {tmp.id=>{:goal=>1,:cards=>2}}#处理match_join不是本队的情况
-    assert_redirected_to '/'
+    assert_fake_redirected
 
     ut1.is_admin = false
     ut1.save!
     put :update, :id => match1.id, :team_id=>t1.id, :match => {}, :mj => {}#处理不是管理员的情况  
-    assert_redirected_to '/'
+    assert_fake_redirected
     
     ut1.is_admin = true #复位为管理员
     ut1.save!
@@ -633,7 +633,7 @@ class MatchesControllerTest < ActionController::TestCase
     assert_no_difference('Match.count') do
       delete :destroy, :id => match1.id
     end
-    assert_redirected_to '/'    
+    assert_fake_redirected    
 
     match1.start_time = Time.now.tomorrow
     match1.half_match_length = 20
@@ -645,6 +645,6 @@ class MatchesControllerTest < ActionController::TestCase
     assert_no_difference('Match.count') do
       delete :destroy, :id => match1.id
     end
-    assert_redirected_to '/'    
+    assert_fake_redirected    
   end  
 end

@@ -73,26 +73,26 @@ class PostsControllerTest < ActionController::TestCase
   def test_get_show_private_noauth
     login_as :aaron
     get :show, :id => posts(:saki_3).id
-    assert_redirected_to '/'
+    assert_fake_redirected
   end
   
   def test_get_show_private_without_logged_in
     get :show, :id => posts(:saki_3).id
-    assert_redirected_to '/'
+    assert_fake_redirected
   end
   
   def test_get_new_noauth
     login_as :aaron
     get :new, :team_id => teams(:inter).id
-    assert_redirected_to '/'
+    assert_fake_redirected
     get :new, :training_id => 1
-    assert_redirected_to '/'
+    assert_fake_redirected
   end
   
   def test_get_edit_noauth
     login_as :quentin
     get :edit, :id=> posts(:saki_1)
-    assert_redirected_to '/'
+    assert_fake_redirected
   end
   
   def test_should_create_post
@@ -146,7 +146,7 @@ class PostsControllerTest < ActionController::TestCase
   def test_update_noauth
     login_as :quentin
     put :update, :id => posts(:saki_1).id, :post => { :content => '123456' }
-    assert_redirected_to '/'
+    assert_fake_redirected
   end
 
   def test_should_destroy_post
@@ -162,6 +162,6 @@ class PostsControllerTest < ActionController::TestCase
     assert_no_difference('Post.count') do
       delete :destroy, :id => posts(:saki_1).id
     end
-    assert_redirected_to '/'
+    assert_fake_redirected
   end
 end

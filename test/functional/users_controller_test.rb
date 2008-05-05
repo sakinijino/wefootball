@@ -134,19 +134,19 @@ class UsersControllerTest < Test::Unit::TestCase
   def test_should_not_update_other_user
     login_as :quentin
     put :update, :id=>2, :user=>{:nickname=>'saki@gmail.com'}
-    assert_redirected_to "/"
+    assert_fake_redirected
   end
   
   def test_should_not_update_image_of_other_user
     login_as :quentin
     put :update_image, :id=>2, :user=>{}
-    assert_redirected_to "/"
+    assert_fake_redirected
   end
   
   def test_should_not_get_edit_page_of_other_user
     login_as :quentin
     get :edit, :id=>2
-    assert_redirected_to "/"
+    assert_fake_redirected
   end
   
 #  def test_should_sign_up_user_with_activation_code
@@ -181,12 +181,12 @@ class UsersControllerTest < Test::Unit::TestCase
   
   def test_should_not_activate_user_without_key
     get :activate
-    assert_redirected_to "/"
+    assert_fake_redirected
   end
 
   def test_should_not_activate_user_with_blank_key
     get :activate, :activation_code => ''
-    assert_redirected_to "/"
+    assert_fake_redirected
   end 
      
   def test_should_not_invite_without_login

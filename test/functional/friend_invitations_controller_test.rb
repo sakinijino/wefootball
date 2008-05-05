@@ -60,7 +60,7 @@ class FriendInvitationsControllerTest < ActionController::TestCase
         :host_id =>users(:saki).id,
         :message=>"Hi"
       }
-      assert_redirected_to '/'
+      assert_fake_redirected
     end
   end
   

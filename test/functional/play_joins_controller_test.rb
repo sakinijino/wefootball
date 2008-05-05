@@ -29,14 +29,14 @@ class PlayJoinsControllerTest < ActionController::TestCase
 #    assert_no_difference('PlayJoin.count') do
 #      post :create, :play_id=>p.id
 #    end
-#    assert_redirected_to '/'
+#    assert_fake_redirected
 #    
 #    p.start_time = 1.hour.since
 #    p.save!
 #    post :create, :play_id=>p.id
 #    assert_equal [p], users(:mike1).play_joins.map{|item| item.play}
 #    post :create, :play_id=>p.id #已参加后就不能重复参加
-#    assert_redirected_to '/'    
+#    assert_fake_redirected    
 #  end
   
   def test_should_destroy
@@ -62,12 +62,12 @@ class PlayJoinsControllerTest < ActionController::TestCase
     assert_no_difference('PlayJoin.count') do
       post :destroy, :play_id=>p.id
     end
-    assert_redirected_to '/'
+    assert_fake_redirected
     
     p.start_time = 1.hour.since
     p.save!
     post :destroy, :play_id=>p.id #未参加时不能退出
-    assert_redirected_to '/'    
+    assert_fake_redirected    
   end
   
 end

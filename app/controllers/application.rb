@@ -69,7 +69,8 @@ protected
   end
   
   def fake_params_redirect
-    redirect_to '/'
+    #redirect_to '/'
+    head 403
   end
   
   def redirect_with_back_uri_or_default(uri='/')

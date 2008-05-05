@@ -14,12 +14,12 @@ class MessagesControllerTest < ActionController::TestCase
     get :show, :id => messages(:saki_mike1_3).id
     assert_template 'show'
     get :show, :id => messages(:saki_mike1_2).id
-    assert_redirected_to '/'
+    assert_fake_redirected
     get :show, :id => messages(:mike2_saki).id
     assert_response :success
     assert_template 'show'
     get :show, :id => messages(:mike2_saki_2).id
-    assert_redirected_to '/'
+    assert_fake_redirected
   end
   
   def test_should_create_message
@@ -34,7 +34,7 @@ class MessagesControllerTest < ActionController::TestCase
     login_as :saki
     assert_no_difference('Message.count') do
       post :create, :message => {:receiver_id=>users(:saki).id, :subject=>'hello', :content=>'hello' }
-      assert_redirected_to '/'
+      assert_fake_redirected
     end
   end
   

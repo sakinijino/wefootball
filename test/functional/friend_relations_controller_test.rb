@@ -33,7 +33,7 @@ class FriendRelationsControllerTest < ActionController::TestCase
     assert_no_difference('FriendRelation.count') do
       assert_no_difference('FriendInvitation.count') do
         post :create, :request_id => friend_invitations(:mike2_to_aaron).id
-        assert_redirected_to '/'
+        assert_fake_redirected
       end
     end
   end

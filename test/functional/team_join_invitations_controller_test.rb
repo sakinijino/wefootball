@@ -22,7 +22,7 @@ class TeamJoinInvitationsControllerTest < ActionController::TestCase
     assert_equal 1, assigns(:friends).length
     
     get :new, :team_id => teams(:juven)
-    assert_redirected_to '/'
+    assert_fake_redirected
   end
   
   def test_index_unlogin
@@ -67,7 +67,7 @@ class TeamJoinInvitationsControllerTest < ActionController::TestCase
         :team_id => teams(:inter).id,
         :message => 'hello'
       }
-      assert_redirected_to '/'
+      assert_fake_redirected
     end
   end
   
@@ -81,7 +81,7 @@ class TeamJoinInvitationsControllerTest < ActionController::TestCase
         :team_id => teams(:inter).id,
         :message => 'hello'
       }
-      assert_redirected_to '/'
+      assert_fake_redirected
     end
   end
   
@@ -139,7 +139,7 @@ class TeamJoinInvitationsControllerTest < ActionController::TestCase
         :message => 'hello'
       }
       assert users(:saki).id, assigns(:user).id
-      assert_redirected_to '/'
+      assert_fake_redirected
     end
     TeamJoinRequest.destroy_all
     assert_no_difference('TeamJoinRequest.count :conditions=>["team_id = ? and is_invitation = true", teams(:juven).id]') do
@@ -150,7 +150,7 @@ class TeamJoinInvitationsControllerTest < ActionController::TestCase
         :message => 'hello'
       }
       assert teams(:juven).id, assigns(:team).id
-      assert_redirected_to '/'
+      assert_fake_redirected
     end
   end
   
@@ -158,7 +158,7 @@ class TeamJoinInvitationsControllerTest < ActionController::TestCase
     login_as :mike2
     assert_no_difference('TeamJoinRequest.count') do
       delete :destroy, :id => 5
-      assert_redirected_to '/'
+      assert_fake_redirected
     end
   end
   

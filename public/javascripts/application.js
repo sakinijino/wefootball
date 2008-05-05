@@ -124,15 +124,23 @@ j(function(){
         })
         
         j("#user_is_playable").change(function(){
-          if (this.checked)
-            j('#playable_info').show()
+          if (this.checked) {
+            j('#playable_info input').attr('disabled', false)
+            j('#playable_info select').attr('disabled', false)
+          }  
           else {
-            this.checked = !confirm('真的要挂靴吗? 挂靴后你将被从所有队伍的阵型中去掉。')
-            if (!this.checked) j('#playable_info').hide()
+            this.checked = !confirm('真的不踢球了吗? 确定后你会被从所有队伍的阵型中去掉。')
+            if (!this.checked) {
+              j('#playable_info input').attr('disabled', true)
+              j('#playable_info select').attr('disabled', true)
+            }
           }
         })
         if (j.browser.msie) j("#user_is_playable").click(function(){this.blur()})
-        if (!j("#user_is_playable").attr('checked')) j('#playable_info').hide()
+        if (!j("#user_is_playable").attr('checked')){
+          j('#playable_info input').attr('disabled', true)
+          j('#playable_info select').attr('disabled', true)
+        }
         
         j("span.province_city_select").each(function(i, span){
             var selects = j(span).find("select")

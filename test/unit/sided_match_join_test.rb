@@ -30,6 +30,30 @@ class SidedMatchJoinTest < ActiveSupport::TestCase
     mj.position = 10
     mj.save!
     assert_nil mj.position
+    
+    mj.goal = 1;
+    mj.position = 11
+    mj.save!
+    assert_equal 11, mj.position
+    
+    mj.goal = 0
+    mj.yellow_card = 1
+    mj.position = 12
+    mj.save!
+    assert_equal 12, mj.position
+    
+    mj.yellow_card = 0
+    mj.red_card = 1
+    mj.position = 13
+    mj.save!
+    assert_equal 13, mj.position
+    
+    mj.goal = ""
+    mj.yellow_card = ""
+    mj.red_card = ""
+    mj.position = 14
+    mj.save!
+    assert_nil mj.position
   end
   
   def test_create_joins #测试create_joins是正确的
@@ -45,7 +69,28 @@ class SidedMatchJoinTest < ActiveSupport::TestCase
     SidedMatchJoin.create_joins(m)    
     host_team_players_from_match_joins = SidedMatchJoin.players(m).map{|mj| mj.user}.sort_by{|u| u.id} 
     host_team_players_from_team = m.host_team.users.players.sort_by{|u| u.id} 
-    assert_equal host_team_players_from_match_joins,host_team_players_from_team    
+    assert_equal host_team_players_from_match_joins,host_team_players_from_team
+    
+    mj = SidedMatchJoin.find(:first, :conditions => ["user_id = ? and match_id = ?", users(:saki), m])
+    mj.position = 12;
+    mj.save!
+    users(:saki).is_playable = false;
+    users(:saki).save!
+    assert SidedMatchJoin.players(m).include?(mj)
+    mj.position = nil;
+    mj.save!
+    assert !SidedMatchJoin.players(m).include?(mj)
+    mj.goal = 1;
+    mj.save!
+    assert SidedMatchJoin.players(m).include?(mj)
+    mj.goal = 0;
+    mj.yellow_card = 1;
+    mj.save!
+    assert SidedMatchJoin.players(m).include?(mj)
+    mj.yellow_card = 0;
+    mj.red_card = 1;
+    mj.save!
+    assert SidedMatchJoin.players(m).include?(mj)
   end
   
   def test_cards #测试红黄牌的赋值和读取是正确的

@@ -57,7 +57,7 @@
   <% form_for(@user,:html => { :class=>"tab"}) do |f| %>
     <%= hidden_field_tag :tab_index, 1%>
     <p><%= f.check_box :is_playable %>
-    <label for="is_playable">我踢球</label></p>
+    <label for="is_playable">我踢球 <span class="optional">(选中后你可以填写你的球员信息和位置, 你也可以被球队管理员安排进阵容中)</span></label></p>
 
     <div id="playable_info">
       <p><label for="height">身高(cm) <span class="optional">(可选)</span></label><br/>

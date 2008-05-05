@@ -39,7 +39,7 @@ class MatchInvitationsControllerTest < ActionController::TestCase
   def test_should_not_get_new
     login_as :quentin
     get :new, :guest_team_id => teams(:milan).id, :host_team_id => teams(:juven).id
-    assert_redirected_to '/'
+    assert_fake_redirected
   end   
 
   def test_should_create_match_invitation
@@ -70,7 +70,7 @@ class MatchInvitationsControllerTest < ActionController::TestCase
         :new_rest_length => 15
       }
     end
-    assert_redirected_to '/'
+    assert_fake_redirected
     assert_no_difference('MatchInvitation.count') do #current_user并不是host_team_id所对应球队的管理员
       post :create, :match_invitation => {
         :host_team_id => teams(:juven).id,
@@ -81,7 +81,7 @@ class MatchInvitationsControllerTest < ActionController::TestCase
         :new_rest_length => 15
      }
     end
-    assert_redirected_to '/'
+    assert_fake_redirected
   end
   
   
@@ -124,12 +124,12 @@ class MatchInvitationsControllerTest < ActionController::TestCase
     inv1.edit_by_host_team = true #如果当前是主队（主队也就是t1队）在编辑
     inv1.save!    
     get :edit, :id => inv1.id
-    assert_redirected_to '/'
+    assert_fake_redirected
 
     inv1.edit_by_host_team = false #如果当前并不是主队（主队也就是t1队）在编辑
     inv1.save!    
     get :edit, :id => inv1.id
-    assert_redirected_to '/'    
+    assert_fake_redirected    
   end    
 
   
@@ -151,14 +151,14 @@ class MatchInvitationsControllerTest < ActionController::TestCase
     inv1.edit_by_host_team = true #如果当前是主队（主队也就是t1队）在编辑
     inv1.save!    
     put :update, :id => inv1.id, :match_invitation => {}
-    assert_redirected_to '/'
+    assert_fake_redirected
     
     ut.is_admin = true #将saki复位为t1队的管理员
     ut.save!    
     inv1.edit_by_host_team = false #如果当前并不是主队（主队也就是t1队）在编辑
     inv1.save!    
     put :update, :id => inv1.id, :match_invitation => {}
-    assert_redirected_to '/'       
+    assert_fake_redirected       
   end
 
   
@@ -289,7 +289,7 @@ class MatchInvitationsControllerTest < ActionController::TestCase
     assert_no_difference 'MatchInvitation.count' do
       delete :destroy, :id => inv1.id
     end
-    assert_redirected_to '/'
+    assert_fake_redirected
 
     ut.is_admin = true #如果saki当前是管理员身份
     ut.save     
@@ -301,7 +301,7 @@ class MatchInvitationsControllerTest < ActionController::TestCase
     assert_no_difference 'MatchInvitation.count' do
       delete :destroy, :id => inv1.id
     end
-    assert_redirected_to '/'
+    assert_fake_redirected
   end
 protected
   def create_match_invitation

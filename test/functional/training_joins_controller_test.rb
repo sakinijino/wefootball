@@ -37,7 +37,7 @@ class TrainingJoinsControllerTest < ActionController::TestCase
 #    login_as :quentin
 #    assert_no_difference('TrainingJoin.count') do
 #      post :create, :training_id=>trainings(:training1).id
-#      assert_redirected_to '/'
+#      assert_fake_redirected
 #    end
 #  end
   
@@ -48,7 +48,7 @@ class TrainingJoinsControllerTest < ActionController::TestCase
     login_as :aaron
     assert_no_difference('TrainingJoin.count') do
       post :create, :training_id=>trainings(:training1).id
-      assert_redirected_to '/'
+      assert_fake_redirected
     end
   end
   
@@ -98,7 +98,7 @@ class TrainingJoinsControllerTest < ActionController::TestCase
 #    login_as :saki
 #    assert_no_difference('TrainingJoin.count', -1) do
 #      delete :destroy, :training_id => trainings(:training1).id
-#      assert_redirected_to '/'
+#      assert_fake_redirected
 #    end
 #  end
   
@@ -109,7 +109,7 @@ class TrainingJoinsControllerTest < ActionController::TestCase
     login_as :quentin
     assert_no_difference('TrainingJoin.count') do
       delete :destroy, :training_id => trainings(:training1).id
-      assert_redirected_to '/'
+      assert_fake_redirected
     end
   end
 end

@@ -18,7 +18,7 @@ class TrainingsControllerTest < ActionController::TestCase
     login_as :mike1
     assert_no_difference('Training.count') do
       post :create, :training => { :team_id => teams(:inter).id }
-      assert_redirected_to '/'
+      assert_fake_redirected
     end
   end
   
@@ -51,7 +51,7 @@ class TrainingsControllerTest < ActionController::TestCase
     login_as :mike1
     t = Time.now
     put :update, :id => trainings(:training1).id, :training => { :start_time=> t}
-    assert_redirected_to '/'
+    assert_fake_redirected
   end
   
   def test_should_be_admin_before_update_training
@@ -61,7 +61,7 @@ class TrainingsControllerTest < ActionController::TestCase
     login_as :mike1
     t = Time.now
     put :update, :id => trainings(:training1).id, :training => { :start_time=> t}
-    assert_redirected_to '/'
+    assert_fake_redirected
   end
 
   def test_should_destroy_training
@@ -82,7 +82,7 @@ class TrainingsControllerTest < ActionController::TestCase
     login_as :mike1
     assert_no_difference('Training.count') do
       delete :destroy, :id => trainings(:training1).id
-      assert_redirected_to '/'
+      assert_fake_redirected
     end
   end
   
@@ -93,7 +93,7 @@ class TrainingsControllerTest < ActionController::TestCase
     login_as :mike1
     assert_no_difference('Training.count') do
       delete :destroy, :id => trainings(:training1).id
-      assert_redirected_to '/'
+      assert_fake_redirected
     end
   end
 end

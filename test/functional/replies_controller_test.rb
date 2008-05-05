@@ -26,7 +26,7 @@ class RepliesControllerTest < ActionController::TestCase
     assert_no_difference('Post.find(posts(:saki_1).id).replies.size') do
       post :create, :post_id => posts(:saki_1).id, :reply => {:content=>""}
     end
-    assert_redirected_to '/'
+    assert_fake_redirected
   end
 
   def test_should_destroy_reply
@@ -44,6 +44,6 @@ class RepliesControllerTest < ActionController::TestCase
     assert_no_difference('Post.find(posts(:saki_1).id).replies.size') do
       delete :destroy, :id => replies(:quentin_1_reply).id
     end
-    assert_redirected_to '/'
+    assert_fake_redirected
   end
 end

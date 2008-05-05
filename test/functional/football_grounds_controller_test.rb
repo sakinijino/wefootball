@@ -18,7 +18,7 @@ class FootballGroundsControllerTest < ActionController::TestCase
   def test_get_index_unauthorize_with_not_editor
     login_as :mike1
     get :unauthorize
-    assert_redirected_to '/'
+    assert_fake_redirected
   end
 
   def test_should_create_football_ground
@@ -32,7 +32,7 @@ class FootballGroundsControllerTest < ActionController::TestCase
   def test_get_edit_with_not_editor
     login_as :mike1
     get :edit, :id => football_grounds(:yiti).id
-    assert_redirected_to '/'
+    assert_fake_redirected
   end
 
   def test_should_update_football_ground
@@ -52,7 +52,7 @@ class FootballGroundsControllerTest < ActionController::TestCase
     n = football_grounds(:daishenhe1).name
     put :update, :id => football_grounds(:daishenhe1).id, :football_ground => {:name => 'Modify', :status => 1 }
     assert_equal n, assigns(:football_ground).name
-    assert_redirected_to '/'
+    assert_fake_redirected
   end
 
   def test_should_destroy_football_ground
@@ -64,7 +64,7 @@ class FootballGroundsControllerTest < ActionController::TestCase
     assert_no_difference('FootballGround.count') do
       delete :destroy, :id => football_grounds(:yiti).id
     end
-    assert_redirected_to '/'
+    assert_fake_redirected
   end
   
   def test_update_with_not_editor
@@ -72,6 +72,6 @@ class FootballGroundsControllerTest < ActionController::TestCase
     assert_no_difference('FootballGround.count') do
       delete :destroy, :id => football_grounds(:daishenhe1).id
     end
-    assert_redirected_to '/'
+    assert_fake_redirected
   end
 end
