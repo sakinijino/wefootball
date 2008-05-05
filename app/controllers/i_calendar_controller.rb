@@ -54,15 +54,16 @@ class ICalendarController < ApplicationController
       when Match
         "#{act.host_team.shortname} 对阵 #{act.guest_team.shortname}的比赛"
       end)
+      
       event.description(case act
       when Play
         nil
       when Training
-        act.summary
+        act.summary.gsub(/\r\n/, "\n")
       when SidedMatch
-        act.description
+        act.description.gsub(/\r\n/, "\n")
       when Match
-        act.description
+        act.description.gsub(/\r\n/, "\n")
       end)
       event.url(case act
       when Play
