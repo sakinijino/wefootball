@@ -15,7 +15,7 @@ class ICalendarController < ApplicationController
     
     send_data generate_calendar(@calendar_activities).to_ical, 
       :filename => "#{@user.nickname}.ics", 
-      :type => 'text/calendar', 
+      :type => 'text/calendar;charset=UTF-8;', 
       :disposition => 'inline'
   end
   
@@ -30,7 +30,7 @@ class ICalendarController < ApplicationController
     
     send_data generate_calendar(@calendar_activities).to_ical, 
       :filename => "#{@team.shortname}.ics", 
-      :type => 'text/calendar', 
+      :type => 'text/calendar;charset=UTF-8;', 
       :disposition => 'inline'
   end
   
@@ -57,13 +57,13 @@ class ICalendarController < ApplicationController
       
       event.description(case act
       when Play
-        nil
+        play_url act
       when Training
-        act.summary.gsub(/\r\n/, "\n")
+        %Q(#{act.summary.gsub(/\r\n/, "\n")}\n\n#{training_url act})
       when SidedMatch
-        act.description.gsub(/\r\n/, "\n")
+        %Q(#{act.description.gsub(/\r\n/, "\n")}\n\n#{sided_match_url act})
       when Match
-        act.description.gsub(/\r\n/, "\n")
+        %Q(#{act.description.gsub(/\r\n/, "\n")}\n\n#{match_url act})
       end)
       event.url(case act
       when Play
