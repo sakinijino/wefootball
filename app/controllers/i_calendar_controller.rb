@@ -14,7 +14,7 @@ class ICalendarController < ApplicationController
         @user.plays.in_a_duration(@start_time, et))
     headers['Content-Type'] = 'text/calendar'
     headers['Cache-Control'] = 'no-cache'
-    render :inline => generate_calendar("#{@user.nickname}最近的活动", @calendar_activities).to_ical
+    render :inline => generate_calendar("#{@user.nickname}近期的活动", @calendar_activities).to_ical
   end
   
   def team
@@ -27,7 +27,7 @@ class ICalendarController < ApplicationController
        @team.match_calendar_proxy.in_a_duration(@start_time, et))
     headers['Content-Type'] = 'text/calendar'
     headers['Cache-Control'] = 'no-cache'
-    render :inline => generate_calendar("#{@team.shortname}最近的活动", @calendar_activities).to_ical
+    render :inline => generate_calendar("#{@team.shortname}近期的活动", @calendar_activities).to_ical
   end
   
   protected

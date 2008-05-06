@@ -39,15 +39,13 @@
     
   <li class="seperate">
   </li>
-  <li>
     <% if @training %>
-      > <%= link_to '返回训练详情', training_path(@training) %>
+      <li> > <%= link_to '返回训练详情', training_path(@training) %></li>
     <%elsif @sided_match%>
-      > <%= link_to '返回比赛详情', sided_match_path(@sided_match) %>
+      <li> > <%= link_to '返回比赛详情', sided_match_path(@sided_match) %></li>
     <%elsif @match%>
-      > <%= link_to '返回比赛详情', match_path(@match) %>
+      <li> > <%= link_to '返回比赛详情', match_path(@match) %></li>
     <%end%>
-  </li>
   <li>
     > <%= link_to '返回球队首页', team_view_path(@team) %>
   </li>
