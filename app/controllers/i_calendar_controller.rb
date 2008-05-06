@@ -13,7 +13,8 @@ class ICalendarController < ApplicationController
         @user.sided_matches.in_a_duration(@start_time, et)+
         @user.plays.in_a_duration(@start_time, et))
     headers['Content-Type'] = 'text/calendar'
-    render :inline => generate_calendar("#{@user.nickname}最近的安排", @calendar_activities).to_ical
+    headers['Cache-Control'] = 'no-cache'
+    render :inline => generate_calendar("#{@user.nickname}最近的活动", @calendar_activities).to_ical
   end
   
   def team
@@ -25,7 +26,8 @@ class ICalendarController < ApplicationController
        @team.sided_matches.in_a_duration(@start_time, et) +
        @team.match_calendar_proxy.in_a_duration(@start_time, et))
     headers['Content-Type'] = 'text/calendar'
-    render :inline => generate_calendar("#{@team.shortname}最近的安排", @calendar_activities).to_ical
+    headers['Cache-Control'] = 'no-cache'
+    render :inline => generate_calendar("#{@team.shortname}最近的活动", @calendar_activities).to_ical
   end
   
   protected
