@@ -1,43 +1,38 @@
 require 'icalendar'
 
 class ICalendarController < ApplicationController
-  DISPLAY_DAYS = 21
+  DISPLAY_DAYS = 28
   
   def user
     @user = User.find(params[:id], :conditions=>"activated_at is not null")    
-    @start_time = 7.days.ago.at_midnight
+    @start_time = 14.days.ago.at_midnight
     et = @start_time.since(3600*24*DISPLAY_DAYS)
     @calendar_activities = 
       (@user.trainings.in_a_duration(@start_time, et) + 
         @user.matches.in_a_duration(@start_time, et)+
         @user.sided_matches.in_a_duration(@start_time, et)+
         @user.plays.in_a_duration(@start_time, et))
-    
-    send_data generate_calendar(@calendar_activities).to_ical, 
-      :filename => "#{@user.nickname}.ics", 
-      :type => 'text/calendar;charset=UTF-8;', 
-      :disposition => 'inline'
+    headers['Content-Type'] = 'text/calendar'
+    render :inline => generate_calendar("#{@user.nickname}最近的安排", @calendar_activities).to_ical
   end
   
   def team
     @team = Team.find(params[:id])
-    @start_time = 7.days.ago.at_midnight
+    @start_time = 14.days.ago.at_midnight
     et = @start_time.since(3600*24*DISPLAY_DAYS)
     @calendar_activities = 
       (@team.trainings.in_a_duration(@start_time, et) +
        @team.sided_matches.in_a_duration(@start_time, et) +
        @team.match_calendar_proxy.in_a_duration(@start_time, et))
-    
-    send_data generate_calendar(@calendar_activities).to_ical, 
-      :filename => "#{@team.shortname}.ics", 
-      :type => 'text/calendar;charset=UTF-8;', 
-      :disposition => 'inline'
+    headers['Content-Type'] = 'text/calendar'
+    render :inline => generate_calendar("#{@team.shortname}最近的安排", @calendar_activities).to_ical
   end
   
   protected
-  def generate_calendar(activities)
+  def generate_calendar(name, activities)
     cal = Icalendar::Calendar.new
     cal.prodid = "WeFootball-iCalendar"
+    cal.custom_property("X-WR-CALNAME", name)
     cal.custom_property("X-WR-TIMEZONE", "Asia/Shanghai")
     activities.each do |act|
       event = Icalendar::Event.new
