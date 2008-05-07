@@ -294,6 +294,10 @@ class User < ActiveRecord::Base
     UserTeam.find_by_user_id_and_team_id(self.id, team_id) != nil
   end
   
+  def related_posts(options={})
+    Post.get_user_related_posts(self, options)
+  end
+  
   def can_invite_team?(team)
     team_id = case team
     when Team

@@ -33,7 +33,8 @@ class Team < ActiveRecord::Base
   
   has_many :posts, :dependent => :destroy, :order => "updated_at desc" do
     def public(options={})
-      find :all, {:conditions => ['is_private = ?', false]}.merge(options)
+      q = {:conditions => ['is_private = ?', false]}.merge(options)
+      options.has_key?(:page) ? paginate(:all, q) : find(:all, q)
     end
   end
   

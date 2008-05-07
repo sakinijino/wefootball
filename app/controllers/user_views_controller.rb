@@ -8,6 +8,7 @@ class UserViewsController < ApplicationController
   SIDED_MATCH_LIST_LENGTH = 1
   PLAY_LIST_LENGTH = 1
   DISPLAY_DAYS = 14
+  POST_LIST_LENGTH = 10
   
   def show
     @user = User.find(params[:id], :include=>[:positions], :conditions=>"activated_at is not null")
@@ -44,6 +45,8 @@ class UserViewsController < ApplicationController
       @user_invitation_count = FriendInvitation.count(:conditions => ["host_id = ?", current_user])
       @team_invitation_count = TeamJoinRequest.count(:conditions => ["user_id = ? and is_invitation = ?", current_user, true])
     end
+    
+    @posts = @user.related_posts(:limit=>POST_LIST_LENGTH) if logged_in? && @user.id == self.current_user.id
     
     @title = "#{@user.nickname}的主页"
   end

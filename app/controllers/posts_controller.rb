@@ -3,14 +3,17 @@ class PostsController < ApplicationController
   before_filter :before_post, :only=>[:new, :create]
   before_filter :before_modify, :only=>[:edit, :update]
   
+  POSTS_PER_PAGE = 30
+  REPLIES_PER_PAGE = 100
+  
   def index
     if (params[:sided_match_id])
       @sided_match = SidedMatch.find(params[:sided_match_id])
       @team = @sided_match.team
       if (logged_in? && current_user.is_team_member_of?(@team.id))
-        @posts = @sided_match.posts
+        @posts = @sided_match.posts.paginate(:page => params[:page], :per_page => POSTS_PER_PAGE)
       else
-        @posts = @sided_match.posts.public
+        @posts = @sided_match.posts.public(:page => params[:page], :per_page => POSTS_PER_PAGE)
       end
       @title = "讨论对阵 #{@sided_match.guest_team_name} 的比赛"
       render :layout => "team_layout"
@@ -18,34 +21,55 @@ class PostsController < ApplicationController
       @match = Match.find(params[:match_id])
       @team = Team.find(params[:team_id])
       if (logged_in? && current_user.is_team_member_of?(@team.id))
-        @posts = @match.posts.team(@team)
+        @posts = @match.posts.team(@team, :page => params[:page], :per_page => POSTS_PER_PAGE)
       else
-        @posts = @match.posts.team_public(@team)
+        @posts = @match.posts.team_public(@team, :page => params[:page], :per_page => POSTS_PER_PAGE)
       end
       @title = "讨论对阵 #{(@match.host_team != @team ? @match.host_team : @match.guest_team).shortname} 的比赛"
       render :layout => "match_layout"
-    elsif (params[:team_id])
-      @team = Team.find(params[:team_id])
-      if (logged_in? && current_user.is_team_member_of?(@team))
-        @posts = @team.posts
-      else
-        @posts = @team.posts.public
-      end
-      @title = "#{@team.shortname}下的讨论"
-      render :layout => "team_layout"
     elsif (params[:training_id])
       @training = Training.find(params[:training_id])
       @team = @training.team
       if (logged_in? && current_user.is_team_member_of?(@training.team_id))
-        @posts = @training.posts
+        @posts = @training.posts.paginate(:page => params[:page], :per_page => POSTS_PER_PAGE)
       else
-        @posts = @training.posts.public
+        @posts = @training.posts.public(:page => params[:page], :per_page => POSTS_PER_PAGE)
       end
       @title = "#{@training.team.shortname} #{@training.start_time.strftime('%m.%d')}训练的讨论"
       render :layout => "team_layout"
+    elsif (params[:team_id])
+      @team = Team.find(params[:team_id])
+      @title = "#{@team.shortname}下的讨论"
+      respond_to do |format| 
+        format.html  {
+          if (logged_in? && current_user.is_team_member_of?(@team))
+            @posts = @team.posts.paginate(:page => params[:page], :per_page => POSTS_PER_PAGE)
+          else
+            @posts = @team.posts.public(:page => params[:page], :per_page => POSTS_PER_PAGE)
+          end
+          @display_rss_link = true
+          render :layout => "team_layout"
+        }
+        format.atom {
+          @posts = Post.find :all, 
+            {:conditions => ['team_id = ? and is_private = ?', @team, false], 
+             :limit => 20, 
+             :order => "created_at desc"}
+        }
+      end
     else
       fake_params_redirect
     end
+  end
+  
+  TEAM_LIST_LENGTH = 9
+  
+  def related
+    @user = current_user
+    @teams = @user.teams.find(:all, :limit => TEAM_LIST_LENGTH+1)
+    @posts = current_user.related_posts :page => params[:page], :per_page => POSTS_PER_PAGE
+    @title = "我所在球队的讨论更新"
+    render :layout => "user_layout"
   end
 
   def show
@@ -54,6 +78,7 @@ class PostsController < ApplicationController
       fake_params_redirect
       return
     end
+    @replies = @post.replies.paginate(:page => params[:page], :per_page => REPLIES_PER_PAGE)
     @can_reply = logged_in? && @post.can_be_replied_by?(current_user)
     @team = @post.team
     @training = @post.training

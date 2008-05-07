@@ -217,6 +217,8 @@ class SidedMatchTest < ActiveSupport::TestCase
     assert_equal 3, m.posts.length
     assert_equal 1, m.posts.public(:limit=>1).length
     assert_equal 2, m.posts.public.length
+    
+    assert_equal 1, m.posts.public(:page=>1, :per_page=>1).length
   end
   
   def test_posts_dependency_nullify

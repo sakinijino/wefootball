@@ -15,7 +15,7 @@ class RepliesControllerTest < ActionController::TestCase
     Post.find(posts(:saki_1).id).replies(:refresh).size
     assert_no_difference('Post.find(posts(:saki_1).id).replies.size') do
       post :create, :post_id => posts(:saki_1).id, :reply => {:content=>""}
-      assert_equal 1, assigns(:post).replies.length
+      assert_equal 1, assigns(:replies).length
     end
     assert_template "posts/show"
   end

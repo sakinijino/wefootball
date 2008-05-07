@@ -12,7 +12,7 @@ class RepliesController < ApplicationController
     if @post.save
       redirect_to(@post)
     else
-      @post.replies.reload
+      @replies = @post.replies.paginate(:page => params[:page], :per_page => PostsController::REPLIES_PER_PAGE)
       @can_reply = @post.can_be_replied_by?(current_user)
       @team = @post.team
       @training = @post.training

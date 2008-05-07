@@ -4,15 +4,19 @@ class MatchInvitationsController < ApplicationController
   def index
     @team = Team.find(params[:team_id])
     if (params[:as] == 'send')
-      @mis = MatchInvitation.find :all,
+      @mis = MatchInvitation.paginate :all,
         :conditions=>["(host_team_id = ? and edit_by_host_team = ?) or (guest_team_id = ? and edit_by_host_team = ?)", @team, false, @team, true],
-        :order => 'updated_at desc'
+        :order => 'updated_at desc',
+        :page => params[:page], 
+        :per_page => 10
       @title = "等待对方回复的约战"
       render :action=>'index_waiting_for_reply', :layout=>"team_layout"
     else
-      @mis = MatchInvitation.find :all,
+      @mis = MatchInvitation.paginate :all,
         :conditions=>["(host_team_id = ? and edit_by_host_team = ?) or (guest_team_id = ? and edit_by_host_team = ?)", @team, true, @team, false],
-        :order => 'updated_at desc'
+        :order => 'updated_at desc',
+        :page => params[:page], 
+        :per_page => 10
       @title = "需要处理的约战"
       render :action=>'index_need_reply', :layout=>"team_layout"
     end

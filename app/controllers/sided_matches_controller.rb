@@ -32,8 +32,8 @@ class SidedMatchesController < ApplicationController
       :conditions => ["goal > 0"], :order => 'goal desc') if @match.is_after_match?
     
     @team = @match.host_team
-    @joined_users = @match.users.joined(JOINED_USER_LIST_LENGTH+1)
-    @undetermined_users = @match.users.undetermined(UNDETERMINED_USER_LIST_LENGTH+1)
+    @joined_users = @match.users.joined(:limit=>JOINED_USER_LIST_LENGTH+1)
+    @undetermined_users = @match.users.undetermined(:limit=>UNDETERMINED_USER_LIST_LENGTH+1)
     if (logged_in? && current_user.is_team_member_of?(@match.host_team_id))
       @posts = @match.posts.find(:all, :limit=>POSTS_LENGTH)
     else
@@ -45,7 +45,7 @@ class SidedMatchesController < ApplicationController
   def joined_users
     @match = SidedMatch.find(params[:id])
     @title = "#{@match.host_team.shortname} #{@match.start_time.strftime('%m.%d')}的比赛"
-    @users = @match.users.joined
+    @users = @match.users.joined :page => params[:page], :per_page => 100
     @team = @match.team
     render :action=>'users', :layout=>'team_layout'    
   end
@@ -53,7 +53,7 @@ class SidedMatchesController < ApplicationController
   def undetermined_users
     @match = SidedMatch.find(params[:id])
     @title = "#{@match.host_team.shortname} #{@match.start_time.strftime('%m.%d')}的比赛"
-    @users = @match.users.undetermined
+    @users = @match.users.undetermined :page => params[:page], :per_page => 100
     @team = @match.team
     render :action=>'users', :layout=>'team_layout'    
   end    

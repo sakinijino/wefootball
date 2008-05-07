@@ -1,16 +1,15 @@
 <ul class="sidebar_menu"> 
 
-  <% if logged_in? %>
+  <% if logged_in? && current_user.is_team_member_of?(@team)%>
     <li <%= selected_class_sidebar_menu_item(:action=>'new')%>> 
-        >
-    <% if @training && current_user.is_team_member_of?(@training.team)%>
-        <%= link_to '针对本次训练发言', new_training_post_path(@training) %>
-    <% elsif @sided_match && current_user.is_team_member_of?(@sided_match.team)%>
-        <%= link_to '针对本场比赛发言', new_sided_match_post_path(@sided_match) %>
-    <% elsif @match && current_user.is_team_member_of?(@team)%>
-        <%= link_to '针对本场比赛发言', new_match_team_post_path(@match, @team) %>
-    <% elsif current_user.is_team_member_of?(@team) %>
-        <%= link_to '发言', new_team_post_path(@team) %>
+    <% if @training%>
+        > <%= link_to '针对本次训练发言', new_training_post_path(@training) %>
+    <% elsif @sided_match%>
+        > <%= link_to '针对本场比赛发言', new_sided_match_post_path(@sided_match) %>
+    <% elsif @match%>
+        > <%= link_to '针对本场比赛发言', new_match_team_post_path(@match, @team) %>
+    <% else%>
+        > <%= link_to '发言', new_team_post_path(@team) %>
     <%end%>
     </li>
   <%end%>

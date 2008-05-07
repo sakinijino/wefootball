@@ -11,19 +11,23 @@ class Match < ActiveRecord::Base
   
   has_many :posts, :dependent => :nullify, :order => "updated_at desc" do
     def team(team_id, options={})
-      find :all, {:conditions => ['team_id = ?', team_id]}.merge(options)
+      q = {:conditions => ['team_id = ?', team_id]}.merge(options)
+      options.has_key?(:page) ? paginate(:all, q) : find(:all, q)
     end
     def team_public(team_id, options={})
-      find :all, {:conditions => ['team_id = ? and is_private = ?', team_id, false]}.merge(options)
+      q = {:conditions => ['team_id = ? and is_private = ?', team_id, false]}.merge(options)
+      options.has_key?(:page) ? paginate(:all, q) : find(:all, q)
     end
   end
 
   has_many :users, :through=>:match_joins do
-    def joined_with_team_id(team_id)
-      find :all, {:conditions => ['team_id = ? and status = ?', team_id,MatchJoin::JOIN]}
+    def joined_with_team_id(team_id, options={})
+      q = {:conditions => ['team_id = ? and status = ?', team_id,MatchJoin::JOIN]}.merge(options)
+      options.has_key?(:page) ? paginate(:all, q) : find(:all, q)
     end
-    def undetermined_with_team_id(team_id)
-      find :all, {:conditions => ['team_id = ? and status = ?', team_id,MatchJoin::UNDETERMINED]}
+    def undetermined_with_team_id(team_id, options={})
+      q = {:conditions => ['team_id = ? and status = ?', team_id,MatchJoin::UNDETERMINED]}.merge(options)
+      options.has_key?(:page) ? paginate(:all, q) : find(:all, q)
     end
   end
   

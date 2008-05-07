@@ -139,9 +139,9 @@
   <div class="sect">   
     <h2><%=h @team.shortname%>关于本场比赛的讨论</h2>
     <%= render :partial=>'posts/narrow_post_list', :object=>@posts%>
-    <div style="margin: 10px 0  0 10px;float:right;">
+    <div class="post_more">
       <%links = []%>
-      <%links << "> #{link_to '针对本场训练发言', new_sided_match_post_path(@match)}" if logged_in? && current_user.is_team_member_of?(@team)%>
+      <%links << "> #{link_to '针对本场比赛发言', new_sided_match_post_path(@match)}" if logged_in? && current_user.is_team_member_of?(@team)%>
       <%links << "> #{link_to '更多', sided_match_posts_path(@match)}"%>
       <%= links_with_sticks links%>
     </div>

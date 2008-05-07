@@ -44,7 +44,7 @@
   <div class="sect">
     <h2>关于本次训练的讨论</h2>
     <%= render(:partial => 'posts/post_list', :object => @posts)%>
-    <div style="margin: 5px 10px  0 10px;float:right">
+    <div class="post_more">
       <%links = []%>
       <%links << "> #{link_to '针对本次训练发言', new_training_post_path(@training)}" if logged_in? && current_user.is_team_member_of?(@training.team)%>
       <%links << "> #{link_to '更多', training_posts_path(@training)}"%>

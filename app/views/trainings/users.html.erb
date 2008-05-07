@@ -1,6 +1,8 @@
 <div id="wide_left_content" class="sect">
   <h2><%=h @title%></h2>
-  <%= user_icon(@undetermined_users)%>
+  <%= user_icon(@users)%>
+  <div class="cb"></div>
+  <%= will_paginate @users %>
 </div>
 
 <div id="narrow_right_content" class="sect">

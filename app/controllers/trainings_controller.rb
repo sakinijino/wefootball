@@ -4,7 +4,7 @@ class TrainingsController < ApplicationController
   
   POSTS_LENGTH = 10
   JOINED_USER_LIST_LENGTH = 9
-  UNDETERMINED_USER_LIST_LENGTH = 9  
+  UNDETERMINED_USER_LIST_LENGTH = 9 
   
   def show
     @training = Training.find(params[:id])
@@ -16,25 +16,25 @@ class TrainingsController < ApplicationController
     end
     
     @team = @training.team
-    @joined_users = @training.users.joined(JOINED_USER_LIST_LENGTH+1)
-    @undetermined_users = @training.users.undetermined(UNDETERMINED_USER_LIST_LENGTH+1)    
+    @joined_users = @training.users.joined(:limit=>JOINED_USER_LIST_LENGTH+1)
+    @undetermined_users = @training.users.undetermined(:limit=>UNDETERMINED_USER_LIST_LENGTH+1)    
     render :layout=>'team_layout'
   end
   
   def joined_users
     @training = Training.find(params[:id])
     @title = "参见#{@training.team.shortname} #{@training.start_time.strftime('%m.%d')}训练的人"
-    @joined_users = @training.users.joined
+    @users = @training.users.joined :page => params[:page], :per_page => 100
     @team = @training.team
-    render :layout=>'team_layout'    
+    render :action=>'users', :layout=>'team_layout'    
   end
   
   def undetermined_users
     @training = Training.find(params[:id])
     @title = "没表态是否参加#{@training.team.shortname} #{@training.start_time.strftime('%m.%d')}训练的人"
-    @undetermined_users = @training.users.undetermined
+    @users = @training.users.undetermined :page => params[:page], :per_page => 100
     @team = @training.team
-    render :layout=>'team_layout'    
+    render :action=>'users', :layout=>'team_layout'    
   end  
   
   def new

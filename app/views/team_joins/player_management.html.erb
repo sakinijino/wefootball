@@ -4,6 +4,7 @@
 </div>
 
 <div id="wide_left_content">
+  <%if @other_uts.current_page == 1%>
   <div class="sect">
     <h2>队员名单</h2>
     <%@player_uts.each do |ut| %>
@@ -18,6 +19,7 @@
     <%end%>
     <div class="cb"></div>
   </div>
+  <%end%>
 
   <div class="sect">
     <h2>可选的队员</h2>
@@ -34,6 +36,7 @@
       </div>
     <%end%>
     <div class="cb"></div>
+    <%= will_paginate @other_uts %>
   </div>
 </div>
 

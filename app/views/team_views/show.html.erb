@@ -117,7 +117,7 @@
   <div class="sect">   
     <h2><%=h @team.shortname%>下的讨论</h2>
     <%= render :partial=>'posts/narrow_post_list', :object=>@posts%>
-    <div style="margin: 10px 0  0 10px;float:right;">
+    <div class="post_more">
       <%links = []%>
       <%links << "> #{link_to '发言', new_team_post_path(@team)}" if logged_in? && current_user.is_team_member_of?(@team)%>
       <%links << "> #{link_to '更多', team_posts_path(@team)}"%>

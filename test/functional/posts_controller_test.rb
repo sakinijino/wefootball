@@ -56,7 +56,7 @@ class PostsControllerTest < ActionController::TestCase
   def test_get_show_can_reply
     login_as :quentin
     get :show, :id => posts(:saki_1).id
-    assert_select "#content form[action=#{post_replies_path(assigns(:post))}]"
+    assert_select "#content form[action=#{post_replies_path(assigns(:post), :page => 1)}]"
   end
   
   def test_get_show_can_not_reply

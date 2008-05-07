@@ -155,5 +155,13 @@
       :locals => {:date => @start_time, :days=> UserViewsController::DISPLAY_DAYS, :activities => @calendar_activities_hash})%>
     <div class="cb"></div>
   </div>
+
+  <%if logged_in? && @user.id == current_user.id && @posts.size > 0%>
+    <div class="sect">
+      <h2><%=smart_nickname @user%>所在球队的讨论更新</h2>
+      <%=render :partial=>'posts/many_teams_post_list', :object=>@posts%>
+      <%= link_to "> 更多", related_posts_path, :class=>"post_more" %>
+    </div>
+  <%end%>
 </div>
 <div class="cb"></div>
