@@ -89,7 +89,6 @@ form.button-to {
   padding-bottom:15px;
   border:solid 1px #3D681A;
   margin:0 auto;
-  overflow:hidden;
 }
 
 * html #main_content {
@@ -473,7 +472,7 @@ a.more {
   margin-right:25px;
 }
 
-a.right_more {
+a.right_more, .post_more {
   clear: both;
   float: right;
   margin-top: 10px;
