@@ -36,4 +36,15 @@ class PostTest < ActiveSupport::TestCase
       posts(:saki_1).destroy
     end
   end
+  
+  def test_user_related_posts
+    posts = Post.get_user_related_posts(users(:saki))
+    assert posts.include?(posts(:quentin_2))
+    assert posts.include?(posts(:saki_1))
+    
+    posts = Post.get_user_related_posts(users(:saki), :limit=>5)
+    assert_equal 5, posts.size
+    posts = Post.get_user_related_posts(users(:saki), :page=>2, :per_page=>2)
+    assert_equal 2, posts.current_page
+  end
 end

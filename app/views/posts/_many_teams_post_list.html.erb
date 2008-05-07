@@ -1,0 +1,31 @@
+<table class="list">
+  <tr>
+    <th style="width:15px">&nbsp;</th>
+    <th>话题</th>
+    <th>球队</th>
+    <th>作者</th>
+    <th style="width:30px">回复</th>
+    <th style="width:100px; text-align:right">最后回复</th>
+  </tr>
+
+<% for post in many_teams_post_list %>
+  <tr>
+    <td>
+      <%if !post.training_id.nil?%>
+        <%= training_icon_link(post.training_id)%>
+      <%elsif !post.match_id.nil?%>
+        <%= match_icon_link(post.match_id)%>
+      <%elsif !post.sided_match_id.nil?%>
+        <%= sided_match_icon_link(post.sided_match_id)%>
+      <%else%>
+        <%= "&nbsp;"%>
+      <%end%>
+    </td>
+    <td><%=link_to h(post.title), post  %><%="<span class='private'>&nbsp;&nbsp;-&nbsp;&nbsp;(仅队内可见)</span>" if post.is_private%></td>
+    <td><%=link_to h(post.team.shortname), team_view_path(post.team) %></td>
+    <td><%=h post.user.nickname %></td>
+    <td><%= post.replies.size %></td>
+    <td><%= post.updated_at.strftime('%Y-%m-%d %H:%M') %></td>
+  </tr>
+<% end %>
+</table>

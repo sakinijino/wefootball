@@ -3,15 +3,20 @@
     <%has_unread_messages = current_user.unread_messages_count>0%>
     <%messages_count = current_user.unread_messages_count<=99 ? "#{current_user.unread_messages_count}" : '99+'%>
     <span class="dropdown_container">
-      <%= link_to("我的#{has_unread_messages ? "(#{messages_count})." : '...'}", user_view_path(current_user))%>
+      <%= link_to("我的#{has_unread_messages ? "(#{messages_count})." : '...'}", 
+        user_view_path(current_user), 
+        :class=>(has_unread_messages ? 'unread' : ''))%>
       <%= image_tag('my_down.gif', :title=>'', :class=>'my_down')%>
       &nbsp;&nbsp;| &nbsp;
-      <div class="dropdown" style="top:15px;left:10px;width:50px">
+      <div class="dropdown" style="top:15px;left:5px;width:55px">
         <%= link_to("首页", user_view_path(current_user))%>
         <%= link_to("朋友", user_friend_relations_path(current_user))%>
         <%= link_to("球队", user_team_joins_path(current_user))%>
         <%= day_calendar_link('活动', Time.now, current_user)%>
-        <%= link_to("信箱#{has_unread_messages ? "(#{messages_count})" : ''}", messages_path)%>
+        <%= link_to('广播', '#')%>
+        <%= link_to("信箱#{has_unread_messages ? "(#{messages_count})" : ''}", 
+          messages_path, 
+          :class=>(has_unread_messages ? 'unread' : ''))%>
         <%= link_to("设置", edit_user_path(current_user))%>
       </div>
     </span>

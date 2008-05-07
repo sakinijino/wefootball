@@ -1,11 +1,15 @@
 <div id="header_menu">
 <%if logged_in? && user.id == current_user.id%>
+<%has_unread_messages = current_user.unread_messages_count>0%>
+<%messages_count = current_user.unread_messages_count<=99 ? "#{current_user.unread_messages_count}" : '99+'%>
 <div class="l1_menu">
   <%= link_to("我的首页", user_view_path(user), :class=>is_selected_user_menu_item?(:user))%>
   <%= link_to("朋友", user_friend_relations_path(user), :class=>is_selected_user_menu_item?(:friends))%>
   <%= link_to("球队", user_team_joins_path(user), :class=>is_selected_user_menu_item?(:teams))%>
   <%= day_calendar_link('活动', Time.now, user, :class=>is_selected_user_menu_item?(:activities))%>
-  <%= link_to("信箱", messages_path(:as=>'receiver'), :class=>is_selected_user_menu_item?(:messages))%>
+  <%= link_to("消息#{has_unread_messages ? "(#{messages_count})" : ''}", 
+    '#', 
+    :class=>"#{is_selected_user_menu_item?(:messages)} #{has_unread_messages ? 'unread' : ''}")%>
   <%= link_to("设置",  edit_user_path(current_user), :class=>is_selected_user_menu_item?(:setting))%>
 </div>
 
@@ -28,7 +32,11 @@
     <li><%= day_calendar_link('今日活动', Time.now, user)%></li>
   </ul>
   <ul>
-    <li><%= link_to("收件箱", messages_path(:as=>'receiver'))%></li>
+    <li><%= link_to("广播", '#')%></li>
+    <li><%= link_to("讨论更新", related_posts_path)%></li>
+    <li><%= link_to("收件箱#{has_unread_messages ? "(#{messages_count})" : ''}", 
+      messages_path(:as=>'receiver'),
+      :class=>(has_unread_messages ? 'unread' : ''))%></li>
     <li><%= link_to("发件箱", messages_path(:as=>'sender'))%></li>
   </ul>
   <ul></ul>

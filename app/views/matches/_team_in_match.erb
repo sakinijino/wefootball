@@ -36,7 +36,7 @@
 <div class="sect">   
   <h2>讨论</h2>
   <%= render :partial=>'posts/post_list', :object=>posts%>
-  <div style="margin: 10px 0  0 10px;float:right;">
+  <div class="post_more">
     <%links = []%>
     <%links << "> #{link_to '针对本场比赛发言', new_match_team_post_path(@match, team)}" if logged_in? && current_user.is_team_member_of?(team)%>
     <%links << "> #{link_to '更多',  match_team_posts_path(@match, team)}"%>

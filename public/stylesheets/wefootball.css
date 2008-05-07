@@ -155,6 +155,10 @@ form.button-to div {
     text-align:center;
 }
 
+#header_setting .unread {
+  font-weight: 700;
+}
+
 #header_setting img.my_down {
     margin-bottom:2px;
 }
@@ -227,6 +231,10 @@ form.button-to div {
     display: inline;
     margin: 0 10px;
     list-style-type: none;
+}
+
+#header_menu div.l2_menu_list ul li .unread {
+  font-weight: 700;
 }
 
 #header_search {
@@ -525,6 +533,11 @@ div.post div.content{
 
 div.post p{
     text-indent: 2em;
+}
+
+.post_more {
+  margin:10px 0 0;
+  float:right;
 }
 
 ul.sidebar_menu {

@@ -91,7 +91,7 @@ ActionController::Routing::Routes.draw do |map|
     plays.resources :play_joins
   end  
   
-  map.resources :posts do |posts|
+  map.resources :posts, :collection => { :related => :get } do |posts|
     posts.resources :replies
   end
   

@@ -13,6 +13,14 @@ class Post < ActiveRecord::Base
   
   attr_accessible :title, :content, :is_private
   
+  def self.get_user_related_posts(user, options={})
+    return [] if user.user_teams.size <= 0
+    team_ids = user.user_teams.map{|item| item.team_id}
+    sql_condition = ["(#{(['team_id = ?']*team_ids.size).join(' or ')})", *team_ids]
+    q = {:conditions => sql_condition, :order => "updated_at desc"}.merge(options)
+    options.has_key?(:page) ? Post.paginate(:all, q) : Post.find(:all, q)
+  end
+  
   def is_visible_to?(user)
     !self.is_private || self.user_id == get_user_id(user) || 
       UserTeam.find_by_user_id_and_team_id(get_user_id(user), self.team_id) != nil
