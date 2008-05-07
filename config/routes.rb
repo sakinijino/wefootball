@@ -38,6 +38,8 @@ ActionController::Routing::Routes.draw do |map|
   end 
   map.resources :user_views
   
+  map.resources :broadcasts  
+  
   map.resources :sessions
   map.resources :friend_relations
   map.resources :friend_invitations
