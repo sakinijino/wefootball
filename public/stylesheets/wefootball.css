@@ -437,6 +437,7 @@ div.tab_container div.tab h2{
     padding: 20px 10px 20px 20px;
     border:solid 1px #3D681A;
     background-color:#FCFDFE;
+    overflow: hidden;
 }
 
 form.tab {
@@ -474,6 +475,12 @@ a.more {
   margin-right: 25px;
 }
 
+a.right_more {
+  clear: both;
+  float: right;
+  margin-top: 10px;
+}
+
 div.tab_container span.shortcut {
     float:right;
     margin-right: 5px;
@@ -497,6 +504,36 @@ div.positions_small_field {
   background:url(/images/small_field.jpg) no-repeat;
   width:160px;
   height:222px
+}
+
+div.broadcast {
+  clear: both;
+}
+
+div.broadcast img.l_icon{
+  margin: 7px 14px 0 0;
+  float: left;
+}
+
+div.broadcast div.content{
+  min-height: 55px;
+  padding: 5px 0;
+  border-bottom: 1px solid #ddd;
+  overflow: hidden;
+}
+
+div.broadcast span.qut, div.broadcast span.dtal {
+  display:block;
+}
+
+div.broadcast span.dtal {
+  padding: 5px 24px;
+  color: #666;
+}
+
+div.broadcast img.r_icon {
+  float:right;
+  margin-left: 14px;
 }
 
 span.private {
@@ -533,11 +570,6 @@ div.post div.content{
 
 div.post p{
     text-indent: 2em;
-}
-
-.post_more {
-  margin:10px 0 0;
-  float:right;
 }
 
 ul.sidebar_menu {

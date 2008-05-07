@@ -14,7 +14,7 @@ module TopMenuHelper
       p[:controller] == 'calendar'
     },
     :messages => Proc.new { |p|
-      p[:controller] == 'messages' || (p[:controller] == 'posts' && p[:action] == 'related')
+      p[:controller] == 'messages' || (p[:controller] == 'posts' && p[:action] == 'related') || p[:controller] == 'broadcasts'
     },
     :setting => Proc.new { |p|
       p[:controller] == 'users' && p[:action] == 'edit'

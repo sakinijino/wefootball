@@ -138,6 +138,16 @@
 </div>
 
 <div id="right_content">
+  <%if logged_in? && @user.id == current_user.id && @bcs.size > 0%>
+    <div class="sect">
+      <h2><%=smart_nickname @user%>的广播</h2>
+      <%for bc in @bcs%>
+        <%=broadcast_text(bc) %>
+      <%end%>
+      <%= link_to "> 更多", broadcasts_path, :class=>"right_more" %>
+    </div>
+  <%end%>
+
   <%if @recent_activity != nil%>
     <div class="sect">
       <h2><%=smart_nickname @user%>最近一次活动</h2>
@@ -160,7 +170,7 @@
     <div class="sect">
       <h2><%=smart_nickname @user%>所在球队的讨论更新</h2>
       <%=render :partial=>'posts/many_teams_post_list', :object=>@posts%>
-      <%= link_to "> 更多", related_posts_path, :class=>"post_more" %>
+      <%= link_to "> 更多", related_posts_path, :class=>"right_more" %>
     </div>
   <%end%>
 </div>

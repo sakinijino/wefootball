@@ -13,7 +13,7 @@
         <%= link_to("朋友", user_friend_relations_path(current_user))%>
         <%= link_to("球队", user_team_joins_path(current_user))%>
         <%= day_calendar_link('活动', Time.now, current_user)%>
-        <%= link_to('广播', '#')%>
+        <%= link_to('广播', broadcasts_path)%>
         <%= link_to("信箱#{has_unread_messages ? "(#{messages_count})" : ''}", 
           messages_path, 
           :class=>(has_unread_messages ? 'unread' : ''))%>

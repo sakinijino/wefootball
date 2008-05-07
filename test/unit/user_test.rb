@@ -207,6 +207,7 @@ class UserTest < Test::Unit::TestCase
     assert users(:saki).is_my_friend?(users(:aaron))
     assert users(:saki).is_my_friend?(users(:mike2))
     assert_equal 2, users(:saki).friends.length
+    assert_equal 2, users(:saki).friend_ids.length
   end
   
   def test_user_is_of

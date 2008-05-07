@@ -16,9 +16,8 @@ class Broadcast < ActiveRecord::Base
         return []
       end      
     end
-    bcs = Broadcast.find(:all,
-                         {:conditions => sql_condition, :order => "created_at DESC"}.merge(options)
-                         )
+    q = {:conditions => sql_condition, :order => "created_at DESC"}.merge(options)
+    bcs = options.has_key?(:page) ? Broadcast.paginate(:all, q) : Broadcast.find(:all, q)
     bcs.reject do |item| 
       ((friend_ids.include?(item.user_id)) && (friend_ids.include?(item.friend_id)) && (item.user_id < item.friend_id))||
       ((item.class == MatchCreationBroadcast) && (team_ids.include?(item.match.host_team_id)) && (team_ids.include?(item.match.guest_team_id)) && (item.team_id == item.match.guest_team_id))
