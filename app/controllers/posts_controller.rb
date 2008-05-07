@@ -39,13 +39,24 @@ class PostsController < ApplicationController
       render :layout => "team_layout"
     elsif (params[:team_id])
       @team = Team.find(params[:team_id])
-      if (logged_in? && current_user.is_team_member_of?(@team))
-        @posts = @team.posts.paginate(:page => params[:page], :per_page => POSTS_PER_PAGE)
-      else
-        @posts = @team.posts.public(:page => params[:page], :per_page => POSTS_PER_PAGE)
-      end
       @title = "#{@team.shortname}下的讨论"
-      render :layout => "team_layout"
+      respond_to do |format| 
+        format.html  {
+          if (logged_in? && current_user.is_team_member_of?(@team))
+            @posts = @team.posts.paginate(:page => params[:page], :per_page => POSTS_PER_PAGE)
+          else
+            @posts = @team.posts.public(:page => params[:page], :per_page => POSTS_PER_PAGE)
+          end
+          @display_rss_link = true
+          render :layout => "team_layout"
+        }
+        format.atom {
+          @posts = Post.find :all, 
+            {:conditions => ['is_private = ?', false], 
+             :limit => POSTS_PER_PAGE, 
+             :order => "created_at desc"}
+        }
+      end
     else
       fake_params_redirect
     end
