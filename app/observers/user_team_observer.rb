@@ -32,6 +32,11 @@ class UserTeamObserver < ActiveRecord::Observer
       mj.status = SidedMatchJoin::UNDETERMINED
       mj.save!
     end
+    
+    bc = TeamJoinBroadcast.new
+    bc.user_id = user_team.user_id
+    bc.team_id = user_team.team_id
+    bc.save!    
   end
   
   def after_destroy(user_team)

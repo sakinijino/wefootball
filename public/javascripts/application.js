@@ -60,10 +60,7 @@ j(function(){
             var item = j(this)
             j("#header_search .dropdown_container img:first").attr('src', item.find('img').attr('src'))
             j("#header_search .dropdown_container img:first").attr('title', item.find('img').attr('title'))
-            
-            j("#header_search input.input").attr('default_value', item.find('img').attr('title'))
-            j("#header_search input.blurinput").attr('value', item.find('img').attr('title'))
-            
+            j("#header_search input.blurinput").attr('value', item.find('img').attr('title'))            
             j('#header_search').attr('action', item.find('a')[0].href)
             item.parent().hide();
             return false;

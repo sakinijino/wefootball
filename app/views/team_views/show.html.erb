@@ -115,7 +115,9 @@
   </div>
 
   <div class="sect">   
-    <h2><%=h @team.shortname%>下的讨论</h2>
+    <h2><%=h @team.shortname%>下的讨论
+    <%=link_to image_tag('rss.gif'), "#{team_posts_path(@team)}.atom", :class=>'atom'%>
+    </h2>
     <%= render :partial=>'posts/narrow_post_list', :object=>@posts%>
     <div class="post_more">
       <%links = []%>

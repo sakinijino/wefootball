@@ -253,6 +253,15 @@ class User < ActiveRecord::Base
     friends_list.map{|fr|[fr.user1, fr.user2]}.flatten.reject {|u| u==self}
   end
   
+  def friend_ids(limit=nil)
+    friends_list = FriendRelation.find(:all,
+                                          :select => 'user1_id, user2_id',
+                                          :conditions => ["user1_id=:uid or user2_id=:uid",{:uid=>self.id}],
+                                          :limit=>limit
+                                         )
+    friends_list.map{|fr|[fr.user1_id, fr.user2_id]}.flatten.reject {|uid| uid==self.id}
+  end  
+  
   def image(thumbnail = nil, refresh = nil)
     if refresh == :refresh && self.user_image != nil
       self.image_path = self.user_image.public_filename

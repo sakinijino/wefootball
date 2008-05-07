@@ -89,6 +89,7 @@ form.button-to {
   padding-bottom:15px;
   border:solid 1px #3D681A;
   margin:0 auto;
+  overflow:hidden;
 }
 
 * html #main_content {
@@ -284,6 +285,7 @@ form.button-to {
 
 #content {
   margin:20px 15px 20px 25px;
+  overflow:hidden;
 }
 
 #welcome {
@@ -323,26 +325,38 @@ div.flash {
 #left_content {
   width:310px;
   float:left;
+  overflow:hidden;
 }
 
 #right_content {
   width:580px;
   float:right;
+  overflow:hidden;
 }
 
 #wide_left_content {
   width:580px;
   float:left;
+  overflow:hidden;
 }
 
 #narrow_right_content {
   width:330px;
   float:right;
+  overflow:hidden;
+}
+
+div.sect {
+  overflow:hidden;
 }
 
 div.sect h2 {
   margin:0 0 5px -5px;
   padding:5px;
+}
+
+div.sect h2 a.atom {
+  margin:0 0 0 10px;
 }
 
 div.cb {
@@ -402,6 +416,7 @@ div.notification {
   background:#F2F7AB;
   margin:10px 0 15px;
   padding:6px 10px;
+  overflow:hidden;
 }
 
 div.tab_container {
@@ -419,6 +434,8 @@ div.tab_container div.tab h2 {
   border:solid 1px #3D681A;
   background-color:#FCFDFE;
   padding:20px 10px 20px 20px;
+  overflow:hidden;
+    overflow: hidden;
 }
 
 form.tab {
@@ -456,6 +473,12 @@ a.more {
   margin-right:25px;
 }
 
+a.right_more {
+  clear: both;
+  float: right;
+  margin-top: 10px;
+}
+
 div.tab_container span.shortcut {
   float:right;
   margin-right:5px;
@@ -481,6 +504,36 @@ div.positions_small_field {
   height:222px;
 }
 
+div.broadcast {
+  clear: both;
+}
+
+div.broadcast img.l_icon{
+  margin: 7px 14px 0 0;
+  float: left;
+}
+
+div.broadcast div.content{
+  min-height: 55px;
+  padding: 5px 0;
+  border-bottom: 1px solid #ddd;
+  overflow: hidden;
+}
+
+div.broadcast span.qut, div.broadcast span.dtal {
+  display:block;
+}
+
+div.broadcast span.dtal {
+  padding: 5px 24px;
+  color: #666;
+}
+
+div.broadcast img.r_icon {
+  float:right;
+  margin-left: 14px;
+}
+
 div.post {
   margin-bottom:15px;
   padding:10px;
@@ -494,6 +547,7 @@ div.post img {
 div.post .title {
   background-color:#FCFDFE;
   width:80%;
+  overflow:hidden;
   display: -moz-inline-box;/*firefox hack*/
   display:inline-block;
   padding:2px 10px;
@@ -506,12 +560,8 @@ div.post .title .name {
 div.post div.content {
   margin-top:10px;
   width:80%;
+  overflow:hidden;
   float:left;
-}
-
-.post_more {
-  margin:10px 0 0;
-  float:right;
 }
 
 ul.sidebar_menu {
@@ -623,6 +673,7 @@ div.message div.icon {
 div.message div.content {
   float:left;
   width:400px;
+  overflow:hidden;
 }
 
 div.message div.content p {
@@ -633,6 +684,7 @@ div.message div.title {
   font-size:14px;
   border-bottom:dashed 1px #3D681A;
   padding-bottom:15px;
+  overflow:hidden;
 }
 
 div.result_block {
@@ -658,10 +710,6 @@ div.pagination {
 div.pagination a, .current, .gap{ padding: 2px 4px; }
 div.pagination .prev_page { margin-right: 20px; }
 div.pagination .next_page { margin-left: 20px; }
-
-.atom {
-  margin: 0 0 0 10px;
-}
 
 div.help h1 {
   font-weight:700;
@@ -733,10 +781,12 @@ div.activities div.activity {
   float:left;
   margin-bottom:6px;
   padding:20px 0 0 25px;
+  overflow:hidden;
 }
 
 div.activities div.activity div.content {
   width:310px;
+  overflow:hidden;
 }
 
 div.activities div.training_activity,div.activities div.play_activity {
@@ -810,6 +860,7 @@ div.activities div.detail {
   position:relative;
   width:420px;
   margin:8px 0 0 10px;
+  overflow:hidden;
 }
 
 div.sided_match_result {
@@ -923,6 +974,7 @@ div.calendar div.normalDateDiv,div.calendar div.monthAndYearDiv {
   text-align:center;
   float:left;
   margin:25px;
+  overflow:hidden;
 }
 
 .weekDaySpan {
@@ -939,6 +991,7 @@ div.calendar div.normalDateDiv,div.calendar div.monthAndYearDiv {
   text-align:center;
   float:left;
   margin:2px;
+  overflow:hidden;
 }
 
 .currentDayDiv {
