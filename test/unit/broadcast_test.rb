@@ -112,6 +112,7 @@ class BroadcastTest < ActiveSupport::TestCase
     t2.team = teams(:milan)
     t2.save!
     assert_equal 3, Broadcast.get_related_broadcasts(users(:aaron)).size
+    assert_equal 1, Broadcast.get_related_broadcasts(users(:aaron), :page=>2, :per_page=>1).size
   end
   
   def test_reject_redundance

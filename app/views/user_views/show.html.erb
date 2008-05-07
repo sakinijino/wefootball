@@ -140,7 +140,7 @@
 <div id="right_content">
   <%if logged_in? && @user.id == current_user.id && @bcs.size > 0%>
     <div class="sect">
-      <h2><%=smart_nickname @user%>的广播</h2>
+      <h2><%=smart_nickname @user%>朋友和球队的广播</h2>
       <%for bc in @bcs%>
         <%=broadcast_text(bc) %>
       <%end%>
