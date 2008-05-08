@@ -1,11 +1,13 @@
 module AttributesTracking
   def self.included(base) # hack by include   
-    base.extend(ClassMethods)   
+    base.extend(ClassMethods)
     base.class_eval do  
       class << self  
         alias_method_chain :instantiate, :tracking # to hack instantiate   
       end  
-    end  
+    end
+    
+    base.after_save :store_attributes
   end  
   
   module ClassMethods   
@@ -22,11 +24,11 @@ module AttributesTracking
     return false if new_record?
     db_attributes[column.to_s] != attributes[column.to_s]   
   end
-
-  def after_save
-    @db_attributes = self.attributes.dup
-  end
   
   private   
   attr_accessor :db_attributes  
+  
+  def store_attributes
+    @db_attributes = self.attributes.dup
+  end
 end

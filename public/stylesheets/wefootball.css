@@ -453,7 +453,7 @@ form.tab {
   position: relative;
 }
 
-*+html .tab_link, * html .tab_link{
+*+html .tab_link{
   padding:5px 10px 1px;
 }
 
