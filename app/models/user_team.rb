@@ -1,4 +1,6 @@
 class UserTeam < ActiveRecord::Base
+  include AttributesTracking
+  
   FORMATION_MAX_LENGTH = 11  
   MAX_ADMIN_LENGTH = 20
   
@@ -29,15 +31,8 @@ class UserTeam < ActiveRecord::Base
     UserTeam.find :all, :conditions => ['team_id = ? and position is not null', team_id]
   end
   
-  def is_player=(ip)
-    old_is_player = is_player
-    write_attribute("is_player", ip)
-    @is_player_changed_to_false = @is_player_changed_to_false ? 
-      !(!old_is_player && is_player) : (old_is_player && !is_player) 
-  end
-  
-  def is_player_changed_to_false
-    @is_player_changed_to_false
+  def is_player_updated_to_false
+    !self.is_player && self.column_changed?(:is_player)
   end
   
   def can_destroy_by?(user)

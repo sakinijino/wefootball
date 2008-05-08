@@ -54,7 +54,7 @@
     <%= "<span>喜欢的球队: #{h @user.favorite_team}</span><br/>" unless @user.favorite_team.blank?%>
     <%= "<span>blog地址: <a href='#{@user.full_blog_uri}' target='_blank'>#{word_wrap_with_wbr(h(@user.blog))}</a></span><br/>" unless @user.blog.blank?%>
     <%if !@user.summary.blank?%>
-        <span>自我介绍: </span>
+        <br/><span>自我介绍: </span>
         <p><%=simple_format auto_link(h(@user.summary), :urls)%></p>
     <%end%>
     </div>
@@ -144,7 +144,7 @@
       <%for bc in @bcs%>
         <%=broadcast_text(bc) %>
       <%end%>
-      <%= link_to "> 更多", broadcasts_path, :class=>"right_more" %>
+      <%= link_to "> 更多", broadcasts_path, :class=>"post_more" %>
     </div>
   <%end%>
 
@@ -170,7 +170,7 @@
     <div class="sect">
       <h2><%=smart_nickname @user%>所在球队的讨论更新</h2>
       <%=render :partial=>'posts/many_teams_post_list', :object=>@posts%>
-      <%= link_to "> 更多", related_posts_path, :class=>"right_more" %>
+      <%= link_to "> 更多", related_posts_path, :class=>"post_more" %>
     </div>
   <%end%>
 </div>

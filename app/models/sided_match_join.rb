@@ -1,5 +1,6 @@
 class SidedMatchJoin < ActiveRecord::Base
-
+  include AttributesTracking
+  
   UNDETERMINED = 0
   JOIN = 1
   

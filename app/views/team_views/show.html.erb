@@ -52,11 +52,11 @@
       <%= "<span>球队风格: #{h @team.style}</span><br/>" unless @team.style.blank?%>
       <%= "<span>建队时间: #{@team.found_time}</span><br/>" unless @team.found_time.nil?%>
       <%if !@team.summary.blank?%>
-          <label>球队简介: </label>
+          <br/><label>球队简介: </label>
           <p><%=simple_format auto_link(h(@team.summary), :urls)%></p>
       <%end%>
       </div>
-      <div class="tab">
+      <div class="tab" style="overflow:visible;">
         <%= "<span style='float:left;margin-left:5px;'>阵型: #{f_text}</span>" unless f_text.blank?%>
         <%= link_to '查看详细', formation_index_team_joins_path(:team_id => @team), :style=>"float:right; margin-right:15px;"%>
         <div class="cb"></div>
@@ -115,7 +115,7 @@
   </div>
 
   <div class="sect">   
-    <h2><%=h @team.shortname%>下的讨论
+    <h2><%=h @team.shortname%>下的讨论<br/>
     <%=link_to image_tag('rss.gif'), "#{team_posts_path(@team)}.atom", :class=>'atom'%>
     </h2>
     <%= render :partial=>'posts/narrow_post_list', :object=>@posts%>

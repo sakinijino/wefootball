@@ -4,21 +4,23 @@ class UserTeamTest < ActiveSupport::TestCase
   def test_set_is_player
     ut = UserTeam.new
     assert !ut.is_player 
-    ut.is_player = false #false => false
-    assert !ut.is_player_changed_to_false  
-    ut.is_player = true #false => true
-    assert !ut.is_player_changed_to_false
-    ut.is_player = true #true => true
-    assert !ut.is_player_changed_to_false
+    ut.is_player = true
+    ut.is_player = false
+    assert !ut.is_player_updated_to_false
     
-    ut.is_player = false #true => false and set is_player_changed_to_false
-    assert ut.is_player_changed_to_false
+    ut = user_teams(:saki_inter)
+    assert ut.is_player 
+    ut.is_player = false
+    assert ut.is_player_updated_to_false
+    ut.is_player = true
+    assert !ut.is_player_updated_to_false
     
-    
-    ut.is_player = false #false => false
-    assert ut.is_player_changed_to_false  
-    ut.is_player = true #false => true and reset is_player_changed_to_false
-    assert !ut.is_player_changed_to_false
+    ut = user_teams(:saki_milan)
+    assert !ut.is_player 
+    ut.is_player = false
+    assert !ut.is_player_updated_to_false
+    ut.is_player = true
+    assert !ut.is_player_updated_to_false
   end
   
   def test_depedency_update_positions_when_set_not_player

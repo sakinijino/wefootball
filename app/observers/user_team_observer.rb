@@ -62,7 +62,7 @@ class UserTeamObserver < ActiveRecord::Observer
   end
   
   def after_update(user_team)
-    return if !user_team.is_player_changed_to_false
+    return if !user_team.is_player_updated_to_false
     mids = Match.find(:all,
       :conditions => ["(host_team_id = ? or guest_team_id = ?) and start_time > ?", 
         user_team.team_id, 

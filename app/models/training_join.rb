@@ -1,4 +1,6 @@
 class TrainingJoin < ActiveRecord::Base
+  include AttributesTracking
+  
   belongs_to :user
   belongs_to :training
   

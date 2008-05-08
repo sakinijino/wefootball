@@ -355,7 +355,7 @@ div.sect h2 {
 }
 
 div.sect h2 a.atom {
-  margin:0 0 0 10px;
+  float:right;
 }
 
 div.cb {
@@ -434,7 +434,6 @@ div.tab_container div.tab h2 {
   background-color:#FCFDFE;
   padding:20px 10px 20px 20px;
   overflow:hidden;
-    overflow: hidden;
 }
 
 form.tab {
@@ -445,12 +444,17 @@ form.tab {
 .tab_link {
   margin-right:5px;
   border:solid 1px #3D681A;
-  border-bottom:solid 1px #ACBE33;
+  border-bottom:none;
   background-color:#ACBE33;
   font-size:12px;
   color:#000;
   cursor:pointer;
-  padding:5px 10px 0;
+  padding:5px 10px 2px;
+  position: relative;
+}
+
+*+html .tab_link, * html .tab_link{
+  padding:5px 10px 1px;
 }
 
 a.tab_link {
@@ -462,7 +466,7 @@ a.tab_link {
 }
 
 .tabSelected {
-  border-bottom:2px solid #FCFDFE;
+  border-bottom:1px solid #FCFDFE;
   background-color:#FCFDFE;
 }
 
@@ -472,7 +476,7 @@ a.more {
   margin-right:25px;
 }
 
-a.right_more, .post_more {
+.post_more {
   clear: both;
   float: right;
   margin-top: 10px;
