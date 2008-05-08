@@ -131,5 +131,156 @@ class BroadcastTest < ActiveSupport::TestCase
     assert_equal 2, Broadcast.get_related_broadcasts(users(:saki)).size
     assert_equal 2, Broadcast.get_related_broadcasts(users(:aaron)).size
     assert_equal 1, Broadcast.get_related_broadcasts(users(:mike2)).size    
-  end  
+  end
+
+  def test_correctly_generate_match_join_broadcast
+    mi = match_invitations(:inv1)
+    mi.host_team_id = teams(:milan).id
+    mi.guest_team_id = teams(:inter).id  
+    m = Match.create_by_invitation(mi)    
+    
+    mj1 = MatchJoin.new
+    mj1.user_id = users(:saki).id
+    mj1.team_id = teams(:inter).id
+    mj1.match_id = m.id    
+    mj2 = MatchJoin.new
+    mj2.user_id = users(:aaron).id
+    mj2.team_id = teams(:milan).id
+    mj2.match_id = m.id
+    mj3 = MatchJoin.new    
+  
+    #1.创建状态为join的参加
+    assert_difference('MatchJoinBroadcast.count', 1) do
+      mj1.status = MatchJoin::JOIN
+      mj1.save!
+    end      
+    #2.创建状态为undetermined的参加
+    assert_no_difference('MatchJoinBroadcast.count') do
+      mj2.status = MatchJoin::UNDETERMINED
+      mj2.save!
+    end   
+    #3.状态从join转为unjoin
+    assert_no_difference('MatchJoinBroadcast.count') do
+      assert_equal MatchJoin::JOIN, mj1.status
+      mj1.destroy
+    end
+    #4.状态从unjoin转为join
+    assert_difference('MatchJoinBroadcast.count', 1) do
+      mj3.user_id = mj1.user_id
+      mj3.team_id = mj1.team_id
+      mj3.match_id = m.id        
+      mj3.status = MatchJoin::JOIN
+      mj3.save!
+    end     
+    #4.状态从join转为join
+    assert_no_difference('MatchJoinBroadcast.count') do      
+      mj3.status = MatchJoin::JOIN
+      mj3.save!
+    end 
+    #undetermined -> join
+    assert_difference('MatchJoinBroadcast.count', 1) do
+      assert_equal MatchJoin::UNDETERMINED, mj2.status      
+      mj2.status = MatchJoin::JOIN
+      mj2.save!
+    end
+  end
+  
+  def test_correctly_generate_sided_match_join_broadcast
+    m = SidedMatch.new
+    m.host_team_id = teams(:milan).id
+    m.guest_team_name = '国米'
+    m.location = '一体'
+    m.save!
+
+    mj1 = SidedMatchJoin.new
+    mj1.user_id = users(:saki).id
+    mj1.match_id = m.id
+    mj2 = SidedMatchJoin.new
+    mj2.user_id = users(:aaron).id
+    mj2.match_id = m.id
+    mj3 = SidedMatchJoin.new    
+  
+    #1.创建状态为join的参加
+    assert_difference('SidedMatchJoinBroadcast.count', 1) do
+      mj1.status = SidedMatchJoin::JOIN
+      mj1.save!
+    end      
+    #2.创建状态为undetermined的参加
+    assert_no_difference('SidedMatchJoinBroadcast.count') do
+      mj2.status = SidedMatchJoin::UNDETERMINED
+      mj2.save!
+    end   
+    #3.状态从join转为unjoin
+    assert_no_difference('SidedMatchJoinBroadcast.count') do
+      assert_equal SidedMatchJoin::JOIN, mj1.status
+      mj1.destroy
+    end
+    #4.状态从unjoin转为join
+    assert_difference('SidedMatchJoinBroadcast.count', 1) do
+      mj3.user_id = mj1.user_id
+      mj3.match_id = m.id        
+      mj3.status = SidedMatchJoin::JOIN
+      mj3.save!
+    end     
+    #4.状态从join转为join
+    assert_no_difference('SidedMatchJoinBroadcast.count') do      
+      mj3.status = SidedMatchJoin::JOIN
+      mj3.save!
+    end 
+    #undetermined -> join
+    assert_difference('SidedMatchJoinBroadcast.count', 1) do
+      assert_equal SidedMatchJoin::UNDETERMINED, mj2.status      
+      mj2.status = SidedMatchJoin::JOIN
+      mj2.save!
+    end
+  end
+  
+  def test_correctly_generate_training_join_broadcast
+    t = Training.new
+    t.team_id = teams(:milan).id
+    t.location = '一体'    
+    t.save!
+
+    tj1 = TrainingJoin.new
+    tj1.user_id = users(:saki).id
+    tj1.training_id = t.id
+    tj2 = TrainingJoin.new
+    tj2.user_id = users(:aaron).id
+    tj2.training_id = t.id
+    tj3 = TrainingJoin.new    
+  
+    #1.创建状态为join的参加
+    assert_difference('TrainingJoinBroadcast.count', 1) do
+      tj1.status = TrainingJoin::JOIN
+      tj1.save!
+    end      
+    #2.创建状态为undetermined的参加
+    assert_no_difference('TrainingJoinBroadcast.count') do
+      tj2.status = TrainingJoin::UNDETERMINED
+      tj2.save!
+    end   
+    #3.状态从join转为unjoin
+    assert_no_difference('TrainingJoinBroadcast.count') do
+      assert_equal TrainingJoin::JOIN, tj1.status
+      tj1.destroy
+    end
+    #4.状态从unjoin转为join
+    assert_difference('TrainingJoinBroadcast.count', 1) do
+      tj3.user_id = tj1.user_id
+      tj3.training_id = t.id        
+      tj3.status = TrainingJoin::JOIN
+      tj3.save!
+    end     
+    #4.状态从join转为join
+    assert_no_difference('TrainingJoinBroadcast.count') do      
+      tj3.status = TrainingJoin::JOIN
+      tj3.save!
+    end 
+    #undetermined -> join
+    assert_difference('TrainingJoinBroadcast.count', 1) do
+      assert_equal MatchJoin::UNDETERMINED, tj2.status      
+      tj2.status = TrainingJoin::JOIN
+      tj2.save!
+    end
+  end   
 end

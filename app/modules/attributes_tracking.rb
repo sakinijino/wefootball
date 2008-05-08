@@ -21,7 +21,11 @@ module AttributesTracking
   def column_changed?(column)
     return false if new_record?
     db_attributes[column.to_s] != attributes[column.to_s]   
-  end  
+  end
+
+  def after_save
+    @db_attributes = self.attributes.dup
+  end
   
   private   
   attr_accessor :db_attributes  
