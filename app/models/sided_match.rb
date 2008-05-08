@@ -33,6 +33,9 @@ class SidedMatch < ActiveRecord::Base
       options.has_key?(:page) ? paginate(:all, q) : find(:all, q)
     end
   end
+  
+  has_many :sided_match_creation_broadcasts, :foreign_key=>"activity_id", :dependent => :destroy
+  has_many :sided_match_join_broadcasts, :foreign_key=>"activity_id", :dependent => :destroy
             
   attr_protected :host_team_id
   

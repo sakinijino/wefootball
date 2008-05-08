@@ -40,7 +40,7 @@ class UserTeam < ActiveRecord::Base
   end
   
   def can_promote_as_admin_by?(user)
-    !self.is_admin && user.is_team_admin_of?(self.team_id) && (self.user.teams.admin.length < MAX_ADMIN_LENGTH)
+    !self.is_admin && user.is_team_admin_of?(self.team_id) && (self.user.teams.admin.size < MAX_ADMIN_LENGTH)
   end
   
   def can_degree_as_common_user_by?(user) 

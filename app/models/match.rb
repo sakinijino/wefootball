@@ -41,6 +41,9 @@ class Match < ActiveRecord::Base
     end
   end
   
+  has_many :match_creation_broadcasts, :foreign_key=>"activity_id", :dependent => :destroy
+  has_many :match_join_broadcasts, :foreign_key=>"activity_id", :dependent => :destroy
+  
   belongs_to :football_ground
   
   validates_length_of       :description, :maximum =>MAX_DESCRIPTION_LENGTH, :allow_nil => true

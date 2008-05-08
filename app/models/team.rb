@@ -38,6 +38,8 @@ class Team < ActiveRecord::Base
     end
   end
   
+  has_many :broadcasts, :dependent => :destroy
+  
   validates_presence_of     :shortname, :message => "请填写队名"
   validates_length_of        :name, :maximum => 50, :message => "球队全名最长可以填50个字"
   validates_length_of        :shortname,    :maximum => 15, :message => "队名最长可以填15个字"

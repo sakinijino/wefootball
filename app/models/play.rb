@@ -4,7 +4,9 @@ class Play < ActiveRecord::Base
   has_many :play_joins,
             :dependent => :destroy
           
-  has_many :users, :through => :play_joins  
+  has_many :users, :through => :play_joins
+  
+  has_many :play_join_broadcasts, :foreign_key=>"activity_id", :dependent => :destroy
 
   validates_presence_of     :location, :message => "请填写或选择场地"
   validates_length_of        :location,    :maximum => 100, :message=>"场地名称最长可以填100个字"

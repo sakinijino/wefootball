@@ -24,6 +24,9 @@ class Training < ActiveRecord::Base
     end
   end
   
+  has_many :training_creation_broadcasts, :foreign_key=>"activity_id", :dependent => :destroy
+  has_many :training_join_broadcasts, :foreign_key=>"activity_id", :dependent => :destroy
+  
   validates_presence_of     :location, :message => "请选择或填写训练场地"
   validates_length_of        :location,    :maximum => 100, :message=>"场地名称最长可以填100个字"
   validates_length_of        :summary,    :maximum => 3000, :allow_nil=>true, :message => "比赛描述最长可以填3000个字"

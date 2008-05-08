@@ -9,7 +9,7 @@ class BroadcastTest < ActiveSupport::TestCase
     play_id = 14
     
     assert_equal 0, FriendCreationBroadcast.count  
-    fr = FriendRelation.create!(:user1_id=>user1_id, :user2_id=>user2_id)
+    FriendRelation.create!(:user1_id=>user1_id, :user2_id=>user2_id)
     #生成对称的两条广播
     assert_equal 2, FriendCreationBroadcast.count
     assert_equal user2_id, FriendCreationBroadcast.find_by_user_id(user1_id).friend_id
@@ -87,6 +87,102 @@ class BroadcastTest < ActiveSupport::TestCase
     tj.save!
     assert_equal 1, TrainingJoinBroadcast.count
     assert_equal t.id, TrainingJoinBroadcast.find_by_user_id(user1_id).activity_id    
+  end
+  
+  def test_destory_dependency
+    FriendCreationBroadcast.create!(:user_id => users(:saki).id, :friend_id=>users(:mike1).id)
+    MatchCreationBroadcast.create!(:team_id => teams(:inter).id, :activity_id=>matches(:one).id)
+    MatchJoinBroadcast.create!(:user_id => users(:saki).id, :team_id => teams(:inter).id, :activity_id=>matches(:one).id)
+    PlayJoinBroadcast.create!(:user_id => users(:saki).id, :activity_id=>plays(:play1).id)
+    SidedMatchCreationBroadcast.create!(:team_id => teams(:inter).id, :activity_id=>sided_matches(:one).id)
+    SidedMatchJoinBroadcast.create!(:user_id => users(:saki).id, :team_id => teams(:inter).id, :activity_id=>sided_matches(:one).id)
+    TrainingCreationBroadcast.create!(:team_id => teams(:inter).id, :activity_id=>trainings(:training1).id)
+    TrainingJoinBroadcast.create!(:user_id => users(:saki).id, :team_id => teams(:inter).id, :activity_id=>trainings(:training1).id)
+    
+    assert_difference('Broadcast.count', -1) do
+    assert_difference('FriendCreationBroadcast.count', -1) do
+      users(:mike1).destroy
+    end
+    end
+    
+    assert_difference('Broadcast.count', -2) do
+    assert_difference('MatchJoinBroadcast.count', -1) do
+    assert_difference('MatchCreationBroadcast.count', -1) do
+      matches(:one).destroy
+    end
+    end
+    end
+    
+    assert_difference('Broadcast.count', -1) do
+    assert_difference('PlayJoinBroadcast.count', -1) do
+      plays(:play1).destroy
+    end
+    end
+    
+    assert_difference('Broadcast.count', -2) do
+    assert_difference('SidedMatchCreationBroadcast.count', -1) do
+    assert_difference('SidedMatchJoinBroadcast.count', -1) do
+      sided_matches(:one).destroy
+    end
+    end
+    end
+    
+    assert_difference('Broadcast.count', -2) do
+    assert_difference('TrainingCreationBroadcast.count', -1) do
+    assert_difference('TrainingJoinBroadcast.count', -1) do
+      trainings(:training1).destroy
+    end
+    end
+    end
+    
+    FriendCreationBroadcast.create!(:user_id => users(:saki).id, :friend_id=>users(:mike1).id)
+    MatchJoinBroadcast.create!(:user_id => users(:saki).id, :team_id => teams(:inter).id, :activity_id=>matches(:one).id)
+    PlayJoinBroadcast.create!(:user_id => users(:saki).id, :activity_id=>plays(:play1).id)
+    SidedMatchJoinBroadcast.create!(:user_id => users(:saki).id, :team_id => teams(:inter).id, :activity_id=>sided_matches(:one).id)
+    TeamJoinBroadcast.create!(:user_id => users(:saki).id, :team_id => teams(:inter).id)
+    TrainingJoinBroadcast.create!(:user_id => users(:saki).id, :team_id => teams(:inter).id, :activity_id=>trainings(:training1).id)
+    
+    assert_difference('Broadcast.count', -6) do
+    assert_difference('FriendCreationBroadcast.count', -1) do
+    assert_difference('MatchJoinBroadcast.count', -1) do
+    assert_difference('PlayJoinBroadcast.count', -1) do
+    assert_difference('SidedMatchJoinBroadcast.count', -1) do
+    assert_difference('TeamJoinBroadcast.count', -1) do
+    assert_difference('TrainingJoinBroadcast.count', -1) do
+      users(:saki).destroy
+    end
+    end
+    end
+    end
+    end
+    end
+    end
+    
+    MatchCreationBroadcast.create!(:team_id => teams(:inter).id, :activity_id=>matches(:one).id)
+    MatchJoinBroadcast.create!(:user_id => users(:saki).id, :team_id => teams(:inter).id, :activity_id=>matches(:one).id)
+    SidedMatchCreationBroadcast.create!(:team_id => teams(:inter).id, :activity_id=>sided_matches(:one).id)
+    SidedMatchJoinBroadcast.create!(:user_id => users(:saki).id, :team_id => teams(:inter).id, :activity_id=>sided_matches(:one).id)
+    TeamJoinBroadcast.create!(:user_id => users(:saki).id, :team_id => teams(:inter).id)
+    TrainingCreationBroadcast.create!(:team_id => teams(:inter).id, :activity_id=>trainings(:training1).id)
+    TrainingJoinBroadcast.create!(:user_id => users(:saki).id, :team_id => teams(:inter).id, :activity_id=>trainings(:training1).id)
+    
+    assert_difference('Broadcast.count', -7) do
+    assert_difference('MatchCreationBroadcast.count', -1) do
+    assert_difference('MatchJoinBroadcast.count', -1) do
+    assert_difference('SidedMatchCreationBroadcast.count', -1) do
+    assert_difference('SidedMatchJoinBroadcast.count', -1) do
+    assert_difference('TeamJoinBroadcast.count', -1) do
+    assert_difference('TrainingCreationBroadcast.count', -1) do
+    assert_difference('TrainingJoinBroadcast.count', -1) do
+      teams(:inter).destroy
+    end
+    end
+    end
+    end
+    end
+    end
+    end
+    end
   end
   
   def test_get_related_broadcasts

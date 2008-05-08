@@ -48,6 +48,9 @@ class User < ActiveRecord::Base
   has_many :posts, :dependent => :destroy
   
   has_many :site_posts, :dependent => :destroy
+  
+  has_many :friend_creation_broadcasts, :foreign_key=>"friend_id", :dependent => :destroy
+  has_many :broadcasts, :dependent => :destroy
 
   validates_presence_of     :login, :message=>'请填写Email'
   validates_presence_of     :nickname, :message=>'请填写昵称'
@@ -314,7 +317,7 @@ class User < ActiveRecord::Base
     else
       team
     end
-    !(self.teams.admin.empty?||(self.teams.admin.length == 1 && self.teams.admin[0].id == team_id))
+    !(self.teams.admin.empty?||(self.teams.admin.size == 1 && self.teams.admin[0].id == team_id))
   end
   
   def can_edit_match_invitation?(match_invitation)
