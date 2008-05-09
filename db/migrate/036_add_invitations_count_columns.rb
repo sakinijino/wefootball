@@ -12,7 +12,7 @@ class AddInvitationsCountColumns < ActiveRecord::Migration
         t.id, true, t.id, false]
       t.save!
     end 
-    # there are some bugs, and teams' counts can not be refresh correctly. Please run these aboving codes manually.
+    # there are some bugs, and teams' counts can not be refreshed correctly. Please run these aboving codes manually.
     User.find(:all).each do |u|
       u.friend_invitations_count = FriendInvitation.count :conditions => ["host_id = ?", u.id]
       u.team_join_invitations_count = TeamJoinRequest.count :conditions => ["user_id = ? and is_invitation = ?", u.id, true]
