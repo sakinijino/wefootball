@@ -20,11 +20,12 @@ class ApplicationController < ActionController::Base
   def index
     @users = User.find(:all, :conditions=>"activated_at is not null", :limit => 9, :order => 'id desc')
     @teams = Team.find(:all, :limit => 9, :order => 'id desc')
+    
     tmp = []
-    tmp += Training.find(:all, :limit => 2, :order => 'id desc')
-    tmp += Match.find(:all, :limit => 2, :order => 'id desc')
-    tmp += SidedMatch.find(:all, :limit => 2, :order => 'id desc')
-    tmp += Play.find(:all, :limit => 2, :order => 'id desc')
+    tmp += Training.find(:all, :limit => 1, :order => 'id desc')
+    tmp += Match.find(:all, :limit => 1, :order => 'id desc')
+    tmp += SidedMatch.find(:all, :limit => 1, :order => 'id desc')
+    tmp += Play.find(:all, :limit => 1, :order => 'id desc')
     tmp = tmp.sort_by{|act| act.start_time}
     if (tmp.length >0)
       @start_time = tmp[0].start_time.yesterday
@@ -35,6 +36,8 @@ class ApplicationController < ActionController::Base
       @end_time = Time.now
       @activities = {}
     end
+    
+    @bcs = Broadcast.find(:all, :limit => 8, :order => 'id desc')
     render :template => 'shared/index', :layout =>default_layout
   end
   

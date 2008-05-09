@@ -73,6 +73,11 @@ protected
   end
   
   def check_admins_limit
-    redirect_to user_view_path(current_user) if current_user.teams.admin.size >= UserTeam::MAX_ADMIN_LENGTH
+    if current_user.teams.admin.size >= UserTeam::MAX_ADMIN_LENGTH
+      flash[:notice] = %(
+  WeFootball允许每个用户最多担任#{UserTeam::MAX_ADMIN_LENGTH}只球队的管理员<br/>
+  你管理的球队数量已经达到了上限, 不能再创建新球队)
+      redirect_to user_view_path(current_user)
+    end
   end
 end

@@ -526,12 +526,14 @@ class MatchesControllerTest < ActionController::TestCase
     ut2.user_id = u2.id
     ut2.team_id = t1.id
     ut2.is_player = true
+    ut2.is_admin = true
     ut2.save!
-    ut2 = UserTeam.new
-    ut2.user_id = u2.id
-    ut2.team_id = t2.id
-    ut2.is_player = true
-    ut2.save!
+    ut3 = UserTeam.new
+    ut3.user_id = u2.id
+    ut3.team_id = t2.id
+    ut3.is_player = true
+    ut3.is_admin = true
+    ut3.save!
     
     match1 = Match.new   
     match1.host_team_id = t1.id
@@ -618,7 +620,13 @@ class MatchesControllerTest < ActionController::TestCase
     ut1.user_id = u1.id
     ut1.team_id = t1.id 
     ut1.is_admin = true
-    ut1.save!  
+    ut1.save! 
+    u2 = users(:mike1)
+    ut2 = UserTeam.new
+    ut2.user_id = u2.id
+    ut2.team_id = t1.id
+    ut2.is_admin = true
+    ut2.save!    
     
     match1 = Match.new   
     match1.host_team_id = t1.id

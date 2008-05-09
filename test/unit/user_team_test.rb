@@ -264,12 +264,28 @@ class UserTeamTest < ActiveSupport::TestCase
       ut.save!
     end
     assert_equal UserTeam::MAX_ADMIN_LENGTH, users(:saki).teams.admin.length
+    
     ut = UserTeam.new(:is_admin => true)
     ut.user_id = users(:saki).id
     ut.team_id = teams_array[20].id
-    ut.save!
-    assert !ut.is_admin;
+    assert !ut.save
     assert_equal UserTeam::MAX_ADMIN_LENGTH, users(:saki).teams.admin.length
+    
+    ut = UserTeam.new(:is_admin => false)
+    ut.user_id = users(:saki).id
+    ut.team_id = teams_array[20].id
+    ut.save!
+    ut.is_admin = true;
+    ut.save!
+    assert !ut.is_admin
+    assert_equal UserTeam::MAX_ADMIN_LENGTH, users(:saki).teams.admin.length
+    
+    ut = UserTeam.find_by_user_id_and_team_id users(:saki).id, teams_array[1].id
+    ut.is_admin = false
+    ut.save!
+    assert ut.is_admin;
+    assert_equal UserTeam::MAX_ADMIN_LENGTH, users(:saki).teams.admin.length
+    
     ut = UserTeam.find_by_user_id_and_team_id users(:saki).id, teams_array[1].id
     ut.is_player = true
     ut.save!

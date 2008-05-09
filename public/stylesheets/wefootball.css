@@ -597,6 +597,11 @@ ul.sidebar_menu li.selected a {
   background:transparent;
 }
 
+div.icon_select {
+  float:left;
+  width: 175px;
+}
+
 div.icon_select div.icon {
   margin-right:0;
 }
@@ -1082,7 +1087,7 @@ div.post p,div.help p {
   text-indent:2em;
 }
 
-div.icon_select,#footer span.arrd,div.activities div.activity_list {
+#footer span.arrd,div.activities div.activity_list {
   float:left;
 }
 

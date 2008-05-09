@@ -11,16 +11,18 @@ class TeamJoinsController < ApplicationController
       render :action=>"index_team", :layout => 'user_layout'
     else # 显示球队的所有成员
       @team = Team.find(params[:team_id])
-      @others = @team.users.paginate(
-        :all, 
-        :conditions => ['is_admin = ? and is_player = ?', false, false],
+      @uts = UserTeam.paginate_all_by_team_id(
+        params[:team_id],
+        :include=>[:user],
+        :order => 'is_player DESC',
         :page => params[:page], 
         :per_page => 50
       )
-      if @others.current_page == 1
+      if @uts.current_page == 1
         @admin = @team.users.admin
-        @players = @team.users.players
       end
+      @others = (@uts.reject {|ut| ut.is_player}).map {|ut| ut.user}
+      @players = (@uts.reject {|ut| !ut.is_player}).map {|ut| ut.user}
       @title = "#{@team.shortname}的成员"
       render :action=>"index_user", :layout => "team_layout"
     end
@@ -37,24 +39,29 @@ class TeamJoinsController < ApplicationController
   end
   
   def admin_management
-    @other_uts = UserTeam.paginate_all_by_team_id_and_is_admin(
-      params[:team_id], false, 
+    @uts = UserTeam.paginate_all_by_team_id(
+      params[:team_id],
+      :order => 'is_admin DESC',
       :include=>[:user],
       :page => params[:page], 
       :per_page => 50
     )
-    @admin_uts = UserTeam.find_all_by_team_id_and_is_admin(params[:team_id], true, :include=>[:user]) if @other_uts.current_page == 1
+    @admin_uts = @uts.reject {|ut| !ut.is_admin}
+    @other_uts = @uts.reject {|ut| ut.is_admin}
     @title = "#{@team.shortname}的成员管理"
     render :layout => "team_layout"
   end
   
   def player_management
-    @other_uts = UserTeam.paginate :all, 
-      :conditions => ["team_id = ? and is_player = ? and users.is_playable = ?", params[:team_id], false, true],
+    @uts = UserTeam.paginate_all_by_team_id(
+      params[:team_id],
+      :order => 'is_player DESC',
       :include=>[:user],
       :page => params[:page], 
       :per_page => 50
-    @player_uts = UserTeam.find_all_by_team_id_and_is_player(params[:team_id], true, :include=>[:user]) if @other_uts.current_page == 1
+    )
+    @player_uts = @uts.reject {|ut| !ut.is_player}
+    @other_uts = @uts.reject {|ut| ut.is_player}
     @title = "#{@team.shortname}的队员名单管理"
     render :layout => "team_layout"
   end
@@ -102,14 +109,13 @@ class TeamJoinsController < ApplicationController
     if (!current_user.is_team_admin_of?(@tj.team_id))
       fake_params_redirect
       return
-    end    
+    end
+    tmp = UserTeam.new(:is_admin => params[:ut][:is_admin])
+    params[:ut].delete(:is_admin) if tmp.is_admin && !@tj.can_promote_as_admin_by?(current_user)||
+       !tmp.is_admin && !@tj.can_degree_as_common_user_by?(current_user)
     @user =@tj.user
     @team = @tj.team
     params[:ut][:is_player] = false if !@user.is_playable
-    tmp = UserTeam.new(:is_admin => params[:ut][:is_admin])
-    params[:ut][:is_admin] = @tj.is_admin if(
-      tmp.is_admin && !@tj.can_promote_as_admin_by?(current_user)||
-      !tmp.is_admin && !@tj.can_degree_as_common_user_by?(current_user))
     if @tj.update_attributes(params[:ut])
       if current_user.is_team_admin_of?(@team)
         redirect_with_back_uri_or_default team_view_path(@team)

@@ -16,8 +16,18 @@ class UserTeam < ActiveRecord::Base
     self.position = nil if self.position==""
   end
   
-  def before_save
-    self.is_admin = false if self.is_admin && ((self.user.teams.admin - [self.team]).length >= MAX_ADMIN_LENGTH)
+  def before_create
+    false if self.is_admin && self.user.teams.count(:conditions => ["is_admin = ?", true]) >= MAX_ADMIN_LENGTH
+  end
+  
+  def before_update
+    if self.column_changed?(:is_admin)
+      if self.is_admin && self.user.teams.count(:conditions => ["is_admin = ?", true]) >= MAX_ADMIN_LENGTH
+        self.is_admin = false 
+      elsif !self.is_admin && UserTeam.count(:conditions=>["team_id = ? and is_admin = true",self.team_id])<=1
+        self.is_admin = true 
+      end
+    end
     true
   end
   
@@ -48,6 +58,6 @@ class UserTeam < ActiveRecord::Base
   end
 
   def is_the_only_one_admin?
-    self.is_admin && (UserTeam.count(:conditions=>["team_id = :tid and is_admin = true",{:tid=>self.team_id}])==1)
+    self.is_admin && (UserTeam.count(:conditions=>["team_id = ? and is_admin = true",self.team_id])==1)
   end
 end

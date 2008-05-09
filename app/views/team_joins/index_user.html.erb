@@ -4,26 +4,30 @@
 </div>
 
 <div id="wide_left_content">
-  <%if @others.current_page == 1%>
+  <%if @uts.current_page == 1%>
     <div class="sect">
       <h2>管理员</h2>
       <%= user_icon(@admin)%>
       <div class="cb"></div>
     </div>
-
-    <div class="sect">
-      <h2>队员</h2>
-      <%= user_icon(@players)%>
-      <div class="cb"></div>
-    </div>
   <%end%>
-
+  
+  <%if @players.size > 0%>
+  <div class="sect">
+    <h2>队员</h2>
+    <%= user_icon(@players)%>
+    <div class="cb"></div>
+  </div>
+  <%end%>
+  
+  <%if @others.size > 0%>
   <div class="sect">
     <h2>其他成员</h2>
     <%= user_icon(@others)%>
     <div class="cb"></div>
-    <%= will_paginate @others %>
   </div>
+  <%end%>
+  <%= will_paginate @uts %>
 </div>
 
 <div class="cb"></div>

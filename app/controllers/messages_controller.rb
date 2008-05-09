@@ -25,9 +25,7 @@ class MessagesController < ApplicationController
       fake_params_redirect
       return
     end
-    if (!@message.is_receiver_read && @message.receiver_id == self.current_user.id)
-      @message.receiver_read!
-    end
+    @message.receiver_read! if @message.receiver_id == self.current_user.id
   end
   
   def new

@@ -1,4 +1,6 @@
 class Message < ActiveRecord::Base
+  include AttributesTracking
+  
   belongs_to :sender, :class_name=>"User", :foreign_key=>"sender_id"
   belongs_to :receiver, :class_name=>"User", :foreign_key=>"receiver_id"
   
@@ -26,45 +28,31 @@ class Message < ActiveRecord::Base
     elsif (self.receiver_id == user.id)
       self.is_delete_by_receiver = true
     end
+    
     if (self.is_delete_by_sender && self.is_delete_by_receiver) 
       self.destroy
     else
-      Message.transaction do
-        if (user == self.receiver && !self.is_receiver_read)
-          self.is_receiver_read = true;
-          self.receiver.unread_messages_count -=1
-          self.receiver.unread_messages_count = 0 if self.receiver.unread_messages_count < 0 
-          self.receiver.save!
-        end
-        self.save!
-      end
+      self.is_receiver_read = true if (self.receiver_id == user.id && !self.is_receiver_read)
+      self.save!
     end
   end
   
   def receiver_read!
-    Message.transaction do
-      if (!self.is_receiver_read)
-        self.is_receiver_read = true;
-        self.save!
-        self.receiver.unread_messages_count -=1
-        self.receiver.unread_messages_count = 0 if self.receiver.unread_messages_count < 0 
-        self.receiver.save!
-      end
+    if (!self.is_receiver_read)
+      self.is_receiver_read = true;
+      self.save!
     end
+  end
+  
+  def before_update
+    User.update_all('unread_messages_count=unread_messages_count-1', ['id = ?', self.receiver_id]) if (self.is_receiver_read && self.column_changed?(:is_receiver_read))
   end
   
   def after_create
-    if (!self.is_receiver_read)
-      self.receiver.unread_messages_count +=1
-      self.receiver.save!
-    end
+    User.update_all('unread_messages_count=unread_messages_count+1', ['id = ?', self.receiver_id]) if (!self.is_receiver_read)
   end
   
   def after_destroy
-    if (!self.is_receiver_read)
-      self.receiver.unread_messages_count -=1
-      self.receiver.unread_messages_count = 0 if self.receiver.unread_messages_count < 0 
-      self.receiver.save!
-    end
+    User.update_all('unread_messages_count=unread_messages_count-1', ['id = ?', self.receiver_id]) if (!self.is_receiver_read)
   end
 end

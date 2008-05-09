@@ -274,6 +274,7 @@ class SidedMatchesControllerTest < ActionController::TestCase
     ut2.user_id = u2.id
     ut2.team_id = t1.id
     ut2.is_player = true
+    ut2.is_admin = true
     ut2.save!     
     
     match1 = SidedMatch.new   

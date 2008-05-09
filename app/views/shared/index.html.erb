@@ -17,9 +17,9 @@
       <br/><br/>
       WeFootball<a href="http://blog.wefootball.org/2008/5/6/8">广播功能</a>上线 - 05.07
       <br/><br/>
-      球队讨论支持RSS订阅 - 05.07
+      球队讨论<a href="http://blog.wefootball.org/2008/5/7/9">支持RSS订阅</a> - 05.07
       <br/><br/>
-      个人和球队的近期活动已支持iCalendar格式 - 05.06
+      个人和球队的近期活动已<a href="http://blog.wefootball.org/2008/5/7/9">支持iCalendar格式</a> - 05.06
       <br/><br/>
       WeFootball<%= link_to '关于我们', site_about_path%>和<%= link_to '常见问题', site_faq_path%>上线 - 04.29
       <br/><br/>
@@ -41,6 +41,13 @@
 </div>
 
 <div id="right_content">
+  <div class="sect">
+    <h2>最新的广播</h2>
+    <%for bc in @bcs%>
+      <%=broadcast_text(bc) %>
+    <%end%>
+  </div>
+
   <div class="sect">
     <h2>最近添加的活动</h2>
     <%= render :partial => 'shared/activities', :object => @activities, :locals=>{:start_date=> @start_time, :end_date=> @end_time}%>

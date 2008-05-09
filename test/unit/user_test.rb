@@ -313,6 +313,7 @@ class UserTest < Test::Unit::TestCase
   
   def test_can_act_on_match_invitation #测试can_edit_match_invitation、can_reject_match_invitation和can_accept_match_invitation
     u = create_user({:login => 'sakinijinoo@gmail.com', :nickname=>'AiHaibara'})
+    u2 = create_user({:login => 'sakinijinoo123@gmail.com', :nickname=>'AiHaibara'})
     t1 = Team.create!(:name=>"test1",:shortname=>"t1")
     t2 = Team.create!(:name=>"test2",:shortname=>"t2")
     inv = MatchInvitation.new
@@ -328,25 +329,30 @@ class UserTest < Test::Unit::TestCase
     ut.user_id = u.id
     ut.team_id = t1.id
     ut.is_admin = true
-    ut.save
+    ut.save!
+    ut2 = UserTeam.new
+    ut2.user_id = u2.id
+    ut2.team_id = t1.id
+    ut2.is_admin = true
+    ut2.save!
     assert_equal true, u.can_edit_match_invitation?(inv)  
     assert_equal true, u.can_accpet_match_invitation?(inv)
     assert_equal true, u.can_reject_match_invitation?(inv)
     ut.is_admin = false #而且用户是主队的管理员
-    ut.save
+    ut.save!
     assert_equal false, u.can_edit_match_invitation?(inv)  
     assert_equal false, u.can_accpet_match_invitation?(inv)
     assert_equal false, u.can_reject_match_invitation?(inv)
 
     inv.edit_by_host_team = false #如果当前是客队在编辑
-    inv.save
+    inv.save!
     ut.is_admin = true 
-    ut.save    
+    ut.save!    
     assert_equal false, u.can_edit_match_invitation?(inv)  
     assert_equal false, u.can_accpet_match_invitation?(inv)
     assert_equal false, u.can_reject_match_invitation?(inv)
     ut.is_admin = false
-    ut.save
+    ut.save!
     assert_equal false, u.can_edit_match_invitation?(inv)  
     assert_equal false, u.can_accpet_match_invitation?(inv)
     assert_equal false, u.can_reject_match_invitation?(inv)        
