@@ -37,7 +37,7 @@ class ApplicationController < ActionController::Base
       @activities = {}
     end
     
-    @bcs = Broadcast.find(:all, :limit => 8, :order => 'id desc')
+    @bcs = Broadcast.find(:all, :limit => 5, :order => 'id desc')
     render :template => 'shared/index', :layout =>default_layout
   end
   

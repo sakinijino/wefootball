@@ -406,7 +406,28 @@ class UserTest < Test::Unit::TestCase
     
     assert_equal [m1,m2],u.matches.sort_by{|i| i.start_time}
     assert_equal [m2],u.matches.recent        
-  end  
+  end
+  
+  def test_admin_teams_count_sum
+    teams(:inter).team_join_requests_count = 1
+    teams(:inter).match_invitations_count = 1
+    teams(:milan).team_join_requests_count = 2
+    teams(:milan).match_invitations_count = 2
+    teams(:juven).team_join_requests_count = 4
+    teams(:juven).match_invitations_count = 4
+    teams(:inter).save!
+    teams(:milan).save!
+    teams(:juven).save!
+    
+    assert_equal 3, users(:saki).admin_teams_count_sum(:team_join_requests_count)
+    assert_equal 3, users(:saki).admin_teams_count_sum(:match_invitations_count)
+    assert_equal 1, users(:quentin).admin_teams_count_sum(:team_join_requests_count)
+    assert_equal 1, users(:quentin).admin_teams_count_sum(:match_invitations_count)
+    assert_equal 0, users(:aaron).admin_teams_count_sum(:team_join_requests_count)
+    assert_equal 0, users(:aaron).admin_teams_count_sum(:match_invitations_count)
+    assert_equal 0, users(:mike1).admin_teams_count_sum(:team_join_requests_count)
+    assert_equal 0, users(:mike1).admin_teams_count_sum(:match_invitations_count)
+  end
 
 protected
   def create_user(options = {})

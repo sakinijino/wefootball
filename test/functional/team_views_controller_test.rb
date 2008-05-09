@@ -2,6 +2,8 @@ require File.dirname(__FILE__) + '/../test_helper'
 
 class TeamViewsControllerTest < ActionController::TestCase
   def test_show_unlogin
+    teams(:inter).team_join_requests_count = 1
+    teams(:inter).save!
     get :show, :id => teams(:inter).id  # 未登录
     assert_select "#send_team_join_request_div", 0
     assert_select "img[src*=inviteIntoTeam]", 0
@@ -26,6 +28,8 @@ class TeamViewsControllerTest < ActionController::TestCase
   end
   
   def test_show_not_member
+    teams(:inter).team_join_requests_count = 1
+    teams(:inter).save!
     login_as :mike3
     get :show, :id => teams(:inter).id # 非队员
     assert_select "#send_team_join_request_div"
@@ -36,6 +40,8 @@ class TeamViewsControllerTest < ActionController::TestCase
   
   def test_show_member
     TeamJoinRequest.destroy_all
+    teams(:inter).team_join_requests_count = 0
+    teams(:inter).save!
     tjr = TeamJoinRequest.new
     tjr.team = teams(:inter)
     tjr.user = users(:mike1)
@@ -50,6 +56,8 @@ class TeamViewsControllerTest < ActionController::TestCase
   
   def test_show_admin
     TeamJoinRequest.destroy_all
+    teams(:inter).team_join_requests_count = 0
+    teams(:inter).save!
     tjr = TeamJoinRequest.new
     tjr.team = teams(:inter)
     tjr.user = users(:mike1)

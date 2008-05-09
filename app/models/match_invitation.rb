@@ -1,5 +1,6 @@
 class MatchInvitation < ActiveRecord::Base
   include ModelHelper
+  include AttributesTracking
   
   MAX_DESCRIPTION_LENGTH = 3000
   MAX_TEAM_MESSAGE_LENGTH = 300
@@ -106,5 +107,19 @@ class MatchInvitation < ActiveRecord::Base
   
   def outdated?
     new_start_time < Time.now
+  end
+  
+  def before_create
+    Team.update_all('match_invitations_count=match_invitations_count+1', ['id = ?', self.guest_team_id])
+  end
+  
+  def before_update
+    return if !self.column_changed?(:edit_by_host_team)
+    Team.update_all('match_invitations_count=match_invitations_count+1', ['id = ?', edit_by_host_team ? self.host_team_id : self.guest_team_id])
+    Team.update_all('match_invitations_count=match_invitations_count-1', ['id = ?', !edit_by_host_team ? self.host_team_id : self.guest_team_id])
+  end
+  
+  def before_destroy
+    Team.update_all('match_invitations_count=match_invitations_count-1', ['id = ?', edit_by_host_team ? self.host_team_id : self.guest_team_id])
   end
 end

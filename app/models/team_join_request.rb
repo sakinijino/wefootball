@@ -14,6 +14,13 @@ class TeamJoinRequest < ActiveRecord::Base
   
   def before_create
     self.apply_date = Date.today
+    User.update_all('team_join_invitations_count=team_join_invitations_count+1', ['id = ?', self.user_id]) if self.is_invitation
+    Team.update_all('team_join_requests_count=team_join_requests_count+1', ['id = ?', self.team_id]) if !self.is_invitation
+  end
+  
+  def before_destroy
+    User.update_all('team_join_invitations_count=team_join_invitations_count-1', ['id = ?', self.user_id]) if self.is_invitation
+    Team.update_all('team_join_requests_count=team_join_requests_count-1', ['id = ?', self.team_id]) if !self.is_invitation
   end
   
   def can_destroy_by?(user)

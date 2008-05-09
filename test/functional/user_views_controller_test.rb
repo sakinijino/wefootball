@@ -3,6 +3,9 @@ require File.dirname(__FILE__) + '/../test_helper'
 class UserViewsControllerTest < ActionController::TestCase
   
   def test_show_unlogin
+    users(:aaron).friend_invitations_count = 2
+    users(:aaron).team_join_invitations_count = 1
+    users(:aaron).save!
     get :show, :id => users(:aaron).id  # 未登录
     assert_select "#send_friend_invitation_div", 0
     assert_select "img[src*=breakUpFriendship]", 0
@@ -12,6 +15,9 @@ class UserViewsControllerTest < ActionController::TestCase
   end
   
   def test_show
+    users(:aaron).friend_invitations_count = 2
+    users(:aaron).team_join_invitations_count = 1
+    users(:aaron).save!
     login_as :aaron    
     get :show, :id => users(:aaron).id # 自己
     assert_select "#send_friend_invitation_div", 0

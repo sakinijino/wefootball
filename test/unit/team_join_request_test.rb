@@ -35,6 +35,42 @@ class TeamJoinRequestTest < ActiveSupport::TestCase
     assert_equal 'Modified', t.message
   end
   
+  def test_team_join_invitations_count
+    t = TeamJoinRequest.new
+    assert_difference "users(:aaron).reload.team_join_invitations_count", 1 do
+    assert_no_difference "teams(:inter).reload.team_join_requests_count" do
+      t.user = users(:aaron)
+      t.team = teams(:inter)
+      t.is_invitation = true
+      t.save!
+    end
+    end
+    
+    assert_difference "users(:aaron).reload.team_join_invitations_count", -1 do
+    assert_no_difference "teams(:inter).reload.team_join_requests_count" do
+      t.destroy
+    end
+    end
+  end
+  
+  def test_team_join_requests_count
+    t = TeamJoinRequest.new
+    assert_no_difference "users(:aaron).reload.team_join_invitations_count" do
+    assert_difference "teams(:inter).reload.team_join_requests_count", 1 do
+      t.user = users(:aaron)
+      t.team = teams(:inter)
+      t.is_invitation = false
+      t.save!
+    end
+    end
+    
+    assert_no_difference "users(:aaron).reload.team_join_invitations_count" do
+    assert_difference "teams(:inter).reload.team_join_requests_count", -1 do
+      t.destroy
+    end
+    end
+  end
+  
 protected
   def create_request
     t = TeamJoinRequest.new

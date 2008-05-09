@@ -332,6 +332,13 @@ class User < ActiveRecord::Base
     can_act_on_match_invitation?(match_invitation)
   end
   
+  def admin_teams_count_sum(prop)
+    return 0 if self.teams.admin.size <= 0
+    admin_team_ids = self.teams.admin.map{|item| item.id}
+    q = {:conditions => ["(#{(['id = ?']*admin_team_ids.size).join(' or ')})", *admin_team_ids]}
+    Team.sum(prop, q)
+  end
+  
   def full_blog_uri
     "http://#{self.blog}"
   end

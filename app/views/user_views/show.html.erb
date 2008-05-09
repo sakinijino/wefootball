@@ -7,7 +7,9 @@
   <div class="sect">
     <h2><%=smart_nickname @user%>的信息</h2>
 
-    <%if @firend_request != nil || @firend_invitation != nil || @user_invitation_count > 0 ||  @team_invitation_count > 0%>
+    <%if @firend_request != nil || @firend_invitation != nil || 
+         @user_invitation_count > 0 ||  @team_invitation_count > 0 ||
+         @team_join_requests_count > 0 ||  @match_invitations_count > 0 %>
     <div class="notification">
       <%if @firend_request != nil%>
         <span>你已邀请<%=h @user.nickname%>成为朋友, 等待对方确认</span>
@@ -20,9 +22,17 @@
       <%end%>
 
       <%if @user_invitation_count > 0 ||  @team_invitation_count > 0%>
-        你有<%= link_to "#{@user_invitation_count}个朋友邀请", friend_invitations_path if @user_invitation_count > 0 %>
-        <%= ', ' if @user_invitation_count > 0 &&  @team_invitation_count > 0 %>
-        <%= link_to "#{@team_invitation_count}个球队邀请", team_join_invitations_path if @team_invitation_count > 0%>
+        <%links= []%>
+        <%links << link_to("#{@user_invitation_count}个朋友邀请", friend_invitations_path) if @user_invitation_count > 0 %>
+        <%links << link_to("#{@team_invitation_count}个球队邀请", team_join_invitations_path) if @team_invitation_count > 0%>
+        你有<%= links_with_sticks links, ', '%>
+      <%end%>
+      <%='<br/>' if (@user_invitation_count > 0 ||  @team_invitation_count > 0) && ( @team_join_requests_count > 0 ||  @match_invitations_count > 0)%>
+      <%if @team_join_requests_count > 0 ||  @match_invitations_count > 0%>
+        <%links= []%>
+        <%links << link_to("#{@team_join_requests_count}个加入申请", user_team_joins_path(@user)) if @team_join_requests_count > 0 %>
+        <%links << link_to("#{@match_invitations_count}个需要处理的约战", user_team_joins_path(@user)) if @match_invitations_count > 0%>
+        你管理的球队有<%= links_with_sticks links, ', '%>
       <%end%>
     </div>
     <%end%>

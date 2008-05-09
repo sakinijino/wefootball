@@ -49,7 +49,7 @@ class Team < ActiveRecord::Base
   
   validates_multiparameter_assignments :message => "无效的建队日期" 
   
-  attr_protected :uploaded_data
+  attr_protected :uploaded_data, :team_join_requests_count, :match_invitations_count, :image_path
   
   def before_validation
     attribute_slice(:summary, 3000)

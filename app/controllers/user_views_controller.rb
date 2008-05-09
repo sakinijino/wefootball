@@ -42,9 +42,13 @@ class UserViewsController < ApplicationController
     
     @user_invitation_count = 0
     @team_invitation_count = 0
+    @team_join_requests_count = 0
+    @match_invitations_count = 0
     if logged_in? && @user.id == self.current_user.id
-      @user_invitation_count = FriendInvitation.count(:conditions => ["host_id = ?", current_user])
-      @team_invitation_count = TeamJoinRequest.count(:conditions => ["user_id = ? and is_invitation = ?", current_user, true])
+      @user_invitation_count = current_user.friend_invitations_count
+      @team_invitation_count = current_user.team_join_invitations_count
+      @team_join_requests_count = current_user.admin_teams_count_sum(:team_join_requests_count)
+      @match_invitations_count = current_user.admin_teams_count_sum(:match_invitations_count)
     end
     
     @posts = @user.related_posts(:limit=>POST_LIST_LENGTH) if logged_in? && @user.id == self.current_user.id

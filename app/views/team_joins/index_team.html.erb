@@ -2,6 +2,19 @@
   <%if @admin_teams.length > 0%>
   <div class="sect">
     <h2>管理的球队</h2>
+    <%if (@admin_teams.inject(0) {|sum, t| sum+t.team_join_requests_count+t.match_invitations_count}) > 0%>
+      <div class="notification">
+        <%@admin_teams.each do |team|%>
+          <%if team.team_join_requests_count > 0 || team.match_invitations_count > 0%>
+            <%links= []%>
+            <%links << link_to("#{team.team_join_requests_count}个加入申请", team_team_join_requests_path(team)) if team.team_join_requests_count > 0 %>
+            <%links << link_to("#{team.match_invitations_count}个需要处理的约战", team_match_invitations_path(team)) if team.match_invitations_count > 0%>
+            <%=link_to h(team.shortname), team_view_path(team)%>有<%= links_with_sticks links, ', '%>
+            <br/>
+          <%end%>
+        <%end%>
+      </div>
+    <%end%>
     <%= team_icon(@admin_teams)%>
     <div class="cb"></div>
   </div>

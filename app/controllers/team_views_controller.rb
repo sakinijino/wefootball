@@ -50,8 +50,8 @@ class TeamViewsController < ApplicationController
     @team_join_request_count = 0
     @match_invitation_count = 0
     if logged_in? && current_user.is_team_admin_of?(@team)
-      @team_join_request_count = TeamJoinRequest.count(:conditions => ["team_id = ? and is_invitation = ?", @team, false])
-      @match_invitation_count = MatchInvitation.count(:conditions=>["(host_team_id = ? and edit_by_host_team = ?) or (guest_team_id = ? and edit_by_host_team = ?)", @team, true, @team, false ])
+      @team_join_request_count = @team.team_join_requests_count
+      @match_invitation_count = @team.match_invitations_count
     end
     
     @title = "#{@team.shortname}的首页"

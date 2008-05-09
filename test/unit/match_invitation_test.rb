@@ -150,4 +150,58 @@ class MatchInvitationTest < ActiveSupport::TestCase
     assert m.has_attribute_been_modified?(:football_ground_id)
   end
 
+  def test_match_invitations_count
+    m = MatchInvitation.new
+    assert_no_difference "teams(:inter).reload.match_invitations_count" do
+    assert_difference "teams(:milan).reload.match_invitations_count", 1 do
+      m.host_team = teams(:inter)
+      m.guest_team = teams(:milan)
+      m.new_location = "北大一体"
+      m.save!
+    end
+    end
+    
+    assert_difference "teams(:inter).reload.match_invitations_count", 1 do
+    assert_difference "teams(:milan).reload.match_invitations_count", -1 do
+      m.edit_by_host_team = !m.edit_by_host_team
+      m.save!
+    end
+    end
+    
+    assert_difference "teams(:inter).reload.match_invitations_count", -1 do
+    assert_difference "teams(:milan).reload.match_invitations_count", 1 do
+      m.edit_by_host_team = !m.edit_by_host_team
+      m.save!
+    end
+    end
+    
+    assert_no_difference "teams(:inter).reload.match_invitations_count" do
+    assert_difference "teams(:milan).reload.match_invitations_count", -1 do
+      m.destroy
+    end
+    end
+    
+    m = MatchInvitation.new
+    assert_no_difference "teams(:inter).reload.match_invitations_count" do
+    assert_difference "teams(:milan).reload.match_invitations_count", 1 do
+      m.host_team = teams(:inter)
+      m.guest_team = teams(:milan)
+      m.new_location = "北大一体"
+      m.save!
+    end
+    end
+    
+    assert_difference "teams(:inter).reload.match_invitations_count", 1 do
+    assert_difference "teams(:milan).reload.match_invitations_count", -1 do
+      m.edit_by_host_team = !m.edit_by_host_team
+      m.save!
+    end
+    end
+    
+    assert_difference "teams(:inter).reload.match_invitations_count", -1 do
+    assert_no_difference "teams(:milan).reload.match_invitations_count" do
+      m.destroy
+    end
+    end
+  end
 end

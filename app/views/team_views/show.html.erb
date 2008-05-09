@@ -20,8 +20,10 @@
       <%end%>
 
       <%if @team_join_request_count > 0 || @match_invitation_count > 0%>
-        球队有<%= link_to("#{@team_join_request_count}个加入申请", team_team_join_requests_path(@team)) if @team_join_request_count > 0 %><%= ',' if @team_join_request_count > 0 && @match_invitation_count > 0%>
-        <%= link_to("#{@match_invitation_count}个需要处理的约战", team_match_invitations_path(@team)) if @match_invitation_count > 0%>
+        <%links= []%>
+        <%links << link_to("#{@team_join_request_count}个加入申请", team_team_join_requests_path(@team)) if @team_join_request_count > 0 %>
+        <%links << link_to("#{@match_invitation_count}个需要处理的约战", team_match_invitations_path(@team)) if @match_invitation_count > 0%>
+        球队有<%= links_with_sticks links, ', '%>
       <%end%>
     </div>
     <%end%>

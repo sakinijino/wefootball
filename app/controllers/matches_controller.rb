@@ -64,7 +64,7 @@ class MatchesController < ApplicationController
     Match.transaction do
       @match = Match.create_by_invitation(@match_invitation)
       MatchJoin.create_joins(@match)
-      MatchInvitation.delete(match_invitation_id)
+      @match_invitation.destroy
     end
     redirect_to match_path(@match)
   end

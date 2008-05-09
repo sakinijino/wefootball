@@ -14,5 +14,10 @@ class FriendInvitation < ActiveRecord::Base
   
   def before_create
     self.apply_date = Date.today
+    User.update_all('friend_invitations_count=friend_invitations_count+1', ['id = ?', self.host_id])
+  end
+  
+  def before_destroy
+    User.update_all('friend_invitations_count=friend_invitations_count-1', ['id = ?', self.host_id])
   end
 end

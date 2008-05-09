@@ -18,7 +18,26 @@ class FriendInvitationTest < ActiveSupport::TestCase
   
   def test_apply_date
     fi = FriendInvitation.new()
+    fi.host_id = users(:saki).id
+    fi.applier_id = users(:quentin).id
     fi.save!
     assert_equal Date.today, fi.apply_date
+  end
+  
+  def test_friend_invitations_count
+    fi = FriendInvitation.new()
+    assert_difference "users(:saki).reload.friend_invitations_count", 1 do
+    assert_no_difference "users(:quentin).reload.friend_invitations_count" do
+      fi.host_id = users(:saki).id
+      fi.applier_id = users(:quentin).id
+      fi.save!
+    end
+    end
+    
+    assert_difference "users(:saki).reload.friend_invitations_count", -1 do
+    assert_no_difference "users(:quentin).reload.friend_invitations_count" do
+      fi.destroy
+    end
+    end
   end
 end

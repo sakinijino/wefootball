@@ -10,6 +10,7 @@ module BroadcastsHelper
           <span class='qut'>#{link_to(h(bc.user.nickname), user_view_path(bc.user_id))}和#{
             link_to(h(bc.friend.nickname), user_view_path(bc.friend_id))
           }成为了朋友</span>
+          <div class='cb'></div>
        </div>
      </div>
     )
@@ -23,6 +24,7 @@ module BroadcastsHelper
             link_to(h(bc.match.guest_team.shortname), team_view_path(bc.match.guest_team_id))
           }约定进行一场#{link_to "比赛",match_path(bc.activity_id)}</span>
           <span class='dtal'>#{bc.activity.start_time.strftime("%m月%d日 %H:%M")} - #{bc.activity.end_time.strftime("%H:%M")}, #{h(bc.activity.location)}</span>
+          <div class='cb'></div>
        </div>
      </div>
     )      
@@ -40,6 +42,7 @@ module BroadcastsHelper
               link_to(h(bc.match.host_team.shortname), team_view_path(bc.match.host_team_id))
           }的#{link_to "比赛",match_path(bc.activity_id)}</span>
           <span class='dtal'>#{bc.activity.start_time.strftime("%m月%d日 %H:%M")} - #{bc.activity.end_time.strftime("%H:%M")}, #{h(bc.activity.location)}</span>
+          <div class='cb'></div>
        </div>
      </div>
     )     
@@ -52,6 +55,7 @@ module BroadcastsHelper
             link_to "随便踢踢",play_path(bc.activity_id)
           }</span>
           <span class='dtal'>#{bc.activity.start_time.strftime("%m月%d日 %H:%M")} - #{bc.activity.end_time.strftime("%H:%M")}, #{h(bc.activity.location)}</span>
+          <div class='cb'></div>
        </div>
      </div>
     )        
@@ -64,6 +68,7 @@ module BroadcastsHelper
             h(bc.sided_match.guest_team_name)
           }的#{link_to "比赛",sided_match_path(bc.activity_id)}</span>
           <span class='dtal'>#{bc.activity.start_time.strftime("%m月%d日 %H:%M")} - #{bc.activity.end_time.strftime("%H:%M")}, #{h(bc.activity.location)}</span>
+          <div class='cb'></div>
        </div>
      </div>
     )          
@@ -77,6 +82,7 @@ module BroadcastsHelper
             link_to(h(bc.team.shortname), team_view_path(bc.team_id))
           }参加对阵#{bc.sided_match.guest_team_name}的#{link_to "比赛",sided_match_path(bc.activity_id)}</span>
           <span class='dtal'>#{bc.activity.start_time.strftime("%m月%d日 %H:%M")} - #{bc.activity.end_time.strftime("%H:%M")}, #{h(bc.activity.location)}</span>
+          <div class='cb'></div>
        </div>
      </div>
     )         
@@ -88,6 +94,7 @@ module BroadcastsHelper
           #{small_team_image_link bc.team, :class=>"icon r_icon"}
           <span class='qut'>#{link_to(h(bc.user.nickname), user_view_path(bc.user_id))}加入了#{
             link_to(h(bc.team.shortname), team_view_path(bc.team_id))}</span>
+          <div class='cb'></div>
        </div>
      </div>
     )        
@@ -100,6 +107,7 @@ module BroadcastsHelper
             link_to "训练",training_path(bc.activity_id)
           }</span>
           <span class='dtal'>#{bc.activity.start_time.strftime("%m月%d日 %H:%M")} - #{bc.activity.end_time.strftime("%H:%M")}, #{h(bc.activity.location)}</span>
+          <div class='cb'></div>
        </div>
      </div>
     )        
@@ -112,6 +120,7 @@ module BroadcastsHelper
           <span class='qut'>#{link_to(h(bc.user.nickname), user_view_path(bc.user_id))}要参加#{
             link_to(h(bc.team.shortname), team_view_path(bc.team_id))}的#{link_to "训练",training_path(bc.activity_id)}</span>
           <span class='dtal'>#{bc.activity.start_time.strftime("%m月%d日 %H:%M")} - #{bc.activity.end_time.strftime("%H:%M")}, #{h(bc.activity.location)}</span>
+          <div class='cb'></div>
        </div>
      </div>
     )       
