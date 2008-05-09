@@ -599,6 +599,9 @@ ul.sidebar_menu li.selected a {
 
 div.icon_select {
   float:left;
+}
+
+div.wide_icon_select {
   width: 175px;
 }
 

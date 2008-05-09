@@ -8,7 +8,7 @@
   <div class="sect">
     <h2>队员名单</h2>
     <%@player_uts.each do |ut| %>
-      <div class="icon_select">
+      <div class="icon_select wide_icon_select">
         <%= user_icon(ut.user)%>
         <div>
           <span>首选位置: <%= position_text ut.user.premier_position%></span><br/><br/>
@@ -25,7 +25,7 @@
   <div class="sect">
     <h2>可选的队员</h2>
     <%@other_uts.each do |ut| %>
-      <div class="icon_select">
+      <div class="icon_select wide_icon_select">
         <%= user_icon(ut.user)%>
         <div>
           <span>首选位置: <%= position_text ut.user.premier_position%></span><br/><br/>

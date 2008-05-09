@@ -8,7 +8,7 @@
   <div class="sect">
     <h2>管理员</h2>
     <%@admin_uts.each do |ut| %>
-      <div class="icon_select">
+      <div class="icon_select wide_icon_select">
         <%= user_icon(ut.user)%>
         <div>
           <%if !ut.is_the_only_one_admin?%>
@@ -28,7 +28,7 @@
   <div class="sect">
     <h2>其他成员</h2>
     <%@other_uts.each do |ut| %>
-      <div class="icon_select">
+      <div class="icon_select wide_icon_select">
         <%= user_icon(ut.user)%>
         <div>
           <%=link_to("提升为管理员",team_join_path(ut, "ut[is_admin]" => true, 

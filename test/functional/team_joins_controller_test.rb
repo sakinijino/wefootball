@@ -29,7 +29,7 @@ class TeamJoinsControllerTest < ActionController::TestCase
     login_as :saki
     get :player_management, :team_id => 2
     assert_equal 1, assigns(:player_uts).length
-    assert_equal 2, assigns(:other_uts).length
+    assert_equal 1, assigns(:other_uts).length
   end
   
   def test_player_noauth
