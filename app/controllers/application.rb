@@ -37,7 +37,12 @@ class ApplicationController < ActionController::Base
       @activities = {}
     end
     
-    @bcs = Broadcast.find(:all, :limit => 5, :order => 'id desc')
+    @bcs = Broadcast.find(:all, :limit => 5*2, :order => 'id desc')
+    @bcs = @bcs.reject do |item| 
+      (((item.class == FriendCreationBroadcast) && (item.user_id < item.friend_id)) ||
+      ((item.class == MatchCreationBroadcast) && (item.team_id == item.match.guest_team_id)))
+    end
+    @bcs = @bcs.slice(0,5)
     render :template => 'shared/index', :layout =>default_layout
   end
   
