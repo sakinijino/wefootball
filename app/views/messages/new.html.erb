@@ -11,7 +11,7 @@
       <tr>
         <td>写给:</td>
         <td>
-          <%= small_user_image_link @receiver, :style=>"margin:0;float:right" %>
+          <%= user_image_link @receiver, :style=>"margin:0;float:right", :thumb => :small %>
           <%= link_to h(@receiver.nickname), user_view_path(@receiver)%>
        </td>
       </tr>

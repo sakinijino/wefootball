@@ -1,5 +1,5 @@
 <div class="post">
-<%=small_user_image_link(post.user)%>
+<%=user_image_link(post.user, :thumb => :small)%>
 
 <span class="title">
 <%=h post.created_at.strftime('%Y-%m-%d %H:%M:%S')%>

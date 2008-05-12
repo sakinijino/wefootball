@@ -9,7 +9,7 @@
     <%@starting_uts.each do |ut|%>
       <% tmp = formation_field_position(ut.position, @formation_array) %>
       <div style="width: 40px; height: 40px; position: absolute; <%= "top:#{tmp[:top]}px;left:#{tmp[:left]}px"%>">
-        <%= tiny_user_image_link ut.user%>
+        <%= user_image_link ut.user, :thumb => :tiny%>
       </div>
     <%end%>
   </div>
@@ -29,7 +29,7 @@
     <tbody>
       <% (@starting_uts + @subs_uts).each do |ut| %>
         <tr>
-          <td><%= tiny_user_image_link ut.user%></td>
+          <td><%= user_image_link ut.user, :thumb => :tiny%></td>
           <td style="width:80px"><%= link_to truncate(h(ut.user.nickname), 12), user_view_path(ut.user)%></td>
           <td><%= formation_position_text ut.position %></td>
           <td><%= fitfoot_text ut.user.fitfoot %></td>

@@ -1,6 +1,6 @@
 <div class="sect">
   <h2><%=h team.shortname%></h2>
-  <%= small_team_image_link team, :class=>'icon title_icon'%>
+  <%= team_image_link team, :thumb=>:small, :class=>'icon title_icon'%>
   <div class="info">
     <%links = []%>
     <%if logged_in? && current_user.is_team_member_of?(team)%>

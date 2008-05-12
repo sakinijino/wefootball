@@ -9,7 +9,7 @@
     </tr>
     <% for req in @requests %>
       <tr>
-        <td><%= small_team_image_link req.team%></td>
+        <td><%= team_image_link req.team, :thumb=>:small%></td>
         <td><%=req.apply_date.to_s(:db) %></td>
         <td>
           <%= link_to h(req.team.shortname), team_view_path(req.team) %>邀请你加入

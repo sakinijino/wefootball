@@ -65,7 +65,7 @@
         <div class="small_field">
           <%@formation_uts.each do |ut|%>
             <% pos = team_field_position(ut.position, @formation_array) %>
-            <%= link_to small_user_image_tag(ut.user,
+            <%= link_to user_image_tag(ut.user, :thumb => :small,
               :style=>"left:#{pos[:left]}px;top:#{pos[:top]}px;",
               :title=>ut.user.nickname), user_view_path(ut.user), :class=>"resize_small_icon" %>
           <%end%>

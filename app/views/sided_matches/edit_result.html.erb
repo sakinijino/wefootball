@@ -70,7 +70,7 @@ end%>
 
       <%for mj in @player_mjs%>
         <tr>
-          <td><%= tiny_user_image_link(mj.user)%></td>
+          <td><%= user_image_link(mj.user, :thumb => :tiny)%></td>
           <td style="width:80px"><%= link_to h(mj.user.nickname), user_view_path(mj.user)%></td>
           <td style="width:60px"><%= formation_position_text mj.position %></td>
           <td>

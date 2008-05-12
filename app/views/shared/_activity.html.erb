@@ -53,7 +53,7 @@
     <%= links_with_sticks links%>
   </div>
   <div class="activity_icon">
-    <%= small_team_image_link activity.host_team, :class=>"host_icon" %>
+    <%= team_image_link activity.host_team, :thumb=>:small, :class=>"host_icon" %>
     <div class="vs" title="V.S."></div>
     <%= image_tag('default_user_small.gif', :title=>activity.guest_team_name, :class=>"guest_icon") %>
   </div>
@@ -147,9 +147,9 @@
     <%end%>
   </div>
   <div class="activity_icon">
-    <%= small_team_image_link activity.host_team, :class=>"host_icon" %>
+    <%= team_image_link activity.host_team, :thumb=>:small, :class=>"host_icon" %>
     <div class="vs" title="V.S."></div>
-    <%= small_team_image_link(activity.guest_team, :class=>"guest_icon") %>
+    <%= team_image_link(activity.guest_team, :thumb=>:small, :class=>"guest_icon") %>
   </div>
 </div>
 <%end%>

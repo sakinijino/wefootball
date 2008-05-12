@@ -8,7 +8,7 @@
     </tr>
     <% (team_player_mjs).each do |ut| %>
       <tr>
-        <td><%= tiny_user_image_link ut.user%></td>
+        <td><%= user_image_link ut.user, :thumb => :tiny%></td>
         <td style="width:80px"><%= link_to h(ut.user.nickname), user_view_path(ut.user)%></td>
         <td style="width:60px"><%= formation_position_text ut.position %></td>
       </tr>
@@ -24,7 +24,7 @@
   <div class="small_field">
     <%team_player_mjs.each do |ut|%>
       <% pos = team_field_position(ut.position, formation_array) %>
-      <%= link_to small_user_image_tag(ut.user,
+      <%= link_to user_image_tag(ut.user, :thumb => :small,
         :style=>"left:#{pos[:left]}px;top:#{pos[:top]}px;",
         :title=>ut.user.nickname), user_view_path(ut.user), :class=>"resize_small_icon" %>
     <%end%>

@@ -37,7 +37,7 @@
               <h2>可选的<%= position_text pos%></h2>
               <%@position_hash[pos].each do |user|%>
                 <div class="icon user_<%= "#{user.id}"%>">
-                  <%=small_user_image_tag user%>
+                  <%=user_image_tag user, :thumb => :small%>
                   <span><%=link_to h(user.nickname), user_view_path(user.id)%></span>
                 </div>
               <%end%>
@@ -63,8 +63,8 @@
           var options = {
             user_id : <%= player_ut.user.id%>,
             ut_id : <%= player_ut.id%>,
-            small_image_tag: '<%= small_user_image_tag player_ut.user%>',
-            tiny_image_tag: '<%= tiny_user_image_tag player_ut.user%>',
+            small_image_tag: '<%= user_image_tag player_ut.user, :thumb => :small%>',
+            tiny_image_tag: '<%= user_image_tag player_ut.user, :thumb => :tiny%>',
             nickname : '<%= escape_javascript(h(player_ut.user.nickname))%>'
           }
           var p = new wefootball.player(options)

@@ -29,7 +29,7 @@
       <tr ><td>
         对方:
       </td><td>
-        <%= small_team_image_link @guest_team, :style=>"margin:0;float:right"%>
+        <%= team_image_link @guest_team, :thumb=>:small, :style=>"margin:0;float:right"%>
         <span><%=link_to h(@guest_team.shortname), team_view_path(@guest_team.id)%></span>
       </td></tr>
       <tr><td>

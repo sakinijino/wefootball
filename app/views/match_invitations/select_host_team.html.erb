@@ -21,7 +21,7 @@
     </div>
     <%for t in @host_teams%>
       <div class="icon">
-        <%=link_to small_team_image_tag(t), new_match_invitation_path(:host_team_id=>t.id, :guest_team_id=>@guest_team.id)%>
+        <%=link_to team_image_tag(t, :thumb=>:small), new_match_invitation_path(:host_team_id=>t.id, :guest_team_id=>@guest_team.id)%>
         <span><%=link_to h(t.shortname), new_match_invitation_path(:host_team_id=>t.id, :guest_team_id=>@guest_team.id)%></span>
       </div>
     <%end%>

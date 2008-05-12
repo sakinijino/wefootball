@@ -6,9 +6,9 @@
 <div id="wide_left_content" class="sect message">
   <div class="icon">
     <%if @message.sender!=current_user%>
-      <%= small_user_image_link @message.sender %>
+      <%= user_image_link @message.sender, :thumb => :small %>
     <%else%>
-      <%= small_user_image_link @message.receiver %>
+      <%= user_image_link @message.receiver, :thumb => :small %>
     <%end%>
   </div>
 

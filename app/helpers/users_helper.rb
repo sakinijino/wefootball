@@ -17,29 +17,22 @@ module UsersHelper
   end
   
   def user_image_tag(user, options={})
-    image_tag(user.image, {:width=>UserImage::WIDTH, :height=>UserImage::HEIGHT, :title=>h(user.nickname)}.merge(options))
+    thumb = options[:thumb]
+    options.delete :thumb
+    case thumb
+    when :small
+      image_tag(user.image(:small), {:width=>UserImage::SMALL_WIDTH, :height=>UserImage::SMALL_HEIGHT,
+        :class=>"icon", :title=>h(user.nickname)}.merge(options))
+    when :tiny
+      image_tag(user.image(:tiny), {:width=>UserImage::TINY_WIDTH, :height=>UserImage::TINY_HEIGHT,
+        :class=>"icon", :title=>h(user.nickname)}.merge(options))
+    else
+      image_tag(user.image, {:width=>UserImage::WIDTH, :height=>UserImage::HEIGHT, :title=>h(user.nickname)}.merge(options))
+    end
   end
   
   def user_image_link(user, options={})
     link_to user_image_tag(user, options), user_view_path(user.id)
-  end
-  
-  def small_user_image_tag(user, options={})
-    image_tag(user.image(:small), {:width=>UserImage::SMALL_WIDTH, :height=>UserImage::SMALL_HEIGHT,
-      :class=>"icon", :title=>user.nickname}.merge(options))
-  end
-  
-  def small_user_image_link(user, options={})
-    link_to small_user_image_tag(user, options), user_view_path(user.id)
-  end
-  
-  def tiny_user_image_tag(user, options={})
-    image_tag(user.image(:tiny), {:width=>UserImage::TINY_WIDTH, :height=>UserImage::TINY_HEIGHT,
-      :class=>"icon", :title=>user.nickname}.merge(options))
-  end
-  
-  def tiny_user_image_link(user, options={})
-    link_to tiny_user_image_tag(user, options), user_view_path(user.id)
   end
   
   def user_icon(user)
@@ -48,7 +41,7 @@ module UsersHelper
     when User
       content << %(
       <div class="icon">
-        #{small_user_image_link user}
+        #{user_image_link user, :thumb=>:small}
         <span>#{link_to h(user.nickname), user_view_path(user.id)}</span>
       </div>)
     else
