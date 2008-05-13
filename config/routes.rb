@@ -104,6 +104,7 @@ ActionController::Routing::Routes.draw do |map|
   end
   
   map.resources :offical_teams, :member => {:update_image => :put}
+  map.resources :offical_matches
   
   map.site_index "/", :controller => 'application', :action => 'index'
   map.site_about "/about", :controller => 'application', :action => 'about'

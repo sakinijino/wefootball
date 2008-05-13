@@ -53,6 +53,7 @@ class User < ActiveRecord::Base
   has_many :broadcasts, :dependent => :destroy
   
   has_many :offical_teams, :dependent => :nullify
+  has_many :offical_matches, :dependent => :nullify
 
   validates_presence_of     :login, :message=>'请填写Email'
   validates_presence_of     :nickname, :message=>'请填写昵称'

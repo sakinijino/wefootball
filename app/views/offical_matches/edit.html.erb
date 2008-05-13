@@ -1,0 +1,12 @@
+<h1>Editing offical_match</h1>
+
+<%= error_messages_for :offical_match %>
+
+<% form_for(@offical_match) do |f| %>
+  <p>
+    <%= f.submit "Update" %>
+  </p>
+<% end %>
+
+<%= link_to 'Show', @offical_match %> |
+<%= link_to 'Back', offical_matches_path %>
