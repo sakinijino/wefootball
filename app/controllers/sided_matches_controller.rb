@@ -26,7 +26,7 @@ class SidedMatchesController < ApplicationController
   def show
     @match = SidedMatch.find(params[:id])  
     @player_mjs = SidedMatchJoin.find(:all,
-        :conditions => ["match_id=? and position is not null",@match.id])    
+        :conditions => ["match_id=? and position is not null",@match.id], :order => "position")    
     @formation_array = @player_mjs.map {|ut| ut.position}  
     @team_goals = SidedMatchJoin.find_all_by_match_id(@match, 
       :conditions => ["goal > 0"], :order => 'goal desc') if @match.is_after_match?
