@@ -5,10 +5,11 @@ module QmdHelper
     'Debbie,don\'t play football with others...',
     '我爱踢大场~',
     '我们脚下的江湖~',
-    '在炎热而忧郁的夏天我们不能停止踢球~'    
+    '在炎热而忧郁的夏天我们不能停止踢球~',
+    '在球场中心呼唤爱~'
   ]
     
   def site_qmd
-    QMDS[rand(QMDS.length)]
+    "面对灾害，我们心在一起"
   end
 end

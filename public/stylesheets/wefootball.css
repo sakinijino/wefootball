@@ -292,15 +292,10 @@ form.button-to {
   margin:0 0 25px 5px;
 }
 
-#welcome div,#welcome img {
-  float:left;
+#welcome span.title {
+  position: relative;
+  top:-10px;
   font-size:20px;
-  margin:0;
-  padding:0;
-}
-
-#welcome div.title {
-  padding-top:13px;
 }
 
 #welcome div.exp {
