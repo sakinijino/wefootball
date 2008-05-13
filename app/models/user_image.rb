@@ -20,7 +20,7 @@ class UserImage < ActiveRecord::Base
   def before_save
     if (self.user != nil)
       self.user.image_path = self.public_filename
-      self.user.save
+      self.user.save!
     end
   end
   

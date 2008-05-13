@@ -2,9 +2,8 @@
   <h2><%=h @title%></h2>
   <%= error_messages_for :team %>
   <% form_for @team do |f| -%>
-
-  <%= render :partial => "form", :locals=>{:f=> f}%>
-      <%= hidden_field_tag :back_uri, params[:back_uri] if !params[:back_uri].nil?%>
+    <%= render :partial => "form", :locals=>{:f=> f}%>
+    <%= hidden_field_tag :back_uri, params[:back_uri] if !params[:back_uri].nil?%>
   <p><%= submit_tag '创建' %></p>
   <% end -%>
 </div>

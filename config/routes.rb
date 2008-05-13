@@ -103,6 +103,8 @@ ActionController::Routing::Routes.draw do |map|
     site_posts.resources :site_replies
   end
   
+  map.resources :offical_teams, :member => {:update_image => :put}
+  
   map.site_index "/", :controller => 'application', :action => 'index'
   map.site_about "/about", :controller => 'application', :action => 'about'
   map.site_faq "/faq", :controller => 'application', :action => 'faq'

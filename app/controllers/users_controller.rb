@@ -265,7 +265,7 @@ class UsersController < ApplicationController
     else
       @title = "修改我的信息"
       @positions = @user.positions_array
-      @user.errors.add_to_base('上传的必须是一张图片, 而且大小不能超过2M') if !user_image.errors.empty?
+      @user.errors.add_to_base('上传图片只支持是jpg/gif/png格式, 并且图片大小不能超过2M') if !user_image.errors.empty?
       render :action => "edit", :layout => "user_layout"
     end
   end
