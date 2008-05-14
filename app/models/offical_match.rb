@@ -24,6 +24,7 @@ class OfficalMatch < ActiveRecord::Base
   end
   
   def before_validation
+    self.start_time = DateTime.now.tomorrow if self.start_time==nil
     attribute_slice(:description, MAX_DESCRIPTION_LENGTH)    
   end
   

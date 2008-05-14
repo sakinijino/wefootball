@@ -50,7 +50,6 @@ class FootballGroundsController < ApplicationController
     end
   end
 
-  # PUT /football_grounds/1
   def update
     @football_ground = FootballGround.find(params[:id])
     if @football_ground.status !=0 && params[:football_ground][:status].to_s == '0'

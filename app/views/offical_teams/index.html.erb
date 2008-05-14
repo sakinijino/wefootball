@@ -1,6 +1,11 @@
 <div id="wide_left_content" class="sect">
   <h2><%=h @title%></h2>
-  <%= offical_team_icon(@offical_teams, true)%>
+  <%@offical_teams.each do |offical_team|%>
+    <div class="icon">
+      <%= link_to offical_team_image_tag(offical_team), edit_offical_team_path(offical_team.id)%>
+      <span><%=link_to h(offical_team.name), edit_offical_team_path(offical_team.id)%></span>
+    </div>
+  <%end%>
   <div class="cb"></div>
   <%= will_paginate @offical_teams %>
 </div>
