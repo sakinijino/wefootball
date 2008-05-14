@@ -10,9 +10,9 @@
 <div id="wide_left_content">
   <div class="sect">
     <h2></h2>
-    <% form_tag search_teams_path do%>
+    <% form_tag search_teams_path, :method => :get do%>
       <%= text_field_tag 'q', params[:q], :size=>55 %>
-      <%= submit_tag '搜索球队' %>
+      <%= submit_tag '搜索球队', :name=>'' %>
     <%end%>
   </div>
 
@@ -20,6 +20,7 @@
     <h2><%=h @title%></h2>
     <%= team_icon(@teams)%>
     <div class="cb"></div>
+    <%= will_paginate @teams if @teams %>
   </div>
 </div>
 

@@ -143,8 +143,9 @@ class User < ActiveRecord::Base
 #      ]},
 #    { :analyzer => GENERIC_ANALYZER })
 
-  def self.find_by_contents(q)
-    User.find :all, :conditions => ["(login like ? or nickname like ?) and activated_at is not null", "%#{q}%", "%#{q}%"]
+  def self.find_by_contents(q, options={})
+    query = {:conditions => ["(login like ? or nickname like ?) and activated_at is not null", "%#{q}%", "%#{q}%"]}.merge(options)
+    options.has_key?(:page) ? User.paginate(:all, query) : User.find(:all, query)
   end
 
  # Activates the user in the database.

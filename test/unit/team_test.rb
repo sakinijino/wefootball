@@ -139,6 +139,9 @@ class TeamTest < ActiveSupport::TestCase
     assert 1, teams.length
     teams = Team.find_by_contents("Beijing")
     assert 2, teams.length
+    teams = Team.find_by_contents("Beijing", :page => 1, :per_page => 1)
+    assert 1, teams.length
+    assert 1, teams.current_page
   end
   
   def test_recent_match #测试team.matches.recent

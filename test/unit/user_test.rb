@@ -282,6 +282,9 @@ class UserTest < Test::Unit::TestCase
     assert 1, users.length
     users = User.find_by_contents("gmail")
     assert 2, users.length
+    users = User.find_by_contents("gmail", :page => 1, :per_page => 1)
+    assert 1, users.length
+    assert 1, users.current_page
   end
   
   def test_can_invite_team

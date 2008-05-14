@@ -56,8 +56,9 @@ class Team < ActiveRecord::Base
     attribute_slice(:style, 50)
   end
 
-  def self.find_by_contents(q)
-    Team.find :all, :conditions => ["name like ? or shortname like ?", "%#{q}%", "%#{q}%"]
+  def self.find_by_contents(q, options={})
+    query = {:conditions => ["name like ? or shortname like ?", "%#{q}%", "%#{q}%"]}.merge(options)
+    options.has_key?(:page) ? Team.paginate(:all, query) : Team.find(:all, query)
   end
   
   def image(thumbnail = nil, refresh = nil)

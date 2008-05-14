@@ -253,6 +253,14 @@ form.button-to {
   padding:0;
 }
 
+#header_search table td.dropdown_container{
+  width:23px;
+}
+
+#header_search table td.input{
+  width:137px;
+}
+
 #header_search input {
   border:none;
   background:#fff;
@@ -266,7 +274,6 @@ form.button-to {
 }
 
 #header_search input.submit {
-  margin-left:5px;
   width:32px;
   height:30px;
   cursor:pointer;

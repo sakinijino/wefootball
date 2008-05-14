@@ -119,7 +119,7 @@ class UsersController < ApplicationController
   
   def search
     if !params[:q].blank?
-      @users = User.find_by_contents(params[:q])
+      @users = User.find_by_contents(params[:q], :page => params[:page], :per_page => 48)
       @title = "搜索“#{params[:q]}”的结果"
     end
     render :layout=>default_layout

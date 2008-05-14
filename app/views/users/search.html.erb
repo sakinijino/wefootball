@@ -12,9 +12,9 @@
 <div id="wide_left_content">
   <div class="sect">
     <h2></h2>
-    <% form_tag search_users_path do%>
+    <% form_tag search_users_path, :method => :get do%>
       <%= text_field_tag 'q', params[:q], :size=>55 %>
-      <%= submit_tag '搜索用户' %>
+      <%= submit_tag '搜索用户', :name=>'' %>
     <%end%>
   </div>
 
@@ -22,6 +22,7 @@
     <h2><%=h @title%></h2>
     <%= user_icon(@users)%>
     <div class="cb"></div>
+    <%= will_paginate @users if @users %>
   </div>
 </div>
 
