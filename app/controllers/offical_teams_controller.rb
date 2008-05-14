@@ -27,6 +27,7 @@ class OfficalTeamsController < ApplicationController
       flash[:notice] = '球队已经成功创建'
       redirect_to(edit_offical_team_path(@offical_team))
     else
+      @title = "创建新球队"
       render :action => "new", :layout => default_layout
     end
   end
@@ -37,6 +38,7 @@ class OfficalTeamsController < ApplicationController
       flash[:notice] = '球队信息已经更新'
       redirect_to(edit_offical_team_path(@offical_team))
     else
+      @title = "修改球队信息"
       render :action => "edit", :layout => default_layout
     end
   end
@@ -46,10 +48,10 @@ class OfficalTeamsController < ApplicationController
     team_image = OfficalTeamImage.find_or_initialize_by_offical_team_id(@offical_team.id)
     team_image.uploaded_data = params[:offical_team][:uploaded_data]
     if team_image.save
-      @title = "修改球队信息"
       flash[:notice] = "队标已上传, 如果队标一时没有更新, 多刷新几次页面"
       redirect_to edit_offical_team_path(@offical_team)
     else
+      @title = "修改球队信息"
       @offical_team.errors.add_to_base('上传图片只支持是jpg/gif/png格式, 并且图片大小不能超过2M') if !team_image.errors.empty?
       render :action => "edit", :layout => default_layout
     end

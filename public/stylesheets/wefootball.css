@@ -652,6 +652,28 @@ table.match_invitation_list th,table.match_invitation_list td {
   vertical-align:top;
 }
 
+table.om td{
+  vertical-align:top;
+  text-align: center;
+  overflow: hidden;
+}
+
+table.om td.detail {
+  width: 370px;
+}
+
+table.om td.detail span{
+  color:#666;
+}
+
+table.om td.detail div.om_result {
+  font-size:48px;
+  line-height:60px;
+  color:#7E3E0B;
+  font-family:Georgia,"Times New Roman",Times,serif;
+  margin-bottom: 10px;
+}
+
 table.form td.conflict {
   padding:3px;
 }

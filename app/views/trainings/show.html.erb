@@ -37,7 +37,7 @@
   <%if !@training.summary.blank?%>
   <div class="sect">
     <h2>训练说明</h2>
-    <p><%=simple_format auto_link(h(@training.summary), :urls)%></p>
+    <%=simple_format auto_link(h(@training.summary), :urls)%>
   </div>  
   <%end%>       
 

@@ -65,7 +65,7 @@
     <%= "<span>blog地址: <a href='#{@user.full_blog_uri}' target='_blank'>#{word_wrap_with_wbr(h(@user.blog))}</a></span><br/>" unless @user.blog.blank?%>
     <%if !@user.summary.blank?%>
         <br/><span>自我介绍: </span>
-        <p><%=simple_format auto_link(h(@user.summary), :urls)%></p>
+        <%=simple_format auto_link(h(@user.summary), :urls)%>
     <%end%>
     </div>
     <%if @user.is_playable%>

@@ -55,7 +55,7 @@
       <%= "<span>建队时间: #{@team.found_time}</span><br/>" unless @team.found_time.nil?%>
       <%if !@team.summary.blank?%>
           <br/><label>球队简介: </label>
-          <p><%=simple_format auto_link(h(@team.summary), :urls)%></p>
+          <%=simple_format auto_link(h(@team.summary), :urls)%>
       <%end%>
       </div>
       <div class="tab" style="overflow:visible;">

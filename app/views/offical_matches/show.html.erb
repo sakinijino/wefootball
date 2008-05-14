@@ -1,3 +1,42 @@
-
-<%= link_to 'Edit', edit_offical_match_path(@offical_match) %> |
-<%= link_to 'Back', offical_matches_path %>
+<div id="wide_left_content" class="sect">
+  <div class="sect">
+    <h2><%=h @title%></h2>
+    <table class="om">
+    <tr>
+      <td><%= offical_team_icon(@offical_match.host_team, @is_editor)%></td>
+      <td class="detail">
+        <div class="om_result">
+          <%if @offical_match.finished? && !@offical_match.host_team_goal.nil? && !@offical_match.guest_team_goal.nil?%>
+            <%if @offical_match.pk?%>
+              <%= @offical_match.host_team_goal%>(<%= @offical_match.host_team_pk_goal%>)
+              :
+              <%= @offical_match.guest_team_goal%>(<%= @offical_match.guest_team_pk_goal%>)
+            <%else%>
+              <%= @offical_match.host_team_goal%> : <%= @offical_match.guest_team_goal%>
+            <%end%>
+          <%end%>
+        </div>
+        <span>时间: </span><%= @offical_match.start_time.strftime("%m月%d日 %H:%M")%><br />
+        <span>地点: </span><%= @offical_match.location %>
+      </td>
+      <td><%= offical_team_icon(@offical_match.guest_team, @is_editor)%></td>
+    </tr>
+    </table>
+    <%if @is_editor%> 
+      <div class="control">
+        <%links = []%>
+        <%links << "#{link_to '修改比赛信息', edit_offical_match_path(@offical_match)}"%>
+        <%= links_with_sticks links%>
+      </div>
+      <div class="cb"></div>
+    <%end%>
+  </div>
+  <%if !@offical_match.description.blank?%>
+  <div class="sect">
+    <h2>比赛说明</h2>
+    <%=simple_format auto_link(h(@offical_match.description), :urls)%>
+  </div>  
+  <%end%>
+</div>
+  
+<div class="cb"></div>
