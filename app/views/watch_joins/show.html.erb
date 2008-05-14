@@ -1,0 +1,13 @@
+<p>
+  <b>User:</b>
+  <%=h @watch_join.user_id %>
+</p>
+
+<p>
+  <b>Watch:</b>
+  <%=h @watch_join.watch_id %>
+</p>
+
+
+<%= link_to 'Edit', edit_watch_join_path(@watch_join) %> |
+<%= link_to 'Back', watch_joins_path %>

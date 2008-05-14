@@ -1,0 +1,28 @@
+<p>
+  <b>Start time:</b>
+  <%=h @watch.start_time %>
+</p>
+
+<p>
+  <b>Location:</b>
+  <%=h @watch.location %>
+</p>
+
+<p>
+  <b>Official match:</b>
+  <%=h @watch.official_match_id %>
+</p>
+
+<p>
+  <b>User:</b>
+  <%=h @watch.user_id %>
+</p>
+
+<p>
+  <b>Description:</b>
+  <%=h @watch.description %>
+</p>
+
+
+<%= link_to 'Edit', edit_watch_path(@watch) %> |
+<%= link_to 'Back', watches_path %>

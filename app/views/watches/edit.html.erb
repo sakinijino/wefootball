@@ -1,0 +1,37 @@
+<h1>Editing watch</h1>
+
+<%= error_messages_for :watch %>
+
+<% form_for(@watch) do |f| %>
+  <p>
+    <b>Start time</b><br />
+    <%= f.datetime_select :start_time %>
+  </p>
+
+  <p>
+    <b>Location</b><br />
+    <%= f.text_field :location %>
+  </p>
+
+  <p>
+    <b>Official match</b><br />
+    <%= f.text_field :official_match_id %>
+  </p>
+
+  <p>
+    <b>User</b><br />
+    <%= f.text_field :user_id %>
+  </p>
+
+  <p>
+    <b>Description</b><br />
+    <%= f.text_area :description %>
+  </p>
+
+  <p>
+    <%= f.submit "Update" %>
+  </p>
+<% end %>
+
+<%= link_to 'Show', @watch %> |
+<%= link_to 'Back', watches_path %>

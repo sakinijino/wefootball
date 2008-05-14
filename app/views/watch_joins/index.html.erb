@@ -1,0 +1,22 @@
+<h1>Listing watch_joins</h1>
+
+<table>
+  <tr>
+    <th>User</th>
+    <th>Watch</th>
+  </tr>
+
+<% for watch_join in @watch_joins %>
+  <tr>
+    <td><%=h watch_join.user_id %></td>
+    <td><%=h watch_join.watch_id %></td>
+    <td><%= link_to 'Show', watch_join %></td>
+    <td><%= link_to 'Edit', edit_watch_join_path(watch_join) %></td>
+    <td><%= link_to 'Destroy', watch_join, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New watch_join', new_watch_join_path %>

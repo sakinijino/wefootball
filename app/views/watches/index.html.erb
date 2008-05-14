@@ -1,0 +1,28 @@
+<h1>Listing watches</h1>
+
+<table>
+  <tr>
+    <th>Start time</th>
+    <th>Location</th>
+    <th>Official match</th>
+    <th>User</th>
+    <th>Description</th>
+  </tr>
+
+<% for watch in @watches %>
+  <tr>
+    <td><%=h watch.start_time %></td>
+    <td><%=h watch.location %></td>
+    <td><%=h watch.official_match_id %></td>
+    <td><%=h watch.user_id %></td>
+    <td><%=h watch.description %></td>
+    <td><%= link_to 'Show', watch %></td>
+    <td><%= link_to 'Edit', edit_watch_path(watch) %></td>
+    <td><%= link_to 'Destroy', watch, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New watch', new_watch_path %>
