@@ -9,7 +9,7 @@ class UserViewsController < ApplicationController
   PLAY_LIST_LENGTH = 1
   DISPLAY_DAYS = 14
   POST_LIST_LENGTH = 10
-  BROADCAST_LIST_LENGTH = 5
+  BROADCAST_LIST_LENGTH = 10
   
   def show
     @user = User.find(params[:id], :include=>[:positions], :conditions=>"activated_at is not null")
@@ -52,7 +52,7 @@ class UserViewsController < ApplicationController
     end
     
     @posts = @user.related_posts(:limit=>POST_LIST_LENGTH) if logged_in? && @user.id == self.current_user.id
-    @bcs = Broadcast.get_related_broadcasts(@user, :limit=>BROADCAST_LIST_LENGTH) if logged_in? && @user.id == self.current_user.id
+    @bcs = Broadcast.get_related_broadcasts(@user, :limit=>BROADCAST_LIST_LENGTH).slice(0, 5) if logged_in? && @user.id == self.current_user.id
     @title = "#{@user.nickname}的主页"
   end
 end
