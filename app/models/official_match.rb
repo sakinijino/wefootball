@@ -10,6 +10,7 @@ class OfficialMatch < ActiveRecord::Base
   belongs_to :guest_team, :class_name=>"OfficialTeam", :foreign_key=>"guest_official_team_id"
   
   has_many :match_reviews, :foreign_key=>"match_id", :class_name=>"OfficialMatchReview", :dependent => :destroy
+  has_many :watches, :dependent => :destroy
   
   validates_length_of :location, :maximum => MAX_LOCATION_LENGTH, :message=>"场地名称最长可以填#{MAX_LOCATION_LENGTH}个字"
   

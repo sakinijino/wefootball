@@ -1,36 +1,12 @@
-<h1>New watch</h1>
-
-<%= error_messages_for :watch %>
-
-<% form_for(@watch) do |f| %>
-  <p>
-    <b>Start time</b><br />
-    <%= f.datetime_select :start_time %>
-  </p>
-
-  <p>
-    <b>Location</b><br />
-    <%= f.text_field :location %>
-  </p>
-
-  <p>
-    <b>Official match</b><br />
-    <%= f.text_field :official_match_id %>
-  </p>
-
-  <p>
-    <b>User</b><br />
-    <%= f.text_field :user_id %>
-  </p>
-
-  <p>
-    <b>Description</b><br />
-    <%= f.text_area :description %>
-  </p>
-
-  <p>
-    <%= f.submit "Create" %>
-  </p>
-<% end %>
-
-<%= link_to 'Back', watches_path %>
+<div id="wide_left_content" class="sect">
+  <h2><%=h @title%></h2>
+  <%= error_messages_for :watch %>
+  
+  <% form_for @watch do |f| -%>
+    <%= f.hidden_field :official_match_id,  :value=>@official_match.id%>
+    <%= render :partial => "form", :locals=>{:f=> f}%>
+    <p><%= submit_tag '创建' %></p>
+  <% end -%>
+</div>
+  
+<div class="cb"></div>
