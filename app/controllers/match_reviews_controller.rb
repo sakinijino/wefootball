@@ -18,11 +18,11 @@ class MatchReviewsController < ApplicationController
       return
     end
     
-    @title = "#{@match ? @match.to_s : @user.nickname}的球评"
+    @title = @match ?  "#{@match.host_team_name} V.S. #{@match.guest_team_name}的球评" : "#{@user.nickname}的球评"
     @reviews = @match ? 
       @match.match_reviews.paginate(:page => params[:page], :per_page => 15) :
       @user.match_reviews.paginate(:page => params[:page], :per_page => 15)
-    render :layout => match_layout
+    @match ? render(:layout => match_layout) : render(:action => 'index_user', :layout => "user_layout")
   end
   
   def show
@@ -51,7 +51,7 @@ class MatchReviewsController < ApplicationController
       return
     end
     
-    @title = "评论#{@match.to_s}的比赛"
+    @title = "评论#{@match.host_team_name} V.S. #{@match.guest_team_name}的比赛"
     @match_review = MatchReview.new
     render :layout => match_layout
   end

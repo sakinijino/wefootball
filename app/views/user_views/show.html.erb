@@ -150,11 +150,10 @@
 <div id="right_content">
   <%if logged_in? && @user.id == current_user.id && @bcs.size > 0%>
     <div class="sect">
-      <h2><%=smart_nickname @user%>朋友和球队的广播</h2>
+      <h2><%=smart_nickname @user%>朋友和球队的广播 <%= link_to "(更多广播...)", broadcasts_path %></h2>
       <%for bc in @bcs%>
         <%=broadcast_text(bc) %>
       <%end%>
-      <%= link_to "> 更多", broadcasts_path, :class=>"post_more" %>
     </div>
   <%end%>
 
@@ -178,17 +177,15 @@
 
   <%if logged_in? && @user.id == current_user.id && @posts.size > 0%>
     <div class="sect">
-      <h2><%=smart_nickname @user%>所在球队的讨论更新</h2>
+      <h2><%=smart_nickname @user%>所在球队的讨论更新 <%= link_to "(更多讨论更新...)", related_posts_path %></h2>
       <%=render :partial=>'posts/many_teams_post_list', :object=>@posts%>
-      <%= link_to "> 更多", related_posts_path, :class=>"post_more" %>
     </div>
   <%end%>
   
   <%if @reviews.length > 0%>
   <div class="sect">
-    <h2><%=smart_nickname @user%>近期的球评</h2>
-    <%=render :partial=>'match_reviews/match_review_list', :object=>@reviews%>
-    <%= link_to "> 更多", user_match_reviews_path(@user), :class=>"post_more" if @reviews.length >= UserViewsController::REVIEW_LIST_LENGTH%>
+    <h2><%=smart_nickname @user%>近期的球评 <%= link_to "(更多球评...)", user_match_reviews_path(@user)%></h2>
+    <%=render :partial=>'match_reviews/match_review_list_by_user', :object=>@reviews%>
   </div>
   <%end%>
 </div>

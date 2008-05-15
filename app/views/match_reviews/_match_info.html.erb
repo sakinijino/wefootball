@@ -1,0 +1,15 @@
+<%host_team_icon, guest_team_icon = team_icons_of_match @match
+time = @match.start_time.strftime("%m月%d日 %H:%M")
+location = @match.location
+result = @match.result_text%>
+
+<%= host_team_icon%>
+<div class="m_result"><%= result%></div>
+<%= guest_team_icon%>
+<div class="cb"></div>
+<div class="detail">
+  <span>时间: </span><%= time%><br />
+  <%if !location.blank?%>
+    <span>地点: </span><%= location %>
+  <%end%>
+</div>

@@ -664,7 +664,7 @@ table.om td.detail span{
 }
 
 table.om td.detail div.om_result {
-  font-size:48px;
+  font-size:32px;
   line-height:60px;
   color:#7E3E0B;
   font-family:Georgia,"Times New Roman",Times,serif;
@@ -736,9 +736,35 @@ div.mreview img.icon{
   float: left;
 }
 
+div.mreview div.match_icons {
+  float: left;
+  width: 100px;
+  height: 100px;
+  overflow: hidden;
+  position: relative;
+  margin: 10px 0 0;
+}
+
+div.mreview div.match_icons img.icon{
+  margin: 0;
+}
+
+div.mreview div.match_icons img.host_icon {
+  position:absolute;
+  top:0;
+  left:0;
+}
+
+div.mreview div.match_icons img.guest_icon {
+  position:absolute;
+  top:41px;
+  left:33px;
+}
+
 div.mreview div.content{
   float: left;
-  width: 450px;
+  width: 430px;
+  overflow: hidden;
 }
 
 div.mreview span.title{
@@ -753,6 +779,35 @@ div.mreview span.title{
 div.mreview span.time{
   color: #666;
   margin-left: 20px;
+}
+
+div.mreview span.match_link{
+  display: block;
+  width: 100%;
+  margin: 5px 0;
+}
+
+div.mreview_minfo {
+  margin-top: 20px;
+}
+
+div.mreview_minfo div.m_result {
+  font-size:24px;
+  line-height:60px;
+  color:#7E3E0B;
+  font-family:Georgia,"Times New Roman",Times,serif;
+  margin-bottom: 10px;
+  float:left;
+}
+
+div.mreview_minfo div.detail {
+  line-height:150%;
+  overflow: hidden;
+  margin: 10px 0 0 10px;
+}
+
+div.mreview_minfo div.detail span {
+  color: #666;
 }
 
 div.pagination {

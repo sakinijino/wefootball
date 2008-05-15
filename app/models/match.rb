@@ -195,8 +195,28 @@ class Match < ActiveRecord::Base
     return false
   end
   
-  def to_s
-    "#{self.host_team.shortname} V.S. #{self.guest_team.shortname}"
+  def host_team_name
+    self.host_team.shortname
+  end
+  
+  def guest_team_name
+    self.guest_team.shortname
+  end
+  
+  def result_text
+    return "V.S." if !is_after_match? || has_conflict
+    hg = !host_team_goal_by_host.blank? ? host_team_goal_by_host : host_team_goal_by_guest
+    gg = !guest_team_goal_by_guest.blank? ? guest_team_goal_by_guest : guest_team_goal_by_host
+    
+    if (hg.blank? && gg.blank?)
+      "V.S."
+    elsif hg.blank?
+      "? : #{gg}"
+    elsif gg.blank?
+      "#{hg} : ?"
+    else
+      "#{hg} : #{gg}"
+    end
   end
 
   protected  

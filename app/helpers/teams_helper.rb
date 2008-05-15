@@ -21,14 +21,14 @@ module TeamsHelper
     when Team
       content << %(
       <div class="icon">
-        #{team_image_link team, :thumb=>:small}
-        <span>#{link_to h(team.shortname), team_view_path(team.id)}</span>
+        #{team.new_record? ? team_image_tag(team, :thumb=>:small) : team_image_link(team, :thumb=>:small)}
+        <span>#{team.new_record? ? h(team.shortname) : link_to(h(team.shortname), team_view_path(team.id))}</span>
       </div>)
     else
       if team.respond_to?(:each)
         team.each {|u| content << team_icon(u)}
       end
-    end   
+    end
     content
   end
 end

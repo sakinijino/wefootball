@@ -44,7 +44,23 @@ class OfficialMatch < ActiveRecord::Base
     Time.now > self.end_time
   end
   
-  def to_s
-    "#{self.host_team.name} V.S. #{self.guest_team.name}"
+  def host_team_name
+    self.host_team.name
+  end
+  
+  def guest_team_name
+    self.guest_team.name
+  end
+  
+  def result_text
+    if finished? && !host_team_goal.nil? && !guest_team_goal.nil?
+      if pk?
+        "#{host_team_goal}(#{host_team_pk_goal}) : #{guest_team_goal}(#{guest_team_pk_goal})"
+      else
+        "#{host_team_goal} : #{guest_team_goal}"
+      end
+    else
+      "V.S."
+    end
   end
 end

@@ -153,7 +153,22 @@ class SidedMatch < ActiveRecord::Base
     SidedMatchJoin.find :first, :conditions => ['user_id = ? and match_id = ?', user_id, self.id]
   end
   
-  def to_s
-    "#{self.team.shortname} V.S. #{self.guest_team_name}"
+  def host_team_name
+    self.team.shortname
+  end
+  
+  def result_text
+    return "V.S." if !is_after_match?
+    hg = host_team_goal
+    gg = guest_team_goal
+    if (hg.blank? && gg.blank?)
+      "V.S."
+    elsif hg.blank?
+      "? : #{gg}"
+    elsif gg.blank?
+      "#{hg} : ?"
+    elsif !hg.blank? && !gg.blank?
+      "#{hg} : #{gg}"
+    end
   end
 end
