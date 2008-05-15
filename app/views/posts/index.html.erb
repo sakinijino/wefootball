@@ -1,6 +1,9 @@
 <div id="wide_left_content" class="sect">
-  <h2><%=h @title%>
-  <%=link_to image_tag('rss.gif'), "#{team_posts_path(@team)}.atom", :class=>'atom' if @display_rss_link%></h2>
+  <h2>
+    <%=h @title%>
+    <%=link_to image_tag('rss.gif'), "#{formatted_team_posts_path(@team, :atom)}", :class=>'atom' if @display_rss_link%>
+    <div class="cb"></div>
+  </h2>
   <%=render :partial=>'post_list', :object=>@posts%>
   <%= will_paginate @posts %>
 </div>

@@ -1,7 +1,0 @@
-# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
-
-inter_image:
-  filename: 00000001.not_image
-  content_type: image/pjpeg
-  size: 79683
-  offical_team_id: 1

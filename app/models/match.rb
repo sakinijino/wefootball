@@ -44,6 +44,8 @@ class Match < ActiveRecord::Base
   has_many :match_creation_broadcasts, :foreign_key=>"activity_id", :dependent => :destroy
   has_many :match_join_broadcasts, :foreign_key=>"activity_id", :dependent => :destroy
   
+  has_many :match_reviews, :foreign_key=>"match_id", :class_name=>"BiMatchReview", :dependent => :destroy
+  
   belongs_to :football_ground
   
   validates_length_of       :description, :maximum =>MAX_DESCRIPTION_LENGTH, :allow_nil => true
@@ -191,7 +193,11 @@ class Match < ActiveRecord::Base
       return true
     end
     return false
-  end  
+  end
+  
+  def to_s
+    "#{self.host_team.shortname} V.S. #{self.guest_team.shortname}"
+  end
 
   protected  
   def can_be_edited_by?(user, team)

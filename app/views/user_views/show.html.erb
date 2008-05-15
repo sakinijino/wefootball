@@ -183,5 +183,13 @@
       <%= link_to "> 更多", related_posts_path, :class=>"post_more" %>
     </div>
   <%end%>
+  
+  <%if @reviews.length > 0%>
+  <div class="sect">
+    <h2><%=smart_nickname @user%>近期的球评</h2>
+    <%=render :partial=>'match_reviews/match_review_list', :object=>@reviews%>
+    <%= link_to "> 更多", user_match_reviews_path(@user), :class=>"post_more" if @reviews.length >= UserViewsController::REVIEW_LIST_LENGTH%>
+  </div>
+  <%end%>
 </div>
 <div class="cb"></div>

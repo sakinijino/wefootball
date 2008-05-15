@@ -1,0 +1,32 @@
+<p><label>主队</label><br/>
+<%= f.select :host_official_team_id, (OfficialTeam.find :all, :order=>'name').map {|t| [h(t.name), t.id] } %>
+
+<p><label>客队</label><br/>
+<%= f.select :guest_official_team_id, (OfficialTeam.find :all, :order=>'name').map {|t| [h(t.name), t.id] } %>
+
+<p><label for="start_time">时间</label><br/>
+<%= f.datetime_select :start_time, :start_year => Date.today.year, :end_year => 1.year.since.year, :use_month_numbers => true, :minute_step=>15 %></p>
+
+<p><label for="location">地点 <span class="optional">(可选)</span></label><br/>
+<%= f.text_field :location, :maxlength=>100, :size=>30%></p>
+
+<p>
+  <label for="location">比分 <span class="optional">(比赛结束后填写)</span></label><br/>
+  主队
+  <%= f.text_field :host_team_goal, :maxlength => 2, :size=>1 %>
+  :
+  <%= f.text_field :guest_team_goal, :maxlength => 2, :size=>1 %>
+  客队
+</p>
+
+<p>
+  <label for="location">点球比分 <span class="optional">(点球决胜的比分)</span></label><br/>
+  主队
+  <%= f.text_field :host_team_pk_goal, :maxlength => 2, :size=>1 %>
+  :
+  <%= f.text_field :guest_team_pk_goal, :maxlength => 2, :size=>1 %>
+  客队
+</p>
+
+<p><label for="description">比赛说明 <span class="optional">(可选)</span></label><br/>
+<%= f.text_area :description, :cols=>40, :rows=>15 %></p>

@@ -36,6 +36,8 @@ class SidedMatch < ActiveRecord::Base
   
   has_many :sided_match_creation_broadcasts, :foreign_key=>"activity_id", :dependent => :destroy
   has_many :sided_match_join_broadcasts, :foreign_key=>"activity_id", :dependent => :destroy
+  
+  has_many :match_reviews, :foreign_key=>"match_id", :class_name=>"SidedMatchReview", :dependent => :destroy
             
   attr_protected :host_team_id
   
@@ -149,5 +151,9 @@ class SidedMatch < ActiveRecord::Base
       user
     end
     SidedMatchJoin.find :first, :conditions => ['user_id = ? and match_id = ?', user_id, self.id]
+  end
+  
+  def to_s
+    "#{self.team.shortname} V.S. #{self.guest_team_name}"
   end
 end

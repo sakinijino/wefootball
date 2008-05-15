@@ -1,6 +1,6 @@
 <div id="wide_left_content">
   <div class="sect">
-    <h2><%=h @post.title %></h2>
+    <h2><%=h @title %></h2>
     <%if @replies.current_page == 1%>
       <%= render(:partial => 'posts/post', :object => @post)%>
     <%end%>

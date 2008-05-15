@@ -52,8 +52,10 @@ class User < ActiveRecord::Base
   has_many :friend_creation_broadcasts, :foreign_key=>"friend_id", :dependent => :destroy
   has_many :broadcasts, :dependent => :destroy
   
-  has_many :offical_teams, :dependent => :nullify
-  has_many :offical_matches, :dependent => :nullify
+  has_many :official_teams, :dependent => :nullify
+  has_many :official_matches, :dependent => :nullify
+  
+  has_many :match_reviews, :dependent => :destroy
 
   validates_presence_of     :login, :message=>'请填写Email'
   validates_presence_of     :nickname, :message=>'请填写昵称'

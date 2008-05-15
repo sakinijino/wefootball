@@ -1,0 +1,6 @@
+one:
+  id: 1
+  host_official_team_id: 1
+  guest_official_team_id: 2
+  start_time: 2000-01-01 00:00:00
+  location: "default_location"

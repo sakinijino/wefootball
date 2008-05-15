@@ -1,5 +1,6 @@
 class RepliesController < ApplicationController
-
+  before_filter :login_required
+  
   def create
     @post = Post.find(params[:post_id])
     if (!@post.can_be_replied_by?(current_user))
@@ -16,6 +17,7 @@ class RepliesController < ApplicationController
       @can_reply = @post.can_be_replied_by?(current_user)
       @team = @post.team
       @training = @post.training
+      @title = @post.title
       @related_posts = @team.posts.find(:all, :limit => 20) - [@post]
       render :template => "posts/show", :layout => "team_layout" 
     end

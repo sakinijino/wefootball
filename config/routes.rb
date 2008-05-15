@@ -39,6 +39,7 @@ ActionController::Routing::Routes.draw do |map|
     users.resources :friend_relations
     users.resources :team_join_invitations
     users.resources :team_joins
+    users.resources :match_reviews
   end 
   map.resources :user_views
   
@@ -48,6 +49,7 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :friend_relations
   map.resources :friend_invitations
   map.resources :messages, :collection => { :destroy_multi => :delete }
+  map.send_message_to '/messages/to/:to', :controller => 'messages', :action => 'new'
   
   map.resources :teams, :collection => { :search => :post }, :member => {:update_image => :put} do |teams|
     teams.resources :team_joins
@@ -83,6 +85,7 @@ ActionController::Routing::Routes.draw do |map|
     matches.resources :team do |teams|
       teams.resources :posts
     end
+    matches.resources :match_reviews
   end
   map.resources :match_joins, :collection => { :update_formation => :put }
 
@@ -90,6 +93,7 @@ ActionController::Routing::Routes.draw do |map|
     :member => {:edit_result =>:get, :update_result=>:put, :undetermined_users=>:get, :joined_users=>:get} do |sided_matches|
     sided_matches.resources :sided_match_joins
     sided_matches.resources :posts
+    sided_matches.resources :match_reviews
   end
   map.resources :sided_match_joins, :collection => { :edit_formation => :get, :update_formation => :put }
   
@@ -107,8 +111,14 @@ ActionController::Routing::Routes.draw do |map|
     site_posts.resources :site_replies
   end
   
-  map.resources :offical_teams, :member => {:update_image => :put}
-  map.resources :offical_matches
+  map.resources :official_teams, :member => {:update_image => :put}
+  map.resources :official_matches do |om|
+    om.resources :match_reviews
+  end
+  
+  map.resources :match_reviews do |mr|
+    mr.resources :match_review_replies
+  end
   
   map.site_index "/", :controller => 'application', :action => 'index'
   map.site_about "/about", :controller => 'application', :action => 'about'
@@ -123,13 +133,11 @@ ActionController::Routing::Routes.draw do |map|
   map.team_day_calendar "teams/:team_id/calendar/:year/:month/:day", :controller=>"calendar", :action => "show_a_day",
       :requirements => {:year => /(19|20)\d\d/, :month => /[01]?\d/, :day => /[0-3]?\d/}
     
-  map.user_icalendar "users/:id/icalendar", :controller=>"i_calendar", :action => "user"
-  map.team_icalendar "teams/:id/icalendar", :controller=>"i_calendar", :action => "team"
+  map.user_icalendar "users/:id/icalendar.ics", :controller=>"i_calendar", :action => "user"
+  map.team_icalendar "teams/:id/icalendar.ics", :controller=>"i_calendar", :action => "team"
     
   map.province_city_select "js/province_city_select.js", :controller=>"js", :action => "province_city_select"
   map.football_ground_select "js/football_ground_select.js", :controller=>"js", :action => "football_ground_select"
-  
-  map.send_mail_to '/messages/to/:to', :controller => 'messages', :action => 'new'
   
   map.activate '/activate/:activation_code', :controller => 'users', :action=> 'activate', :activation_code => nil
   map.signup_with_invitation '/signup_with_invitation/:invitation_code', :controller => 'users', :action=> 'new_with_invitation', :invitation_code => nil  

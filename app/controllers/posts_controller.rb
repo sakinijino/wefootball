@@ -90,6 +90,8 @@ class PostsController < ApplicationController
     else
       @related_posts = @team.posts.find(:all, :conditions => ['is_private = ?', false], :limit => 20) - [@post]
     end
+    
+    @title = @post.title
 
     if @match
       render :layout => "match_layout"
@@ -159,14 +161,18 @@ protected
     if (params[:sided_match_id])
       @sided_match = SidedMatch.find(params[:sided_match_id])
       @team = @sided_match.team
+      @posts_url = sided_match_posts_path(@sided_match)
     elsif (params[:team_id] && params[:match_id])
       @team = Team.find(params[:team_id])
       @match = Match.find(params[:match_id])
+      @posts_url = match_team_posts_path(@match, @team)
     elsif (params[:team_id])
       @team = Team.find(params[:team_id])
+      @posts_url = team_posts_path(@team)
     elsif (params[:training_id])
       @training = Training.find(params[:training_id])
       @team = @training.team
+      @posts_url = training_posts_path(@training)
     end
     @tid = @team.id
     fake_params_redirect if !current_user.is_team_member_of?(@tid)

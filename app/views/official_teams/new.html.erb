@@ -1,0 +1,10 @@
+<div id="wide_left_content" class="sect">
+  <h2><%=h @title%></h2>
+  <%= error_messages_for :official_team %>
+  <% form_for @official_team do |f| -%>
+    <%= render :partial => "form", :locals=>{:f=> f}%>
+    <p><%= submit_tag '创建' %></p>
+  <% end -%>
+</div>
+  
+<div class="cb"></div>

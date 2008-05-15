@@ -4,7 +4,8 @@ class SidedMatchesController < ApplicationController
 
   JOINED_USER_LIST_LENGTH = 9
   UNDETERMINED_USER_LIST_LENGTH = 9
-  POSTS_LENGTH = 10  
+  POSTS_LENGTH = 10
+  REVIEW_LIST_LENGTH = 5
   
   def new
     @team = Team.find(params[:team_id])
@@ -38,7 +39,10 @@ class SidedMatchesController < ApplicationController
       @posts = @match.posts.find(:all, :limit=>POSTS_LENGTH)
     else
       @posts = @match.posts.public :limit=>POSTS_LENGTH
-    end    
+    end
+    
+    @reviews = @match.match_reviews.find(:all, :limit=>REVIEW_LIST_LENGTH, :order=>'score, created_at')
+    
     render :layout=>'team_layout'    
   end
   

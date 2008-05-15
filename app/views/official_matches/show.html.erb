@@ -1,0 +1,59 @@
+<div id="wide_left_content" class="sect">
+  <div class="sect">
+    <h2><%=h @title%></h2>
+    <table class="om">
+    <tr>
+      <td><%= official_team_icon(@official_match.host_team)%></td>
+      <td class="detail">
+        <div class="om_result">
+          <%if @official_match.finished? && !@official_match.host_team_goal.nil? && !@official_match.guest_team_goal.nil?%>
+            <%if @official_match.pk?%>
+              <%= @official_match.host_team_goal%>(<%= @official_match.host_team_pk_goal%>)
+              :
+              <%= @official_match.guest_team_goal%>(<%= @official_match.guest_team_pk_goal%>)
+            <%else%>
+              <%= @official_match.host_team_goal%> : <%= @official_match.guest_team_goal%>
+            <%end%>
+          <%end%>
+        </div>
+        <span>时间: </span><%= @official_match.start_time.strftime("%m月%d日 %H:%M")%><br />
+        <span>地点: </span><%= @official_match.location %>
+      </td>
+      <td><%= official_team_icon(@official_match.guest_team)%></td>
+    </tr>
+    </table>
+    <%if @is_editor%> 
+      <div class="control">
+        <%links = []%>
+        <%links << "#{link_to '修改比赛信息', edit_official_match_path(@official_match)}"%>
+        <%= links_with_sticks links%>
+      </div>
+      <div class="cb"></div>
+    <%end%>
+  </div>
+  <%if !@official_match.description.blank?%>
+  <div class="sect">
+    <h2>比赛说明</h2>
+    <%=simple_format auto_link(h(@official_match.description), :urls)%>
+  </div>  
+  <%end%>
+
+  <div id="wide_left_content" class="sect">
+    <h2>最受欢迎的球评 <%= link_to "(发表新球评)", new_official_match_match_review_path(@official_match)%></h2>
+    <%if @reviews.length > 0%>
+      <%=render :partial=>'match_reviews/match_review_list', :object=>@reviews%>
+      <div class="more">
+        <%links = []%>
+        <%#links << %(> #{link_to "发表新球评", new_official_match_match_review_path(@official_match)})%>
+        <%links << %(> #{link_to "更多", official_match_match_reviews_path(@official_match)}) if @reviews.length >= OfficialMatchesController::REVIEW_LIST_LENGTH%>
+        <%= links_with_sticks links%>
+      </div>
+    <%else%>
+      <div class="notification">
+        还没有人为这场比赛写过球评，<%=link_to '打算写一篇吗？', new_official_match_match_review_path(@official_match)%>
+      </div>
+    <%end%>
+  </div>
+</div>
+  
+<div class="cb"></div>
