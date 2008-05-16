@@ -11,15 +11,15 @@ class RepliesController < ApplicationController
     @reply.user = current_user
     @post.replies << @reply
     if @post.save
-      redirect_to(@post)
+      redirect_to(post_path(@post))
     else
       @replies = @post.replies.paginate(:page => params[:page], :per_page => PostsController::REPLIES_PER_PAGE)
       @can_reply = @post.can_be_replied_by?(current_user)
       @team = @post.team
-      @training = @post.training
+      @activity = @post.activity
       @title = @post.title
       @related_posts = @team.posts.find(:all, :limit => 20) - [@post]
-      render :template => "posts/show", :layout => "team_layout" 
+      render :template => "posts/show", :layout => post_layout(@post)
     end
   end
 
@@ -29,7 +29,18 @@ class RepliesController < ApplicationController
       fake_params_redirect
     else      
       @reply.post.replies.delete(@reply)
-      redirect_to @reply.post
+      redirect_to post_path(@reply.post)
+    end
+  end
+  
+protected  
+  def post_layout(p)
+    case @post
+    when MatchPost
+      @match = @post.match if !@match
+      "match_layout"
+    else
+      "team_layout" 
     end
   end
 end

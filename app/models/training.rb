@@ -17,7 +17,7 @@ class Training < ActiveRecord::Base
     end
   end
   
-  has_many :posts, :dependent => :nullify, :order => "updated_at desc" do
+  has_many :posts, :class_name => 'TrainingPost', :foreign_key=>"activity_id", :dependent => :nullify, :order => "updated_at desc" do
     def public(options={})
       q = {:conditions => ['is_private = ?', false]}.merge(options)
       options.has_key?(:page) ? paginate(:all, q) : find(:all, q)

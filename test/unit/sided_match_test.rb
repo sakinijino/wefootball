@@ -226,7 +226,7 @@ class SidedMatchTest < ActiveSupport::TestCase
     l  = t.posts.size
     assert_not_equal 0, l
     assert_no_difference "t.team.posts.reload.length" do
-    assert_difference "t.team.posts.find(:all, :conditions=>['sided_match_id is not null']).length", -l do
+    assert_difference "t.team.posts.find(:all, :conditions=>['activity_id is not null']).length", -l do
       t.destroy
     end
     end

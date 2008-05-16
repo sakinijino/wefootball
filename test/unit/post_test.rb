@@ -47,4 +47,19 @@ class PostTest < ActiveSupport::TestCase
     posts = Post.get_user_related_posts(users(:saki), :page=>2, :per_page=>2)
     assert_equal 2, posts.current_page
   end
+  
+  def test_icon
+    p = Post.new
+    assert_nil p.icon
+    assert_nil p.img_title
+    
+    p = TrainingPost.new
+    assert_nil p.icon
+    assert_nil p.img_title
+    
+    p = TrainingPost.new
+    p.activity = trainings(:training1)
+    assert_not_nil p.icon
+    assert_not_nil p.img_title
+  end
 end

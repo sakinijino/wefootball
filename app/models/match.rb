@@ -7,7 +7,7 @@ class Match < ActiveRecord::Base
   
   attr_accessible
   
-  has_many :posts, :dependent => :nullify, :order => "updated_at desc" do
+  has_many :posts, :class_name => 'MatchPost', :foreign_key=>"activity_id", :dependent => :nullify, :order => "updated_at desc" do
     def team(team_id, options={})
       q = {:conditions => ['team_id = ?', team_id]}.merge(options)
       options.has_key?(:page) ? paginate(:all, q) : find(:all, q)

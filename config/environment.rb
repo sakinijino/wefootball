@@ -29,7 +29,7 @@ Rails::Initializer.run do |config|
   
   # Add additional load paths for your own custom dirs
   config.load_paths += 
-    %W( #{RAILS_ROOT}/app/modules #{RAILS_ROOT}/app/models/broadcasts #{RAILS_ROOT}/app/models/match_reviews #{RAILS_ROOT}/app/sweepers #{RAILS_ROOT}/app/observers)
+    %W( #{RAILS_ROOT}/app/modules #{RAILS_ROOT}/app/models/broadcasts #{RAILS_ROOT}/app/models/posts #{RAILS_ROOT}/app/models/match_reviews #{RAILS_ROOT}/app/sweepers #{RAILS_ROOT}/app/observers)
 
   # Force all environments to use the same logger level
   # (by default production uses :info, the others :debug)
