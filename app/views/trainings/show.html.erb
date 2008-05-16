@@ -9,9 +9,9 @@
         <%if logged_in? && current_user.is_team_member_of?(@training.team)%>
           <br />
           <span>我的状态: </span>
-          <%= join_status_text @training%>&nbsp;&nbsp;&nbsp;
+          <%= @training.join_status_text current_user%>&nbsp;&nbsp;&nbsp;
           <%links = []%>
-          <% links_text = join_status_links @training%>
+          <% links_text = @training.join_links_text current_user%>
           <% links << link_to(links_text[0], training_training_joins_path(@training), :method=>'post') if @training.can_be_joined_by?(current_user)%>
           <% links << link_to(links_text[1], training_training_join_path(@training, 0), :method=>'delete') if @training.can_be_quited_by?(current_user)%>
           <%= links_with_sticks links%>

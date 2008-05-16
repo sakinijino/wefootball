@@ -30,8 +30,12 @@ class Play < ActiveRecord::Base
     self.end_time = self.start_time.since(3600) if self.end_time==nil
   end
   
-  def is_before_play?
-    Time.now < self.start_time
+  def started?
+    Time.now > self.start_time
+  end
+  
+  def finished?
+    Time.now > self.end_time
   end
   
   def has_member?(user)
@@ -51,7 +55,7 @@ class Play < ActiveRecord::Base
     else 
       user
     end
-    #self.is_before_play? && PlayJoin.find_by_user_id_and_play_id(user_id,self.id) == nil
+    #!started? && PlayJoin.find_by_user_id_and_play_id(user_id,self.id) == nil
     PlayJoin.find_by_user_id_and_play_id(user_id,self.id) == nil
   end
 
@@ -62,8 +66,54 @@ class Play < ActiveRecord::Base
     else 
       user
     end
-    #self.is_before_play? && PlayJoin.find_by_user_id_and_play_id(user_id,self.id) != nil
+    #!started? && PlayJoin.find_by_user_id_and_play_id(user_id,self.id) != nil
     PlayJoin.find_by_user_id_and_play_id(user_id,self.id) != nil
   end
   
+  ICON = "play_icon.gif"
+  IMG_TITLE = "随便踢踢"
+  
+  TIME_STATUS_TEXTS = {
+    :before => nil,
+    :in => '正在进行',
+    :after => '结束了'
+  }
+  
+  JOIN_STATUS_TEXTS = {
+    :before =>{
+      :joined => '我要去踢',
+    },
+    :in => {
+      :joined => '我正在踢',
+    },
+    :after => {
+      :joined => '我去了',
+    }
+  }
+  
+  JOIN_LINKS_TEXTS = {
+    :before =>{
+      :joined => ['---', '不去了'],
+      :unjoined => ['要去', '---']
+    },
+    :in =>{
+      :joined => ['---', '没去'],
+      :unjoined => ['现在去', '---']
+    },
+    :after =>{
+      :joined => ['---', '没去'],
+      :unjoined => ['去了', '---']
+    }
+  }
+  
+  include ActivityHelper
+  
+  protected
+  def join_key(user, team=nil)
+    if has_member?(user)
+      :joined
+    else
+      :unjoined
+    end
+  end
 end

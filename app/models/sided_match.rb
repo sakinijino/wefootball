@@ -97,11 +97,11 @@ class SidedMatch < ActiveRecord::Base
     attribute_slice(:description, MAX_DESCRIPTION_LENGTH)
   end
 
-  def is_before_match?
-    return Time.now < self.start_time
+  def started?
+    Time.now > self.start_time
   end
   
-  def is_after_match?
+  def finished?
     return Time.now > self.end_time
   end
   
@@ -110,12 +110,12 @@ class SidedMatch < ActiveRecord::Base
   end
 
   def can_be_edited_by?(user)
-    #is_before_match? && user.is_team_admin_of?(self.host_team_id)
+    #!started? && user.is_team_admin_of?(self.host_team_id)
     user.is_team_admin_of?(self.host_team_id)
   end  
   
   def can_be_edited_result_by?(user)
-    is_after_match? && user.is_team_admin_of?(self.host_team_id)
+    finished? && user.is_team_admin_of?(self.host_team_id)
   end
   
   def can_be_edited_formation_by?(user)
@@ -128,13 +128,13 @@ class SidedMatch < ActiveRecord::Base
   
   def can_be_joined_by?(user)
     team_id = self.host_team_id
-    #is_before_match? && user.is_team_member_of?(team_id) && !has_joined_member?(user)
+    #!started? && user.is_team_member_of?(team_id) && !has_joined_member?(user)
     user.is_team_member_of?(team_id) && !has_joined_member?(user)
   end
   
   def can_be_quited_by?(user)
     team_id = self.host_team_id
-    #is_before_match? && user.is_team_member_of?(team_id) && has_member?(user)
+    #!started? && user.is_team_member_of?(team_id) && has_member?(user)
     user.is_team_member_of?(team_id) && has_member?(user)
   end
   
@@ -158,7 +158,7 @@ class SidedMatch < ActiveRecord::Base
   end
   
   def result_text
-    return "V.S." if !is_after_match?
+    return "V.S." if !finished?
     hg = host_team_goal
     gg = guest_team_goal
     if (hg.blank? && gg.blank?)
@@ -171,4 +171,12 @@ class SidedMatch < ActiveRecord::Base
       "#{hg} : #{gg}"
     end
   end
+  
+  ICON = "match_icon.gif"
+  IMG_TITLE = "比赛"
+  TIME_STATUS_TEXTS = Match::TIME_STATUS_TEXTS
+  JOIN_STATUS_TEXTS = Match::JOIN_STATUS_TEXTS
+  JOIN_LINKS_TEXTS = Match::JOIN_LINKS_TEXTS
+  
+  include ActivityHelper
 end

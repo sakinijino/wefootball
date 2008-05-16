@@ -16,8 +16,8 @@
     <br/><br/>
     <%links = []%>
     <%if display_status%>
-      <%= time_status_text activity%>, <%= join_status_text activity%>&nbsp;&nbsp;&nbsp;
-      <% links_text = join_status_links activity%>
+      <%= time_status_text activity%>, <%= activity.join_status_text current_user%>&nbsp;&nbsp;&nbsp;
+      <% links_text = activity.join_links_text current_user%>
       <% links << link_to(links_text[0], training_training_joins_path(activity), :method=>'post') if activity.can_be_joined_by?(current_user)%>
       <% links << link_to(links_text[1], training_training_join_path(activity, 0), :method=>'delete') if activity.can_be_quited_by?(current_user)%>
     <%else%>
@@ -42,8 +42,8 @@
     <br/><br/>
     <%links = []%>
     <%if display_status%>
-      <%= time_status_text activity%>, <%= join_status_text activity%>&nbsp;&nbsp;&nbsp;
-      <% links_text = join_status_links activity%>
+      <%= time_status_text activity%>, <%= activity.join_status_text current_user%>&nbsp;&nbsp;&nbsp;
+      <% links_text = activity.join_links_text current_user%>
       <% links << link_to(links_text[0], sided_match_sided_match_joins_path(activity), :method=>'post') if activity.can_be_joined_by?(current_user)%>
       <% links << link_to(links_text[1], sided_match_sided_match_join_path(activity, 0), :method=>'delete') if activity.can_be_quited_by?(current_user)%>
     <%else%>
@@ -67,8 +67,8 @@
     <br/><br/>
     <%links = []%>
     <%if display_status%>
-      <%= time_status_text activity%>, <%= join_status_text activity%>&nbsp;&nbsp;&nbsp;
-      <% links_text = join_status_links activity%>
+      <%= time_status_text activity%>, <%= activity.join_status_text current_user%>&nbsp;&nbsp;&nbsp;
+      <% links_text = activity.join_links_text current_user%>
       <% links << link_to(links_text[0], play_play_joins_path(activity), :method=>'post') if activity.can_be_joined_by?(current_user)%>
       <% links << link_to(links_text[1], play_play_join_path(activity, 0), :method=>'delete') if activity.can_be_quited_by?(current_user)%>
     <%else%>
@@ -104,8 +104,8 @@
         <%else%>
           <%team = activity.guest_team%>
         <%end%>
-        <%= time_status_text activity%>, <%= join_status_text activity, team%>&nbsp;&nbsp;&nbsp;
-        <% links_text = match_join_status_links activity, team%>
+        <%= time_status_text activity%>, <%=  activity.join_status_text current_user, team%>&nbsp;&nbsp;&nbsp;
+        <% links_text = activity.join_links_text current_user, team%>
         <%links << link_to(links_text[0], 
           match_joins_path(:team_id => team, :match_id => activity), :method=>:post) if activity.can_be_joined_by?(current_user, team)%>
         <%links << link_to(links_text[1], 
@@ -121,28 +121,16 @@
       <br/><br/>
     </div>
     <div class="content" style="width: 400px">
-      <%if current_user.is_team_member_of?(activity.host_team_id)%>
+      <%[activity.host_team, activity.guest_team].each_with_index do |team, i|%>
         <%links = []%>
-        <%team = activity.host_team%>
-        <%= match_join_status_text activity, team%>&nbsp;&nbsp;&nbsp;
-        <% links_text = match_join_status_links activity, team%>
+        <%= activity.sided_join_status_text current_user, team, "#{link_to h(team.shortname), team_view_path(team)}"%>&nbsp;&nbsp;&nbsp;
+        <% links_text = activity.join_links_text current_user, team%>
         <%links << link_to(links_text[0], 
           match_joins_path(:team_id => team, :match_id => activity), :method=>:post) if activity.can_be_joined_by?(current_user, team)%>
         <%links << link_to(links_text[1], 
           match_join_path(0, :team_id => team, :match_id => activity), :method=>:delete) if activity.can_be_quited_by?(current_user, team)%>
         <%= links_with_sticks links%>
-     <%end%>
-     <%= "<br/>" if current_user.is_team_member_of?(activity.host_team_id) && current_user.is_team_member_of?(activity.guest_team_id)%>
-     <%if current_user.is_team_member_of?(activity.guest_team_id)%>
-        <%links = []%>
-        <%team = activity.guest_team%>
-        <%= match_join_status_text activity, team%>&nbsp;&nbsp;&nbsp;
-        <% links_text = match_join_status_links activity, team%>
-        <%links << link_to(links_text[0], 
-          match_joins_path(:team_id => team, :match_id => activity), :method=>:post) if activity.can_be_joined_by?(current_user, team)%>
-        <%links << link_to(links_text[1], 
-          match_join_path(0, :team_id => team, :match_id => activity), :method=>:delete) if activity.can_be_quited_by?(current_user, team)%>
-        <%= links_with_sticks links%>
+        <%= '<br/>' if i ==0%>
      <%end%>
     <%end%>
   </div>

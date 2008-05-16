@@ -30,11 +30,11 @@ class MatchesController < ApplicationController
     @host_team_goals = MatchJoin.find_all_by_team_id_and_match_id(
       @match.host_team, @match,
       :conditions => ["goal > 0"]
-    ) if @match.is_after_match?
+    ) if @match.finished?
     @guest_team_goals = MatchJoin.find_all_by_team_id_and_match_id(
       @match.guest_team, @match,
       :conditions => ["goal > 0"]
-    ) if @match.is_after_match?
+    ) if @match.finished?
     
     @reviews = @match.match_reviews.find(:all, :limit=>REVIEW_LIST_LENGTH, :order=>'score, created_at')
     render :layout=>'match_layout'

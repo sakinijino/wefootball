@@ -78,20 +78,20 @@ class SidedMatchTest < ActiveSupport::TestCase
     m = sided_matches(:one)
     m.start_time = 9.days.since
     m.save!
-    assert_equal true,m.is_before_match?
-    assert_equal false,m.is_after_match?
+    assert_equal true,!m.started?
+    assert_equal false,m.finished?
     
     m.start_time = Time.now.ago(1800)
     m.half_match_length = 25
     m.rest_length = 10
     m.save!
-    assert_equal false,m.is_before_match?
-    assert_equal false,m.is_after_match?
+    assert_equal false,!m.started?
+    assert_equal false,m.finished?
     
     m.start_time = 1.days.ago
     m.save
-    assert_equal false,m.is_before_match?
-    assert_equal true,m.is_after_match?
+    assert_equal false,!m.started?
+    assert_equal true,m.finished?
   end
 
   def test_cascade_destroy_between_match_and_match_join#测试match和matchJoin间的级联删除

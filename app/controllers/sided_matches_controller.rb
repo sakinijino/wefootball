@@ -30,7 +30,7 @@ class SidedMatchesController < ApplicationController
         :conditions => ["match_id=? and position is not null",@match.id])    
     @formation_array = @player_mjs.map {|ut| ut.position}  
     @team_goals = SidedMatchJoin.find_all_by_match_id(@match, 
-      :conditions => ["goal > 0"], :order => 'goal desc') if @match.is_after_match?
+      :conditions => ["goal > 0"], :order => 'goal desc') if @match.finished?
     
     @team = @match.host_team
     @joined_users = @match.users.joined(:limit=>JOINED_USER_LIST_LENGTH)

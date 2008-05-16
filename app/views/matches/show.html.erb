@@ -23,7 +23,7 @@
   <%= render(:partial => 'detail', :locals => {:team => @match.host_team, :is_host => true})%>
 </div>
 
-<%if @match.is_after_match? %>
+<%if @match.finished? %>
 <div id="match_blackboard">
     <%= display_match_result @match%>
 </div>
@@ -35,7 +35,7 @@
 
 <div class="cb"></div>
 
-<%if @match.is_after_match? %>
+<%if @match.finished? %>
 <div class="host_team_div">
   <div class="sect">
     <h2>进球</h2>
@@ -50,7 +50,7 @@
 </div>
 <%end%>
 
-<%if @match.is_after_match? %>
+<%if @match.finished? %>
 <div class="guest_team_div">
   <div class="sect">
     <h2>进球</h2>
