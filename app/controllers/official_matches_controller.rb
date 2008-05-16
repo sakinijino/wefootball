@@ -7,7 +7,7 @@ class OfficialMatchesController < ApplicationController
   def show
     @official_match = OfficialMatch.find(params[:id])
     @is_editor = OfficialMatchEditor.is_a_editor?(current_user)
-    @title = "#{@official_match.host_team.name} v.s. #{@official_match.guest_team.name}"
+    @title = "#{@official_match.host_team.name} V.S. #{@official_match.guest_team.name}"
     @reviews = @official_match.match_reviews.find(:all, :limit=>REVIEW_LIST_LENGTH, :order=>'score, created_at')
     render :layout => default_layout
   end

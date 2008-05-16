@@ -16,8 +16,8 @@ class TrainingsController < ApplicationController
     end
     
     @team = @training.team
-    @joined_users = @training.users.joined(:limit=>JOINED_USER_LIST_LENGTH+1)
-    @undetermined_users = @training.users.undetermined(:limit=>UNDETERMINED_USER_LIST_LENGTH+1)    
+    @joined_users = @training.users.joined(:limit=>JOINED_USER_LIST_LENGTH)
+    @undetermined_users = @training.users.undetermined(:limit=>UNDETERMINED_USER_LIST_LENGTH)    
     render :layout=>'team_layout'
   end
   

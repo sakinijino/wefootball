@@ -47,9 +47,9 @@ class ICalendarController < ApplicationController
       when Training
         "#{act.team.shortname}训练"
       when SidedMatch
-        "#{act.host_team.shortname} 对阵 #{act.guest_team_name}的比赛"
+        "#{act.host_team.shortname} V.S. #{act.guest_team_name}的比赛"
       when Match
-        "#{act.host_team.shortname} 对阵 #{act.guest_team.shortname}的比赛"
+        "#{act.host_team.shortname} V.S. #{act.guest_team.shortname}的比赛"
       end)
       
       event.description(case act

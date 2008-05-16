@@ -34,7 +34,7 @@
 <div class="activity match_activity">
   <div class="content">
     <%= link_to(h(activity.host_team_name), team_view_path(activity.host_team_id))%>
-    对阵
+    V.S.
     <%=h activity.guest_team_name%>
     <br/><br/>
     <%= activity.start_time.strftime('%H:%M')%>-<%= activity.end_time.strftime('%H:%M')%>,
@@ -90,7 +90,7 @@
 <div class="activity match_activity <%= 'match_activity_wide' if belongs_to_both_teams%>">
   <div class="content">
     <%= link_to(h(activity.host_team_name), team_view_path(activity.host_team_id))%>
-    对阵
+    V.S.
     <%= link_to(h(activity.guest_team_name), team_view_path(activity.guest_team_id))%>
     <br/><br/>
     <%= activity.start_time.strftime('%H:%M')%>-<%= activity.end_time.strftime('%H:%M')%>,

@@ -104,15 +104,8 @@
   </div>
 
   <div class="sect">        
-    <h2><%=h @team.shortname%>的成员</h2>
-    <%if @users.length <= TeamViewsController::USER_LIST_LENGTH%>
-        <%= user_icon(@users)%>
-    <%else%>
-        <%@users.pop%>
-        <%= user_icon(@users)%>
-        <div class="cb"></div>
-        <%= link_to "> 更多",team_team_joins_path(@team), :class=>"more" %>
-    <%end%>
+    <h2><%=h @team.shortname%>的成员 <%= link_to "(更多...)",team_team_joins_path(@team)%></h2>
+    <%= user_icon(@users)%>
     <div class="cb"></div>
   </div>
 

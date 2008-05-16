@@ -24,15 +24,8 @@
 
 <div id="narrow_right_content">
   <div class="sect">
-    <h2>去踢的有...</h2>
-    <%if @players.length <= PlaysController::PLAYER_LIST_LENGTH%>
-        <%= user_icon(@players)%>
-    <%else%>
-        <%@players.pop%>
-        <%= user_icon(@players)%>
-        <div class="cb"></div>
-        <%= link_to "> 更多",players_play_path(@play.id), :class=>"more" %>
-    <%end%>  
+    <h2>去随便踢踢的人有 <%= link_to "(更多...)",players_play_path(@play.id) %></h2>
+    <%= user_icon(@players)%>
     <div class="cb"></div>
   </div>
 </div>
