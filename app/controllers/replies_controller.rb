@@ -17,8 +17,8 @@ class RepliesController < ApplicationController
       @can_reply = @post.can_be_replied_by?(current_user)
       @team = @post.team
       @activity = @post.activity
+      @related_posts = @post.related(logged_in? ? current_user : nil, :limit => 20)
       @title = @post.title
-      @related_posts = @team.posts.find(:all, :limit => 20) - [@post]
       render :template => "posts/show", :layout => post_layout(@post)
     end
   end

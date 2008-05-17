@@ -11,7 +11,8 @@ module TopMenuHelper
         p[:controller] == 'team_join_invitations' || p[:controller] == 'team_join_requests'
     },
     :activities => Proc.new { |p|
-      p[:controller] == 'calendar'
+      p[:controller] == 'calendar' || p[:controller] == 'plays' || (p[:controller] == 'official_matches' && p[:action] == 'index') ||
+        p[:controller] == 'watches' || p[:controller] == 'match_reviews'
     },
     :messages => Proc.new { |p|
       p[:controller] == 'messages' || (p[:controller] == 'posts' && p[:action] == 'related') || p[:controller] == 'broadcasts'

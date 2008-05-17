@@ -30,7 +30,7 @@ module CalendarHelper
     end
   end
   
-  def date_div_link(date, entity)
+  def date_div_link(date, entity=nil)
     content = ''
     content << %(
     <div class="date">

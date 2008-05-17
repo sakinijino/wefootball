@@ -42,23 +42,23 @@ class UserTeamObserver < ActiveRecord::Observer
   def after_destroy(user_team)
     tids = Training.find_all_by_team_id(user_team.team_id, 
       :conditions => ["start_time > ?", Time.now]).map {|t| t.id}
-    TrainingJoin.destroy_all(["user_id = ? and (#{(['training_id = ?']*tids.size).join(' or ')})", 
-        user_team.user_id, *tids]) if tids.size > 0
+    TrainingJoin.destroy_all(["user_id = ? and training_id in (?)", 
+        user_team.user_id, tids]) if tids.size > 0
     
     mids = Match.find(:all,
       :conditions => ["(host_team_id = ? or guest_team_id = ?) and start_time > ?", 
         user_team.team_id, 
         user_team.team_id, 
         Time.now]).map {|t| t.id}
-    MatchJoin.destroy_all(["user_id = ? and team_id = ? and (#{(['match_id = ?']*mids.size).join(' or ')})", 
-        user_team.user_id, user_team.team_id, *mids]) if mids.size > 0
+    MatchJoin.destroy_all(["user_id = ? and team_id = ? and match_id in (?)", 
+        user_team.user_id, user_team.team_id, mids]) if mids.size > 0
     
     mids = SidedMatch.find(:all,
       :conditions => ["host_team_id = ? and start_time > ?", 
         user_team.team_id, 
         Time.now]).map {|t| t.id}
-    SidedMatchJoin.destroy_all(["user_id = ? and (#{(['match_id = ?']*mids.size).join(' or ')})", 
-        user_team.user_id, *mids]) if mids.size > 0
+    SidedMatchJoin.destroy_all(["user_id = ? and match_id in (?)", 
+        user_team.user_id, mids]) if mids.size > 0
   end
   
   def after_update(user_team)
@@ -69,15 +69,15 @@ class UserTeamObserver < ActiveRecord::Observer
         user_team.team_id, 
         Time.now]).map {|t| t.id}
     MatchJoin.update_all(["position = ?", nil], 
-      ["user_id = ? and team_id = ? and (#{(['match_id = ?']*mids.size).join(' or ')})", 
-        user_team.user_id, user_team.team_id, *mids]) if mids.size > 0
+      ["user_id = ? and team_id = ? and match_id in (?)", 
+        user_team.user_id, user_team.team_id, mids]) if mids.size > 0
     
     mids = SidedMatch.find(:all,
       :conditions => ["host_team_id = ? and start_time > ?", 
         user_team.team_id, 
         Time.now]).map {|t| t.id}
     SidedMatchJoin.update_all(["position = ?", nil], 
-      ["user_id = ? and (#{(['match_id = ?']*mids.size).join(' or ')})", 
-        user_team.user_id, *mids]) if mids.size > 0
+      ["user_id = ? and match_id in (?)", 
+        user_team.user_id, mids]) if mids.size > 0
   end
 end

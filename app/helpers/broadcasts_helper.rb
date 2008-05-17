@@ -36,11 +36,12 @@ module BroadcastsHelper
       qut = %(#{link_to(h(bc.user.nickname), user_view_path(bc.user_id))}要去#{
             link_to "随便踢踢", bc.activity})
       dtal = %(#{bc.activity.start_time.strftime("%m月%d日 %H:%M")} - #{bc.activity.end_time.strftime("%H:%M")}, #{h(bc.activity.location)})
+      
     when WatchJoinBroadcast
       l_icon = user_image_link bc.user, :class=>"icon l_icon", :thumb => :small
       qut = %(#{link_to(h(bc.user.nickname), user_view_path(bc.user_id))}要去#{
-            link_to "观看#{bc.watch.official_match.host_team.shortname}
-            V.S. #{bc.watch.official_match.guest_team.shortname}",watch_path(bc.activity_id)
+            link_to "看#{bc.watch.official_match.host_team_name}
+            V.S. #{bc.watch.official_match.guest_team_name}",watch_path(bc.activity_id)
           })
       dtal = %(#{bc.activity.start_time.strftime("%m月%d日 %H:%M")} - #{bc.activity.end_time.strftime("%H:%M")}, #{h(bc.activity.location)})
     
@@ -48,7 +49,7 @@ module BroadcastsHelper
       l_icon = user_image_link bc.user, :class=>"icon l_icon", :thumb => :small
       qut = %(#{link_to(h(bc.user.nickname), user_view_path(bc.user_id))}觉得#{
             link_to "#{bc.match_review.title}",match_review_path(bc.activity_id)
-          }写得不错)
+          }这篇球评写得不错)
       dtal = %(#{truncate(bc.match_review.content,50)})        
       
     when SidedMatchCreationBroadcast
@@ -61,8 +62,8 @@ module BroadcastsHelper
     when MatchReviewCreationBroadcast
       l_icon = user_image_link bc.user, :class=>"icon l_icon", :thumb => :small
 #      r_icon = team_image_link bc.team, :thumb=>:small, :class=>"icon r_icon"
-      qut = %(#{link_to(h(bc.user.nickname), user_view_path(bc.user_id))}写了一篇球评:#{
-            link_to(h(bc.match_review.title), match_review_path(bc.match_review_id))
+      qut = %(#{link_to(h(bc.user.nickname), user_view_path(bc.user_id))}写了一篇球评: #{
+            link_to(h(bc.match_review.title), match_review_path(bc.activity_id))
           })
       dtal = %(#{truncate(bc.match_review.content,50)})      
       

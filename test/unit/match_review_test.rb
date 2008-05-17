@@ -42,4 +42,25 @@ class MatchReviewTest < ActiveSupport::TestCase
     end
     end
   end
+  
+  def test_like_by
+    MatchReviewRecommendation.destroy_all
+    
+    mrr = MatchReviewRecommendation.new
+    mrr.user_id = users(:saki).id
+    mrr.match_review_id = match_reviews(:saki_1).id
+    mrr.status = 1
+    mrr.save!
+    mrr = MatchReviewRecommendation.new
+    mrr.user_id = users(:mike1).id
+    mrr.match_review_id = match_reviews(:saki_1).id
+    mrr.status = 0
+    mrr.save!
+    assert match_reviews(:saki_1).like_by?(users(:saki))
+    assert !match_reviews(:saki_1).like_by?(users(:mike1))
+    assert !match_reviews(:saki_1).like_by?(users(:aaron))
+    assert !match_reviews(:saki_1).dislike_by?(users(:saki))
+    assert match_reviews(:saki_1).dislike_by?(users(:mike1))
+    assert !match_reviews(:saki_1).dislike_by?(users(:aaron))
+  end
 end

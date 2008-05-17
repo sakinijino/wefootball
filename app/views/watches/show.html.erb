@@ -1,26 +1,57 @@
 <div id="wide_left_content" class="sect">
   <div class="sect">
     <h2><%=h @title%></h2>
-    <table class="om">
-    <tr>
-      <td><%= official_team_icon(@official_match.host_team)%></td>
-      <td class="detail">
-        <div class="om_result">
-          <%if @official_match.finished? && !@official_match.host_team_goal.nil? && !@official_match.guest_team_goal.nil?%>
-            <%if @official_match.pk?%>
-              <%= @official_match.host_team_goal%>(<%= @official_match.host_team_pk_goal%>)
-              :
-              <%= @official_match.guest_team_goal%>(<%= @official_match.guest_team_pk_goal%>)
-            <%else%>
-              <%= @official_match.host_team_goal%> : <%= @official_match.guest_team_goal%>
-            <%end%>
-          <%end%>
-        </div>
-        <span>时间: </span><%= @official_match.start_time.strftime("%m月%d日 %H:%M")%><br />
-        <span>地点: </span><%= @official_match.location %>
-      </td>
-      <td><%= official_team_icon(@official_match.guest_team)%></td>
-    </tr>
-    </table>
+    <div class="activities">
+      <%=date_div_link @watch.start_time, @user%>
+      <div class="detail">
+        <span>时间: </span><%= @watch.start_time.strftime("%H:%M")%>-<%=@watch.end_time.strftime("%H:%M")%><br />
+        <span>地点: </span><%= @watch.location %><br />
+        <%if logged_in?%>
+          <br />
+          <span>我的状态: </span>
+          <%= @watch.join_status_text current_user%>&nbsp;&nbsp;&nbsp;
+          <%links = []%>
+          <% links_text = @watch.join_links_text current_user%>
+          <% links << link_to(links_text[0], watch_watch_joins_path(@watch), :method=>'post') if @watch.can_be_joined_by?(current_user)%>
+          <% links << watch_quit_link_by_user(@watch, current_user, links_text[1]) if @watch.can_be_quited_by?(current_user)%>
+          <%= links_with_sticks links%>
+        <%end%>
+      </div>
+      <div class="cb"></div>
+    </div>
+    <%if logged_in?%>
+      <div class="control">
+        <%links = []%>
+        <%if @watch.can_be_edited_by?(current_user)%>
+          <%links << " #{link_to '修改看球活动的信息', edit_watch_path(@watch)}"%>
+        <%end%>
+        <%= links_with_sticks links%>
+      </div>
+    <%end%>
+  </div>
+  <%if !@watch.description.blank?%>
+  <div class="sect">
+      <h2>比赛说明</h2>
+      <%=simple_format auto_link(h(@watch.description), :urls)%>
+  </div>
+  <%end%>
+</div>
+
+<div id="narrow_right_content">
+  <h2>比赛信息</h2>
+  <div class="sect mreview_minfo">
+    <%=render :partial=>'match_reviews/match_info', :object => @official_match%>
+  </div>
+
+  <ul class="sidebar_menu">
+    <li> > <%= link_to('返回比赛详情', @official_match)%></li>
+  </ul>
+
+  <div class="sect">
+    <h2>去看球的有 <%= link_to "(更多...)",users_watch_path(@watch.id) %></h2>
+    <%= user_icon(@users)%>
+    <div class="cb"></div>
   </div>
 </div>
+
+<div class="cb"></div>

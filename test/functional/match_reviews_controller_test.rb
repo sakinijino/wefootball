@@ -28,7 +28,7 @@ class MatchReviewsControllerTest < ActionController::TestCase
   def test_get_show_can_reply
     login_as :quentin
     get :show, :id => match_reviews(:saki_1).id
-    assert_select "#content form[action=#{match_review_match_review_replies_path(assigns(:match_review), :page => 1)}]"
+    assert_select "#content form[action=#{match_review_match_review_replies_path(assigns(:match_review), :page => 1, :anchor=>'reply_form')}]"
   end
   
   def test_get_show_can_not_reply

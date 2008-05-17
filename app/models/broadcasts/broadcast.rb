@@ -5,13 +5,13 @@ class Broadcast < ActiveRecord::Base
     team_ids = user.teams.map{|item| item.id}
     if friend_ids.size > 0
       if team_ids.size > 0
-        sql_condition = ["(#{(['user_id = ?']*friend_ids.size).join(' or ')}) or (#{(['team_id = ?']*team_ids.size).join(' or ')})", friend_ids, team_ids].flatten
+        sql_condition = ["user_id in (?) or team_id in (?)", friend_ids, team_ids]
       else
-        sql_condition = ["(#{(['user_id = ?']*friend_ids.size).join(' or ')})", friend_ids].flatten
+        sql_condition = ["user_id in (?)", friend_ids]
       end
     else
       if team_ids.size > 0
-        sql_condition = ["(#{(['team_id = ?']*team_ids.size).join(' or ')})", team_ids].flatten
+        sql_condition = ["team_id in (?)", team_ids]
       else
         return []
       end      

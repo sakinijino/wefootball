@@ -4,9 +4,7 @@ class WatchJoinsControllerTest < ActionController::TestCase
 
   def test_unlogin
     post :create
-    assert_redirected_to new_session_path    
-    get :select_new_admin
-    assert_redirected_to new_session_path     
+    assert_redirected_to new_session_path       
     delete :destroy_admin
     assert_redirected_to new_session_path    
     delete :destroy
@@ -18,7 +16,7 @@ class WatchJoinsControllerTest < ActionController::TestCase
     
     assert_equal 0, official_matches(:one).watch_count
     assert_equal 0, official_matches(:one).watch_join_count    
-    w = Watch.new(:start_time=>Time.now, :location=>'yiti')
+    w = Watch.new(:start_time=>Time.now, :end_time=>Time.now.since(3600), :location=>'yiti')
     w.official_match = official_matches(:one)
     w.save!
     official_matches(:one).reload
@@ -39,7 +37,7 @@ class WatchJoinsControllerTest < ActionController::TestCase
   def test_should_not_create
     login_as :mike1
     
-    w = Watch.new(:start_time=>Time.now, :location=>'yiti')
+    w = Watch.new(:start_time=>Time.now, :end_time=>Time.now.since(3600), :location=>'yiti')
     w.official_match = official_matches(:one)
     w.save!
     post :create, :watch_id=>w.id
@@ -72,7 +70,7 @@ class WatchJoinsControllerTest < ActionController::TestCase
   def test_should_destroy_with_only_one_user
     login_as :mike1
     
-    w = Watch.new(:start_time=>Time.now, :location=>'yiti')
+    w = Watch.new(:start_time=>Time.now, :end_time=>Time.now.since(3600), :location=>'yiti')
     w.official_match = official_matches(:one)
     w.admin = users(:mike1)
     w.save!
@@ -96,11 +94,38 @@ class WatchJoinsControllerTest < ActionController::TestCase
     w = watches(:one)
     assert_equal users(:saki), w.admin
     
-    wj = WatchJoin.find_by_user_id(users(:aaron))
-    delete :destroy_admin, :watch_join_id=>wj.id
+    wj = w.watch_joins.find_by_user_id(users(:aaron))
+    delete :destroy_admin, :id=>wj.id
     w.reload
     assert_equal users(:aaron), w.admin
     assert_equal nil, WatchJoin.find_by_user_id(users(:saki))
     assert_redirected_to watch_path(w)
   end  
+  
+  def test_destroy_admin_noauth
+    login_as :aaron 
+    w = watches(:one)  
+    wj = w.watch_joins.find_by_user_id(users(:aaron))
+    delete :destroy_admin, :id=>wj.id
+    assert_fake_redirected
+  end
+  
+  def test_destroy_admin_with_same_admin
+    login_as :saki
+    w = watches(:one)  
+    wj = w.watch_joins.find_by_user_id(users(:saki))
+    delete :destroy_admin, :id=>wj.id
+    assert_fake_redirected
+  end
+  
+  def test_destroy_admin_with_user_not_in_watch
+    wj = WatchJoin.new
+    wj.user = users(:mike1)
+    wj.watch = watches(:two)
+    wj.save!
+    
+    login_as :saki
+    delete :destroy_admin, :id=>wj.id
+    assert_fake_redirected
+  end
 end

@@ -81,14 +81,8 @@ class PostsController < ApplicationController
     @replies = @post.replies.paginate(:page => params[:page], :per_page => REPLIES_PER_PAGE)
     @can_reply = logged_in? && @post.can_be_replied_by?(current_user)
     @team = @post.team
-    @activity = @post.activity
-    
-    if (logged_in? && current_user.is_team_member_of?(@team))
-      @related_posts = @team.posts.find(:all, :limit => 20) - [@post]
-    else
-      @related_posts = @team.posts.find(:all, :conditions => ['is_private = ?', false], :limit => 20) - [@post]
-    end
-    
+    @activity = @post.activity  
+    @related_posts = @post.related(logged_in? ? current_user : nil, :limit => 20) 
     @title = @post.title
     render :layout => post_layout(@post)
   end

@@ -4,7 +4,7 @@
 <p><label>客队</label><br/>
 <%= f.select :guest_official_team_id, (OfficialTeam.find :all, :order=>'name').map {|t| [h(t.name), t.id] } %>
 
-<p><label for="start_time">时间</label><br/>
+<p><label for="start_time">时间 <span class="optional">(北京时间)</span></label><br/>
 <%= f.datetime_select :start_time, :start_year => Date.today.year, :end_year => 1.year.since.year, :use_month_numbers => true, :minute_step=>15 %></p>
 
 <p><label for="location">地点 <span class="optional">(可选)</span></label><br/>

@@ -1,25 +1,47 @@
-<div id="wide_left_content" class="sect">
+<div id="wide_left_content">
   <div class="sect">
     <h2><%=h @title%></h2>
     <table class="om">
-    <tr>
-      <td><%= official_team_icon(@official_match.host_team)%></td>
-      <td class="detail">
-        <div class="om_result">
-          <%=@official_match.result_text%>
-        </div>
-        <span>时间: </span><%= @official_match.start_time.strftime("%m月%d日 %H:%M")%><br />
-        <%if !@official_match.location.blank?%>
-          <span>地点: </span><%= @official_match.location %>
-        <%end%>
-      </td>
-      <td><%= official_team_icon(@official_match.guest_team)%></td>
-    </tr>
+      <tr>
+        <td><%= official_team_icon(@official_match.host_team)%></td>
+        <td class="detail">
+          <div class="om_result">
+            <%=@official_match.result_text%>
+          </div>
+          <span>比赛时间: </span><%= @official_match.start_time.strftime("%m月%d日 %H:%M")%><br />
+          <%if !@official_match.location.blank?%>
+            <span>比赛地点: </span><%= @official_match.location %>
+          <%end%>
+        </td>
+        <td><%= official_team_icon(@official_match.guest_team)%></td>
+      </tr>
     </table>
-    <%if @is_editor%> 
+    <div class="control">
+      <%links = []%>
+      <% if @official_match.watch_join_count > 0%>
+        <%links << "共有#{@official_match.watch_join_count}人要看这场比赛" %>
+      <%else%>
+        <%links << "还没有人要看这场比赛" %>
+      <%end%>
+      <%= links_with_sticks links%>
+    </div>
+    <div class="cb"></div>
+    <br/>
+    <div class="control">
+      <%links = []%>
+      <% if @official_match.watch_count > 0%>
+        <%links << "这场比赛下有#{link_to "#{@official_match.watch_count}个看球活动", official_match_watches_path(@official_match)}" %>
+      <%end%>
+      <%links << "#{link_to "新建看球活动", new_official_match_watch_path(@official_match)}" if logged_in?%>
+      <%= links_with_sticks links%>
+    </div>
+    <div class="cb"></div>
+    <%if @is_editor%>
+      <br/>
       <div class="control">
         <%links = []%>
-        <%links << "#{link_to '修改比赛信息', edit_official_match_path(@official_match)}"%>
+        <%links << "#{link_to '修改比赛信息', edit_official_match_path(@official_match)}" %>
+        <%links << "#{link_to '新建比赛', new_official_match_path}" %>
         <%= links_with_sticks links%>
       </div>
       <div class="cb"></div>
@@ -32,7 +54,7 @@
   </div>  
   <%end%>
 
-  <div id="wide_left_content" class="sect">
+  <div class="sect">
     <h2>最受欢迎的球评 <%= link_to "(发表新球评)", new_official_match_match_review_path(@official_match)%></h2>
     <%if @reviews.length > 0%>
       <%=render :partial=>'match_reviews/match_review_list', :object=>@reviews%>
@@ -48,6 +70,19 @@
       </div>
     <%end%>
   </div>
+</div>
+
+<div id="narrow_right_content" class="activities sect">
+  <h2>本场比赛下的看球活动 <%= link_to "(共#{@official_match.watch_count}个...)", official_match_watches_path(@official_match) %></h2>
+  <%@watches.each do |w|%>
+    <div class="simple_watch_activity">
+      <%= w.start_time.strftime('%m月%d日 %H:%M')%> - <%= w.end_time.strftime('%H:%M')%>
+      <br/>
+      <%= h w.location %>,
+      <%= link_to "#{h w.watch_join_count}人", users_watch_path(w) %>参加&nbsp;&nbsp;&nbsp;
+      <div class="control"><%= link_to('> 详情', w)%></div>
+    </div>
+  <%end%>
 </div>
   
 <div class="cb"></div>

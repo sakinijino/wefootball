@@ -1,0 +1,26 @@
+<div id="wide_left_content" class="sect">
+  <h2><%= h @title%></h2>
+  <%@watches.each do |w|%>
+    <div class="activities" style="padding-left: 10px">
+      <%=date_div_link w.start_time%>
+      <div class="activity_list">
+        <%= render :partial => 'shared/activity', :object => w%>
+      </div>
+      <div class="cb"></div>
+    </div>
+  <%end%>
+  <%= will_paginate @watches %>
+</div>
+
+<div id="narrow_right_content">
+  <h2>比赛信息</h2>
+  <div class="sect mreview_minfo">
+    <%=render :partial=>'match_reviews/match_info', :object => @official_match%>
+  </div>
+
+  <ul class="sidebar_menu">
+    <li> > <%= link_to('返回比赛详情', @official_match)%></li>
+  </ul>
+</div>
+
+<div class="cb"></div>

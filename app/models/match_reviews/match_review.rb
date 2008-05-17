@@ -20,6 +20,20 @@ class MatchReview < ActiveRecord::Base
   def can_be_destroyed_by?(user)
     self.user_id == get_user_id(user)
   end
+  
+  def recommendation_count
+    like_count + dislike_count
+  end
+  
+  def like_by?(user)
+    mr = match_review_recommendations.find_by_user_id(user)
+    mr != nil && mr.status == 1
+  end
+  
+  def dislike_by?(user)
+    mr = match_review_recommendations.find_by_user_id(user)
+    mr != nil && mr.status == 0
+  end
 
 private
   def get_user_id(user)

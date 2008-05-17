@@ -30,8 +30,20 @@ class Post < ActiveRecord::Base
   end
   
   def can_be_destroyed_by?(user)
-    self.user_id == get_user_id(user) || 
-      UserTeam.find_by_user_id_and_team_id_and_is_admin(get_user_id(user), self.team_id, true) != nil
+    self.user_id == get_user_id(user) || admin?(user) 
+  end
+  
+  
+  def admin?(user)
+    UserTeam.find_by_user_id_and_team_id_and_is_admin(get_user_id(user), self.team_id, true) != nil
+  end
+  
+  def related(user, options={})
+    if (user!=nil && user.is_team_member_of?(team))
+      team.posts.find(:all, options) - [self]
+    else
+      team.posts.public(options) - [self]
+    end
   end
   
   def activity
@@ -51,8 +63,12 @@ class Post < ActiveRecord::Base
   def img_title
     activity_id.nil? ? nil : self.class::IMG_TITLE
   end
+  
+  def private_text
+    '仅队内可见'
+  end
 
-private
+protected
   def get_user_id(user)
     case user
     when User

@@ -33,7 +33,8 @@ class MatchReviewsController < ApplicationController
     @match = @match_review.match
     
     @title = "#{@match_review.title}"
-    render :layout => default_layout
+    @user = @match_review.user
+    render :layout => 'user_layout'
   end
 
   def new
@@ -63,7 +64,8 @@ class MatchReviewsController < ApplicationController
     else
       @match = @match_review.match
       @title = "修改球评"
-      render :layout => default_layout
+      @user = @match_review.user
+      render :layout => 'user_layout'
     end
   end
 
@@ -87,6 +89,7 @@ class MatchReviewsController < ApplicationController
     if @match_review.save
       redirect_to match_review_path(@match_review)
     else
+      @user = @match_review.user
       render :action => "new", :layout => match_layout
     end
   end
@@ -100,7 +103,8 @@ class MatchReviewsController < ApplicationController
       redirect_to match_review_path(@match_review)
     else
       @match = @match_review.match
-      render :action => "edit", :layout => default_layout
+      @user = @match_review.user
+      render :action => "edit", :layout => 'user_layout'
     end
   end
 

@@ -1,0 +1,32 @@
+<table class="om">
+  <tr>
+    <td><%= official_team_icon(match_info.host_team)%></td>
+    <td class="detail">
+      <div class="om_result">
+        <%=match_info.result_text%>
+      </div>
+      <span>时间: </span><%= match_info.start_time.strftime("%m月%d日 %H:%M")%>&nbsp;&nbsp;&nbsp;&nbsp;
+      <%= link_to '比赛详情', match_info%>
+    </td>
+    <td><%= official_team_icon(match_info.guest_team)%></td>
+  </tr>
+</table>
+<div class="control">
+  <%links = []%>
+  <% if match_info.watch_join_count > 0%>
+    <%links << "共有#{match_info.watch_join_count}人要看这场比赛" %>
+  <%else%>
+    <%links << "还没有人要看这场比赛" %>
+  <%end%>
+  <%= links_with_sticks links%>
+</div>
+<div class="cb"></div>
+<div class="control">
+  <%links = []%>
+  <% if match_info.watch_count > 0%>
+    <%links << "这场比赛下有#{link_to "#{match_info.watch_count}个看球活动", official_match_watches_path(match_info)}" %>
+  <%end%>
+  <%links << "#{link_to "新建看球活动", new_official_match_watch_path(match_info)}" if logged_in?%>
+  <%= links_with_sticks links%>
+</div>
+<div class="cb om_sprt"></div>

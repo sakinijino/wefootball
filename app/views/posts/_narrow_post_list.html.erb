@@ -9,7 +9,7 @@
   <tr>
     <td><%=post_icon_link post%></td>
     <td><%=h post.user.nickname %></td>
-    <td><%=link_to h(post.title), post_path(post)  %><%="<span class='private'>&nbsp;&nbsp;-&nbsp;&nbsp;(仅队内可见)</span>" if post.is_private%></td>
+    <td><%=link_to h(post.title), post_path(post)  %><%="<span class='private'>&nbsp;&nbsp;-&nbsp;&nbsp;(#{post.private_text})</span>" if post.is_private%></td>
   </tr>
 <% end %>
 </table>

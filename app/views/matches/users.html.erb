@@ -7,6 +7,21 @@
 
 <div id="narrow_right_content" class="sect">
   <h2></h2>
-  <%=render :partial=>'sidebar_menus/team_view_match_users'%>
+  <ul class="sidebar_menu">
+    <li <%= selected_class_sidebar_menu_item(:action=>'joined_users', :controller=>'matches')%>>
+      > <%= link_to("代表#{h @team.shortname}参加这次比赛的人", joined_users_match_path(@match,:team_id=>@team.id)) %>
+    </li>
+    <li <%= selected_class_sidebar_menu_item(:action=>'undetermined_users', :controller=>'matches')%>>
+      > <%= link_to("没表态是否代表#{h @team.shortname}参加这次比赛的人", undetermined_users_match_path(@match,:team_id=>@team.id)) %>
+    </li>
+    <li class='seperate'>
+    </li>
+    <li>
+      > <%= link_to "返回比赛", match_path(@match) %>
+    </li>
+    <li>
+      > <%= link_to "返回#{h @team.shortname}首页", team_view_path(@team) %>
+    </li>
+  </ul>
 </div>
 <div class="cb"></div>

@@ -12,17 +12,39 @@
 
 <div class="cb"></div>
 
-<%if logged_in?%>
-<div class="control">
 <%if match_review.is_a?(MatchReview)%>
-  <%links = []%>
-  <%links << "> #{link_to('修改', edit_match_review_path(match_review))}" if match_review.can_be_modified_by?(current_user)%>
-  <%links << "> #{link_to('删除',  match_review_path(match_review.id), :method=>"delete", :confirm => '真的删除球评吗？')}" if match_review.can_be_destroyed_by?(current_user)%>
-  <%= links_with_sticks links%>
-<%elsif match_review.is_a?(MatchReviewReply)%>
-  <%= %(> #{link_to "删除", match_review_match_review_reply_path(parent, match_review.id), :method=>"delete", :confirm => '真的删除回复吗？'}) if match_review.can_be_destroyed_by?(current_user) %>
+  <div class="recomm">
+    <%= match_review.like_count%>/<%= match_review.recommendation_count%>人觉得这篇球评写得不错
+  </div>
+  <div class="cb"></div>
 <%end%>
-</div>
+
+<%if logged_in?%>
+  <div class="recomm">
+  <%if match_review.is_a?(MatchReview)%>
+    <%if match_review.like_by?(current_user)%>
+      我喜欢这篇球评
+    <%end%>
+    <%if match_review.dislike_by?(current_user)%>
+      我不喜欢这篇球评
+    <%end%>
+    <%links = []%>
+    <%links << "#{link_to('我喜欢', match_review_match_review_recommendations_path(match_review, :status=>1), :method=>"post")}" if !match_review.like_by?(current_user)%>
+    <%links << "#{link_to('我不喜欢', match_review_match_review_recommendations_path(match_review, :status=>0), :method=>"post")}" if !match_review.dislike_by?(current_user)%>
+    <%= links_with_sticks links%>
+  <%end%>
+  </div>
+  <div class="cb"></div>
+  <div class="control">
+  <%if match_review.is_a?(MatchReview)%>
+    <%links = []%>
+    <%links << "> #{link_to('修改', edit_match_review_path(match_review))}" if match_review.can_be_modified_by?(current_user)%>
+    <%links << "> #{link_to('删除',  match_review_path(match_review.id), :method=>"delete", :confirm => '真的删除球评吗？')}" if match_review.can_be_destroyed_by?(current_user)%>
+    <%= links_with_sticks links%>
+  <%elsif match_review.is_a?(MatchReviewReply)%>
+    <%= %(> #{link_to "删除", match_review_match_review_reply_path(parent, match_review.id), :method=>"delete", :confirm => '真的删除回复吗？'}) if match_review.can_be_destroyed_by?(current_user) %>
+  <%end%>
+  </div>
 <%end%>
 
 </div>

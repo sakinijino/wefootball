@@ -23,7 +23,7 @@
     <%else%>
       <%= time_status_text activity%>&nbsp;&nbsp;&nbsp;
     <%end%>
-    <%links << link_to('详情', training_path(activity))%>
+    <%links << link_to('详情', activity)%>
     <%= links_with_sticks links%>
   </div>
   <div class="activity_icon">
@@ -49,7 +49,7 @@
     <%else%>
       <%= time_status_text activity%>&nbsp;&nbsp;&nbsp;
     <%end%>
-    <%links << link_to('详情', sided_match_path(activity))%>
+    <%links << link_to('详情', activity)%>
     <%= links_with_sticks links%>
   </div>
   <div class="activity_icon">
@@ -61,7 +61,7 @@
 <%elsif activity.class == Play%>
 <div class="activity play_activity">
   <div class="content">
-    去<%= link_to_if !activity.football_ground_id.nil?, h(activity.location), football_ground_path(activity.football_ground_id)%>随便踢踢
+    去<%= location_link activity.location, activity.football_ground_id%>随便踢踢
     <br/><br/>
     <%= activity.start_time.strftime('%H:%M')%>-<%= activity.end_time.strftime('%H:%M')%>
     <br/><br/>
@@ -74,7 +74,7 @@
     <%else%>
       <%= time_status_text activity%>&nbsp;&nbsp;&nbsp;
     <%end%>
-    <%links << link_to('详情', play_path(activity))%>
+    <%links << link_to('详情', activity)%>
     <%= links_with_sticks links%>
   </div>
   <div class="activity_icon">
@@ -83,6 +83,33 @@
     <%else%>
       <%= user_image_link(activity.users.find(:first)) %>
     <%end%>
+  </div>
+</div>
+<%elsif activity.class == Watch%>
+<div class="activity match_activity">
+  <div class="content">
+    <%= link_to "#{h activity.official_match.host_team_name} V.S. #{h activity.official_match.guest_team_name}", activity.official_match%>的看球活动
+    <br/><br/>
+    <%= activity.start_time.strftime('%H:%M')%>-<%= activity.end_time.strftime('%H:%M')%>,
+    <%= h activity.location %>,
+    <%= link_to "#{h activity.watch_join_count}人", users_watch_path(activity) %>参加
+    <br/><br/>
+    <%links = []%>
+    <%if display_status%>
+      <%= time_status_text activity%>, <%= activity.join_status_text current_user%>&nbsp;&nbsp;&nbsp;
+      <% links_text = activity.join_links_text current_user%>
+      <% links << link_to(links_text[0], watch_watch_joins_path(activity), :method=>'post') if activity.can_be_joined_by?(current_user)%>
+          <% links << watch_quit_link_by_user(activity, current_user, links_text[1]) if activity.can_be_quited_by?(current_user)%>
+    <%else%>
+      <%= time_status_text activity%>&nbsp;&nbsp;&nbsp;
+    <%end%>
+    <%links << link_to('详情', activity)%>
+    <%= links_with_sticks links%>
+  </div>
+  <div class="activity_icon">
+    <%= official_team_image_tag activity.official_match.host_team, :class=>"host_icon" %>
+    <div class="vs" title="V.S."></div>
+    <%= official_team_image_tag activity.official_match.guest_team, :class=>"guest_icon" %>
   </div>
 </div>
 <%elsif activity.class == Match %>
@@ -113,11 +140,11 @@
       <%else%>
         <%= time_status_text activity%>&nbsp;&nbsp;&nbsp;
       <%end%>
-      <%links << link_to('详情', match_path(activity))%>
+      <%links << link_to('详情', activity)%>
       <%= links_with_sticks links%>
     <%else%>
       <%= time_status_text activity%>
-      <%= link_to('详情', match_path(activity))%>
+      <%= link_to('详情', activity)%>
       <br/><br/>
     </div>
     <div class="content" style="width: 400px">

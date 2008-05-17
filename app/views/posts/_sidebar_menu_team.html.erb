@@ -1,0 +1,18 @@
+<ul class="sidebar_menu"> 
+
+  <% if logged_in? && current_user.is_team_member_of?(@team)%>
+    <li <%= selected_class_sidebar_menu_item(:action=>'new')%>> 
+      > <%= link_to '发言', new_team_post_path(@team) %>
+    </li>
+  <%end%>
+  
+  <li <%= selected_class_sidebar_menu_item(:action=>'index')%>>
+  > <%= link_to '球队讨论区', team_posts_path(@team) %>
+  </li>
+    
+  <li class="seperate">
+  </li>
+  <li>
+    > <%= link_to '返回球队首页', team_view_path(@team) %>
+  </li>
+</ul>

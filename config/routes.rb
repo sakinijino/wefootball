@@ -1,7 +1,4 @@
 ActionController::Routing::Routes.draw do |map|
-  map.resources :match_review_recommendations
-
-
   # The priority is based upon order of creation: first created -> highest priority.
   
   # Sample of regular route:
@@ -104,8 +101,11 @@ ActionController::Routing::Routes.draw do |map|
     posts.resources :replies
   end
   
-  map.resources :watch_joins, :collection => { :destroy_admin => :delete, :select_new_admin => :get }
-  map.resources :watches  
+  map.resources :watches, :member => {:users=>:get, :select_new_admin => :get} do |watches|
+    watches.resources :watch_joins
+    watches.resources :posts
+  end
+  map.resources :watch_joins, :member => {:destroy_admin => :delete}
   
   map.resources :football_grounds, :collection => { :unauthorize => :get }
   
@@ -116,10 +116,12 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :official_teams, :member => {:update_image => :put}
   map.resources :official_matches do |om|
     om.resources :match_reviews
+    om.resources :watches
   end
   
   map.resources :match_reviews do |mr|
     mr.resources :match_review_replies
+    mr.resources :match_review_recommendations
   end
   
   map.site_index "/", :controller => 'application', :action => 'index'

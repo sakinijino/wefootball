@@ -345,7 +345,7 @@ class User < ActiveRecord::Base
   def admin_teams_count_sum(prop)
     return 0 if self.teams.admin.size <= 0
     admin_team_ids = self.teams.admin.map{|item| item.id}
-    q = {:conditions => ["(#{(['id = ?']*admin_team_ids.size).join(' or ')})", *admin_team_ids]}
+    q = {:conditions => ["id in (?)", admin_team_ids]}
     Team.sum(prop, q)
   end
   

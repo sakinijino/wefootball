@@ -1,5 +1,4 @@
 class Reply < ActiveRecord::Base
-  belongs_to :team
   belongs_to :user
   belongs_to :post, :counter_cache => true
   
@@ -7,13 +6,8 @@ class Reply < ActiveRecord::Base
   
   attr_accessible :content
   
-  def before_create
-    self.team_id = self.post.team_id
-  end
-  
   def can_be_destroyed_by?(user)
-    self.user_id == get_user_id(user) || 
-      UserTeam.find_by_user_id_and_team_id_and_is_admin(get_user_id(user), self.team_id, true) != nil
+    self.user_id == get_user_id(user) || self.post.admin?(user)
   end
 
 private

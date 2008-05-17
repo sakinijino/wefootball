@@ -44,6 +44,11 @@
 
 <div id="right_content">
   <div class="sect">
+    <h2>近期最受关注的比赛 <%=link_to "(更多比赛...)", official_matches_path%></h2>
+    <%= render(:partial => 'official_matches/match_info', :collection => @official_matches)%>
+  </div>
+  
+  <div class="sect">
     <h2>最新的广播</h2>
     <%for bc in @bcs%>
       <%=broadcast_text(bc) %>
@@ -52,7 +57,7 @@
   </div>
 
   <div class="sect">
-    <h2>最近添加的活动</h2>
+    <h2>最近要进行的活动</h2>
     <%= render :partial => 'shared/activities', :object => @activities, :locals=>{:start_date=> @start_time, :end_date=> @end_time}%>
   </div>
 </div>

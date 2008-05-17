@@ -28,6 +28,8 @@
   </ul>
   <ul>
     <li><%= link_to "随便踢踢", new_play_path %></li>
+    <li><%= link_to "看球", official_matches_path %></li>
+    <li><%= link_to "我的球评", user_match_reviews_path(user) %></li>
     <li><%= month_calendar_link('本月活动', Time.now, user)%></li>
     <li><%= day_calendar_link('今日活动', Time.now, user)%></li>
   </ul>
@@ -54,6 +56,7 @@
   <ul></ul>
   <ul></ul>
   <ul>
+    <li><%= link_to "#{user.gender_text}的球评", user_match_reviews_path(user) %></li>
     <li><%= day_calendar_link('今日活动', Time.now, user)%></li>
     <li><%= month_calendar_link('本月活动', Time.now, user)%></li>
   </ul>

@@ -1,15 +1,15 @@
 <div id="wide_left_content" class="sect">
   <h2><%=h(@title)%></h2>
-  <%= user_icon(@players)%>
+  <%= user_icon(@users)%>
   <div class="cb"></div>
-  <%= will_paginate @players %>
+  <%= will_paginate @users %>
 </div>
 
 <div id="narrow_right_content" class="sect">
   <h2></h2>
   <ul class="sidebar_menu">
     <li>
-      > <%= link_to '返回随便踢踢的页面', play_path(@play) %>
+      > <%= link_to '返回看球活动的页面', @watch %>
     </li>
   </ul>
 </div>

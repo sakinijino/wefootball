@@ -558,10 +558,17 @@ div.post .title .name {
 }
 
 div.post div.content {
-  margin-top:10px;
+  margin:10px;
   width:80%;
   overflow:hidden;
   float:left;
+  padding-bottom: 10px;
+}
+
+div.post div.recomm {
+  float:right;
+  margin:0 20px 10px 0;
+  color: #666;
 }
 
 ul.sidebar_menu {
@@ -600,6 +607,7 @@ div.icon_select {
 
 div.wide_icon_select {
   width: 175px;
+  overflow: hidden;
 }
 
 div.icon_select div.icon {
@@ -663,11 +671,25 @@ table.om td.detail span{
   color:#666;
 }
 
-table.om td.detail div.om_result {
+table.om .om_result {
   font-size:32px;
   line-height:60px;
   color:#7E3E0B;
   font-family:Georgia,"Times New Roman",Times,serif;
+}
+
+div.simple_watch_activity {
+  margin: 5px 0 15px 0;
+  border-bottom: 1px solid #ddd;
+  padding: 5px 10px 10px;
+  width: 200px;
+  float: left;
+  overflow: hidden;
+}
+
+div.om_sprt {
+  width: 100%;
+  border-bottom: 1px solid #ddd;
   margin-bottom: 10px;
 }
 

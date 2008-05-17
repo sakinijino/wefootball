@@ -5,14 +5,29 @@ class OfficialMatchesController < ApplicationController
   REVIEW_LIST_LENGTH = 5
   
   def index
-    @official_matches = OfficialMatch.find(:all)
+    @official_matches = OfficialMatch.paginate :conditions => ['end_time > ? and start_time < ?', Time.now, 7.days.since],
+      :order=>'watch_join_count desc, start_time',
+      :page => params[:page],
+      :per_page => 15
+    
+    @watches = Watch.find :all, 
+      :conditions => ['official_match_id in (?)', @official_matches.map{|om| om.id}], 
+      :order=>'watch_join_count desc', 
+      :limit=>15
+    @title = "近期最受关注的比赛"
+    
+    @is_editor = OfficialMatchEditor.is_a_editor?(current_user)
+    render :layout => default_layout
   end
   
   def show
     @official_match = OfficialMatch.find(params[:id])
+    @reviews = @official_match.match_reviews.find(:all, :limit=>REVIEW_LIST_LENGTH, :order=>'score, created_at')
+    @watches = @official_match.watches.find :all, :order=>'watch_join_count desc', :limit=>10
+    
     @is_editor = OfficialMatchEditor.is_a_editor?(current_user)
     @title = "#{@official_match.host_team.name} V.S. #{@official_match.guest_team.name}"
-    @reviews = @official_match.match_reviews.find(:all, :limit=>REVIEW_LIST_LENGTH, :order=>'score, created_at')
+    
     render :layout => default_layout
   end
 

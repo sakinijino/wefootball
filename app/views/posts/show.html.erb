@@ -10,10 +10,10 @@
 
 <%if @can_reply%>
   <div class="sect cb">
-    <h2>回复</h2>
+    <h2 id="reply_form" >回复</h2>
     <%= error_messages_for :reply %>
     <br/>
-    <% form_for :reply, :url => post_replies_path(@post, :page => @replies.current_page) do |f| %>
+    <% form_for :reply, :url => post_replies_path(@post, :page => @replies.current_page, :anchor=>'reply_form') do |f| %>
       <%= f.text_area :content, :rows=>10, :cols=>50 %>
       <br/><br/>
       <%= f.submit "提交" %>
@@ -25,7 +25,7 @@
 <div id="narrow_right_content">
   <div class="sect">
     <h2></h2>
-    <%=render :partial=>'posts/sidebar_menu'%>
+    <%=post_sidebar_menu @activity%>
   </div>
 
   <div class="sect">

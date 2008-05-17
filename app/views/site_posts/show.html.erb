@@ -9,10 +9,10 @@
   </div>
 
   <div class="sect cb">
-    <h2>回复</h2>
+    <h2 id="reply_form">回复</h2>
     <%= error_messages_for :reply %>
     <br/>
-    <% form_for :reply, :url => site_post_site_replies_path(@site_post) do |f| %>
+    <% form_for :reply, :url => site_post_site_replies_path(@site_post, :anchor=>'reply_form') do |f| %>
       <%if !logged_in?%>
         <p><label for="email">你的Email <span class="optional">(可选, 方便WeFootball联系你)</span></label><br/>
         <%= f.text_field :email, :size=>30, :maxlength=>100 %></p>
