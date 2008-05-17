@@ -22,7 +22,9 @@ class OfficialMatchesController < ApplicationController
   
   def show
     @official_match = OfficialMatch.find(params[:id])
-    @reviews = @official_match.match_reviews.find(:all, :limit=>REVIEW_LIST_LENGTH, :order=>'score, created_at')
+    @reviews = @official_match.match_reviews.find(:all, 
+      :limit=>REVIEW_LIST_LENGTH, 
+      :order=>'like_count-dislike_count desc, like_count desc, created_at desc')
     @watches = @official_match.watches.find :all, :order=>'watch_join_count desc', :limit=>10
     
     @is_editor = OfficialMatchEditor.is_a_editor?(current_user)

@@ -54,7 +54,8 @@ class UserViewsController < ApplicationController
     
     @posts = @user.related_posts(:limit=>POST_LIST_LENGTH) if logged_in? && @user.id == self.current_user.id
     @bcs = Broadcast.get_related_broadcasts(@user, :limit=>BROADCAST_LIST_LENGTH) if logged_in? && @user.id == self.current_user.id
-    @reviews = @user.match_reviews.find(:all, :limit=>REVIEW_LIST_LENGTH)
+    @reviews = @user.match_reviews.find(:all, :limit=>REVIEW_LIST_LENGTH,
+      :order => 'created_at desc')
     @title = "#{@user.nickname}的主页"
   end
 end

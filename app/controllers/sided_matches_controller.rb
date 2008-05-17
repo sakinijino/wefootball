@@ -41,7 +41,8 @@ class SidedMatchesController < ApplicationController
       @posts = @match.posts.public :limit=>POSTS_LENGTH
     end
     
-    @reviews = @match.match_reviews.find(:all, :limit=>REVIEW_LIST_LENGTH, :order=>'score, created_at')
+    @reviews = @match.match_reviews.find(:all, :limit=>REVIEW_LIST_LENGTH, 
+      :order=>'like_count-dislike_count desc, like_count desc, created_at desc')
     
     render :layout=>'team_layout'    
   end

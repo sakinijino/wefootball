@@ -36,7 +36,8 @@ class MatchesController < ApplicationController
       :conditions => ["goal > 0"]
     ) if @match.finished?
     
-    @reviews = @match.match_reviews.find(:all, :limit=>REVIEW_LIST_LENGTH, :order=>'score, created_at')
+    @reviews = @match.match_reviews.find(:all, :limit=>REVIEW_LIST_LENGTH, 
+      :order=>'like_count-dislike_count desc, like_count desc, created_at desc')
     render :layout=>'match_layout'
   end
   

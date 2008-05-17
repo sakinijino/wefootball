@@ -20,8 +20,10 @@ class MatchReviewsController < ApplicationController
     
     @title = @match ?  "#{@match.host_team_name} V.S. #{@match.guest_team_name}的球评" : "#{@user.nickname}的球评"
     @reviews = @match ? 
-      @match.match_reviews.paginate(:page => params[:page], :per_page => 15) :
-      @user.match_reviews.paginate(:page => params[:page], :per_page => 15)
+      @match.match_reviews.paginate(:page => params[:page], :per_page => 15, 
+        :order => 'like_count-dislike_count desc, like_count desc, created_at desc') :
+      @user.match_reviews.paginate(:page => params[:page], :per_page => 15,
+        :order => 'created_at desc')
     @match ? render(:layout => match_layout) : render(:action => 'index_user', :layout => "user_layout")
   end
   
