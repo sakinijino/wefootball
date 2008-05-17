@@ -43,6 +43,14 @@ module BroadcastsHelper
             V.S. #{bc.watch.official_match.guest_team.shortname}",watch_path(bc.activity_id)
           })
       dtal = %(#{bc.activity.start_time.strftime("%m月%d日 %H:%M")} - #{bc.activity.end_time.strftime("%H:%M")}, #{h(bc.activity.location)})
+    
+    when MatchReviewRecommendationBroadcast
+      l_icon = user_image_link bc.user, :class=>"icon l_icon", :thumb => :small
+      qut = %(#{link_to(h(bc.user.nickname), user_view_path(bc.user_id))}觉得#{
+            link_to "#{bc.match_review.title}",match_review_path(bc.activity_id)
+          }写得不错)
+      dtal = %(#{truncate(bc.match_review.content,50)})        
+      
     when SidedMatchCreationBroadcast
       l_icon = team_image_link bc.team, :thumb=>:small, :class=>"icon l_icon"
       qut = %(#{link_to(h(bc.team.shortname), team_view_path(bc.team_id))}新建了一场对阵#{

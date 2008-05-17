@@ -4,6 +4,8 @@ class MatchReview < ActiveRecord::Base
   has_many :match_review_replies, :dependent => :destroy
   
   has_many :match_review_creation_broadcasts, :foreign_key=>"activity_id", :dependent => :destroy
+  has_many :match_review_recommendations, :dependent => :destroy
+  has_many :match_review_recommendation_broadcasts, :foreign_key=>"activity_id", :dependent => :destroy  
   
   validates_presence_of     :title, :message => "标题不能为空"
   validates_length_of :title, :maximum =>100, :message => "标题最长为100个字"

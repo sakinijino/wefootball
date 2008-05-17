@@ -61,7 +61,7 @@ Rails::Initializer.run do |config|
                                    :match_join_observer, :match_observer,
                                    :play_join_observer, :sided_match_join_observer,
                                    :sided_match_observer, :training_join_observer, :training_observer,
-                                   :watch_join_observer, :match_review_observer
+                                   :watch_join_observer, :match_review_observer, :match_review_recommendation_observer
 
   # Make Active Record use UTC-base instead of local time
   # config.active_record.default_timezone = :utc

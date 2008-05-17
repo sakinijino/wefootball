@@ -1,0 +1,18 @@
+<p>
+  <b>User:</b>
+  <%=h @match_review_recommendation.user_id %>
+</p>
+
+<p>
+  <b>Review:</b>
+  <%=h @match_review_recommendation.review_id %>
+</p>
+
+<p>
+  <b>Status:</b>
+  <%=h @match_review_recommendation.status %>
+</p>
+
+
+<%= link_to 'Edit', edit_match_review_recommendation_path(@match_review_recommendation) %> |
+<%= link_to 'Back', match_review_recommendations_path %>
