@@ -18,13 +18,11 @@
       <hr />
       <%= link_to '了解一下WeFootball能做些什么？', site_about_path%>
       <br/><br/>
+      看球活动和球评功能上线 - 05.18
+      <br/><br/>
       预告：<a href="http://blog.wefootball.org/2008/5/11/12">看球功能即将推出</a> - 05.11
       <br/><br/>
       <a href="http://blog.wefootball.org/2008/5/8/10">广播功能</a>上线 - 05.08
-      <br/><br/>
-      球队讨论<a href="http://blog.wefootball.org/2008/5/7/9">支持RSS订阅</a> - 05.07
-      <br/><br/>
-      个人和球队的近期活动已<a href="http://blog.wefootball.org/2008/5/7/9">支持iCalendar格式</a> - 05.07
       <br/><br/>
       要给WeFootball提提建议？ 请到<%= link_to '站务论坛', site_posts_path%>留言
     </div>
@@ -44,10 +42,12 @@
 </div>
 
 <div id="right_content">
-  <div class="sect">
-    <h2>近期最受关注的比赛 <%=link_to "(更多比赛...)", official_matches_path%></h2>
-    <%= render(:partial => 'official_matches/match_info', :collection => @official_matches)%>
-  </div>
+  <%if @official_matches.length > 0%>
+    <div class="sect">
+      <h2>近期最受关注的比赛 <%=link_to "(更多比赛...)", official_matches_path%></h2>
+      <%= render(:partial => 'official_matches/match_info', :collection => @official_matches)%>
+    </div>
+  <%end%>
   
   <div class="sect">
     <h2>最新的广播</h2>
