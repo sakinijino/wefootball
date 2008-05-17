@@ -41,6 +41,10 @@ class User < ActiveRecord::Base
             :dependent => :destroy
   has_many :plays, :through=>:play_joins, :extend => ActivityCalendar
   
+  has_many :watch_joins,
+            :dependent => :destroy
+  has_many :watches, :through=>:watch_joins, :extend => ActivityCalendar  
+  
   has_many :sided_match_joins,
             :dependent => :destroy
   has_many :sided_matches, :through=>:sided_match_joins, :extend => ActivityCalendar

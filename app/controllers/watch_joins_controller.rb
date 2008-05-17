@@ -1,85 +1,104 @@
 class WatchJoinsController < ApplicationController
-  # GET /watch_joins
-  # GET /watch_joins.xml
-  def index
-    @watch_joins = WatchJoin.find(:all)
 
-    respond_to do |format|
-      format.html # index.html.erb
-      format.xml  { render :xml => @watch_joins }
-    end
-  end
-
-  # GET /watch_joins/1
-  # GET /watch_joins/1.xml
-  def show
-    @watch_join = WatchJoin.find(params[:id])
-
-    respond_to do |format|
-      format.html # show.html.erb
-      format.xml  { render :xml => @watch_join }
-    end
-  end
-
-  # GET /watch_joins/new
-  # GET /watch_joins/new.xml
-  def new
-    @watch_join = WatchJoin.new
-
-    respond_to do |format|
-      format.html # new.html.erb
-      format.xml  { render :xml => @watch_join }
-    end
-  end
-
-  # GET /watch_joins/1/edit
-  def edit
-    @watch_join = WatchJoin.find(params[:id])
-  end
-
-  # POST /watch_joins
-  # POST /watch_joins.xml
+  before_filter :login_required
+  
   def create
-    @watch_join = WatchJoin.new(params[:watch_join])
-
-    respond_to do |format|
-      if @watch_join.save
-        flash[:notice] = 'WatchJoin was successfully created.'
-        format.html { redirect_to(@watch_join) }
-        format.xml  { render :xml => @watch_join, :status => :created, :location => @watch_join }
-      else
-        format.html { render :action => "new" }
-        format.xml  { render :xml => @watch_join.errors, :status => :unprocessable_entity }
-      end
-    end
+    @watch = Watch.find(params[:watch_id])
+    if !@watch.can_be_joined_by?(current_user)
+      fake_params_redirect
+      return
+    end    
+    @watch_join = WatchJoin.create!(:watch_id=>@watch.id,:user_id=>current_user.id)
+    redirect_to watch_path(@watch) 
   end
+  
+#  def update #重新指定管理员,并删除原有管理员的参加
+#    @wj = WatchJoin.find(params[:id])
+#    @watch = @wj.watch
+#    @new_admin = @wj.user    
+#    if (@watch.admin.id != current_user.id) || (@new_admin.id == current_user.id)
+#      fake_params_redirect
+#      return
+#    end
+#
+#    @watch_join = WatchJoin.find_by_watch_id_and_user_id(@watch.id,current_user.id)   
+#    @watch.admin = @new_admin    
+#
+#    WatchJoin.transaction do
+#      @watch.save!
+#      @watch_join.destroy
+#    end
+#    redirect_to watch_path(@watch)
+#    rescue ActiveRecord::RecordInvalid => e
+#      fake_params_redirect
+#  end
+#
+#  def destroy_admin
+#    @watch = Watch.find(params[:watch_id])
+#    if @watch.admin.id != current_user.id
+#      fake_params_redirect
+#      return
+#    end
+#    #可能需要用缓存计数来取代
+#    @wjs = WatchJoin.paginate_all_by_watch_id(
+#      params[:watch_id],
+#      :include=>[:user],
+#      :page => params[:page], 
+#      :per_page => 50
+#    )
+#    if @wjs.size > 1
+#      @other_wjs = @wjs.reject {|wj| wj.user == current_user}
+#      render :action => 'select_new_admin'
+#    else
+#      @watch_join = WatchJoin.find_by_watch_id_and_user_id(@watch.id,current_user.id)
+#      @watch_join.destroy
+#      redirect_to user_view_path(current_user)      
+#    end      
+#  end
 
-  # PUT /watch_joins/1
-  # PUT /watch_joins/1.xml
-  def update
-    @watch_join = WatchJoin.find(params[:id])
-
-    respond_to do |format|
-      if @watch_join.update_attributes(params[:watch_join])
-        flash[:notice] = 'WatchJoin was successfully updated.'
-        format.html { redirect_to(@watch_join) }
-        format.xml  { head :ok }
-      else
-        format.html { render :action => "edit" }
-        format.xml  { render :xml => @watch_join.errors, :status => :unprocessable_entity }
-      end
-    end
+  def select_new_admin
+    @wjs = WatchJoin.paginate_all_by_watch_id(
+      params[:watch_id],
+      :include=>[:user],
+      :page => params[:page], 
+      :per_page => 50
+    )
+    @other_wjs = @wjs.reject {|wj| wj.user == current_user}    
   end
+  
+  def destroy_admin
+    @wj = WatchJoin.find(params[:watch_join_id])
+    @watch = @wj.watch
+    @new_admin = @wj.user    
+    if (@watch.admin.id != current_user.id) || (@new_admin.id == current_user.id)
+      fake_params_redirect
+      return
+    end
 
-  # DELETE /watch_joins/1
-  # DELETE /watch_joins/1.xml
+    @watch_join = WatchJoin.find_by_watch_id_and_user_id(@watch.id,current_user.id)   
+    @watch.admin = @new_admin    
+
+    WatchJoin.transaction do
+      @watch.save!
+      @watch_join.destroy
+    end
+    redirect_to watch_path(@watch)
+    rescue ActiveRecord::RecordInvalid => e
+      fake_params_redirect    
+  end
+  
   def destroy
-    @watch_join = WatchJoin.find(params[:id])
+    @watch = Watch.find(params[:watch_id])
+    if !@watch.can_be_quited_by?(current_user)
+      fake_params_redirect
+      return
+    end
+    @watch_join = WatchJoin.find_by_watch_id_and_user_id(@watch.id,current_user.id)
     @watch_join.destroy
-
-    respond_to do |format|
-      format.html { redirect_to(watch_joins_url) }
-      format.xml  { head :ok }
+    if @watch.watch_joins.empty?
+      redirect_to user_view_path(current_user)
+    else
+      redirect_to watch_path(@watch)
     end
   end
 end

@@ -4,6 +4,10 @@ class OfficialMatchesController < ApplicationController
 
   REVIEW_LIST_LENGTH = 5
   
+  def index
+    @official_matches = OfficialMatch.find(:all)
+  end
+  
   def show
     @official_match = OfficialMatch.find(params[:id])
     @is_editor = OfficialMatchEditor.is_a_editor?(current_user)

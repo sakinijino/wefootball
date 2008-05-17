@@ -36,13 +36,27 @@ module BroadcastsHelper
       qut = %(#{link_to(h(bc.user.nickname), user_view_path(bc.user_id))}要去#{
             link_to "随便踢踢", bc.activity})
       dtal = %(#{bc.activity.start_time.strftime("%m月%d日 %H:%M")} - #{bc.activity.end_time.strftime("%H:%M")}, #{h(bc.activity.location)})
-      
+    when WatchJoinBroadcast
+      l_icon = user_image_link bc.user, :class=>"icon l_icon", :thumb => :small
+      qut = %(#{link_to(h(bc.user.nickname), user_view_path(bc.user_id))}要去#{
+            link_to "观看#{bc.watch.official_match.host_team.shortname}
+            V.S. #{bc.watch.official_match.guest_team.shortname}",watch_path(bc.activity_id)
+          })
+      dtal = %(#{bc.activity.start_time.strftime("%m月%d日 %H:%M")} - #{bc.activity.end_time.strftime("%H:%M")}, #{h(bc.activity.location)})
     when SidedMatchCreationBroadcast
       l_icon = team_image_link bc.team, :thumb=>:small, :class=>"icon l_icon"
       qut = %(#{link_to(h(bc.team.shortname), team_view_path(bc.team_id))}新建了一场对阵#{
             h(bc.sided_match.guest_team_name)
           }的#{link_to "比赛", bc.activity})
       dtal = %(#{bc.activity.start_time.strftime("%m月%d日 %H:%M")} - #{bc.activity.end_time.strftime("%H:%M")}, #{h(bc.activity.location)})
+
+    when MatchReviewCreationBroadcast
+      l_icon = user_image_link bc.user, :class=>"icon l_icon", :thumb => :small
+#      r_icon = team_image_link bc.team, :thumb=>:small, :class=>"icon r_icon"
+      qut = %(#{link_to(h(bc.user.nickname), user_view_path(bc.user_id))}写了一篇球评:#{
+            link_to(h(bc.match_review.title), match_review_path(bc.match_review_id))
+          })
+      dtal = %(#{truncate(bc.match_review.content,50)})      
       
     when SidedMatchJoinBroadcast
       l_icon = user_image_link bc.user, :class=>"icon l_icon", :thumb => :small

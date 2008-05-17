@@ -40,7 +40,8 @@ class WatchesControllerTest < ActionController::TestCase
                                   :location => 's'}
         assert_redirected_to watch_path(assigns(:watch))
         assert_equal users(:saki), assigns(:watch).admin
-        assert_equal official_matches(:one), assigns(:watch).official_match      
+        assert_equal official_matches(:one), assigns(:watch).official_match
+        assert_equal users(:saki), WatchJoin.find_by_watch_id(assigns(:watch)).user        
       end
     end    
   end  

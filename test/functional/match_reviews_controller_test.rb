@@ -48,7 +48,9 @@ class MatchReviewsControllerTest < ActionController::TestCase
     assert_difference('BiMatchReview.count') do
     assert_difference('matches(:one).match_reviews.reload.length') do
     assert_difference('users(:quentin).match_reviews.reload.length') do
+    assert_difference('MatchReviewCreationBroadcast.count',1) do
       post :create, :match_id=>matches(:one).id, :match_review => { :title => 'Test', :content => '123456'*100}
+    end
     end
     end
     end
@@ -59,7 +61,9 @@ class MatchReviewsControllerTest < ActionController::TestCase
     assert_difference('OfficialMatchReview.count') do
     assert_difference('official_matches(:one).match_reviews.reload.length') do
     assert_difference('users(:quentin).match_reviews.reload.length') do
+    assert_difference('MatchReviewCreationBroadcast.count',1) do      
       post :create, :official_match_id=>official_matches(:one).id, :match_review => { :title => 'Test', :content => '123456'*100}
+    end
     end
     end
     end
@@ -70,7 +74,9 @@ class MatchReviewsControllerTest < ActionController::TestCase
     assert_difference('SidedMatchReview.count') do
     assert_difference('sided_matches(:one).match_reviews.reload.length') do
     assert_difference('users(:quentin).match_reviews.reload.length') do
+    assert_difference('MatchReviewCreationBroadcast.count',1) do      
       post :create, :sided_match_id=>sided_matches(:one).id, :match_review => { :title => 'Test', :content => '123456'*100}
+    end
     end
     end
     end
@@ -93,7 +99,7 @@ class MatchReviewsControllerTest < ActionController::TestCase
 
   def test_should_destroy_match_review
     login_as :saki
-    assert_difference('MatchReview.count', -1) do
+    assert_difference('MatchReview.count', -1) do     
       delete :destroy, :id => match_reviews(:saki_1).id
     end
     assert_redirected_to sided_match_path(sided_matches(:one))
@@ -101,9 +107,29 @@ class MatchReviewsControllerTest < ActionController::TestCase
   
   def test_destroy_match_review_unauth
     login_as :aaron
-    assert_no_difference('MatchReview.count') do
+    assert_no_difference('MatchReview.count') do     
       delete :destroy, :id => match_reviews(:saki_1).id
     end
     assert_fake_redirected
+  end
+  
+  def test_cascade_destroy_broadcast
+    login_as :quentin
+    assert_difference('MatchReview.count') do
+    assert_difference('BiMatchReview.count') do
+    assert_difference('matches(:one).match_reviews.reload.length') do
+    assert_difference('users(:quentin).match_reviews.reload.length') do
+    assert_difference('MatchReviewCreationBroadcast.count',1) do
+      post :create, :match_id=>matches(:one).id, :match_review => { :title => 'Test', :content => '123456'*100}
+    end
+    end
+    end
+    end
+    end
+    assert_difference('MatchReview.count', -1) do
+    assert_difference('MatchReviewCreationBroadcast.count',-1) do       
+      delete :destroy, :id => MatchReview.find_by_match_id_and_user_id(matches(:one).id,users(:quentin).id).id
+    end
+    end    
   end
 end

@@ -1,0 +1,12 @@
+<div class="sect">
+  <h2>请选择一位继任管理员</h2>
+  <%@other_wjs.each do |wj| %>
+    <div class="icon_select wide_icon_select">
+      <%= user_icon(wj.user)%>
+      <div>
+        <%=link_to("提升为管理员",destroy_admin_watch_join_path(wj),:method=>:delete, :confirm => '要选这位成为你的继任者吗？') if ut.can_promote_as_admin_by?(current_user)%>
+      </div>
+    </div>
+  <%end%>
+  <div class="cb"></div>
+</div>

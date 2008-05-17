@@ -1,7 +1,6 @@
 ActionController::Routing::Routes.draw do |map|
-  map.resources :watch_joins
+  map.resources :match_review_recommendations
 
-  map.resources :watches
 
   # The priority is based upon order of creation: first created -> highest priority.
   
@@ -104,6 +103,9 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :posts, :collection => { :related => :get } do |posts|
     posts.resources :replies
   end
+  
+  map.resources :watch_joins, :collection => { :destroy_admin => :delete, :select_new_admin => :get }
+  map.resources :watches  
   
   map.resources :football_grounds, :collection => { :unauthorize => :get }
   
