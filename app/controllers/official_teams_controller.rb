@@ -4,7 +4,7 @@ class OfficialTeamsController < ApplicationController
   
   def index
     @title = "球队列表"
-    @official_teams = OfficialTeam.paginate :page => params[:page], :per_page => 2
+    @official_teams = OfficialTeam.paginate :page => params[:page], :per_page => 50
     render :layout => default_layout
   end
   
