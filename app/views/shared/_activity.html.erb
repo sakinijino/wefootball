@@ -16,14 +16,14 @@
     <br/><br/>
     <%links = []%>
     <%if display_status%>
-      <%= time_status_text activity%>, <%= join_status_text activity%>&nbsp;&nbsp;&nbsp;
-      <% links_text = join_status_links activity%>
+      <%= time_status_text activity%>, <%= activity.join_status_text current_user%>&nbsp;&nbsp;&nbsp;
+      <% links_text = activity.join_links_text current_user%>
       <% links << link_to(links_text[0], training_training_joins_path(activity), :method=>'post') if activity.can_be_joined_by?(current_user)%>
       <% links << link_to(links_text[1], training_training_join_path(activity, 0), :method=>'delete') if activity.can_be_quited_by?(current_user)%>
     <%else%>
       <%= time_status_text activity%>&nbsp;&nbsp;&nbsp;
     <%end%>
-    <%links << link_to('详情', training_path(activity))%>
+    <%links << link_to('详情', activity)%>
     <%= links_with_sticks links%>
   </div>
   <div class="activity_icon">
@@ -33,8 +33,8 @@
 <%elsif activity.class == SidedMatch%>
 <div class="activity match_activity">
   <div class="content">
-    <%= link_to(h(activity.host_team.shortname), team_view_path(activity.host_team_id))%>
-    对阵
+    <%= link_to(h(activity.host_team_name), team_view_path(activity.host_team_id))%>
+    V.S.
     <%=h activity.guest_team_name%>
     <br/><br/>
     <%= activity.start_time.strftime('%H:%M')%>-<%= activity.end_time.strftime('%H:%M')%>,
@@ -42,39 +42,39 @@
     <br/><br/>
     <%links = []%>
     <%if display_status%>
-      <%= time_status_text activity%>, <%= join_status_text activity%>&nbsp;&nbsp;&nbsp;
-      <% links_text = join_status_links activity%>
+      <%= time_status_text activity%>, <%= activity.join_status_text current_user%>&nbsp;&nbsp;&nbsp;
+      <% links_text = activity.join_links_text current_user%>
       <% links << link_to(links_text[0], sided_match_sided_match_joins_path(activity), :method=>'post') if activity.can_be_joined_by?(current_user)%>
       <% links << link_to(links_text[1], sided_match_sided_match_join_path(activity, 0), :method=>'delete') if activity.can_be_quited_by?(current_user)%>
     <%else%>
       <%= time_status_text activity%>&nbsp;&nbsp;&nbsp;
     <%end%>
-    <%links << link_to('详情', sided_match_path(activity))%>
+    <%links << link_to('详情', activity)%>
     <%= links_with_sticks links%>
   </div>
   <div class="activity_icon">
     <%= team_image_link activity.host_team, :thumb=>:small, :class=>"host_icon" %>
     <div class="vs" title="V.S."></div>
-    <%= image_tag('default_user_small.gif', :title=>activity.guest_team_name, :class=>"guest_icon") %>
+    <%= team_image_tag Team.new(:shortname => activity.guest_team_name), :thumb=>:small, :class=>"guest_icon" %>
   </div>
 </div>
 <%elsif activity.class == Play%>
 <div class="activity play_activity">
   <div class="content">
-    去<%= link_to_if !activity.football_ground_id.nil?, h(activity.location), football_ground_path(activity.football_ground_id)%>随便踢踢
+    去<%= location_link activity.location, activity.football_ground_id%>随便踢踢
     <br/><br/>
     <%= activity.start_time.strftime('%H:%M')%>-<%= activity.end_time.strftime('%H:%M')%>
     <br/><br/>
     <%links = []%>
     <%if display_status%>
-      <%= time_status_text activity%>, <%= join_status_text activity%>&nbsp;&nbsp;&nbsp;
-      <% links_text = join_status_links activity%>
+      <%= time_status_text activity%>, <%= activity.join_status_text current_user%>&nbsp;&nbsp;&nbsp;
+      <% links_text = activity.join_links_text current_user%>
       <% links << link_to(links_text[0], play_play_joins_path(activity), :method=>'post') if activity.can_be_joined_by?(current_user)%>
       <% links << link_to(links_text[1], play_play_join_path(activity, 0), :method=>'delete') if activity.can_be_quited_by?(current_user)%>
     <%else%>
       <%= time_status_text activity%>&nbsp;&nbsp;&nbsp;
     <%end%>
-    <%links << link_to('详情', play_path(activity))%>
+    <%links << link_to('详情', activity)%>
     <%= links_with_sticks links%>
   </div>
   <div class="activity_icon">
@@ -85,13 +85,40 @@
     <%end%>
   </div>
 </div>
+<%elsif activity.class == Watch%>
+<div class="activity match_activity">
+  <div class="content">
+    <%= link_to "#{h activity.official_match.host_team_name} V.S. #{h activity.official_match.guest_team_name}", activity.official_match%>的看球活动
+    <br/><br/>
+    <%= activity.start_time.strftime('%H:%M')%>-<%= activity.end_time.strftime('%H:%M')%>,
+    <%= h activity.location %>,
+    <%= link_to "#{h activity.watch_join_count}人", users_watch_path(activity) %>参加
+    <br/><br/>
+    <%links = []%>
+    <%if display_status%>
+      <%= time_status_text activity%>, <%= activity.join_status_text current_user%>&nbsp;&nbsp;&nbsp;
+      <% links_text = activity.join_links_text current_user%>
+      <% links << link_to(links_text[0], watch_watch_joins_path(activity), :method=>'post') if activity.can_be_joined_by?(current_user)%>
+          <% links << watch_quit_link_by_user(activity, current_user, links_text[1]) if activity.can_be_quited_by?(current_user)%>
+    <%else%>
+      <%= time_status_text activity%>&nbsp;&nbsp;&nbsp;
+    <%end%>
+    <%links << link_to('详情', activity)%>
+    <%= links_with_sticks links%>
+  </div>
+  <div class="activity_icon">
+    <%= official_team_image_tag activity.official_match.host_team, :class=>"host_icon" %>
+    <div class="vs" title="V.S."></div>
+    <%= official_team_image_tag activity.official_match.guest_team, :class=>"guest_icon" %>
+  </div>
+</div>
 <%elsif activity.class == Match %>
 <%belongs_to_both_teams = display_status && current_user.is_team_member_of?(activity.host_team_id) && current_user.is_team_member_of?(activity.guest_team_id)%>
 <div class="activity match_activity <%= 'match_activity_wide' if belongs_to_both_teams%>">
   <div class="content">
-    <%= link_to(h(activity.host_team.shortname), team_view_path(activity.host_team_id))%>
-    对阵
-    <%= link_to(h(activity.guest_team.shortname), team_view_path(activity.guest_team_id))%>
+    <%= link_to(h(activity.host_team_name), team_view_path(activity.host_team_id))%>
+    V.S.
+    <%= link_to(h(activity.guest_team_name), team_view_path(activity.guest_team_id))%>
     <br/><br/>
     <%= activity.start_time.strftime('%H:%M')%>-<%= activity.end_time.strftime('%H:%M')%>,
     <%= location_link activity.location, activity.football_ground_id%>
@@ -104,8 +131,8 @@
         <%else%>
           <%team = activity.guest_team%>
         <%end%>
-        <%= time_status_text activity%>, <%= join_status_text activity, team%>&nbsp;&nbsp;&nbsp;
-        <% links_text = match_join_status_links activity, team%>
+        <%= time_status_text activity%>, <%=  activity.join_status_text current_user, team%>&nbsp;&nbsp;&nbsp;
+        <% links_text = activity.join_links_text current_user, team%>
         <%links << link_to(links_text[0], 
           match_joins_path(:team_id => team, :match_id => activity), :method=>:post) if activity.can_be_joined_by?(current_user, team)%>
         <%links << link_to(links_text[1], 
@@ -113,36 +140,24 @@
       <%else%>
         <%= time_status_text activity%>&nbsp;&nbsp;&nbsp;
       <%end%>
-      <%links << link_to('详情', match_path(activity))%>
+      <%links << link_to('详情', activity)%>
       <%= links_with_sticks links%>
     <%else%>
       <%= time_status_text activity%>
-      <%= link_to('详情', match_path(activity))%>
+      <%= link_to('详情', activity)%>
       <br/><br/>
     </div>
     <div class="content" style="width: 400px">
-      <%if current_user.is_team_member_of?(activity.host_team_id)%>
+      <%[activity.host_team, activity.guest_team].each_with_index do |team, i|%>
         <%links = []%>
-        <%team = activity.host_team%>
-        <%= match_join_status_text activity, team%>&nbsp;&nbsp;&nbsp;
-        <% links_text = match_join_status_links activity, team%>
+        <%= activity.sided_join_status_text current_user, team, "#{link_to h(team.shortname), team_view_path(team)}"%>&nbsp;&nbsp;&nbsp;
+        <% links_text = activity.join_links_text current_user, team%>
         <%links << link_to(links_text[0], 
           match_joins_path(:team_id => team, :match_id => activity), :method=>:post) if activity.can_be_joined_by?(current_user, team)%>
         <%links << link_to(links_text[1], 
           match_join_path(0, :team_id => team, :match_id => activity), :method=>:delete) if activity.can_be_quited_by?(current_user, team)%>
         <%= links_with_sticks links%>
-     <%end%>
-     <%= "<br/>" if current_user.is_team_member_of?(activity.host_team_id) && current_user.is_team_member_of?(activity.guest_team_id)%>
-     <%if current_user.is_team_member_of?(activity.guest_team_id)%>
-        <%links = []%>
-        <%team = activity.guest_team%>
-        <%= match_join_status_text activity, team%>&nbsp;&nbsp;&nbsp;
-        <% links_text = match_join_status_links activity, team%>
-        <%links << link_to(links_text[0], 
-          match_joins_path(:team_id => team, :match_id => activity), :method=>:post) if activity.can_be_joined_by?(current_user, team)%>
-        <%links << link_to(links_text[1], 
-          match_join_path(0, :team_id => team, :match_id => activity), :method=>:delete) if activity.can_be_quited_by?(current_user, team)%>
-        <%= links_with_sticks links%>
+        <%= '<br/>' if i ==0%>
      <%end%>
     <%end%>
   </div>

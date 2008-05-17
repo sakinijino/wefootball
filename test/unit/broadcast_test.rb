@@ -7,6 +7,7 @@ class BroadcastTest < ActiveSupport::TestCase
     team_id = 12
     match_id = 13
     play_id = 14
+    watch_id = 15
     
     assert_equal 0, FriendCreationBroadcast.count  
     FriendRelation.create!(:user1_id=>user1_id, :user2_id=>user2_id)
@@ -86,7 +87,32 @@ class BroadcastTest < ActiveSupport::TestCase
     tj.status = TrainingJoin::JOIN    
     tj.save!
     assert_equal 1, TrainingJoinBroadcast.count
-    assert_equal t.id, TrainingJoinBroadcast.find_by_user_id(user1_id).activity_id    
+    assert_equal t.id, TrainingJoinBroadcast.find_by_user_id(user1_id).activity_id
+
+    assert_equal 0, WatchJoinBroadcast.count
+    wj = WatchJoin.new
+    wj.user_id = user1_id
+    wj.watch_id = watches(:one).id   
+    wj.save!
+    assert_equal 1, WatchJoinBroadcast.count
+    assert_equal watches(:one).id, WatchJoinBroadcast.find_by_user_id(user1_id).activity_id     
+
+    assert_equal 0, MatchReviewCreationBroadcast.count
+    mr = MatchReview.new
+    mr.user_id = user1_id
+    mr.match_id = sided_matches(:one).id
+    mr.save_without_validation
+    assert_equal 1, MatchReviewCreationBroadcast.count
+    assert_equal mr.id, MatchReviewCreationBroadcast.find_by_user_id(user1_id).activity_id
+    
+    assert_equal 0, MatchReviewRecommendationBroadcast.count
+    mrr = MatchReviewRecommendation.new
+    mrr.user_id = user1_id
+    mrr.match_review_id = match_reviews(:saki_1).id
+    mrr.status = 1
+    mrr.save!
+    assert_equal 1, MatchReviewRecommendationBroadcast.count
+    assert_equal watches(:one).id, MatchReviewRecommendationBroadcast.find_by_user_id(user1_id).activity_id     
   end
   
   def test_destory_dependency
@@ -185,6 +211,39 @@ class BroadcastTest < ActiveSupport::TestCase
     end
   end
   
+  def test_cascade_destroy_in_watch_and_match_review_and_recommendation_broadcast
+
+    MatchReviewCreationBroadcast.create!(:user_id => users(:saki).id, :activity_id=>sided_matches(:one).id)
+    MatchReviewRecommendationBroadcast.create!(:user_id => users(:saki).id, :activity_id=>match_reviews(:saki_1).id)    
+    assert_difference('Broadcast.count', -2) do
+    assert_difference('MatchReviewCreationBroadcast.count', -1) do
+    assert_difference('MatchReviewRecommendationBroadcast.count', -1) do      
+      sided_matches(:one).destroy
+    end
+    end
+    end
+    
+    WatchJoinBroadcast.create!(:user_id => users(:saki).id, :activity_id=>watches(:one).id)
+    assert_difference('WatchJoinBroadcast.count', -1) do
+      official_matches(:one).destroy
+    end 
+
+    
+    WatchJoinBroadcast.create!(:user_id => users(:saki).id, :activity_id=>watches(:one).id)
+    MatchReviewCreationBroadcast.create!(:user_id => users(:saki).id, :activity_id=>matches(:one).id)
+    MatchReviewRecommendationBroadcast.create!(:user_id => users(:saki).id, :activity_id=>matches(:one).id)    
+    assert_difference('Broadcast.count', -3) do
+    assert_difference('WatchJoinBroadcast.count', -1) do
+    assert_difference('MatchReviewCreationBroadcast.count', -1) do
+    assert_difference('MatchReviewRecommendationBroadcast.count', -1) do      
+      users(:saki).destroy
+    end
+    end
+    end
+    end
+    
+  end
+  
   def test_get_related_broadcasts
     #在夹具数据中,aaron和saki是朋友,是milan的成员
     #saki和mike成为朋友
@@ -229,6 +288,26 @@ class BroadcastTest < ActiveSupport::TestCase
     assert_equal 1, Broadcast.get_related_broadcasts(users(:mike2)).size    
   end
 
+  def test_correctly_generate_match_review_recommendation_broadcast
+    assert_equal 0, MatchReviewRecommendationBroadcast.count
+    mrr = MatchReviewRecommendation.new
+    mrr.user_id = 1
+    mrr.match_review_id = match_reviews(:saki_1).id
+    mrr.status = 0
+    mrr.save!
+    assert_equal 0, MatchReviewRecommendationBroadcast.count
+    mrr.status = 1
+    mrr.save!    
+    assert_equal 1, MatchReviewRecommendationBroadcast.count
+    assert_equal watches(:one).id, MatchReviewRecommendationBroadcast.find_by_user_id(1).activity_id
+    mrr.status = 0
+    mrr.save!    
+    assert_equal 1, MatchReviewRecommendationBroadcast.count #广播数目没有增加
+    mrr.status = 1
+    mrr.save!    
+    assert_equal 2, MatchReviewRecommendationBroadcast.count #增加一条广播（实际中应该不存在这种情况）   
+  end  
+  
   def test_correctly_generate_match_join_broadcast
     mi = match_invitations(:inv1)
     mi.host_team_id = teams(:milan).id

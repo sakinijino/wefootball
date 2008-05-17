@@ -1,0 +1,24 @@
+<h1>Listing match_review_recommendations</h1>
+
+<table>
+  <tr>
+    <th>User</th>
+    <th>Review</th>
+    <th>Status</th>
+  </tr>
+
+<% for match_review_recommendation in @match_review_recommendations %>
+  <tr>
+    <td><%=h match_review_recommendation.user_id %></td>
+    <td><%=h match_review_recommendation.review_id %></td>
+    <td><%=h match_review_recommendation.status %></td>
+    <td><%= link_to 'Show', match_review_recommendation %></td>
+    <td><%= link_to 'Edit', edit_match_review_recommendation_path(match_review_recommendation) %></td>
+    <td><%= link_to 'Destroy', match_review_recommendation, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New match_review_recommendation', new_match_review_recommendation_path %>

@@ -22,10 +22,11 @@ class ApplicationController < ActionController::Base
     @teams = Team.find(:all, :limit => 9, :order => 'id desc')
     
     tmp = []
-    tmp += Training.find(:all, :limit => 1, :order => 'id desc')
-    tmp += Match.find(:all, :limit => 1, :order => 'id desc')
-    tmp += SidedMatch.find(:all, :limit => 1, :order => 'id desc')
-    tmp += Play.find(:all, :limit => 1, :order => 'id desc')
+    tmp += Training.find(:all, :limit => 1, :conditions => ['end_time > ?', Time.now], :order=>'start_time')
+    tmp += Match.find(:all, :limit => 1, :conditions => ['end_time > ?', Time.now], :order=>'start_time')
+    tmp += SidedMatch.find(:all, :limit => 1, :conditions => ['end_time > ?', Time.now], :order=>'start_time')
+    tmp += Play.find(:all, :limit => 1, :conditions => ['end_time > ?', Time.now], :order=>'start_time')
+    tmp += Watch.find(:all, :limit => 1, :conditions => ['end_time > ?', Time.now], :order=>'start_time')
     tmp = tmp.sort_by{|act| act.start_time}
     if (tmp.length >0)
       @start_time = tmp[0].start_time.yesterday
@@ -43,6 +44,11 @@ class ApplicationController < ActionController::Base
       ((item.class == MatchCreationBroadcast) && (item.team_id == item.match.guest_team_id)))
     end
     @bcs = @bcs.slice(0,5)
+    
+    @official_matches = OfficialMatch.paginate :conditions => ['end_time > ? and start_time < ?', Time.now, 7.days.since],
+      :order=>'watch_join_count DESC, start_time',
+      :page => params[:page],
+      :per_page => 3
     render :template => 'shared/index', :layout =>default_layout
   end
   

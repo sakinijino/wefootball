@@ -23,7 +23,7 @@
   <%= render(:partial => 'detail', :locals => {:team => @match.host_team, :is_host => true})%>
 </div>
 
-<%if @match.is_after_match? %>
+<%if @match.finished? %>
 <div id="match_blackboard">
     <%= display_match_result @match%>
 </div>
@@ -35,7 +35,7 @@
 
 <div class="cb"></div>
 
-<%if @match.is_after_match? %>
+<%if @match.finished? %>
 <div class="host_team_div">
   <div class="sect">
     <h2>进球</h2>
@@ -50,7 +50,7 @@
 </div>
 <%end%>
 
-<%if @match.is_after_match? %>
+<%if @match.finished? %>
 <div class="guest_team_div">
   <div class="sect">
     <h2>进球</h2>
@@ -81,6 +81,23 @@
       :team_player_mjs => @guest_team_player_mjs,
       :formation_array => @guest_formation_array,
       :posts => @guest_posts})%>
+</div>
+
+<div id="wide_left_content" class="sect">
+  <h2>最受欢迎的球评 <%= link_to "(发表新球评)", new_match_match_review_path(@match)%></h2>
+  <%if @reviews.length > 0%>
+    <%=render :partial=>'match_reviews/match_review_list', :object=>@reviews%>
+    <div class="more">
+      <%links = []%>
+      <%#links << %(> #{link_to "发表新球评", new_match_match_review_path(@match)})%>
+      <%links << %(> #{link_to "更多", match_match_reviews_path(@match)}) if @reviews.length >= MatchesController::REVIEW_LIST_LENGTH%>
+      <%= links_with_sticks links%>
+    </div>
+  <%else%>
+    <div class="notification">
+      还没有人为这场比赛写过球评，<%=link_to '打算写一篇吗？', new_match_match_review_path(@match)%>
+    </div>
+  <%end%>
 </div>
 
 <div class="cb"></div>

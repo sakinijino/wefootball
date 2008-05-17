@@ -60,29 +60,29 @@ class MatchTest < ActiveSupport::TestCase
     m = matches(:one)
     m.start_time = 9.days.since
     m.save
-    assert_equal true,m.is_before_match?
-    assert_equal false,m.is_after_match_and_before_match_close?
-    assert_equal false,!m.is_before_match_close? #这里用!m.is_before_match_close?模拟m.is_after_match_close? 
+    assert_equal true,!m.started?
+    assert_equal false,m.finished_and_before_close?
+    assert_equal false,m.closed? #这里用m.closed?模拟m.is_after_match_close? 
     
     m.start_time = Time.now.ago(1800)
     m.half_match_length = 25
     m.rest_length = 10
     m.save!
-    assert_equal false,m.is_before_match?
-    assert_equal false,m.is_after_match_and_before_match_close?
-    assert_equal true,m.is_before_match_close?
+    assert_equal false,!m.started?
+    assert_equal false,m.finished_and_before_close?
+    assert_equal true,!m.closed?
     
     m.start_time = 1.days.ago
     m.save
-    assert_equal false,m.is_before_match?
-    assert_equal true,m.is_after_match_and_before_match_close?
-    assert_equal false,!m.is_before_match_close?
+    assert_equal false,!m.started?
+    assert_equal true,m.finished_and_before_close?
+    assert_equal false,m.closed?
     
     m.start_time = 9.days.ago
     m.save
-    assert_equal false,m.is_before_match?
-    assert_equal false,m.is_after_match_and_before_match_close?
-    assert_equal true,!m.is_before_match_close? 
+    assert_equal false,!m.started?
+    assert_equal false,m.finished_and_before_close?
+    assert_equal true,m.closed? 
   end
 
   def test_cascade_destroy_between_match_and_match_join#测试match和matchJoin间的级联删除
@@ -258,8 +258,8 @@ class MatchTest < ActiveSupport::TestCase
     t = Match.find(1)
     l  = t.posts.team(t.host_team).size
     assert_not_equal 0, l
-    assert_no_difference "t.host_team.posts.length" do
-    assert_difference "t.host_team.posts.find(:all, :conditions=>['match_id is not null']).length", -l do
+    assert_no_difference "t.host_team.posts.reload.length" do
+    assert_difference "t.host_team.posts.find(:all, :conditions=>['activity_id is not null']).length", -l do
       t.destroy
     end
     end

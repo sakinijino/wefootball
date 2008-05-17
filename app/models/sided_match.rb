@@ -27,7 +27,7 @@ class SidedMatch < ActiveRecord::Base
     end
   end
   
-  has_many :posts, :dependent => :nullify, :order => "updated_at desc" do
+  has_many :posts, :class_name => 'SidedMatchPost', :foreign_key=>"activity_id", :dependent => :nullify, :order => "updated_at desc" do
     def public(options={})
       q = {:conditions => ['is_private = ?', false]}.merge(options)
       options.has_key?(:page) ? paginate(:all, q) : find(:all, q)
@@ -36,6 +36,8 @@ class SidedMatch < ActiveRecord::Base
   
   has_many :sided_match_creation_broadcasts, :foreign_key=>"activity_id", :dependent => :destroy
   has_many :sided_match_join_broadcasts, :foreign_key=>"activity_id", :dependent => :destroy
+  
+  has_many :match_reviews, :foreign_key=>"match_id", :class_name=>"SidedMatchReview", :dependent => :destroy
             
   attr_protected :host_team_id
   
@@ -95,11 +97,11 @@ class SidedMatch < ActiveRecord::Base
     attribute_slice(:description, MAX_DESCRIPTION_LENGTH)
   end
 
-  def is_before_match?
-    return Time.now < self.start_time
+  def started?
+    Time.now > self.start_time
   end
   
-  def is_after_match?
+  def finished?
     return Time.now > self.end_time
   end
   
@@ -108,12 +110,12 @@ class SidedMatch < ActiveRecord::Base
   end
 
   def can_be_edited_by?(user)
-    #is_before_match? && user.is_team_admin_of?(self.host_team_id)
+    #!started? && user.is_team_admin_of?(self.host_team_id)
     user.is_team_admin_of?(self.host_team_id)
   end  
   
   def can_be_edited_result_by?(user)
-    is_after_match? && user.is_team_admin_of?(self.host_team_id)
+    finished? && user.is_team_admin_of?(self.host_team_id)
   end
   
   def can_be_edited_formation_by?(user)
@@ -126,13 +128,13 @@ class SidedMatch < ActiveRecord::Base
   
   def can_be_joined_by?(user)
     team_id = self.host_team_id
-    #is_before_match? && user.is_team_member_of?(team_id) && !has_joined_member?(user)
+    #!started? && user.is_team_member_of?(team_id) && !has_joined_member?(user)
     user.is_team_member_of?(team_id) && !has_joined_member?(user)
   end
   
   def can_be_quited_by?(user)
     team_id = self.host_team_id
-    #is_before_match? && user.is_team_member_of?(team_id) && has_member?(user)
+    #!started? && user.is_team_member_of?(team_id) && has_member?(user)
     user.is_team_member_of?(team_id) && has_member?(user)
   end
   
@@ -150,4 +152,31 @@ class SidedMatch < ActiveRecord::Base
     end
     SidedMatchJoin.find :first, :conditions => ['user_id = ? and match_id = ?', user_id, self.id]
   end
+  
+  def host_team_name
+    self.team.shortname
+  end
+  
+  def result_text
+    return "V.S." if !finished?
+    hg = host_team_goal
+    gg = guest_team_goal
+    if (hg.blank? && gg.blank?)
+      "V.S."
+    elsif hg.blank?
+      "? : #{gg}"
+    elsif gg.blank?
+      "#{hg} : ?"
+    elsif !hg.blank? && !gg.blank?
+      "#{hg} : #{gg}"
+    end
+  end
+  
+  ICON = "match_icon.gif"
+  IMG_TITLE = "比赛"
+  TIME_STATUS_TEXTS = Match::TIME_STATUS_TEXTS
+  JOIN_STATUS_TEXTS = Match::JOIN_STATUS_TEXTS
+  JOIN_LINKS_TEXTS = Match::JOIN_LINKS_TEXTS
+  
+  include ActivityHelper
 end

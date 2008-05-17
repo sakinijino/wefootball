@@ -1,0 +1,21 @@
+<div id="wide_left_content" class="sect">
+  <h2><%=h @title%></h2>
+  <%@official_teams.each do |official_team|%>
+    <div class="icon">
+      <%= link_to official_team_image_tag(official_team), edit_official_team_path(official_team.id)%>
+      <span><%=link_to h(official_team.name), edit_official_team_path(official_team.id)%></span>
+    </div>
+  <%end%>
+  <div class="cb"></div>
+  <%= will_paginate @official_teams %>
+</div>
+
+<div id="narrow_right_content" class="sect">
+  <h2></h2>
+  <ul class="sidebar_menu">
+    <li>
+      > <%= link_to '新建球队', new_official_team_path %>
+    </li>
+  </ul>
+</div>
+<div class="cb"></div>

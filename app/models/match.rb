@@ -2,14 +2,12 @@ class Match < ActiveRecord::Base
   include ModelHelper
   
   MAX_DESCRIPTION_LENGTH = 3000 
-  
   TIME_LENGTH_TO_CLOSE_MATCH = 7
-  
-  SITUATIONS = (1..8).to_a  
+  SITUATIONS = (1..8).to_a
   
   attr_accessible
   
-  has_many :posts, :dependent => :nullify, :order => "updated_at desc" do
+  has_many :posts, :class_name => 'MatchPost', :foreign_key=>"activity_id", :dependent => :nullify, :order => "updated_at desc" do
     def team(team_id, options={})
       q = {:conditions => ['team_id = ?', team_id]}.merge(options)
       options.has_key?(:page) ? paginate(:all, q) : find(:all, q)
@@ -43,6 +41,8 @@ class Match < ActiveRecord::Base
   
   has_many :match_creation_broadcasts, :foreign_key=>"activity_id", :dependent => :destroy
   has_many :match_join_broadcasts, :foreign_key=>"activity_id", :dependent => :destroy
+  
+  has_many :match_reviews, :foreign_key=>"match_id", :class_name=>"BiMatchReview", :dependent => :destroy
   
   belongs_to :football_ground
   
@@ -115,20 +115,20 @@ class Match < ActiveRecord::Base
     match
   end
 
-  def is_before_match?
-    return Time.now < self.start_time
+  def started?
+    return Time.now > self.start_time
   end
   
-  def is_after_match?
+  def finished?
     return Time.now > self.end_time
   end
   
-  def is_after_match_and_before_match_close?
-    return ((Time.now > self.end_time) && (TIME_LENGTH_TO_CLOSE_MATCH.days.ago < self.end_time))
+  def finished_and_before_close?
+    return finished? && !closed?
   end
   
-  def is_before_match_close?
-    return TIME_LENGTH_TO_CLOSE_MATCH.days.ago < self.end_time   
+  def closed?
+    return TIME_LENGTH_TO_CLOSE_MATCH.days.ago > self.end_time   
   end
   
   def has_team_member?(user, team_id)
@@ -155,7 +155,7 @@ class Match < ActiveRecord::Base
     else
       team
     end
-    belongs_to?(team_id) && is_before_match? && user.is_team_member_of?(team_id) && !has_joined_team_member?(user, team_id)
+    belongs_to?(team_id) && !started? && user.is_team_member_of?(team_id) && !has_joined_team_member?(user, team_id)
   end
   
   def can_be_quited_by?(user, team)
@@ -165,19 +165,19 @@ class Match < ActiveRecord::Base
     else
       team
     end
-    belongs_to?(team_id) && is_before_match? && has_team_member?(user, team_id)
+    belongs_to?(team_id) && !started? && has_team_member?(user, team_id)
   end
   
   def can_be_edited_result_by?(user, team)
-    is_after_match_and_before_match_close? && self.can_be_edited_by?(user, team)
+    finished_and_before_close? && self.can_be_edited_by?(user, team)
   end
   
   def can_be_edited_formation_by?(user, team)
-    is_before_match_close? && self.can_be_edited_by?(user, team)
+    !closed? && self.can_be_edited_by?(user, team)
   end
   
   def can_be_destroyed_by?(user)
-    is_before_match? && self.is_team_admin_of?(user)
+    !started? && self.is_team_admin_of?(user)
   end
 
   def judge_conflict
@@ -191,7 +191,109 @@ class Match < ActiveRecord::Base
       return true
     end
     return false
-  end  
+  end
+  
+  def host_team_name
+    self.host_team.shortname
+  end
+  
+  def guest_team_name
+    self.guest_team.shortname
+  end
+  
+  def result_text
+    return "V.S." if !finished? || has_conflict
+    hg = !host_team_goal_by_host.blank? ? host_team_goal_by_host : host_team_goal_by_guest
+    gg = !guest_team_goal_by_guest.blank? ? guest_team_goal_by_guest : guest_team_goal_by_host
+    
+    if (hg.blank? && gg.blank?)
+      "V.S."
+    elsif hg.blank?
+      "? : #{gg}"
+    elsif gg.blank?
+      "#{hg} : ?"
+    else
+      "#{hg} : #{gg}"
+    end
+  end
+  
+  ICON = "match_icon.gif"
+  IMG_TITLE = "比赛"
+  TIME_STATUS_TEXTS = {
+    :before => nil,
+    :in => '比赛正在进行',
+    :after => '比赛已结束'
+  }
+  
+  JOIN_STATUS_TEXTS = {
+    :before =>{
+      :joined => '我打算去',
+      :undetermined => '要去吗?',
+      :unjoined => '我不打算去',
+    },
+    :in => {
+      :joined => '我正在比赛',
+      :undetermined => '要去吗?',
+    },
+    :after => {
+      :joined => '我去了',
+      :undetermined => '参加了吗?',
+      :unjoined => '我没去',
+    }
+  }
+  
+  JOIN_LINKS_TEXTS = {
+    :before =>{
+      :joined => ['---', '不去了'],
+      :undetermined => ['要去', '不去'],
+      :unjoined => ['打算去', '---']
+    },
+    :in =>{
+      :joined => ['---', '没去'],
+      :undetermined => ['现在去', '不去'],
+      :unjoined => ['现在去', '---']
+    },
+    :after =>{
+      :joined => ['---', '没去'],
+      :undetermined => ['我去了', '我没去'],
+      :unjoined => ['去了', '---']
+    }
+  }
+  
+  SIDED_JOIN_STATUS_TEXTS = {
+    :before =>{
+      :joined => "我要代表%s参赛",
+      :undetermined => "代表%s参赛?",
+      :unjoined => "我不打算代表%s参赛",
+    },
+    :in => {
+      :joined => "我正代表%s参赛",
+      :undetermined => "我没说是否代表%s参赛",
+      :unjoined => "我没代表%s参赛",
+    },
+    :after => {
+      :joined => "我代表%s参赛了",
+      :undetermined => "我没说是否代表%s参赛",
+      :unjoined => "我没代表%s参赛",
+    }
+  }
+  
+  include ActivityHelper
+  
+  def sided_join_status_text(user, team, team_name)
+    SIDED_JOIN_STATUS_TEXTS[time_key][join_key(user, team)] % (team_name ? team_name : team.shortname)
+  end
+  
+  protected
+  def join_key(user, team)
+    if has_joined_team_member?(user, team)
+      :joined
+    elsif has_team_member?(user, team)
+      :undetermined
+    else
+      :unjoined
+    end
+  end
 
   protected  
   def can_be_edited_by?(user, team)

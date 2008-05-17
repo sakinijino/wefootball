@@ -1,7 +1,7 @@
 <div id="wide_left_content" class="sect">
   <h2><%=h @title%></h2>
   <%= error_messages_for :post%>
-  <% form_for :post, :url=>new_post_path2 do |f| %>
+  <% form_for :post, :url=>@posts_url do |f| %>
     <%= render :partial=>'form', :locals => {:f=>f } %>
     <p>
       <%= f.submit "发言" %>
@@ -11,6 +11,6 @@
 
 <div id="narrow_right_content" class="sect">
   <h2></h2>
-  <%=render :partial=>'sidebar_menu'%>
+  <%=post_sidebar_menu @activity%>
 </div>
 <div class="cb"></div>

@@ -1,0 +1,23 @@
+<div id="wide_left_content" class="sect">
+  <h2><%=h @title%></h2>
+  <%= error_messages_for :watch %>
+  
+  <% form_for @watch do |f| -%>
+    <%= f.hidden_field :official_match_id,  :value=>@official_match.id%>
+    <%= render :partial => "form", :locals=>{:f=> f}%>
+    <p><%= submit_tag '创建' %></p>
+  <% end -%>
+</div>
+
+<div id="narrow_right_content">
+  <h2>比赛信息</h2>
+  <div class="sect mreview_minfo">
+    <%=render :partial=>'match_reviews/match_info', :object => @official_match%>
+  </div>
+
+  <ul class="sidebar_menu">
+    <li> > <%= link_to('返回比赛详情', @official_match)%></li>
+  </ul>
+</div>
+  
+<div class="cb"></div>

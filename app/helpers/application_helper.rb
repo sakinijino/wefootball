@@ -13,6 +13,17 @@ module ApplicationHelper
     links.join(seperator)
   end
   
+  def time_status_text(act)
+    text = act.time_status_text
+        
+    case text
+    when String
+      text
+    when nil
+      "#{distance_of_time_in_words(act.start_time, Time.now)}之后开始"
+    end
+  end
+  
   def distance_of_time_in_words(from_time, to_time = 0, include_seconds = false)
     from_time = from_time.to_time if from_time.respond_to?(:to_time)
     to_time = to_time.to_time if to_time.respond_to?(:to_time)

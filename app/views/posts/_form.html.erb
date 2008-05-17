@@ -2,7 +2,7 @@
   标题 <%= f.text_field :title, :size=>30, :maxlength=>100 %>
 </p>
 <p>
-  <%= f.check_box :is_private %> 只有本队队友可见
+  <%= f.check_box :is_private %> <%= @post.private_text%>
 </p>
 <p>
   <%= f.text_area :content, :cols=>50, :rows=>20 %>

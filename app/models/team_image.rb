@@ -18,7 +18,7 @@ class TeamImage < ActiveRecord::Base
   def before_save
     if (self.team != nil)
       self.team.image_path = self.public_filename
-      self.team.save
+      self.team.save!
     end
   end
   

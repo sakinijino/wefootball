@@ -2,6 +2,7 @@ class MatchesController < ApplicationController
   before_filter :login_required, :only=>[:create,:edit,:update,:destroy]
   
   POSTS_LENGTH = 10
+  REVIEW_LIST_LENGTH = 5
 
   def show
     @match = Match.find(params[:id])  
@@ -29,12 +30,14 @@ class MatchesController < ApplicationController
     @host_team_goals = MatchJoin.find_all_by_team_id_and_match_id(
       @match.host_team, @match,
       :conditions => ["goal > 0"]
-    ) if @match.is_after_match?
+    ) if @match.finished?
     @guest_team_goals = MatchJoin.find_all_by_team_id_and_match_id(
       @match.guest_team, @match,
       :conditions => ["goal > 0"]
-    ) if @match.is_after_match?
-
+    ) if @match.finished?
+    
+    @reviews = @match.match_reviews.find(:all, :limit=>REVIEW_LIST_LENGTH, 
+      :order=>'like_count-dislike_count desc, like_count desc, created_at desc')
     render :layout=>'match_layout'
   end
   

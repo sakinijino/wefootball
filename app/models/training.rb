@@ -17,7 +17,7 @@ class Training < ActiveRecord::Base
     end
   end
   
-  has_many :posts, :dependent => :nullify, :order => "updated_at desc" do
+  has_many :posts, :class_name => 'TrainingPost', :foreign_key=>"activity_id", :dependent => :nullify, :order => "updated_at desc" do
     def public(options={})
       q = {:conditions => ['is_private = ?', false]}.merge(options)
       options.has_key?(:page) ? paginate(:all, q) : find(:all, q)
@@ -98,4 +98,50 @@ class Training < ActiveRecord::Base
     tj = has_member?(user)
     tj!=nil && tj.status == TrainingJoin::JOIN
   end
+  
+  ICON = "training_icon.gif"
+  IMG_TITLE = "训练"
+  TIME_STATUS_TEXTS = {
+    :before => nil,
+    :in => '比赛正在进行',
+    :after => '比赛已结束'
+  }
+  
+  JOIN_STATUS_TEXTS = {
+    :before =>{
+      :joined => '我打算去',
+      :undetermined => '要去吗?',
+      :unjoined => '我不打算去',
+    },
+    :in => {
+      :joined => '我正在训练',
+      :undetermined => '要去吗?',
+      :unjoined => '我没去',
+    },
+    :after => {
+      :joined => '我去了',
+      :undetermined => '参加了吗?',
+      :unjoined => '我没去',
+    }
+  }
+  
+  JOIN_LINKS_TEXTS = {
+    :before =>{
+      :joined => ['---', '不去了'],
+      :undetermined => ['要去', '不去'],
+      :unjoined => ['打算去', '---']
+    },
+    :in =>{
+      :joined => ['---', '没去'],
+      :undetermined => ['现在去', '不去'],
+      :unjoined => ['现在去', '---']
+    },
+    :after =>{
+      :joined => ['---', '没去'],
+      :undetermined => ['我去了', '我没去'],
+      :unjoined => ['去了', '---']
+    }
+  }
+  
+  include ActivityHelper
 end

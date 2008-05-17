@@ -41,6 +41,10 @@ class User < ActiveRecord::Base
             :dependent => :destroy
   has_many :plays, :through=>:play_joins, :extend => ActivityCalendar
   
+  has_many :watch_joins,
+            :dependent => :destroy
+  has_many :watches, :through=>:watch_joins, :extend => ActivityCalendar  
+  
   has_many :sided_match_joins,
             :dependent => :destroy
   has_many :sided_matches, :through=>:sided_match_joins, :extend => ActivityCalendar
@@ -51,6 +55,12 @@ class User < ActiveRecord::Base
   
   has_many :friend_creation_broadcasts, :foreign_key=>"friend_id", :dependent => :destroy
   has_many :broadcasts, :dependent => :destroy
+  
+  has_many :official_teams, :dependent => :nullify
+  has_many :official_matches, :dependent => :nullify
+  
+  has_many :match_reviews, :dependent => :destroy
+  has_many :match_review_recommendations, :dependent => :destroy  
 
   validates_presence_of     :login, :message=>'请填写Email'
   validates_presence_of     :nickname, :message=>'请填写昵称'
@@ -336,7 +346,7 @@ class User < ActiveRecord::Base
   def admin_teams_count_sum(prop)
     return 0 if self.teams.admin.size <= 0
     admin_team_ids = self.teams.admin.map{|item| item.id}
-    q = {:conditions => ["(#{(['id = ?']*admin_team_ids.size).join(' or ')})", *admin_team_ids]}
+    q = {:conditions => ["id in (?)", admin_team_ids]}
     Team.sum(prop, q)
   end
   

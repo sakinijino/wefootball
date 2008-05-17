@@ -31,6 +31,18 @@ class PostTest < ActiveSupport::TestCase
     assert !posts(:quentin_2).can_be_destroyed_by?(users(:aaron))
   end
   
+  def test_admin
+    assert posts(:saki_1).admin?(users(:saki))
+    assert posts(:saki_1).admin?(users(:quentin))
+    assert !posts(:saki_1).admin?(users(:mike1))
+  end
+  
+  def test_related_posts
+    assert posts(:saki_1).team.posts.length-1, posts(:saki_1).related(users(:saki)).length
+    assert posts(:saki_1).team.posts.public.length-1, posts(:saki_1).related(users(:mike1)).length
+    assert posts(:saki_1).team.posts.public.length-1, posts(:saki_1).related(nil).length
+  end
+  
   def test_destroy
     assert_difference 'Reply.count', -1 do
       posts(:saki_1).destroy
@@ -46,5 +58,20 @@ class PostTest < ActiveSupport::TestCase
     assert_equal 5, posts.size
     posts = Post.get_user_related_posts(users(:saki), :page=>2, :per_page=>2)
     assert_equal 2, posts.current_page
+  end
+  
+  def test_icon
+    p = Post.new
+    assert_nil p.icon
+    assert_nil p.img_title
+    
+    p = TrainingPost.new
+    assert_nil p.icon
+    assert_nil p.img_title
+    
+    p = TrainingPost.new
+    p.activity = trainings(:training1)
+    assert_not_nil p.icon
+    assert_not_nil p.img_title
   end
 end

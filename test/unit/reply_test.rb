@@ -8,14 +8,6 @@ class ReplyTest < ActiveSupport::TestCase
     assert !replies(:quentin_1_reply).can_be_destroyed_by?(users(:aaron))
   end
   
-  def test_before_save
-    r = Reply.new(:content => "Test Reply")
-    r.post = posts(:saki_1)
-    r.user = users(:saki)
-    r.save!
-    assert_equal posts(:saki_1).team, r.team
-  end
-  
   def test_replies_counter
     posts(:saki_1).replies(:refresh).size
     r = Reply.new(:content => "Test Reply")

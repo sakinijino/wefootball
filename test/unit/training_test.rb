@@ -162,8 +162,8 @@ class TrainingTest < ActiveSupport::TestCase
   def test_posts_dependency_nullify
     t = Training.find(1)
     l  = t.posts.size
-    assert_no_difference "t.team.posts.length" do
-    assert_difference "t.team.posts.find(:all, :conditions=>['training_id is not null']).length", -l do
+    assert_no_difference "t.team.posts.reload.length" do
+    assert_difference "t.team.posts.find(:all, :conditions=>['activity_id is not null']).length", -l do
       t.destroy
     end
     end

@@ -6,7 +6,7 @@ class PlaysController < ApplicationController
 
   def show
     @play = Play.find(params[:id])
-    @players = @play.users.find(:all,:limit=>PLAYER_LIST_LENGTH+1)
+    @players = @play.users.find(:all,:limit=>PLAYER_LIST_LENGTH)
     render :layout => default_layout  
   end
 

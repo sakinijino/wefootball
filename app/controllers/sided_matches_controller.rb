@@ -4,7 +4,8 @@ class SidedMatchesController < ApplicationController
 
   JOINED_USER_LIST_LENGTH = 9
   UNDETERMINED_USER_LIST_LENGTH = 9
-  POSTS_LENGTH = 10  
+  POSTS_LENGTH = 10
+  REVIEW_LIST_LENGTH = 5
   
   def new
     @team = Team.find(params[:team_id])
@@ -29,16 +30,20 @@ class SidedMatchesController < ApplicationController
         :conditions => ["match_id=? and position is not null",@match.id], :order => "position")    
     @formation_array = @player_mjs.map {|ut| ut.position}  
     @team_goals = SidedMatchJoin.find_all_by_match_id(@match, 
-      :conditions => ["goal > 0"], :order => 'goal desc') if @match.is_after_match?
+      :conditions => ["goal > 0"], :order => 'goal desc') if @match.finished?
     
     @team = @match.host_team
-    @joined_users = @match.users.joined(:limit=>JOINED_USER_LIST_LENGTH+1)
-    @undetermined_users = @match.users.undetermined(:limit=>UNDETERMINED_USER_LIST_LENGTH+1)
+    @joined_users = @match.users.joined(:limit=>JOINED_USER_LIST_LENGTH)
+    @undetermined_users = @match.users.undetermined(:limit=>UNDETERMINED_USER_LIST_LENGTH)
     if (logged_in? && current_user.is_team_member_of?(@match.host_team_id))
       @posts = @match.posts.find(:all, :limit=>POSTS_LENGTH)
     else
       @posts = @match.posts.public :limit=>POSTS_LENGTH
-    end    
+    end
+    
+    @reviews = @match.match_reviews.find(:all, :limit=>REVIEW_LIST_LENGTH, 
+      :order=>'like_count-dislike_count desc, like_count desc, created_at desc')
+    
     render :layout=>'team_layout'    
   end
   

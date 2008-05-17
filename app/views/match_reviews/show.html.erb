@@ -1,0 +1,32 @@
+<div id="wide_left_content">
+  <div class="sect">
+    <h1><%=h @title %></h1>
+    <%if @replies.current_page == 1%>
+      <%= render(:partial => 'match_reviews/match_review', :object => @match_review)%>
+    <%end%>
+    <%= render(:partial => 'match_reviews/match_review', :collection => @replies, :locals => {:parent => @match_review})%>
+    <%= will_paginate @replies %>
+  </div>
+
+<%if @can_reply%>
+  <div class="sect cb">
+    <h2 id="reply_form">回复</h2>
+    <%= error_messages_for :reply %>
+    <br/>
+    <% form_for :reply, :url => match_review_match_review_replies_path(@match_review, :page => @replies.current_page, :anchor=>'reply_form') do |f| %>
+      <%= f.text_area :content, :rows=>10, :cols=>50 %>
+      <br/><br/>
+      <%= f.submit "提交" %>
+    <% end %>
+  </div>
+<%end%>
+</div>
+
+<div id="narrow_right_content">
+  <h2>比赛信息</h2>
+  <div class="sect mreview_minfo">
+    <%=render :partial=>'match_reviews/match_info', :object => @match%>
+  </div>
+  <%=render :partial=>'match_reviews/sidebar_menu'%>
+</div>
+<div class="cb"></div>

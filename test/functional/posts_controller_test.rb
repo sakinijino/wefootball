@@ -56,7 +56,7 @@ class PostsControllerTest < ActionController::TestCase
   def test_get_show_can_reply
     login_as :quentin
     get :show, :id => posts(:saki_1).id
-    assert_select "#content form[action=#{post_replies_path(assigns(:post), :page => 1)}]"
+    assert_select "#content form[action=#{post_replies_path(assigns(:post), :page => 1, :anchor=>'reply_form')}]"
   end
   
   def test_get_show_can_not_reply
@@ -98,29 +98,35 @@ class PostsControllerTest < ActionController::TestCase
   def test_should_create_post
     login_as :quentin
     assert_difference('Post.count') do
+    assert_difference('TrainingPost.count') do
     assert_difference('Training.find(trainings(:training1).id).team.posts.length') do
     assert_difference('Training.find(trainings(:training1).id).posts.length') do
       post :create, :training_id=>trainings(:training1).id, :post => { :title => 'Test', :content => '123456'}
     end
     end
     end
+    end
     assert_equal users(:quentin).id, assigns(:post).user_id
     assert_redirected_to post_path(assigns(:post))
     
     assert_difference('Post.count') do
+    assert_difference('SidedMatchPost.count') do
     assert_difference('SidedMatch.find(sided_matches(:one).id).team.posts.length') do
     assert_difference('SidedMatch.find(sided_matches(:one).id).posts.length') do
       post :create, :sided_match_id=>sided_matches(:one).id, :post => { :title => 'Test', :content => '123456'}
     end
     end
     end
+    end
     assert_equal users(:quentin).id, assigns(:post).user_id
     assert_redirected_to post_path(assigns(:post))
     
     assert_difference('Post.count') do
+    assert_difference('MatchPost.count') do
     assert_difference('Team.find(teams(:inter).id).posts.length') do
     assert_difference('Match.find(matches(:one).id).posts.team(teams(:inter)).length') do
       post :create, :match_id=>matches(:one).id, :team_id=>teams(:inter).id, :post => { :title => 'Test', :content => '123456'}
+    end
     end
     end
     end

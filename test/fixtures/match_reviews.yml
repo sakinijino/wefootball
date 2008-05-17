@@ -1,0 +1,23 @@
+saki_1:
+  id: 1
+  title: Title1
+  content: <%="Content1"*100%>
+  match_id: 1
+  type: SidedMatchReview
+  user_id: 3
+
+saki_2:
+  id: 2
+  title: Title1
+  content: <%="Content1"*100%>
+  match_id: 1
+  type: BiMatchReview
+  user_id: 3
+
+saki_3:
+  id: 3
+  title: Title1
+  content: <%="Content1"*100%>
+  match_id: 1
+  type: OfficialMatchReview
+  user_id: 3

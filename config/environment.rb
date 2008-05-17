@@ -28,7 +28,8 @@ Rails::Initializer.run do |config|
   # config.plugins = [ :exception_notification, :ssl_requirement, :all ]
   
   # Add additional load paths for your own custom dirs
-  config.load_paths += %W( #{RAILS_ROOT}/app/modules #{RAILS_ROOT}/app/models/broadcasts #{RAILS_ROOT}/app/sweepers #{RAILS_ROOT}/app/observers)
+  config.load_paths += 
+    %W( #{RAILS_ROOT}/app/modules #{RAILS_ROOT}/app/models/broadcasts #{RAILS_ROOT}/app/models/posts #{RAILS_ROOT}/app/models/match_reviews #{RAILS_ROOT}/app/sweepers #{RAILS_ROOT}/app/observers)
 
   # Force all environments to use the same logger level
   # (by default production uses :info, the others :debug)
@@ -59,7 +60,8 @@ Rails::Initializer.run do |config|
   config.active_record.observers = :user_team_observer, :friend_relation_observer,
                                    :match_join_observer, :match_observer,
                                    :play_join_observer, :sided_match_join_observer,
-                                   :sided_match_observer, :training_join_observer, :training_observer
+                                   :sided_match_observer, :training_join_observer, :training_observer,
+                                   :watch_join_observer, :match_review_observer, :match_review_recommendation_observer
 
   # Make Active Record use UTC-base instead of local time
   # config.active_record.default_timezone = :utc

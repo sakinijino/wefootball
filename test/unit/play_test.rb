@@ -41,15 +41,15 @@ class PlayTest < ActiveSupport::TestCase
   def test_time_check
     plays(:play1).start_time = 3.hours.ago
     plays(:play1).end_time = 4.hours.ago
-    assert_equal false, plays(:play1).is_before_play?
+    assert_equal false, !plays(:play1).started?
     
     plays(:play1).start_time = 2.hours.ago
     plays(:play1).end_time = 2.hours.since
-    assert_equal false, plays(:play1).is_before_play?    
+    assert_equal false, !plays(:play1).started?
 
     plays(:play1).start_time = 3.hours.since
     plays(:play1).end_time = 4.hours.since
-    assert_equal true, plays(:play1).is_before_play?    
+    assert_equal true, !plays(:play1).started?
   end
 
   def test_has_member

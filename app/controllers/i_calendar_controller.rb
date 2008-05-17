@@ -11,7 +11,8 @@ class ICalendarController < ApplicationController
       (@user.trainings.in_a_duration(@start_time, et) + 
         @user.matches.in_a_duration(@start_time, et)+
         @user.sided_matches.in_a_duration(@start_time, et)+
-        @user.plays.in_a_duration(@start_time, et))
+        @user.plays.in_a_duration(@start_time, et)+
+        @user.watches.in_a_duration(@start_time, et))
     headers['Content-Type'] = 'text/calendar'
     headers['Cache-Control'] = 'no-cache'
     render :inline => generate_calendar("#{@user.nickname}近期的活动", @calendar_activities).to_ical
@@ -47,9 +48,11 @@ class ICalendarController < ApplicationController
       when Training
         "#{act.team.shortname}训练"
       when SidedMatch
-        "#{act.host_team.shortname} 对阵 #{act.guest_team_name}的比赛"
+        "#{act.host_team_name} V.S. #{act.guest_team_name}的比赛"
       when Match
-        "#{act.host_team.shortname} 对阵 #{act.guest_team.shortname}的比赛"
+        "#{act.host_team_name} V.S. #{act.guest_team_name}的比赛"
+      when Watch
+        "观看#{act.official_match.host_team_name} V.S. #{act.official_match.guest_team_name}的比赛"
       end)
       
       event.description(case act
@@ -61,6 +64,8 @@ class ICalendarController < ApplicationController
         %Q(#{act.description.gsub(/\r\n/, "\n")}\n\n#{sided_match_url act})
       when Match
         %Q(#{act.description.gsub(/\r\n/, "\n")}\n\n#{match_url act})
+      when Watch
+        %Q(#{act.description.gsub(/\r\n/, "\n")}\n\n#{watch_url act})
       end)
       event.url(case act
       when Play
@@ -71,6 +76,8 @@ class ICalendarController < ApplicationController
         sided_match_url act
       when Match
         match_url act
+      when Watch
+        watch_url act
       end)
       event.uid "www.wefootball.org-#{act.class}-#{act.id}"
       cal.add event

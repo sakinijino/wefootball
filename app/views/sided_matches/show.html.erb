@@ -4,14 +4,14 @@
     <div class="activities">
         <%=date_div_link @match.start_time, @match.host_team%>
         <div class="detail">
-          <%if @match.is_after_match?%>
+          <%if @match.finished?%>
             <% tmp = display_sided_match_result @match%>
             <%if !tmp.nil?%>
               <div class="sided_match_result"><%=tmp%></div>
             <%end%>
           <%end%>
           <span>对阵球队: </span><%=h @match.guest_team_name%><br />
-          <%if @match.is_after_match?%>
+          <%if @match.finished?%>
             <span>比赛结果: </span><%=sided_match_result_text @match%><br />
           <%end%>
           <span>时间: </span><%= @match.start_time.strftime("%H:%M")%>-<%=@match.end_time.strftime("%H:%M")%><br />
@@ -24,9 +24,9 @@
           <%if logged_in? && current_user.is_team_member_of?(@match.team)%>
             <br />
             <span>我的状态: </span>
-            <%= join_status_text @match%>&nbsp;&nbsp;&nbsp;
+            <%= @match.join_status_text current_user%>&nbsp;&nbsp;&nbsp;
             <%links = []%>
-            <% links_text = join_status_links @match%>
+            <% links_text = @match.join_links_text current_user%>
             <% links << link_to(links_text[0], sided_match_sided_match_joins_path(@match), :method=>'post') if @match.can_be_joined_by?(current_user)%>
             <% links << link_to(links_text[1], sided_match_sided_match_join_path(@match, 0), :method=>'delete') if @match.can_be_quited_by?(current_user)%>
             <%= links_with_sticks links%>
@@ -57,11 +57,11 @@
   <%if !@match.description.blank?%>
   <div class="sect">
       <h2>比赛说明</h2>
-      <p><%=simple_format auto_link(h(@match.description), :urls)%></p>
+      <%=simple_format auto_link(h(@match.description), :urls)%>
   </div>
   <%end%>
   
-  <%if @match.is_after_match? && !@team_goals.empty?%>
+  <%if @match.finished? && !@team_goals.empty?%>
   <div class="sect">
     <h2>进球</h2>
     <%links = []%>
@@ -106,33 +106,36 @@
     </div>
     <div class="cb"></div>
   </div>
+
+  <div class="sect">
+    <h2>最受欢迎的球评 <%= link_to "(发表新球评)", new_sided_match_match_review_path(@match)%></h2>
+    <%if @reviews.length > 0%>
+      <%=render :partial=>'match_reviews/match_review_list', :object=>@reviews%>
+      <div class="more">
+        <%links = []%>
+        <%#links << %(> #{link_to "发表新球评", new_sided_match_match_review_path(@match)})%>
+        <%links << %(> #{link_to "更多", sided_match_match_reviews_path(@match)}) if @reviews.length >= SidedMatchesController::REVIEW_LIST_LENGTH%>
+        <%= links_with_sticks links%>
+      </div>
+    <%else%>
+      <div class="notification">
+        还没有人为这场比赛写过球评，<%=link_to '打算写一篇吗？', new_sided_match_match_review_path(@match)%>
+      </div>
+    <%end%>
+  </div>
 </div>
 
         
 <div id="narrow_right_content">
   <div class="sect">
-    <h2>参加这场比赛的人</h2>
-    <%if @joined_users.length <= SidedMatchesController::JOINED_USER_LIST_LENGTH%>
-        <%= user_icon(@joined_users)%>
-    <%else%>
-        <%@joined_users.pop%>
-        <%= user_icon(@joined_users)%>
-        <div class="cb"></div>
-        <%= link_to "> 更多",joined_users_sided_match_path(@match.id), :class=>"more" %>
-    <%end%>
+    <h2>参加这场比赛的人 <%= link_to "(更多...)",joined_users_sided_match_path(@match.id)%></h2>
+    <%= user_icon(@joined_users)%>
     <div class="cb"></div>
   </div>
          
   <div class="sect">
-    <h2>没表态是否参加的人</h2>
-    <%if @undetermined_users.length <= SidedMatchesController::UNDETERMINED_USER_LIST_LENGTH%>
-        <%= user_icon(@undetermined_users)%>
-    <%else%>
-        <%@undetermined_users.pop%>
-        <%= user_icon(@undetermined_users)%>
-        <div class="cb"></div>
-        <%= link_to "> 更多",undetermined_users_sided_match_path(@match.id), :class=>"more" %>
-    <%end%>
+    <h2>没表态是否参加的人 <%= link_to "(更多...)",undetermined_users_sided_match_path(@match.id)%></h2>
+    <%= user_icon(@undetermined_users)%>
     <div class="cb"></div>
   </div>
 

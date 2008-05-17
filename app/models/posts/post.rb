@@ -1,9 +1,6 @@
 class Post < ActiveRecord::Base
   belongs_to :team
   belongs_to :user
-  belongs_to :training
-  belongs_to :match
-  belongs_to :sided_match
 
   has_many :replies, :dependent => :destroy
   
@@ -15,9 +12,7 @@ class Post < ActiveRecord::Base
   
   def self.get_user_related_posts(user, options={})
     return [] if user.user_teams.size <= 0
-    team_ids = user.user_teams.map{|item| item.team_id}
-    sql_condition = ["(#{(['team_id = ?']*team_ids.size).join(' or ')})", *team_ids]
-    q = {:conditions => sql_condition, :order => "updated_at desc"}.merge(options)
+    q = {:conditions => ["team_id in (?)", user.user_teams.map{|item| item.team_id}], :order => "updated_at desc"}.merge(options)
     options.has_key?(:page) ? Post.paginate(:all, q) : Post.find(:all, q)
   end
   
@@ -35,11 +30,45 @@ class Post < ActiveRecord::Base
   end
   
   def can_be_destroyed_by?(user)
-    self.user_id == get_user_id(user) || 
-      UserTeam.find_by_user_id_and_team_id_and_is_admin(get_user_id(user), self.team_id, true) != nil
+    self.user_id == get_user_id(user) || admin?(user) 
+  end
+  
+  
+  def admin?(user)
+    UserTeam.find_by_user_id_and_team_id_and_is_admin(get_user_id(user), self.team_id, true) != nil
+  end
+  
+  def related(user, options={})
+    if (user!=nil && user.is_team_member_of?(team))
+      team.posts.find(:all, options) - [self]
+    else
+      team.posts.public(options) - [self]
+    end
+  end
+  
+  def activity
+    nil
+  end
+  
+  def activity=(act)
+  end
+  
+  ICON = nil
+  IMG_TITLE = nil
+  
+  def icon
+    activity_id.nil? ? nil : self.class::ICON
+  end
+  
+  def img_title
+    activity_id.nil? ? nil : self.class::IMG_TITLE
+  end
+  
+  def private_text
+    '仅队内可见'
   end
 
-private
+protected
   def get_user_id(user)
     case user
     when User

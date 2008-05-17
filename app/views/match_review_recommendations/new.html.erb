@@ -1,0 +1,26 @@
+<h1>New match_review_recommendation</h1>
+
+<%= error_messages_for :match_review_recommendation %>
+
+<% form_for(@match_review_recommendation) do |f| %>
+  <p>
+    <b>User</b><br />
+    <%= f.text_field :user_id %>
+  </p>
+
+  <p>
+    <b>Review</b><br />
+    <%= f.text_field :review_id %>
+  </p>
+
+  <p>
+    <b>Status</b><br />
+    <%= f.text_field :status %>
+  </p>
+
+  <p>
+    <%= f.submit "Create" %>
+  </p>
+<% end %>
+
+<%= link_to 'Back', match_review_recommendations_path %>

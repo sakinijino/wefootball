@@ -1,0 +1,16 @@
+<% for mr in match_review_list %>
+  <div class="mreview">
+    <%=user_image_link(mr.user, :thumb => :small)%>
+    <div class="content">
+      <span class="title"><%=link_to h(mr.title), match_review_path(mr)%></span>
+      <span class="match_link"><%=link_to "#{h(mr.match.host_team_name)} V.S. #{h mr.match.guest_team_name}", mr.match%></span>
+      <span>来自<%=link_to h(mr.user.nickname), user_view_path(mr.user)%></span>
+      <span class="time"><%= mr.created_at.strftime('%Y-%m-%d %H:%M') %></span>
+      <p>
+        <%=auto_link(h(truncate(mr.content, MatchReviewsController::SUMMARY_LENGTH)), :urls) %>
+        <%= link_to "(#{mr.match_review_replies.size}回应)", match_review_path(mr) %>
+      </p>
+    </div>
+    <div class="cb"></div>
+  </div>
+<%end%>

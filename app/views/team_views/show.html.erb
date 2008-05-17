@@ -55,7 +55,7 @@
       <%= "<span>建队时间: #{@team.found_time}</span><br/>" unless @team.found_time.nil?%>
       <%if !@team.summary.blank?%>
           <br/><label>球队简介: </label>
-          <p><%=simple_format auto_link(h(@team.summary), :urls)%></p>
+          <%=simple_format auto_link(h(@team.summary), :urls)%>
       <%end%>
       </div>
       <div class="tab" style="overflow:visible;">
@@ -104,21 +104,16 @@
   </div>
 
   <div class="sect">        
-    <h2><%=h @team.shortname%>的成员</h2>
-    <%if @users.length <= TeamViewsController::USER_LIST_LENGTH%>
-        <%= user_icon(@users)%>
-    <%else%>
-        <%@users.pop%>
-        <%= user_icon(@users)%>
-        <div class="cb"></div>
-        <%= link_to "> 更多",team_team_joins_path(@team), :class=>"more" %>
-    <%end%>
+    <h2><%=h @team.shortname%>的成员 <%= link_to "(更多...)",team_team_joins_path(@team)%></h2>
+    <%= user_icon(@users)%>
     <div class="cb"></div>
   </div>
 
   <div class="sect">   
-    <h2><%=h @team.shortname%>下的讨论<br/>
-    <%=link_to image_tag('rss.gif'), "#{team_posts_path(@team)}.atom", :class=>'atom'%>
+    <h2>
+      <%=h @team.shortname%>下的讨论
+      <%=link_to image_tag('rss.gif'), "#{formatted_team_posts_path(@team, :atom)}", :class=>'atom'%>
+      <div class="cb"></div>
     </h2>
     <%= render :partial=>'posts/narrow_post_list', :object=>@posts%>
     <div class="post_more">

@@ -1,16 +1,14 @@
 class TeamViewsController < ApplicationController
   layout "team_layout"
   
-  TRAINING_LIST_LENGTH = 1
+  RECENT_ACTIVITY_LIST_LENGTH = 1
   USER_LIST_LENGTH = 9
   POSTS_LENGTH = 10
-  MATCH_LIST_LENGTH = 1
-  SIDED_MATCH_LIST_LENGTH = 1
   DISPLAY_DAYS = 14
   
   def show
     @team = Team.find(params[:id])
-    @users = @team.users.find(:all, :limit => USER_LIST_LENGTH+1)
+    @users = @team.users.find(:all, :limit => USER_LIST_LENGTH)
     
     if (logged_in? && current_user.is_team_member_of?(@team))
       @posts = @team.posts.find(:all, :limit=> POSTS_LENGTH)
@@ -19,14 +17,14 @@ class TeamViewsController < ApplicationController
     end
     
     activities = []
-    tmp = @team.trainings.recent(TRAINING_LIST_LENGTH)
+    tmp = @team.trainings.recent(RECENT_ACTIVITY_LIST_LENGTH)
     activities << tmp[0] if tmp.length > 0
     tmp = Match.find :all,
       :conditions => ['(host_team_id = ? or guest_team_id = ?) and end_time > ?', @team.id, @team.id, Time.now],
       :order => 'start_time',
-      :limit => MATCH_LIST_LENGTH
+      :limit => RECENT_ACTIVITY_LIST_LENGTH
     activities << tmp[0] if tmp.length > 0
-    tmp = @team.sided_matches.recent(SIDED_MATCH_LIST_LENGTH)
+    tmp = @team.sided_matches.recent(RECENT_ACTIVITY_LIST_LENGTH)
     activities << tmp[0] if tmp.length > 0
     @recent_activity = activities.length > 0 ? (activities.sort_by{|act| act.start_time})[0] : nil
     

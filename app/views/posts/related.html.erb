@@ -15,15 +15,8 @@
     </ul>
   </div>
   <div class="sect">
-    <h2>我参加的球队</h2>    
-    <%if @teams.length <= PostsController::TEAM_LIST_LENGTH%>
-        <%= team_icon(@teams)%>
-    <%else%>
-        <%@teams.pop%>
-        <%= team_icon(@teams)%>
-        <div class="cb"></div>
-        <%= link_to "> 更多",user_team_joins_path(@user.id), :class=>"more" %>
-    <%end%>       
+    <h2>我参加的球队 <%= link_to "(更多球队...)",user_team_joins_path(@user.id) %></h2>    
+    <%= team_icon(@teams)%>
     <div class="cb"></div>
   </div>
 </div>

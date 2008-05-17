@@ -1,0 +1,11 @@
+<div id="wide_left_content" class="sect">
+  <h2><%=h @title%></h2>
+  <%=render :partial=>'match_review_list_by_user', :object=>@reviews%>
+  <%= will_paginate @reviews %>
+</div>
+
+<div id="narrow_right_content" class="sect">
+  <h2></h2>
+  <%=render :partial=>'sidebar_menu'%>
+</div>
+<div class="cb"></div>

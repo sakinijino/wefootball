@@ -8,24 +8,10 @@
         <span class="bigWeekDaySpan"><%=wday_text date.wday%></span>
       </div>
       <div class="dateContent">
-        <% if act_a_day.length > 0
-           (act_a_day.length>6 ? 6 : act_a_day.length).times do |j|
-              act = act_a_day[j]
-              if act.class == Training
-                img_link = training_icon_link(act)
-              elsif act.class == Match
-                img_link = match_icon_link(act)
-              elsif act.class == SidedMatch
-                img_link = sided_match_icon_link(act)
-              elsif act.class == Play
-                img_link = play_icon_link(act)
-              end%>
-            <span class="activityContent">
-              <%= img_link%>
-            </span>
-          <%end%>
-          <%= day_calendar_link("> 更多", date, @user || @team, :class=>"more") if act_a_day.length > 6%>
+        <%act_a_day.slice(0, 6).each do |act|%>
+          <span class="activityContent"><%= activity_icon(act)%></span>
         <%end%>
+        <%= day_calendar_link("> 更多", date, @user || @team, :class=>"more") if act_a_day.length > 6%>
       </div>
     </div>
     <% date = date.tomorrow %>
@@ -43,32 +29,16 @@
         <%end%>
       </div>
       <div class="dateContent">
-        <% if act_a_day.length > 0 %>
-          <table class="activityContent">
-          <%(act_a_day.length>3 ? 3 : act_a_day.length).times do |j|
-            act = act_a_day[j]
-            if act.class == Training
-              link = training_path(act)
-              img_link = training_icon_link(act)
-            elsif act.class == Match
-              link = match_path(act)
-              img_link = match_icon_link(act)
-            elsif act.class == SidedMatch
-              link = sided_match_path(act)
-              img_link = sided_match_icon_link(act)
-            elsif act.class == Play
-              link = play_path(act)
-              img_link = play_icon_link(act)
-            end%>
-              <tr>
-                <td><%= img_link%></td>
-                <td><%= "#{act.start_time.strftime("%H:%M")}-#{act.end_time.strftime("%H:%M")}"%></td>
-                <td><%= link_to '详情', link%></td>
-             </tr>
-          <%end%>
-          </table>
-          <%= day_calendar_link("> 更多", date, @user || @team, :class=>"more") if act_a_day.length > 3%>
+        <table class="activityContent">
+        <%act_a_day.slice(0, 3).each do |act|%>
+            <tr>
+              <td><%= activity_icon(act)%></td>
+              <td><%= "#{act.start_time.strftime("%H:%M")}-#{act.end_time.strftime("%H:%M")}"%></td>
+              <td><%= link_to '详情', act%></td>
+           </tr>
         <%end%>
+        </table>
+        <%= day_calendar_link("> 更多", date, @user || @team, :class=>"more") if act_a_day.length > 3%>
       </div>
     </div>
     <%if i==0%>
@@ -88,24 +58,12 @@
         <span class="bigWeekDaySpan"><%=wday_text date.wday%></span>
       </div>
       <div class="dateContent">
-        <% if act_a_day.length > 0
-           (act_a_day.length>6 ? 6 : act_a_day.length).times do |j|
-              act = act_a_day[j]
-              if act.class == Training
-                img_link = training_icon_link(act)
-              elsif act.class == Match
-                img_link = match_icon_link(act)
-              elsif act.class == SidedMatch
-                img_link = sided_match_icon_link(act)
-              elsif act.class == Play
-                img_link = play_icon_link(act)
-              end%>
-            <span class="activityContent">
-              <%= img_link%>
-            </span>
-          <%end%>
-          <%= day_calendar_link("> 更多", date, @user || @team, :class=>"more") if act_a_day.length > 6%>
+        <%act_a_day.slice(0, 6).each do |act|%>
+          <span class="activityContent">
+            <%= activity_icon(act)%>
+          </span>
         <%end%>
+        <%= day_calendar_link("> 更多", date, @user || @team, :class=>"more") if act_a_day.length > 6%>
       </div>
     </div>
     <% date = date.tomorrow %>

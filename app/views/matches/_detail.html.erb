@@ -9,9 +9,9 @@
       <%links << link_to("取消比赛", match_path(@match), :method => :delete, :confirm => '真的要取消这场比赛吗？') if @match.can_be_destroyed_by?(current_user)%>
       <%= links_with_sticks links%>
       <%= "<br/><br/>" if links.length > 0 %>
-      <%= match_join_status_text @match, team, '该队'%>
+      <%= @match.sided_join_status_text current_user, team, '该队'%>
       <br/>
-      <% links_text = match_join_status_links @match, team%>
+      <% links_text = @match.join_links_text current_user, team%>
       <%links = []%>
       <%links << link_to(links_text[0], 
           match_joins_path(:team_id => team, :match_id => @match), :method=>:post) if @match.can_be_joined_by?(current_user, team)%>
@@ -19,7 +19,7 @@
           match_join_path(0, :team_id => team, :match_id => @match), :method=>:delete) if @match.can_be_quited_by?(current_user, team)%>
       <%= links_with_sticks links%>
     <%end%>
-    <%if @match.is_after_match? && @match.has_conflict%>
+    <%if @match.finished? && @match.has_conflict%>
       <br/>
       <%if is_host%>
         <span>主队认为: <%= match_result_text_by_host @match%></span>

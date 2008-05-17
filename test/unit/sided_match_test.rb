@@ -78,20 +78,20 @@ class SidedMatchTest < ActiveSupport::TestCase
     m = sided_matches(:one)
     m.start_time = 9.days.since
     m.save!
-    assert_equal true,m.is_before_match?
-    assert_equal false,m.is_after_match?
+    assert_equal true,!m.started?
+    assert_equal false,m.finished?
     
     m.start_time = Time.now.ago(1800)
     m.half_match_length = 25
     m.rest_length = 10
     m.save!
-    assert_equal false,m.is_before_match?
-    assert_equal false,m.is_after_match?
+    assert_equal false,!m.started?
+    assert_equal false,m.finished?
     
     m.start_time = 1.days.ago
     m.save
-    assert_equal false,m.is_before_match?
-    assert_equal true,m.is_after_match?
+    assert_equal false,!m.started?
+    assert_equal true,m.finished?
   end
 
   def test_cascade_destroy_between_match_and_match_join#测试match和matchJoin间的级联删除
@@ -225,8 +225,8 @@ class SidedMatchTest < ActiveSupport::TestCase
     t = SidedMatch.find(1)
     l  = t.posts.size
     assert_not_equal 0, l
-    assert_no_difference "t.team.posts.length" do
-    assert_difference "t.team.posts.find(:all, :conditions=>['sided_match_id is not null']).length", -l do
+    assert_no_difference "t.team.posts.reload.length" do
+    assert_difference "t.team.posts.find(:all, :conditions=>['activity_id is not null']).length", -l do
       t.destroy
     end
     end

@@ -1,0 +1,22 @@
+<div id="wide_left_content" class="sect">
+  <h2>请选择一位继任管理员</h2>
+  <%@wjs.each do |wj| %>
+    <div class="icon_select wide_icon_select">
+      <%= user_icon(wj.user)%>
+      <div>
+        <%=link_to("选为继任管理员，然后退出看球活动", destroy_admin_watch_join_path(wj), :method=>:delete, :confirm => '确实要转让管理员并退出吗？')%>
+      </div>
+    </div>
+  <%end%>
+  <div class="cb"></div>
+</div>
+
+<div id="narrow_right_content">
+  <ul class="sidebar_menu">
+    <li>
+      > <%= link_to '返回看球活动的页面', @watch %>
+    </li>
+  </ul>
+</div>
+
+<div class="cb"></div>
