@@ -2,7 +2,7 @@
   <tr>
     <th style="width:15px">&nbsp;</th>
     <th>话题</th>
-    <th>球队</th>
+    <th>来自</th>
     <th>作者</th>
     <th style="width:30px">回复</th>
     <th style="width:100px; text-align:right">最后回复</th>
@@ -12,7 +12,14 @@
   <tr>
     <td><%=post_icon_link post%></td>
     <td><%=link_to h(post.title), post_path(post)  %><%="<span class='private'>&nbsp;&nbsp;-&nbsp;&nbsp;(#{post.private_text})</span>" if post.is_private%></td>
-    <td><%=link_to h(post.team.shortname), team_view_path(post.team) %></td>
+    <td>
+      <%=case post
+        when WatchPost
+          link_to '看球活动', post.activity
+        else
+          link_to h(post.team.shortname), team_view_path(post.team)
+      end%>
+    </td>
     <td><%=h post.user.nickname %></td>
     <td><%= post.replies.size %></td>
     <td><%= post.updated_at.strftime('%Y-%m-%d %H:%M') %></td>
