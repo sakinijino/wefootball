@@ -14,7 +14,12 @@ class Post < ActiveRecord::Base
   
   def self.get_user_related_posts(user, options={})
     return [] if user.user_teams.size <= 0
-    q = {:conditions => ["team_id in (?)", user.user_teams.map{|item| item.team_id}], :order => "updated_at desc"}.merge(options)
+    q = {:conditions => [
+        "team_id in (?) or (type='WatchPost' and activity_id in (?))", 
+        user.user_teams.map{|item| item.team_id},
+        user.watch_joins.map{|item| item.watch_id}
+      ], 
+      :order => "updated_at desc"}.merge(options)
     options.has_key?(:page) ? Post.paginate(:all, q) : Post.find(:all, q)
   end
   

@@ -25,6 +25,12 @@ class PostsControllerTest < ActionController::TestCase
     assert_equal 1, assigns(:posts).length
   end
   
+  def test_should_get_watch_index
+    get :index, :watch_id => 1
+    assert_response :success
+    assert_equal 2, assigns(:posts).length
+  end  
+  
   def test_should_get_team_index_private
     login_as :saki
     get :index, :team_id => 1
@@ -52,6 +58,13 @@ class PostsControllerTest < ActionController::TestCase
     assert_response :success
     assert_equal 2, assigns(:posts).length
   end
+  
+  def test_should_get_watch_index_private
+    login_as :saki    
+    get :index, :watch_id => 1
+    assert_response :success
+    assert_equal 3, assigns(:posts).length
+  end    
   
   def test_get_show_can_reply
     login_as :quentin
@@ -86,8 +99,14 @@ class PostsControllerTest < ActionController::TestCase
     get :new, :team_id => teams(:inter).id
     assert_fake_redirected
     get :new, :training_id => 1
-    assert_fake_redirected
+    assert_fake_redirected   
   end
+  
+  def test_get_watch_new_noauth
+    login_as :mike1
+    get :new, :watch_id => 1
+    assert_fake_redirected   
+  end  
   
   def test_get_edit_noauth
     login_as :quentin
@@ -140,6 +159,16 @@ class PostsControllerTest < ActionController::TestCase
     end
     assert_equal users(:quentin).id, assigns(:post).user_id
     assert_redirected_to post_path(assigns(:post))
+    
+    assert_difference('Post.count') do
+    assert_difference('WatchPost.count') do
+    assert_difference('Watch.find(1).posts.length') do
+      post :create, :watch_id=>1, :post => { :title => 'Test', :content => '123456'}
+    end
+    end
+    end
+    assert_equal users(:quentin).id, assigns(:post).user_id
+    assert_redirected_to post_path(assigns(:post))    
   end
 
   def test_should_update_post

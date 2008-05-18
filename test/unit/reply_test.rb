@@ -6,6 +6,11 @@ class ReplyTest < ActiveSupport::TestCase
     assert replies(:quentin_1_reply).can_be_destroyed_by?(users(:quentin))
     assert replies(:quentin_1_reply).can_be_destroyed_by?(users(:saki))
     assert !replies(:quentin_1_reply).can_be_destroyed_by?(users(:aaron))
+    
+    #reply of watch_post
+    assert replies(:quentin_2_reply).can_be_destroyed_by?(users(:quentin))
+    assert replies(:quentin_2_reply).can_be_destroyed_by?(users(:saki))
+    assert !replies(:quentin_2_reply).can_be_destroyed_by?(users(:aaron))
   end
   
   def test_replies_counter
