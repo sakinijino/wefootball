@@ -14,7 +14,7 @@ class WatchPost < Post
   
   def is_visible_to?(user)
     !self.is_private || self.user_id == get_user_id(user) || 
-      WatchJoin.find_by_user_id_and_team_id(get_user_id(user), self.activity_id) != nil
+      WatchJoin.find_by_user_id_and_watch_id(get_user_id(user), self.activity_id) != nil
   end
   
   def can_be_replied_by?(user)

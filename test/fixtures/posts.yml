@@ -93,6 +93,21 @@ saki_11:
   is_private: true
   user_id: 3
 
+saki_12:
+  title: Title1
+  content: Content1
+  activity_id: 1
+  type: WatchPost
+  is_private: true
+  user_id: 3
+
+saki_13:
+  title: Title1
+  content: Content1
+  activity_id: 1
+  type: WatchPost
+  user_id: 3
+
 quentin_2:
   id: 2
   title: Title2
@@ -100,4 +115,12 @@ quentin_2:
   team_id: 2
   type: Post
   is_private: true
+  user_id: 1
+
+quentin_1:
+  id: 3
+  title: Title1
+  content: Content1
+  activity_id: 1
+  type: WatchPost
   user_id: 1

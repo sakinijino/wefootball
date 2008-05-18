@@ -6,12 +6,14 @@ module PostsHelper
   
   def post_sidebar_menu(act)
     case @activity 
-     when Training
+    when Training
       "#{render :partial=>'posts/sidebar_menu_training'}"
     when SidedMatch
       "#{render :partial=>'posts/sidebar_menu_sided_match'}"
     when Match
       "#{render :partial=>'posts/sidebar_menu_match'}"
+    when Watch
+      "#{render :partial=>'posts/sidebar_menu_watch'}"
     else
       "#{render :partial=>'posts/sidebar_menu_team'}"
     end

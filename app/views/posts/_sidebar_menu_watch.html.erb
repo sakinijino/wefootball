@@ -1,0 +1,18 @@
+<ul class="sidebar_menu"> 
+
+  <% if logged_in? && @activity.has_member?(current_user)%>
+    <li <%= selected_class_sidebar_menu_item(:action=>'new')%>> 
+      > <%= link_to '针对本次看球活动发言', new_watch_post_path(@activity) %>
+    </li>
+  <%end%>
+  
+  <li <%= selected_class_sidebar_menu_item(:action=>'index')%>>
+    > <%= link_to '本场看球活动的讨论', watch_posts_path(@activity) %>
+  </li>
+    
+  <li class="seperate">
+  </li>
+  <li> 
+    > <%= link_to "返回#{@activity.img_title}活动详情", @activity %>
+  </li>
+</ul>
