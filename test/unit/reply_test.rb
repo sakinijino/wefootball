@@ -12,13 +12,13 @@ class ReplyTest < ActiveSupport::TestCase
     posts(:saki_1).replies(:refresh).size
     r = Reply.new(:content => "Test Reply")
     r.user = users(:saki)
-    assert_difference "posts(:saki_1).replies.size" do
+    assert_difference "posts(:saki_1).reload.replies.size" do
       posts(:saki_1).replies << r
-      r.save!
+      posts(:saki_1).save!
     end
     
     assert_difference "Reply.count", -1 do
-    assert_difference "posts(:saki_1).replies.size", -1 do
+    assert_difference "posts(:saki_1).reload.replies.size", -1 do
       posts(:saki_1).replies.delete(r)
     end
     end

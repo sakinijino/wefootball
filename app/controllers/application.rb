@@ -33,8 +33,6 @@ class ApplicationController < ActionController::Base
       @end_time = tmp[-1].end_time.tomorrow
       @activities = tmp.group_by{|t| t.start_time.strftime("%Y-%m-%d")}
     else
-      @start_time = Time.now
-      @end_time = Time.now
       @activities = {}
     end
     
@@ -45,10 +43,16 @@ class ApplicationController < ActionController::Base
     end
     @bcs = @bcs.slice(0,5)
     
-    @official_matches = OfficialMatch.paginate :conditions => ['end_time > ? and start_time < ?', Time.now, 7.days.since],
+    @official_matches = OfficialMatch.find :all, 
+      :conditions => ['end_time > ? and start_time < ?', Time.now, 7.days.since],
       :order=>'watch_join_count DESC, start_time',
-      :page => params[:page],
-      :per_page => 3
+      :limit => 3
+    
+    @reviews = MatchReview.find( :all,
+      :conditions => ['created_at > ?', 3.days.ago], 
+      :limit=>5,
+      :order => 'like_count-dislike_count desc, like_count desc, created_at desc')
+    
     render :template => 'shared/index', :layout =>default_layout
   end
   

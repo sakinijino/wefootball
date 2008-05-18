@@ -532,9 +532,32 @@ div.broadcast span.dtal {
   color: #666;
 }
 
-div.broadcast img.r_icon {
+div.broadcast .r_icon {
   float:right;
   margin-left: 14px;
+}
+
+div.broadcast div.match_icons {
+  width: 100px;
+  height: 100px;
+  overflow: hidden;
+  position: relative;
+}
+
+div.broadcast div.match_icons img.icon{
+  margin: 0;
+}
+
+div.broadcast div.match_icons img.host_icon {
+  position:absolute;
+  top:0;
+  left:0;
+}
+
+div.broadcast div.match_icons img.guest_icon {
+  position:absolute;
+  top:41px;
+  left:33px;
 }
 
 div.post {
@@ -565,12 +588,6 @@ div.post div.content {
   overflow:hidden;
   float:left;
   padding-bottom: 10px;
-}
-
-div.post div.recomm {
-  float:right;
-  margin:0 20px 10px 0;
-  color: #666;
 }
 
 ul.sidebar_menu {
@@ -809,6 +826,12 @@ div.mreview span.match_link{
   display: block;
   width: 100%;
   margin: 5px 0;
+}
+
+div.recomm {
+  float:right;
+  margin:0 20px 10px 0;
+  color: #666;
 }
 
 div.mreview_minfo {

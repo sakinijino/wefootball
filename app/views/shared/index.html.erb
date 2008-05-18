@@ -49,6 +49,13 @@
     </div>
   <%end%>
   
+  <%if @reviews.length > 0%>
+    <div class="sect">
+      <h2>近期最受欢迎的球评</h2>
+      <%=render :partial=>'match_reviews/match_review_list_by_user', :object=>@reviews%>
+    </div>
+  <%end%>
+  
   <div class="sect">
     <h2>最新的广播</h2>
     <%for bc in @bcs%>
@@ -57,9 +64,11 @@
     <div class='cb'></div>
   </div>
 
-  <div class="sect">
-    <h2>最近要进行的活动</h2>
-    <%= render :partial => 'shared/activities', :object => @activities, :locals=>{:start_date=> @start_time, :end_date=> @end_time}%>
-  </div>
+  <%if !@activities.empty?%>
+    <div class="sect">
+      <h2>最近要进行的活动</h2>
+      <%= render :partial => 'shared/activities', :object => @activities, :locals=>{:start_date=> @start_time, :end_date=> @end_time}%>
+    </div>
+  <%end%>
 </div>
 <div class="cb"></div>

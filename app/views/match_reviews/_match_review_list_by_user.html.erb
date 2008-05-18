@@ -14,6 +14,9 @@
         <%=auto_link(h(truncate(mr.content, MatchReviewsController::SUMMARY_LENGTH)), :urls) %>
         <%= link_to "(#{mr.match_review_replies.size}回应)", match_review_path(mr) %>
       </p>
+      <div class="recomm">
+        <%= mr.like_count%>/<%= mr.recommendation_count%>人觉得这篇球评写得不错
+      </div>
     </div>
     <div class="cb"></div>
   </div>

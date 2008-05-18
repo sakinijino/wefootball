@@ -13,13 +13,13 @@ class SiteReplyTest < ActiveSupport::TestCase
     site_posts(:saki_1).site_replies(:refresh).size
     r = SiteReply.new(:content => "Test Reply")
     r.user = users(:saki)
-    assert_difference "site_posts(:saki_1).site_replies.size" do
+    assert_difference "site_posts(:saki_1).reload.site_replies.size" do
       site_posts(:saki_1).site_replies << r
-      r.save!
+      site_posts(:saki_1).save!
     end
     
     assert_difference "SiteReply.count", -1 do
-    assert_difference "site_posts(:saki_1).site_replies.size", -1 do
+    assert_difference "site_posts(:saki_1).reload.site_replies.size", -1 do
       site_posts(:saki_1).site_replies.delete(r)
     end
     end

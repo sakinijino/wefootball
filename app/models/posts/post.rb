@@ -10,6 +10,8 @@ class Post < ActiveRecord::Base
   
   attr_accessible :title, :content, :is_private
   
+  attr_readonly :replies_count
+  
   def self.get_user_related_posts(user, options={})
     return [] if user.user_teams.size <= 0
     q = {:conditions => ["team_id in (?)", user.user_teams.map{|item| item.team_id}], :order => "updated_at desc"}.merge(options)

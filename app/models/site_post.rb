@@ -14,6 +14,8 @@ class SitePost < ActiveRecord::Base
   
   attr_accessible :title, :content, :email
   
+  attr_readonly :site_replies_count
+  
   def before_validation
     self.email = nil if self.email.blank?
   end

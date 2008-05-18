@@ -6,7 +6,7 @@
         <%=match_info.result_text%>
       </div>
       <span>时间: </span><%= match_info.start_time.strftime("%m月%d日 %H:%M")%>&nbsp;&nbsp;&nbsp;&nbsp;
-      <%= link_to '比赛详情', match_info%>
+      <%= link_to '查看详情', match_info%>
     </td>
     <td><%= official_team_icon(match_info.guest_team)%></td>
   </tr>
