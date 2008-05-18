@@ -35,6 +35,16 @@
       <%=simple_format auto_link(h(@watch.description), :urls)%>
   </div>
   <%end%>
+  <div class="sect">
+    <h2>关于本次看球活动的讨论</h2>
+    <%= render(:partial => 'posts/post_list', :object => @posts)%>
+    <div class="post_more">
+      <%links = []%>
+      <%links << "> #{link_to '针对本次看球活动发言', new_watch_post_path(@watch)}" if logged_in? && @watch.has_member?(current_user)%>
+      <%links << "> #{link_to '更多', watch_posts_path(@watch)}"%>
+      <%= links_with_sticks links%>
+    </div>
+  </div>  
 </div>
 
 <div id="narrow_right_content">

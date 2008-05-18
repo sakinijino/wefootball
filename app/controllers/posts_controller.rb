@@ -57,6 +57,16 @@ class PostsController < ApplicationController
              :order => "created_at desc"}
         }
       end
+    elsif params[:watch_id]
+      @activity = Watch.find(params[:watch_id])
+      @user = current_user
+      if (logged_in? && @activity.has_member?(current_user))
+        @posts = @activity.posts.paginate(:page => params[:page], :per_page => POSTS_PER_PAGE)
+      else
+        @posts = @activity.posts.public(:page => params[:page], :per_page => POSTS_PER_PAGE)
+      end
+      @title = "本次看球活动下的讨论"
+      render :layout => default_layout
     else
       fake_params_redirect
     end
@@ -94,6 +104,11 @@ class PostsController < ApplicationController
       @posts_url = sided_match_posts_path(@activity)
       @title = "讨论对阵 #{@activity.guest_team_name} 的比赛"
       @post = SidedMatchPost.new
+      if !current_user.is_team_member_of?(@team.id)
+        fake_params_redirect 
+        return
+      end
+      render :layout => 'team_layout'     
     elsif (params[:match_id])
       @activity = Match.find(params[:match_id])
       @team = Team.find(params[:team_id])
@@ -101,26 +116,45 @@ class PostsController < ApplicationController
       @title = "讨论对阵 #{(@activity.host_team_id != @team.id ? @activity.host_team : @activity.guest_team).shortname} 的比赛"
       @post = MatchPost.new
       @match = @activity
+      if !current_user.is_team_member_of?(@team.id)
+        fake_params_redirect 
+        return
+      end
+      render :layout => 'match_layout'       
     elsif (params[:training_id])
       @activity = Training.find(params[:training_id])
       @team = @activity.team
       @posts_url = training_posts_path(@activity)
       @title = "讨论#{@team.shortname} #{@activity.start_time.strftime('%m.%d')}的训练"
       @post = TrainingPost.new
+      if !current_user.is_team_member_of?(@team.id)
+        fake_params_redirect 
+        return
+      end
+      render :layout => 'team_layout'      
     elsif (params[:team_id])
       @activity = nil
       @team = Team.find(params[:team_id])
       @posts_url = team_posts_path(@team)
       @title = "在#{@team.shortname}的讨论区中发言" if @team
       @post = Post.new
-    end
-    
-    if !current_user.is_team_member_of?(@team.id)
-      fake_params_redirect 
-      return
-    end
-    
-    render :layout => post_layout(@post)
+      if !current_user.is_team_member_of?(@team.id)
+        fake_params_redirect 
+        return
+      end
+      render :layout => 'team_layout'       
+    elsif (params[:watch_id])
+      @activity = Watch.find(params[:watch_id])
+      @posts_url = watch_posts_path
+      @title = "在本次看球活动中中发言"
+      @post = WatchPost.new
+      if !@activity.has_member?(current_user)
+        fake_params_redirect 
+        return
+      end
+      @user = current_user
+      render :layout => 'user_layout'       
+    end    
   end
 
   def create
@@ -128,33 +162,60 @@ class PostsController < ApplicationController
       @activity = SidedMatch.find(params[:sided_match_id])
       @team = @activity.team
       @post = SidedMatchPost.new(params[:post])
+      if !current_user.is_team_member_of?(@team.id)
+        fake_params_redirect 
+        return
+      end
+      @post.team = @team
+      layout = 'team_layout'
     elsif (params[:match_id])
       @activity = Match.find(params[:match_id])
       @team = Team.find(params[:team_id])
       @post = MatchPost.new(params[:post])
+      if !current_user.is_team_member_of?(@team.id)
+        fake_params_redirect 
+        return
+      end
+      @post.team = @team
+      layout = 'team_layout'      
     elsif (params[:training_id])
       @activity = Training.find(params[:training_id])
       @team = @activity.team
       @post = TrainingPost.new(params[:post])
+      if !current_user.is_team_member_of?(@team.id)
+        fake_params_redirect 
+        return
+      end
+      @post.team = @team
+      layout = 'team_layout'      
     elsif (params[:team_id])
       @activity = nil
       @team = Team.find(params[:team_id])
       @post = Post.new(params[:post])
+      if !current_user.is_team_member_of?(@team.id)
+        fake_params_redirect 
+        return
+      end
+      @post.team = @team
+      layout = 'team_layout'      
+    elsif params[:watch_id]
+      @activity = Watch.find(params[:watch_id])
+      @post = WatchPost.new(params[:post])
+      if !@activity.has_member?(current_user)
+        fake_params_redirect 
+        return
+      end
+      @user = current_user
+      layout = 'user_layout'      
     end
     
-    if !current_user.is_team_member_of?(@team.id)
-      fake_params_redirect 
-      return
-    end
-    
-    @post.team = @team
     @post.activity = @activity
     @post.user = current_user
     if @post.save
       redirect_to(post_path(@post))
     else
-      render :action => "new", :layout => post_layout(@post)
-    end
+      render :action => "new", :layout => layout
+    end      
   end
   
   def edit
@@ -191,9 +252,11 @@ protected
     case @post
     when MatchPost
       @match = @post.match if !@match
-      "match_layout"
+      @match.nil? ? "team_layout" : "match_layout"
+    when WatchPost
+      default_layout
     else
       "team_layout" 
-    end
-  end
+    end    
+  end  
 end

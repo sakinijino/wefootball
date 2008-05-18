@@ -2,6 +2,7 @@ class WatchesController < ApplicationController
   before_filter :login_required, :except => [:show, :index]  
   
   USERS_LIST_LENGTH = 18
+  POSTS_LENGTH = 10
   
   def index
     @official_match = OfficialMatch.find(params[:official_match_id])
@@ -12,6 +13,12 @@ class WatchesController < ApplicationController
   
   def show
     @watch = Watch.find(params[:id])
+    
+    if (logged_in? && @watch.has_member?(current_user))
+      @posts = @watch.posts.find(:all, :limit=>POSTS_LENGTH)
+    else
+      @posts = @watch.posts.public :limit=>POSTS_LENGTH
+    end    
     @users = @watch.users.find(:all,:limit=>USERS_LIST_LENGTH)
     @official_match = @watch.official_match
     @is_admin = logged_in? && (@watch.admin.id == current_user.id)
