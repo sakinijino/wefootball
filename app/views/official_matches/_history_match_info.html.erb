@@ -1,0 +1,21 @@
+<table class="om">
+  <tr>
+    <td class="host_team"><%= official_team_icon(history_match_info.host_team)%></td>
+    <td class="detail">
+      <div class="om_result">
+        <%=history_match_info.result_text%>
+      </div>
+      <%= link_to '查看详情', history_match_info%>
+    </td>
+    <td class="guest_team"><%= official_team_icon(history_match_info.guest_team)%></td>
+  </tr>
+</table>
+<div class="control">
+  <%links = []%>
+  <% if history_match_info.watch_join_count > 0%>
+    <%links << "共有#{history_match_info.watch_join_count}人看了这场比赛" %>
+  <%end%>
+  <%links << link_to("写一篇新球评", new_official_match_match_review_path(history_match_info))%>
+  <%= links_with_sticks links%>
+</div>
+<div class="cb om_sprt"></div>

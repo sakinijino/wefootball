@@ -162,7 +162,7 @@
 
   <%if logged_in? && @user.id == current_user.id && @posts.size > 0%>
     <div class="sect">
-      <h2><%=smart_nickname @user%>所在球队的讨论更新 <%= link_to "(更多讨论更新...)", related_posts_path %></h2>
+      <h2><%=smart_nickname @user%>的讨论更新 <%= link_to "(更多讨论更新...)", related_posts_path %></h2>
       <%=render :partial=>'posts/many_teams_post_list', :object=>@posts%>
     </div>
   <%end%>

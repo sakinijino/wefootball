@@ -7,17 +7,13 @@
 </div>
 
 <div id="right_content" class="activities sect" style="width:460px">
-  <h2>近期人数最多的看球活动</h2>
+  <%=render :partial=>'sidebar_menu'%>
+  
+  <h2>参加人数最多的相关看球活动</h2>
   <%@watches.each do |w|%>
     <%= render :partial => 'shared/activity', :object => w%>
     <div class="cb"></div>
   <%end%>
-    
-  <ul class="sidebar_menu">
-    <%if @is_editor%>
-    <li> > <%= link_to('新建比赛', new_official_match_path)%></li>
-    <%end%>
-  </ul>
 </div>
 <div class="cb"></div>
 

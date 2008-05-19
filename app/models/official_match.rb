@@ -55,7 +55,7 @@ class OfficialMatch < ActiveRecord::Base
   def result_text
     if finished? && !host_team_goal.nil? && !guest_team_goal.nil?
       if pk?
-        "#{host_team_goal}(#{host_team_pk_goal}) : #{guest_team_goal}(#{guest_team_pk_goal})"
+        "#{host_team_goal}<span class='pk_goal'>(#{host_team_pk_goal})</span> : #{guest_team_goal}<span class='pk_goal'>(#{guest_team_pk_goal})</span>"
       else
         "#{host_team_goal} : #{guest_team_goal}"
       end

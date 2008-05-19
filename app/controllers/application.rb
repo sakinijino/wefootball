@@ -44,23 +44,31 @@ class ApplicationController < ActionController::Base
     @bcs = @bcs.slice(0,5)
     
     @official_matches = OfficialMatch.find :all, 
-      :conditions => ['end_time > ? and start_time < ?', Time.now, 7.days.since],
+      :conditions => ['end_time > ? and start_time < ?', Time.now, OfficialMatchesController::RECENT_DAYS.days.since],
       :order=>'watch_join_count DESC, start_time',
       :limit => 3
+    
+    @history_official_matches = OfficialMatch.find :all, 
+      :conditions => ['end_time > ? and end_time < ?', OfficialMatchesController::HISTORY_DAYS.days.ago, Time.now],
+      :order=>'watch_join_count desc, start_time',
+      :limit => 5
     
     @reviews = MatchReview.find( :all,
       :conditions => ['created_at > ?', 3.days.ago], 
       :limit=>5,
       :order => 'like_count-dislike_count desc, like_count desc, created_at desc')
     
+    @title = "WeFootball - 没事儿踢踢球才是正经事~"
     render :template => 'shared/index', :layout =>default_layout
   end
   
   def about
+    @title = "关于WeFootball"  
     render :template => 'shared/about', :layout =>default_layout
   end
   
   def faq
+    @title = "WeFootball常见问题"  
     render :template => 'shared/faq', :layout =>default_layout
   end
   

@@ -1,6 +1,6 @@
 <table class="om">
   <tr>
-    <td><%= official_team_icon(match_info.host_team)%></td>
+    <td class="host_team"><%= official_team_icon(match_info.host_team)%></td>
     <td class="detail">
       <div class="om_result">
         <%=match_info.result_text%>
@@ -8,7 +8,7 @@
       <span>时间: </span><%= match_info.start_time.strftime("%m月%d日 %H:%M")%>&nbsp;&nbsp;&nbsp;&nbsp;
       <%= link_to '查看详情', match_info%>
     </td>
-    <td><%= official_team_icon(match_info.guest_team)%></td>
+    <td class="guest_team"><%= official_team_icon(match_info.guest_team)%></td>
   </tr>
 </table>
 <div class="control">

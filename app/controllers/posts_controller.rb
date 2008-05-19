@@ -76,9 +76,8 @@ class PostsController < ApplicationController
   
   def related
     @user = current_user
-    @teams = @user.teams.find(:all, :limit => TEAM_LIST_LENGTH)
     @posts = current_user.related_posts :page => params[:page], :per_page => POSTS_PER_PAGE
-    @title = "我所在球队的讨论更新"
+    @title = "我的讨论更新"
     render :layout => "user_layout"
   end
 

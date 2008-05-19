@@ -114,7 +114,7 @@ ActionController::Routing::Routes.draw do |map|
   end
   
   map.resources :official_teams, :member => {:update_image => :put}
-  map.resources :official_matches do |om|
+  map.resources :official_matches, :collection => {:history => :get} do |om|
     om.resources :match_reviews
     om.resources :watches
   end

@@ -1,11 +1,13 @@
 class OfficialMatchesController < ApplicationController
-  before_filter :login_required, :except => [:show, :index]
-  before_filter :require_editor, :except => [:show, :index]
+  before_filter :login_required, :except => [:show, :index, :history]
+  before_filter :require_editor, :except => [:show, :index, :history]
 
   REVIEW_LIST_LENGTH = 5
+  RECENT_DAYS = 7
+  HISTORY_DAYS = 7
   
   def index
-    @official_matches = OfficialMatch.paginate :conditions => ['end_time > ? and start_time < ?', Time.now, 7.days.since],
+    @official_matches = OfficialMatch.paginate :conditions => ['end_time > ? and start_time < ?', Time.now, RECENT_DAYS.days.since],
       :order=>'watch_join_count desc, start_time',
       :page => params[:page],
       :per_page => 15
@@ -14,8 +16,24 @@ class OfficialMatchesController < ApplicationController
       :conditions => ['official_match_id in (?)', @official_matches.map{|om| om.id}], 
       :order=>'watch_join_count desc', 
       :limit=>15
-    @title = "近期最受关注的比赛"
+    @title = "未来#{RECENT_DAYS}天内最受关注的比赛"
     
+    @is_editor = OfficialMatchEditor.is_a_editor?(current_user)
+    render :layout => default_layout
+  end
+  
+  def history
+    @official_matches = OfficialMatch.paginate :conditions => ['end_time > ? and end_time < ?', HISTORY_DAYS.days.ago, Time.now],
+      :order=>'watch_join_count desc, start_time',
+      :page => params[:page],
+      :per_page => 15
+    
+    @reviews = OfficialMatchReview.find :all, 
+      :conditions => ['match_id in (?)', @official_matches.map{|om| om.id}], 
+      :order => 'like_count-dislike_count desc, like_count desc, created_at desc',
+      :limit=>10
+    
+    @title = "过去#{HISTORY_DAYS}天内最受关注的比赛"
     @is_editor = OfficialMatchEditor.is_a_editor?(current_user)
     render :layout => default_layout
   end

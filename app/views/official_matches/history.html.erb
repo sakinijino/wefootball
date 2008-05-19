@@ -1,0 +1,15 @@
+<div id="left_content" class="sect">
+  <div class="sect">
+    <h2><%=h @title%></h2>
+    <%= render(:partial => 'history_match_info', :collection => @official_matches)%>
+    <%= will_paginate @official_matches %>
+  </div>
+</div>
+
+<div id="right_content" class="activities sect">
+  <%=render :partial=>'sidebar_menu'%>
+  
+  <h2>最受欢迎的相关球评</h2>
+  <%=render :partial=>'match_reviews/match_review_list_by_user', :object=>@reviews%>
+</div>
+<div class="cb"></div>

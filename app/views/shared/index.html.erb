@@ -28,6 +28,13 @@
     </div>
   </div>
 
+  <%if @history_official_matches.length > 0%>
+    <div class="sect">
+      <h2>过去<%= OfficialMatchesController::HISTORY_DAYS%>天内最受关注的比赛 <%=link_to "(更多比赛...)", history_official_matches_path%></h2>
+      <%= render(:partial => 'official_matches/history_match_info', :collection => @history_official_matches)%>
+    </div>
+  <%end%>
+
   <div class="sect">
     <h2>最近加入的用户</h2>    
     <%= user_icon(@users)%>
@@ -44,7 +51,7 @@
 <div id="right_content">
   <%if @official_matches.length > 0%>
     <div class="sect">
-      <h2>近期最受关注的比赛 <%=link_to "(更多比赛...)", official_matches_path%></h2>
+      <h2>未来<%= OfficialMatchesController::RECENT_DAYS%>天内最受关注的比赛 <%=link_to "(更多比赛...)", official_matches_path%></h2>
       <%= render(:partial => 'official_matches/match_info', :collection => @official_matches)%>
     </div>
   <%end%>

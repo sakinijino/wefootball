@@ -1,0 +1,14 @@
+<ul class="sidebar_menu">
+  <li <%= selected_class_sidebar_menu_item(:action=>'index')%>>
+    > <%= link_to "未来#{OfficialMatchesController::RECENT_DAYS}天内最受关注的比赛", official_matches_path %>
+  </li>
+  <li <%= selected_class_sidebar_menu_item(:action=>'history')%>>
+    > <%= link_to "过去#{OfficialMatchesController::HISTORY_DAYS}天内最受关注的比赛", history_official_matches_path %>
+  </li>
+  <%if @is_editor%>
+    <li> 
+      > <%= link_to('新建比赛', new_official_match_path)%>
+    </li>
+  <%end%>
+  <li class='seperate'></li>
+</ul>

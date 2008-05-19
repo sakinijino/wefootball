@@ -108,12 +108,12 @@
   </div>
 
   <div class="sect">
-    <h2>最受欢迎的球评 <%= link_to "(发表新球评)", new_sided_match_match_review_path(@match)%></h2>
+    <h2>最受欢迎的球评 <%= link_to "(写一篇新球评...)", new_sided_match_match_review_path(@match)%></h2>
     <%if @reviews.length > 0%>
       <%=render :partial=>'match_reviews/match_review_list', :object=>@reviews%>
       <div class="more">
         <%links = []%>
-        <%#links << %(> #{link_to "发表新球评", new_sided_match_match_review_path(@match)})%>
+        <%#links << %(> #{link_to "写一篇新球评", new_sided_match_match_review_path(@match)})%>
         <%links << %(> #{link_to "更多", sided_match_match_reviews_path(@match)}) if @reviews.length >= SidedMatchesController::REVIEW_LIST_LENGTH%>
         <%= links_with_sticks links%>
       </div>

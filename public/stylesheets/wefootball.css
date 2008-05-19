@@ -682,6 +682,14 @@ table.om td{
   overflow: hidden;
 }
 
+table.om td.host_team div.icon {
+  margin-right: 0;
+}
+
+table.om td.guest_team div.icon {
+  margin-left: 0;
+}
+
 table.om td.detail {
   width: 370px;
 }
@@ -695,6 +703,11 @@ table.om .om_result {
   line-height:60px;
   color:#7E3E0B;
   font-family:Georgia,"Times New Roman",Times,serif;
+}
+
+table.om .om_result span.pk_goal{
+  font-size:24px;
+  color:#7E3E0B;
 }
 
 div.simple_watch_activity {
@@ -769,7 +782,7 @@ div.result_block span.another_result {
 }
 
 div.mreview {
-  margin: 0 0 20px;
+  margin: 0;
 }
 
 div.mreview img.icon{
