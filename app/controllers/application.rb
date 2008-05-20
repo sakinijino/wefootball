@@ -72,7 +72,11 @@ class ApplicationController < ActionController::Base
     render :template => 'shared/faq', :layout =>default_layout
   end
   
-  
+  def privacy
+    @title = "WeFootball隐私原则"
+    render :template => 'shared/privacy', :layout =>default_layout
+  end
+    
   class FakeParametersError < StandardError
   end
   

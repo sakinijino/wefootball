@@ -127,6 +127,7 @@ ActionController::Routing::Routes.draw do |map|
   map.site_index "/", :controller => 'application', :action => 'index'
   map.site_about "/about", :controller => 'application', :action => 'about'
   map.site_faq "/faq", :controller => 'application', :action => 'faq'
+  map.site_privacy "/privacy", :controller => 'application', :action => 'privacy'
   
   map.user_month_calendar "users/:user_id/calendar/:year/:month", :controller=>"calendar", :action => "show_a_month",
       :requirements => {:year => /(19|20)\d\d/, :month => /[01]?\d/}
