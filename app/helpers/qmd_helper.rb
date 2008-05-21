@@ -10,6 +10,6 @@ module QmdHelper
   ]
     
   def site_qmd
-    "面对灾害，我们心在一起"
+    QMDS[rand(QMDS.length)]
   end
 end
