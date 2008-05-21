@@ -17,46 +17,46 @@ class UsersControllerTest < Test::Unit::TestCase
     @response   = ActionController::TestResponse.new
   end
 
-#  def test_should_allow_signup
-#    assert_difference 'User.count' do
-#      create_user
-#      get :activate, :activation_code => assigns(:user).activation_code
-#      assert 'sakinijino@gmail.com', assigns["user"].login
-#      assert_redirected_to edit_user_path(assigns(:user))
-#    end
-#  end
+  def test_should_allow_signup
+    assert_difference 'User.count' do
+      create_user
+      get :activate, :activation_code => assigns(:user).activation_code
+      assert 'sakinijino@gmail.com', assigns["user"].login
+      assert_redirected_to edit_user_path(assigns(:user))
+    end
+  end
 
-#  def test_should_require_login_on_signup
-#    assert_no_difference 'User.count' do
-#      create_user(:login => nil)
-#      assert assigns(:user).errors.on(:login)
-#      assert_template "new"
-#    end
-#  end
+  def test_should_require_login_on_signup
+    assert_no_difference 'User.count' do
+      create_user(:login => nil)
+      assert assigns(:user).errors.on(:login)
+      assert_template "new"
+    end
+  end
   
-#  def test_login_should_be_an_email_on_signup
-#    assert_no_difference 'User.count' do
-#      create_user(:login => 'saki')
-#      assert assigns(:user).errors.on(:login)
-#      assert_template "new"
-#    end
-#  end
+  def test_login_should_be_an_email_on_signup
+    assert_no_difference 'User.count' do
+      create_user(:login => 'saki')
+      assert assigns(:user).errors.on(:login)
+      assert_template "new"
+    end
+  end
 
-#  def test_should_require_password_on_signup
-#    assert_no_difference 'User.count' do
-#      create_user(:password => nil)
-#      assert assigns(:user).errors.on(:password)
-#      assert_template "new"
-#    end
-#  end
+  def test_should_require_password_on_signup
+    assert_no_difference 'User.count' do
+      create_user(:password => nil)
+      assert assigns(:user).errors.on(:password)
+      assert_template "new"
+    end
+  end
 
-#  def test_should_require_password_confirmation_on_signup
-#    assert_no_difference 'User.count' do
-#      create_user(:password_confirmation => nil)
-#      assert assigns(:user).errors.on(:password_confirmation)
-#      assert_template "new"
-#    end
-#  end  
+  def test_should_require_password_confirmation_on_signup
+    assert_no_difference 'User.count' do
+      create_user(:password_confirmation => nil)
+      assert assigns(:user).errors.on(:password_confirmation)
+      assert_template "new"
+    end
+  end  
 
   def test_should_allow_signup_with_invitation
     assert_difference 'User.count' do
@@ -149,11 +149,11 @@ class UsersControllerTest < Test::Unit::TestCase
     assert_fake_redirected
   end
   
-#  def test_should_sign_up_user_with_activation_code
-#    create_user
-#    assigns(:user).reload
-#    assert_not_nil assigns(:user).activation_code
-#  end
+  def test_should_sign_up_user_with_activation_code
+    create_user
+    assigns(:user).reload
+    assert_not_nil assigns(:user).activation_code
+  end
 
   def test_signup_user_with_invitation_should_have_an_activation_code
     login_as :saki
@@ -162,13 +162,13 @@ class UsersControllerTest < Test::Unit::TestCase
     assert_not_nil assigns(:user).activation_code
   end
 
-#  def test_should_activate_user
-#    create_user
-#    assert_nil User.authenticate(assigns(:user).login, 'quire')
-#    get :activate, :activation_code => assigns(:user).activation_code
-#    assert_redirected_to edit_user_path(assigns(:user))
-#    assert_equal assigns(:user), User.authenticate(assigns(:user).login, 'quire')
-#  end
+  def test_should_activate_user
+    create_user
+    assert_nil User.authenticate(assigns(:user).login, 'quire')
+    get :activate, :activation_code => assigns(:user).activation_code
+    assert_redirected_to edit_user_path(assigns(:user))
+    assert_equal assigns(:user), User.authenticate(assigns(:user).login, 'quire')
+  end
 
   def test_should_activate_user
     login_as :saki

@@ -3,7 +3,11 @@ class SessionsController < ApplicationController
   skip_before_filter :store_current_location
   
   def new
-    render :layout => default_layout  
+    if logged_in?
+      redirect_to(user_view_path(current_user))
+    else
+      render :layout => default_layout  
+    end
   end
   
   def create

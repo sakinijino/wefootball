@@ -1,5 +1,5 @@
 class WatchesController < ApplicationController
-  before_filter :login_required, :except => [:show, :index]  
+  before_filter :login_required, :except => [:show, :index, :users]  
   
   USERS_LIST_LENGTH = 18
   POSTS_LENGTH = 10

@@ -31,11 +31,13 @@ class UsersController < ApplicationController
         UnRegTeamInv.destroy_all(["user_id = ?", current_user.id])
         
         rfi = UnRegFriendInv.find_by_user_id(current_user.id)
-        @friend_relation = FriendRelation.new
-        @friend_relation.user1_id = rfi.host_id
-        @friend_relation.user2_id = rfi.user_id
-        @friend_relation.save!
-        UnRegFriendInv.destroy_all(["user_id = ?", current_user.id])        
+        if !rti.nil?
+          @friend_relation = FriendRelation.new
+          @friend_relation.user1_id = rfi.host_id
+          @friend_relation.user2_id = rfi.user_id
+          @friend_relation.save!
+          UnRegFriendInv.destroy_all(["user_id = ?", current_user.id])
+        end
       end
       
       flash[:notice] = "你的帐号已经激活, 现在请设置一下个人信息"
@@ -114,7 +116,7 @@ class UsersController < ApplicationController
   end  
   
   def new
-    render :action=>'explain_register', :layout => default_layout  
+    render :layout => default_layout  
   end
   
   def search
@@ -125,28 +127,28 @@ class UsersController < ApplicationController
     render :layout=>default_layout
   end
   
-#  def create
-#    cookies.delete :auth_token
-#    # protects against session fixation attacks, wreaks havoc with 
-#    # request forgery protection.
-#    # uncomment at your own risk
-#    # reset_session
-#    @user = User.find_by_login_and_activated_at(params[:user][:login],nil)
-#    if @user
-#      @user.password = params[:user][:password]
-#      @user.password_confirmation = params[:user][:password_confirmation]       
-#    else
-#      @user = User.new(params[:user])
-#      @user.login = params[:user][:login]
-#    end
-#    if @user.save
-#      UserMailer.deliver_signup_notification(@user)
-#      flash[:notice] = "激活帐户的邮件已发送, 请到你的邮箱激活"
-#      redirect_to(new_session_path)
-#    else
-#      render :action=>'new', :layout => 'unlogin_layout'  
-#    end
-#  end
+  def create
+    cookies.delete :auth_token
+    # protects against session fixation attacks, wreaks havoc with 
+    # request forgery protection.
+    # uncomment at your own risk
+    # reset_session
+    @user = User.find_by_login_and_activated_at(params[:user][:login],nil)
+    if @user
+      @user.password = params[:user][:password]
+      @user.password_confirmation = params[:user][:password_confirmation]       
+    else
+      @user = User.new(params[:user])
+      @user.login = params[:user][:login]
+    end
+    if @user.save
+      UserMailer.deliver_signup_notification(@user)
+      flash[:notice] = "激活帐户的邮件已发送, 请到你的邮箱激活"
+      redirect_to(new_session_path)
+    else
+      render :action=>'new', :layout => 'unlogin_layout'  
+    end
+  end
   
   def invite
     if request.post?

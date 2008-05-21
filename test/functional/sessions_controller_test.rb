@@ -12,6 +12,12 @@ class SessionsControllerTest < Test::Unit::TestCase
     @request    = ActionController::TestRequest.new
     @response   = ActionController::TestResponse.new
   end
+  
+  def test_new_when_login
+    login_as :saki
+    get :new
+    assert_redirected_to user_view_path(users(:saki))
+  end
 
   def test_should_login
     post :create, :login => 'sakinijino0725@163.com', :password => 'test'
