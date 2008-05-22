@@ -170,13 +170,14 @@ class UsersControllerTest < Test::Unit::TestCase
     assert_equal assigns(:user), User.authenticate(assigns(:user).login, 'quire')
   end
 
-  def test_should_activate_user
+  def test_should_activate_user_with_invitation
     login_as :saki
     create_user_with_invitation
     assert_nil User.authenticate(assigns(:user).login, 'quire')
     get :activate, :activation_code => assigns(:user).activation_code
     assert_redirected_to edit_user_path(assigns(:user))
     assert_equal assigns(:user), User.authenticate(assigns(:user).login, 'quire')
+    assert users(:saki).friends.include?(assigns(:user))
   end
   
   def test_should_not_activate_user_without_key

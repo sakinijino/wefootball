@@ -31,7 +31,7 @@ class UsersController < ApplicationController
         UnRegTeamInv.destroy_all(["user_id = ?", current_user.id])
         
         rfi = UnRegFriendInv.find_by_user_id(current_user.id)
-        if !rti.nil?
+        if !rfi.nil?
           @friend_relation = FriendRelation.new
           @friend_relation.user1_id = rfi.host_id
           @friend_relation.user2_id = rfi.user_id
