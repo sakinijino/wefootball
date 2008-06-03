@@ -11,8 +11,8 @@ module TeamsHelper
     end 
   end
   
-  def team_image_link(team, options={})
-    link_to team_image_tag(team, options), team_view_path(team.id)
+  def team_image_link(team, options={}, link_options={})
+    link_to team_image_tag(team, options), team_view_path(team.id), link_options
   end
   
   def team_icon(team)

@@ -15,7 +15,8 @@ class PostsController < ApplicationController
         @posts = @activity.posts.public(:page => params[:page], :per_page => POSTS_PER_PAGE)
       end
       @title = "讨论对阵 #{@activity.guest_team_name} 的比赛"
-      render :layout => "team_layout"
+      @match = @activity
+      render :layout => "match_layout"
     elsif (params[:team_id] && params[:match_id])
       @activity = Match.find(params[:match_id])
       @team = Team.find(params[:team_id])
@@ -36,7 +37,7 @@ class PostsController < ApplicationController
         @posts = @activity.posts.public(:page => params[:page], :per_page => POSTS_PER_PAGE)
       end
       @title = "#{@activity.team.shortname} #{@activity.start_time.strftime('%m.%d')}训练的讨论"
-      render :layout => "team_layout"
+      render :layout => "training_layout"
     elsif (params[:team_id])
       @team = Team.find(params[:team_id])
       @title = "#{@team.shortname}下的讨论"
@@ -66,7 +67,8 @@ class PostsController < ApplicationController
         @posts = @activity.posts.public(:page => params[:page], :per_page => POSTS_PER_PAGE)
       end
       @title = "本次看球活动下的讨论"
-      render :layout => default_layout
+      @match = @activity.official_match
+      render :layout => "match_layout"
     else
       fake_params_redirect
     end
@@ -89,11 +91,10 @@ class PostsController < ApplicationController
     end
     @replies = @post.replies.paginate(:page => params[:page], :per_page => REPLIES_PER_PAGE)
     @can_reply = logged_in? && @post.can_be_replied_by?(current_user)
-    @team = @post.team
     @activity = @post.activity  
     @related_posts = @post.related(logged_in? ? current_user : nil, :limit => 20) 
     @title = @post.title
-    render :layout => post_layout(@post)
+    render :layout => post_layout
   end
 
   def new
@@ -107,7 +108,8 @@ class PostsController < ApplicationController
         fake_params_redirect 
         return
       end
-      render :layout => 'team_layout'     
+      @match = @activity
+      render :layout => "match_layout"
     elsif (params[:match_id])
       @activity = Match.find(params[:match_id])
       @team = Team.find(params[:team_id])
@@ -130,7 +132,7 @@ class PostsController < ApplicationController
         fake_params_redirect 
         return
       end
-      render :layout => 'team_layout'      
+      render :layout => 'training_layout'      
     elsif (params[:team_id])
       @activity = nil
       @team = Team.find(params[:team_id])
@@ -144,15 +146,15 @@ class PostsController < ApplicationController
       render :layout => 'team_layout'       
     elsif (params[:watch_id])
       @activity = Watch.find(params[:watch_id])
-      @posts_url = watch_posts_path
+      @posts_url = watch_posts_path(@activity)
       @title = "在本次看球活动中中发言"
       @post = WatchPost.new
       if !@activity.has_member?(current_user)
         fake_params_redirect 
         return
       end
-      @user = current_user
-      render :layout => 'user_layout'       
+      @match = @activity.official_match
+      render :layout => "match_layout"
     end    
   end
 
@@ -161,36 +163,42 @@ class PostsController < ApplicationController
       @activity = SidedMatch.find(params[:sided_match_id])
       @team = @activity.team
       @post = SidedMatchPost.new(params[:post])
+      @posts_url = sided_match_posts_path(@activity)
       if !current_user.is_team_member_of?(@team.id)
         fake_params_redirect 
         return
       end
       @post.team = @team
-      layout = 'team_layout'
+      @match = @activity
+      layout = "match_layout"
     elsif (params[:match_id])
       @activity = Match.find(params[:match_id])
       @team = Team.find(params[:team_id])
+      @posts_url = match_team_posts_path(@activity, @team)
       @post = MatchPost.new(params[:post])
       if !current_user.is_team_member_of?(@team.id)
         fake_params_redirect 
         return
       end
       @post.team = @team
-      layout = 'team_layout'      
+      @match = @activity
+      layout = 'match_layout'      
     elsif (params[:training_id])
       @activity = Training.find(params[:training_id])
       @team = @activity.team
       @post = TrainingPost.new(params[:post])
+      @posts_url = training_posts_path(@activity)
       if !current_user.is_team_member_of?(@team.id)
         fake_params_redirect 
         return
       end
       @post.team = @team
-      layout = 'team_layout'      
+      layout = 'training_layout'      
     elsif (params[:team_id])
       @activity = nil
       @team = Team.find(params[:team_id])
       @post = Post.new(params[:post])
+      @posts_url = team_posts_path(@team)
       if !current_user.is_team_member_of?(@team.id)
         fake_params_redirect 
         return
@@ -200,12 +208,13 @@ class PostsController < ApplicationController
     elsif params[:watch_id]
       @activity = Watch.find(params[:watch_id])
       @post = WatchPost.new(params[:post])
+      @posts_url = watch_posts_path(@activity)
       if !@activity.has_member?(current_user)
         fake_params_redirect 
         return
       end
-      @user = current_user
-      layout = 'user_layout'      
+      @match = @activity.official_match
+      layout = "match_layout"
     end
     
     @post.activity = @activity
@@ -219,15 +228,14 @@ class PostsController < ApplicationController
   
   def edit
     @title = "修改发言"
-    @team = @post.team
-    render :layout => post_layout(@post)
+    render :layout => post_layout
   end
 
   def update
     if @post.update_attributes(params[:post])
       redirect_to(post_path(@post))
     else
-      render :action => "edit", :layout => post_layout(@post)
+      render :action => "edit", :layout => post_layout
     end
   end
 
@@ -237,7 +245,22 @@ class PostsController < ApplicationController
       fake_params_redirect
     else
       @post.destroy
-      redirect_to team_posts_url(@post.team_id)
+      if @post.activity_id.nil?
+        redirect_to team_posts_url(@post.team_id)
+      else
+        case @post
+        when WatchPost
+          redirect_to watch_posts_url(@post.activity_id)
+        when MatchPost
+          redirect_to match_team_posts_url(@post.activity_id, @post.team_id)
+        when SidedMatchPost
+          redirect_to sided_match_posts_url(@post.activity_id)
+        when TrainingPost
+          redirect_to training_posts_url(@post.activity_id)
+        else
+          redirect_to team_posts_url(@post.team_id)
+        end
+      end
     end
   end
 
@@ -247,13 +270,20 @@ protected
     fake_params_redirect if !@post.can_be_modified_by?(current_user)
   end
   
-  def post_layout(p)
+  def post_layout
+    @team = @post.team
     case @post
     when MatchPost
-      @match = @post.match if !@match
+      @match = @post.activity
       @match.nil? ? "team_layout" : "match_layout"
+    when SidedMatchPost
+      @match = @post.activity
+      @match.nil? ? "team_layout" : "match_layout"
+    when TrainingPost
+      @post.training.nil? ? "team_layout" : "training_layout"
     when WatchPost
-      default_layout
+      @match = @post.activity.official_match
+      "match_layout"
     else
       "team_layout" 
     end    

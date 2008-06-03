@@ -45,7 +45,8 @@ class SidedMatchJoinsController < ApplicationController
       end
     end
     @title = "设置#{@team.shortname}的首发阵型"
-    render :layout => "team_layout"                       
+    @match = @sided_match
+    render :layout => "match_layout"
   end
   
   def update_formation

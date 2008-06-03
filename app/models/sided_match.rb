@@ -172,11 +172,6 @@ class SidedMatch < ActiveRecord::Base
     end
   end
   
-  ICON = "match_icon.gif"
-  IMG_TITLE = "比赛"
-  TIME_STATUS_TEXTS = Match::TIME_STATUS_TEXTS
-  JOIN_STATUS_TEXTS = Match::JOIN_STATUS_TEXTS
-  JOIN_LINKS_TEXTS = Match::JOIN_LINKS_TEXTS
-  
-  include ActivityHelper
+  include ActivityTenseHelper
+  include SidedMatchTenseHelper
 end

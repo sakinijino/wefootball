@@ -11,7 +11,7 @@ module OfficialTeamsHelper
     case official_team
     when OfficialTeam
       content << %(
-      <div class="icon">
+      <div class="icon ot_icon">
         #{official_team_image_tag(official_team)}
         <span>#{h(official_team.name)}</span>
       </div>)

@@ -1,5 +1,5 @@
 class TrainingsController < ApplicationController
-  before_filter :login_required, :except => [:show]
+  before_filter :login_required, :except => [:show, :joined_users, :undetermined_users]
   before_filter :parse_time, :only => [:create, :update]
   
   POSTS_LENGTH = 10
@@ -18,7 +18,7 @@ class TrainingsController < ApplicationController
     @team = @training.team
     @joined_users = @training.users.joined(:limit=>JOINED_USER_LIST_LENGTH)
     @undetermined_users = @training.users.undetermined(:limit=>UNDETERMINED_USER_LIST_LENGTH)    
-    render :layout=>'team_layout'
+    render :layout=>'training_layout'
   end
   
   def joined_users
@@ -26,7 +26,7 @@ class TrainingsController < ApplicationController
     @title = "参见#{@training.team.shortname} #{@training.start_time.strftime('%m.%d')}训练的人"
     @users = @training.users.joined :page => params[:page], :per_page => 100
     @team = @training.team
-    render :action=>'users', :layout=>'team_layout'    
+    render :action=>'users', :layout=>'training_layout'    
   end
   
   def undetermined_users
@@ -34,7 +34,7 @@ class TrainingsController < ApplicationController
     @title = "没表态是否参加#{@training.team.shortname} #{@training.start_time.strftime('%m.%d')}训练的人"
     @users = @training.users.undetermined :page => params[:page], :per_page => 100
     @team = @training.team
-    render :action=>'users', :layout=>'team_layout'    
+    render :action=>'users', :layout=>'training_layout'    
   end  
   
   def new
@@ -42,7 +42,7 @@ class TrainingsController < ApplicationController
     fake_params_redirect if (!current_user.is_team_admin_of?(@team))
     @training = Training.new(:start_time => Time.now.tomorrow, :end_time => Time.now.tomorrow.since(3600))
     @title = "创建新训练"
-    render :layout => "team_layout"
+    render :layout => "training_layout"
   end
 
   def create
@@ -57,7 +57,7 @@ class TrainingsController < ApplicationController
     if @training.save
       redirect_to training_path(@training)
     else
-      render :action=>"new", :layout => "team_layout"
+      render :action=>"new", :layout => "training_layout"
     end
   end
   
@@ -69,7 +69,7 @@ class TrainingsController < ApplicationController
       return
     end
     @title = "修改#{@training.start_time.strftime('%m月%d日')}训练的信息"
-    render :layout => "team_layout"
+    render :layout => "training_layout"
   end
   
   def update
@@ -81,7 +81,7 @@ class TrainingsController < ApplicationController
       redirect_to training_path(params[:id])
     else
       @title = "修改#{@training.start_time.strftime('%m月%d日')}训练的信息"
-      render :action=>'edit', :layout => "team_layout"
+      render :action=>'edit', :layout => "training_layout"
     end
   end
 

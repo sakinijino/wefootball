@@ -1,7 +1,7 @@
 <div id="header_menu">
   <% is_admin = (logged_in? && current_user.is_team_admin_of?(team))%>
   <div class="l1_menu">
-    <%= link_to("球队首页", team_view_path(team), :class=>is_selected_team_menu_item?(:team))%>
+    <%= link_to("首页", team_view_path(team), :class=>is_selected_team_menu_item?(:team))%>
     <%= month_calendar_link('活动', Time.now, team, :class=>is_selected_team_menu_item?(:activities))%>
     <%= link_to("成员", team_team_joins_path(team), :class=>is_selected_team_menu_item?(:members))%>
     <%= link_to("阵型", formation_index_team_joins_path(:team_id => team), :class=>is_selected_team_menu_item?(:formation))%>
@@ -12,7 +12,13 @@
   </div>
 
   <div class="l2_menu_list">
-    <ul></ul>
+    <ul>
+      <li><%= link_to("球队首页", team_view_path(team))%></li>
+      <%if logged_in?%>
+        <li><%= link_to("我的首页", user_view_path(current_user))%></li>
+      <%end%>
+      <li><a href="/">WeFootball首页</a></li>
+    </ul>
     <ul>
       <%if is_admin%>
       <li><%= link_to("新建训练", new_team_training_path(team))%></li>

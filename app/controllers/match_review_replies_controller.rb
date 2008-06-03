@@ -14,7 +14,7 @@ class MatchReviewRepliesController < ApplicationController
       @can_reply = logged_in?
       @match = @match_review.match
       @title = "#{@match_review.title}"
-      render :template => "match_reviews/show", :layout => default_layout
+      render :template => "match_reviews/show", :layout => "match_layout"
     end
   end
 

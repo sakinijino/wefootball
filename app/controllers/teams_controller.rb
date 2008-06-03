@@ -16,7 +16,7 @@ class TeamsController < ApplicationController
       @teams = Team.find_by_contents(params[:q], :page => params[:page], :per_page => 48)
       @title = "搜索“#{params[:q]}”的结果"
     end
-    render :layout=>default_layout
+    render :layout=>"user_layout"
   end
 
   def create

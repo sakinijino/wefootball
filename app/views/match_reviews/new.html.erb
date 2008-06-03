@@ -10,7 +10,10 @@
 </div>
 
 <div id="narrow_right_content" class="sect">
-  <h2></h2>
+  <h2>比赛信息</h2>
+  <div class="sect mreview_minfo">
+    <%=render :partial=>'match_reviews/match_info', :object => @match%>
+  </div>
   <%=render :partial=>'sidebar_menu'%>
 </div>
 <div class="cb"></div>

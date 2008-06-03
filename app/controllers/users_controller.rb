@@ -66,7 +66,7 @@ class UsersController < ApplicationController
         end
       end     
     end
-    render :layout => 'unlogin_layout'
+    render :layout => 'user_layout'
   end 
   
   def reset_password
@@ -87,11 +87,11 @@ class UsersController < ApplicationController
         redirect_to user_view_path(@user)
         return
       else   
-        render :action => :reset_password, :layout=>'unlogin_layout'
+        render :action => :reset_password, :layout=>'user_layout'
         return        
       end 
     end
-    render :layout => 'unlogin_layout'
+    render :layout => 'user_layout'
   end
 
   def resend_activate_mail
@@ -112,11 +112,11 @@ class UsersController < ApplicationController
         end
       end     
     end
-    render :layout => 'unlogin_layout'
+    render :layout => 'user_layout'
   end  
   
   def new
-    render :layout => default_layout  
+    render :layout => "user_layout"  
   end
   
   def search
@@ -124,7 +124,7 @@ class UsersController < ApplicationController
       @users = User.find_by_contents(params[:q], :page => params[:page], :per_page => 48)
       @title = "搜索“#{params[:q]}”的结果"
     end
-    render :layout=>default_layout
+    render :layout=>"user_layout"
   end
   
   def create
@@ -143,10 +143,9 @@ class UsersController < ApplicationController
     end
     if @user.save
       UserMailer.deliver_signup_notification(@user)
-      flash[:notice] = "激活帐户的邮件已发送, 请到你的邮箱激活"
-      redirect_to(new_session_path)
+      render :layout => 'user_layout'  
     else
-      render :action=>'new', :layout => 'unlogin_layout'  
+      render :action=>'new', :layout => 'user_layout'  
     end
   end
   
@@ -198,7 +197,7 @@ class UsersController < ApplicationController
     end
     @user = User.new
     @user.login = @invitation.login
-    render :layout => 'unlogin_layout' 
+    render :layout => 'user_layout' 
   end
 
   def create_with_invitation
@@ -227,13 +226,11 @@ class UsersController < ApplicationController
       end
       RegisterInvitation.destroy(@register_invitation)
       UserMailer.deliver_signup_notification(@user)
-      flash[:notice] = "激活帐户的邮件已发送, 请到你的邮箱激活"
-      redirect_to(new_session_path)
-      return
+      render :action=>'create', :layout => 'user_layout'  
     end
   rescue ActiveRecord::RecordInvalid => e
     @invitation = @register_invitation
-    render :action=>"new_with_invitation", :layout => 'unlogin_layout' 
+    render :action=>"new_with_invitation", :layout => 'user_layout' 
   end  
   
   def edit

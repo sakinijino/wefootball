@@ -106,53 +106,8 @@ class Watch < ActiveRecord::Base
 
   def after_create
     OfficialMatch.update_all('watch_count=watch_count+1', ['id = ?', self.official_match_id]) 
-  end  
-
-  ICON = "watch_icon.gif"
-  IMG_TITLE = "看球"
-  
-  TIME_STATUS_TEXTS = {
-    :before => nil,
-    :in => '正在进行',
-    :after => '结束了'
-  }
-  
-  JOIN_STATUS_TEXTS = {
-    :before =>{
-      :joined => '我要去',
-    },
-    :in => {
-      :joined => '正在看',
-    },
-    :after => {
-      :joined => '我去了',
-    }
-  }
-  
-  JOIN_LINKS_TEXTS = {
-    :before =>{
-      :joined => ['---', '不去了'],
-      :unjoined => ['要去', '---']
-    },
-    :in =>{
-      :joined => ['---', '没去'],
-      :unjoined => ['现在去', '---']
-    },
-    :after =>{
-      :joined => ['---', '没去'],
-      :unjoined => ['去了', '---']
-    }
-  }
-  
-  include ActivityHelper
-  
-  protected
-  def join_key(user, team=nil)
-    if has_member?(user)
-      :joined
-    else
-      :unjoined
-    end
   end
   
+  include ActivityTenseHelper
+  include WatchTenseHelper
 end

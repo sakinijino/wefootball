@@ -24,7 +24,7 @@ class MatchReviewsController < ApplicationController
         :order => 'like_count-dislike_count desc, like_count desc, created_at desc') :
       @user.match_reviews.paginate(:page => params[:page], :per_page => 15,
         :order => 'created_at desc')
-    @match ? render(:layout => match_layout) : render(:action => 'index_user', :layout => "user_layout")
+    @match ? render(:layout => "match_layout") : render(:action => 'index_user', :layout => "user_layout")
   end
   
   def show
@@ -36,7 +36,7 @@ class MatchReviewsController < ApplicationController
     
     @title = "#{@match_review.title}"
     @user = @match_review.user
-    render :layout => 'user_layout'
+    render :layout => "match_layout"
   end
 
   def new
@@ -56,7 +56,7 @@ class MatchReviewsController < ApplicationController
     
     @title = "评论#{@match.host_team_name} V.S. #{@match.guest_team_name}的比赛"
     @match_review = MatchReview.new
-    render :layout => match_layout
+    render :layout => "match_layout"
   end
   
   def edit
@@ -67,7 +67,7 @@ class MatchReviewsController < ApplicationController
       @match = @match_review.match
       @title = "修改球评"
       @user = @match_review.user
-      render :layout => 'user_layout'
+      render :layout => "match_layout"
     end
   end
 
@@ -92,7 +92,7 @@ class MatchReviewsController < ApplicationController
       redirect_to match_review_path(@match_review)
     else
       @user = @match_review.user
-      render :action => "new", :layout => match_layout
+      render :action => "new", :layout => "match_layout"
     end
   end
 
@@ -106,7 +106,7 @@ class MatchReviewsController < ApplicationController
     else
       @match = @match_review.match
       @user = @match_review.user
-      render :action => "edit", :layout => 'user_layout'
+      render :action => "edit", :layout => 'match_layout'
     end
   end
 
@@ -117,19 +117,6 @@ class MatchReviewsController < ApplicationController
     else
       @match_review.destroy
       redirect_to @match_review.match
-    end
-  end
-  
-  private
-  def match_layout
-    case @match
-    when Match
-      "match_layout"
-    when SidedMatch
-      @team = @match.team
-      "team_layout"
-    else
-      default_layout
     end
   end
 end

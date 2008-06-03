@@ -8,7 +8,8 @@ class WatchesController < ApplicationController
     @official_match = OfficialMatch.find(params[:official_match_id])
     @watches = @official_match.watches.paginate :order=>'watch_join_count DESC', :page => params[:page], :per_page => 15
     @title = "#{@official_match.host_team_name} V.S. #{@official_match.guest_team_name}比赛下的看球活动"
-    render :layout => default_layout
+    @match = @official_match
+    render :layout => "match_layout"
   end
   
   def show
@@ -23,7 +24,8 @@ class WatchesController < ApplicationController
     @official_match = @watch.official_match
     @is_admin = logged_in? && (@watch.admin.id == current_user.id)
     @title = "观看#{@official_match.host_team_name} V.S. #{@official_match.guest_team_name}比赛的活动信息"
-    render :layout => default_layout
+    @match = @official_match
+    render :layout => "match_layout"
   end
   
   def users
@@ -31,7 +33,8 @@ class WatchesController < ApplicationController
     @official_match = @watch.official_match
     @title = "观看#{@official_match.host_team_name} V.S. #{@official_match.guest_team_name}比赛的人"
     @users = @watch.users.paginate(:page => params[:page], :per_page => 100)
-    render :layout => default_layout    
+    @match = @official_match
+    render :layout => "match_layout"
   end
 
   def new
@@ -40,7 +43,8 @@ class WatchesController < ApplicationController
     @watch.start_time = @official_match.start_time
     @watch.end_time = @official_match.end_time
     @title = "观看#{@official_match.host_team_name} V.S. #{@official_match.guest_team_name}的比赛"
-    render :layout => default_layout    
+    @match = @official_match
+    render :layout => "match_layout"
   end
 
   def create 
@@ -56,7 +60,8 @@ class WatchesController < ApplicationController
       redirect_to watch_path(@watch)
     end
     rescue ActiveRecord::RecordInvalid => e
-      render :action => 'new', :layout => default_layout 
+      @match = @official_match
+      render :action => 'new', :layout => "match_layout" 
   end
 
   def edit
@@ -67,7 +72,8 @@ class WatchesController < ApplicationController
     end
     @official_match = @watch.official_match
     @title = "修改看球活动的信息"
-    render :layout => default_layout    
+    @match = @official_match
+    render :layout => "match_layout"
   end
 
   def update
@@ -81,7 +87,8 @@ class WatchesController < ApplicationController
     if @watch.update_attributes(params[:watch])   
       redirect_to(watch_path(@watch))
     else
-      render :action => "edit", :layout => default_layout 
+      @match = @watch.official_match
+      render :action => "edit", :layout => "match_layout" 
     end
   end
 
@@ -106,6 +113,7 @@ class WatchesController < ApplicationController
       :include=>[:user],
       :page => params[:page], 
       :per_page => 50
-    render :layout => default_layout
+    @match = @watch.official_match
+    render :layout => "match_layout"
   end
 end

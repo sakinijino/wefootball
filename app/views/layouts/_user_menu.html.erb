@@ -1,9 +1,10 @@
 <div id="header_menu">
-<%if logged_in? && user.id == current_user.id%>
+<%if logged_in? %>
+<%user = current_user%>
 <%has_unread_messages = current_user.unread_messages_count>0%>
 <%messages_count = current_user.unread_messages_count<=99 ? "#{current_user.unread_messages_count}" : '99+'%>
 <div class="l1_menu">
-  <%= link_to("我的首页", user_view_path(user), :class=>is_selected_user_menu_item?(:user))%>
+  <%= link_to("首页", user_view_path(user), :class=>is_selected_user_menu_item?(:user))%>
   <%= link_to("朋友", user_friend_relations_path(user), :class=>is_selected_user_menu_item?(:friends))%>
   <%= link_to("球队", user_team_joins_path(user), :class=>is_selected_user_menu_item?(:teams))%>
   <%= day_calendar_link('活动', Time.now, user, :class=>is_selected_user_menu_item?(:activities))%>
@@ -14,7 +15,10 @@
 </div>
 
 <div class="l2_menu_list">
-  <ul></ul>
+  <ul>
+    <li><%= link_to("我的首页", user_view_path(user))%></li>
+    <li><a href="/">WeFootball首页</a></li>
+  </ul>
   <ul>
     <li><%= link_to("我的朋友", user_friend_relations_path(user))%></li>
     <li><%= link_to("待处理的申请", friend_invitations_path)%></li>
@@ -44,22 +48,19 @@
   <ul></ul>
 </div>
 <%else%>
-<div class="l1_menu">
-  <%= link_to("#{user.gender_text}的首页", user_view_path(user), :class=>is_selected_user_menu_item?(:user))%>
-  <%= link_to("朋友", user_friend_relations_path(user), :class=>is_selected_user_menu_item?(:friends))%>
-  <%= link_to("球队", user_team_joins_path(user), :class=>is_selected_user_menu_item?(:teams))%>
-  <%= day_calendar_link('活动', Time.now, user, :class=>is_selected_user_menu_item?(:activities))%>
-</div>
-
-<div class="l2_menu_list">
-  <ul></ul>
-  <ul></ul>
-  <ul></ul>
-  <ul>
-    <li><%= link_to "#{user.gender_text}的球评", user_match_reviews_path(user) %></li>
-    <li><%= day_calendar_link('今日活动', Time.now, user)%></li>
-    <li><%= month_calendar_link('本月活动', Time.now, user)%></li>
-  </ul>
-</div>
+  <div class="l1_menu">
+    <%= link_to("首页", '/', :class=>is_selected_user_menu_item?(:user))%>
+    <%= link_to("朋友", new_session_path, :class=>is_selected_user_menu_item?(:friends))%>
+    <%= link_to("球队", new_session_path, :class=>is_selected_user_menu_item?(:teams))%>
+    <%= link_to('活动', new_session_path, :class=>is_selected_user_menu_item?(:activities))%>
+    <%= link_to("消息", new_session_path, :class=>is_selected_user_menu_item?(:messages))%>
+  </div>
+  <div class="l2_menu_list">
+    <ul></ul>
+    <ul></ul>
+    <ul></ul>
+    <ul></ul>
+    <ul></ul>
+  </div>
 <%end%>
 </div>

@@ -187,9 +187,29 @@ class PostsControllerTest < ActionController::TestCase
   def test_should_destroy_post
     login_as :quentin
     assert_difference('Post.count', -1) do
-      delete :destroy, :id => posts(:saki_1).id
+      delete :destroy, :id => posts(:saki_4).id
     end
-    assert_redirected_to team_posts_url(posts(:saki_1).team_id)
+    assert_redirected_to team_posts_url(posts(:saki_4).team_id)
+  end
+  
+  def test_should_destroy_post_redirect
+    login_as :saki
+    delete :destroy, :id => posts(:saki_12).id
+    assert_redirected_to watch_posts_url(posts(:saki_12).activity_id)
+    
+    delete :destroy, :id => posts(:saki_1).id
+    assert_redirected_to training_posts_url(posts(:saki_1).activity_id)
+    
+    delete :destroy, :id => posts(:saki_5).id
+    assert_redirected_to match_team_posts_url(posts(:saki_5).activity_id, posts(:saki_5).team_id)
+    
+    delete :destroy, :id => posts(:saki_9).id
+    assert_redirected_to sided_match_posts_url(posts(:saki_9).activity_id)
+    
+    posts(:saki_2).activity_id = nil
+    posts(:saki_2).save
+    delete :destroy, :id => posts(:saki_2).id
+    assert_redirected_to team_posts_url(posts(:saki_2).team_id)
   end
   
   def test_destroy_post_unauth

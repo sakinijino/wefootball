@@ -1,4 +1,4 @@
-<% display_status = logged_in? && (!@user || @user == current_user) %>
+<% display_status = logged_in? %>
 
 <%if activity.class == Training || activity.class == SidedMatch%>
   <%display_status = display_status && current_user.is_team_member_of?(activity.team)%>

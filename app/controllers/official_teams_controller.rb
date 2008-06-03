@@ -5,19 +5,19 @@ class OfficialTeamsController < ApplicationController
   def index
     @title = "球队列表"
     @official_teams = OfficialTeam.paginate :page => params[:page], :per_page => 50
-    render :layout => default_layout
+    render :layout => "user_layout"
   end
   
   def new
     @title = "创建新球队"
     @official_team = OfficialTeam.new
-    render :layout => default_layout
+    render :layout => "user_layout"
   end
 
   def edit
     @title = "修改球队信息"
     @official_team = OfficialTeam.find(params[:id])
-    render :layout => default_layout
+    render :layout => "user_layout"
   end
 
   def create
@@ -28,7 +28,7 @@ class OfficialTeamsController < ApplicationController
       redirect_to(edit_official_team_path(@official_team))
     else
       @title = "创建新球队"
-      render :action => "new", :layout => default_layout
+      render :action => "new", :layout => "user_layout"
     end
   end
 
@@ -39,7 +39,7 @@ class OfficialTeamsController < ApplicationController
       redirect_to(edit_official_team_path(@official_team))
     else
       @title = "修改球队信息"
-      render :action => "edit", :layout => default_layout
+      render :action => "edit", :layout => "user_layout"
     end
   end
   
@@ -53,7 +53,7 @@ class OfficialTeamsController < ApplicationController
     else
       @title = "修改球队信息"
       @official_team.errors.add_to_base('上传图片只支持是jpg/gif/png格式, 并且图片大小不能超过2M') if !team_image.errors.empty?
-      render :action => "edit", :layout => default_layout
+      render :action => "edit", :layout => "user_layout"
     end
   end
   

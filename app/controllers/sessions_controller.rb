@@ -6,7 +6,7 @@ class SessionsController < ApplicationController
     if logged_in?
       redirect_to(user_view_path(current_user))
     else
-      render :layout => default_layout  
+      render :layout => "user_layout"  
     end
   end
   
@@ -28,7 +28,7 @@ class SessionsController < ApplicationController
       else
         @se.errors.add_to_base('用户名或密码错误')
       end
-      render :action => 'new', :layout => default_layout  
+      render :action => 'new', :layout => "user_layout"  
     end
   end
   

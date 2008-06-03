@@ -1,7 +1,7 @@
 <div id="wide_left_content" class="sect">
   <h2><%=h @title%></h2>
   <%= error_messages_for :post%>
-  <% form_for(@post) do |f| %>
+  <% form_for :post, :url=>post_url(@post), :html=>{:method => :put} do |f| %>
     <%= render :partial=>'form', :locals => {:f=>f } %>
     <p>
       <%= f.submit "修改" %>

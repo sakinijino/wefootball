@@ -19,7 +19,7 @@ class OfficialMatchesController < ApplicationController
     @title = "未来#{RECENT_DAYS}天内最受关注的比赛"
     
     @is_editor = OfficialMatchEditor.is_a_editor?(current_user)
-    render :layout => default_layout
+    render :layout => "user_layout"
   end
   
   def history
@@ -35,7 +35,7 @@ class OfficialMatchesController < ApplicationController
     
     @title = "过去#{HISTORY_DAYS}天内最受关注的比赛"
     @is_editor = OfficialMatchEditor.is_a_editor?(current_user)
-    render :layout => default_layout
+    render :layout => "user_layout"
   end
   
   def show
@@ -47,21 +47,22 @@ class OfficialMatchesController < ApplicationController
     
     @is_editor = OfficialMatchEditor.is_a_editor?(current_user)
     @title = "#{@official_match.host_team.name} V.S. #{@official_match.guest_team.name}"
-    
-    render :layout => default_layout
+    @match = @official_match
+    render :layout => 'match_layout'
   end
 
   def new
     @official_match = OfficialMatch.new
     @official_match.start_time = Time.now
     @title = "创建新比赛"
-    render :layout => default_layout
+    render :layout => "user_layout"
   end
 
   def edit
     @official_match = OfficialMatch.find(params[:id])
+    @match = @official_match
     @title = "修改比赛信息"
-    render :layout => default_layout
+    render :layout => 'match_layout'
   end
 
   def create

@@ -10,7 +10,10 @@
 </div>
 
 <div id="narrow_right_content" class="sect">
-  <h2></h2>
+  <h2>比赛信息</h2>
+  <div class="sect mreview_minfo">
+    <%=render :partial=>'match_reviews/match_info', :object => @match%>
+  </div>
   <ul class="sidebar_menu">
     <li>
       > <%= link_to '返回球评', match_review_path(@match_review) %>

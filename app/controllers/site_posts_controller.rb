@@ -3,19 +3,19 @@ class SitePostsController < ApplicationController
   def index
     @site_posts = SitePost.paginate(:page => params[:page], :per_page => 30)
     @title = "站务论坛"
-    render :layout => default_layout
+    render :layout => "user_layout"
   end
 
   def show
     @site_post = SitePost.find(params[:id])
     @replies = @site_post.site_replies.paginate(:page => params[:page], :per_page => 100)
-    render :layout => default_layout
+    render :layout => "user_layout"
   end
 
   def new
     @site_post = SitePost.new
     @title = "发言"
-    render :layout => default_layout
+    render :layout => "user_layout"
   end
 
   def create
@@ -25,7 +25,7 @@ class SitePostsController < ApplicationController
       redirect_to(@site_post)
     else
       @title = "发言"
-      render :action => "new", :layout => default_layout
+      render :action => "new", :layout => "user_layout"
     end
   end
 

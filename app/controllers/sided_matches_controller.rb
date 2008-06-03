@@ -44,7 +44,7 @@ class SidedMatchesController < ApplicationController
     @reviews = @match.match_reviews.find(:all, :limit=>REVIEW_LIST_LENGTH, 
       :order=>'like_count-dislike_count desc, like_count desc, created_at desc')
     
-    render :layout=>'team_layout'    
+    render :layout => "match_layout"
   end
   
   def joined_users
@@ -52,7 +52,7 @@ class SidedMatchesController < ApplicationController
     @title = "#{@match.host_team.shortname} #{@match.start_time.strftime('%m.%d')}的比赛"
     @users = @match.users.joined :page => params[:page], :per_page => 100
     @team = @match.team
-    render :action=>'users', :layout=>'team_layout'    
+    render :action=>'users', :layout=>'match_layout'    
   end
   
   def undetermined_users
@@ -60,7 +60,7 @@ class SidedMatchesController < ApplicationController
     @title = "#{@match.host_team.shortname} #{@match.start_time.strftime('%m.%d')}的比赛"
     @users = @match.users.undetermined :page => params[:page], :per_page => 100
     @team = @match.team
-    render :action=>'users', :layout=>'team_layout'    
+    render :action=>'users', :layout=>'match_layout'    
   end    
 
   def create
@@ -92,7 +92,8 @@ class SidedMatchesController < ApplicationController
     end
     @title = "编辑比赛"
     @team = @sided_match.host_team
-    render :layout=>'team_layout'
+    @match = @sided_match
+    render :layout=>'match_layout'
   end
 
   def update  
@@ -102,9 +103,10 @@ class SidedMatchesController < ApplicationController
     elsif @sided_match.update_attributes(params[:sided_match])
       redirect_to sided_match_path(@sided_match)
     else
-      @team = @sided_match.host_team
       @title = "编辑比赛"
-      render :action => "edit", :layout=>'team_layout'
+      @team = @sided_match.host_team
+      @match = @sided_match
+      render :action => "edit", :layout=>'match_layout'
     end
   end
   
@@ -115,9 +117,8 @@ class SidedMatchesController < ApplicationController
       return      
     end
     @player_mjs = SidedMatchJoin.players(@sided_match)
-    @team = @sided_match.host_team
-    @title = "填写比赛结果"
-    render :layout=>'team_layout'     
+    @match = @sided_match
+    render :layout=>'match_layout'
   end
 
   def update_result
@@ -159,7 +160,8 @@ class SidedMatchesController < ApplicationController
 
     if (params[:result_type] == "goal" && !@sided_match.host_team_goal.blank? && @sided_match.host_team_goal<filled_goal_sum)
      @sided_match.errors.add_to_base("队员入球总数不能超过本队入球数")
-     render :action => "edit_result", :layout=>'team_layout' 
+     @match = @sided_match
+     render :action => "edit_result", :layout=>'match_layout' 
      return
     end
 
@@ -170,7 +172,8 @@ class SidedMatchesController < ApplicationController
         redirect_to sided_match_path(@sided_match)
       end
     rescue ActiveRecord::RecordInvalid => e
-      render :action => "edit_result", :layout=>'team_layout' 
+      @match = @sided_match
+      render :action => "edit_result", :layout=>'match_layout' 
     end
   end
 

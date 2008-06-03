@@ -15,11 +15,10 @@ class RepliesController < ApplicationController
     else
       @replies = @post.replies.paginate(:page => params[:page], :per_page => PostsController::REPLIES_PER_PAGE)
       @can_reply = @post.can_be_replied_by?(current_user)
-      @team = @post.team
       @activity = @post.activity
       @related_posts = @post.related(logged_in? ? current_user : nil, :limit => 20)
       @title = @post.title
-      render :template => "posts/show", :layout => post_layout(@post)
+      render :template => "posts/show", :layout => post_layout
     end
   end
 
@@ -34,13 +33,22 @@ class RepliesController < ApplicationController
   end
   
 protected  
-  def post_layout(p)
+  def post_layout
+    @team = @post.team
     case @post
     when MatchPost
-      @match = @post.match if !@match
+      @match = @post.activity
+      @match.nil? ? "team_layout" : "match_layout"
+    when SidedMatchPost
+      @match = @post.activity
+      @match.nil? ? "team_layout" : "match_layout"
+    when TrainingPost
+      @post.training.nil? ? "team_layout" : "training_layout"
+    when WatchPost
+      @match = @post.activity.official_match
       "match_layout"
     else
       "team_layout" 
-    end
-  end
+    end    
+  end   
 end

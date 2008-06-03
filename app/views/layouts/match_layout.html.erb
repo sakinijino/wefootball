@@ -5,7 +5,7 @@
 <head>
   <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
   <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
-  <title><%=h @title ? @title : h("#{@match.host_team.shortname} V.S. #{@match.guest_team.shortname}")%></title>
+  <title><%=h @title ? @title : h("#{@match.host_team_name} V.S. #{@match.guest_team_name}")%></title>
   <%= stylesheet_link_tag 'wefootball' %>
   <%= yield :stylesheet%>
   <%= javascript_include_tag "jquery-1.2.3/jquery-1.2.3.min.js" %>
@@ -18,12 +18,16 @@
 <div id="main_content">
   <div id="header" class="match_header">
     <a id="site_link" href="/"></a>
-    <%= link_to team_image_tag(@match.host_team, :thumb=>:small, :class=>''), team_view_path(@match.host_team), :id=>"host_header_icon" %>
-    <%= link_to team_image_tag(@match.guest_team, :thumb=>:small, :class=>''), team_view_path(@match.guest_team), :id=>"guest_header_icon" %>
+    <%host_team_link, guest_team_link = 
+      team_image_links_of_match @match, 
+      {:class=>''}, {:class=>''}, {:id=>"host_header_icon"}, {:id=>"guest_header_icon"}%>
+    
+    <%= host_team_link%>
+    <%= guest_team_link%>
     <%= render(:partial => 'layouts/header_setting')%>
-    <%= render(:partial => 'layouts/match_menu', :locals => {:match => @match})%>
+    <%= render(:partial => 'layouts/user_menu')%>
 
-    <%= render(:partial => 'layouts/search_panel', :locals => {:default => :team})%>
+    <%= render(:partial => 'layouts/search_panel', :locals => {:default => :user})%>
   </div>
 
   <div id="content">

@@ -377,6 +377,10 @@ div.icon {
   margin:3px 10px;
 }
 
+div.ot_icon {
+  height:90px;
+}
+
 img.icon {
   background:#fff;
   border:solid 1px #3D681A;
@@ -684,10 +688,12 @@ table.om td{
 
 table.om td.host_team div.icon {
   margin-right: 0;
+  margin-left: 0;
 }
 
 table.om td.guest_team div.icon {
   margin-left: 0;
+  margin-right: 0;
 }
 
 table.om td.detail {
@@ -1082,14 +1088,13 @@ div.calendar div.normalDateDiv,div.calendar div.monthAndYearDiv {
   font-family:Verdana;
   font-size:17px;
   background-color:#FFF;
+  width:75px;
 }
 
 .monthAndYearDiv a.icalendar{
-  font-family:Arial,Helvetica,sans-serif;
-  font-size:12px;
   display: block;
-  margin:8px 0 0 38px;
-  float:left;
+  margin:8px 0 0;
+  float:right;
 }
 
 .bigMonthDaySpan {

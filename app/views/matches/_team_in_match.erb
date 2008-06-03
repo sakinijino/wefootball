@@ -1,5 +1,9 @@
 <div class="sect">
-  <h2>首发名单</h2>
+  <%if team == @match.host_team%>
+    <h2>首发名单 <%= link_to("(更多参赛成员...)", joined_users_match_path(@match.id,:team_id=>team.id))%></h2>
+  <%else%>
+    <h2><%= link_to("(更多参赛成员...)", joined_users_match_path(@match.id,:team_id=>team.id))%> 首发名单</h2>
+  <%end%>
   <table class="list player_list">
     <tr>
       <th>&nbsp;</th>

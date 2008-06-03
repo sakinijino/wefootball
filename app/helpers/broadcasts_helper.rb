@@ -51,7 +51,7 @@ module BroadcastsHelper
       dtal = %(#{bc.activity.start_time.strftime("%m月%d日 %H:%M")} - #{bc.activity.end_time.strftime("%H:%M")}, #{h(bc.activity.location)})
     
     when MatchReviewRecommendationBroadcast
-      host_team_icon, guest_team_icon = team_image_tags_of_match bc.match_review.match, {:class=>'icon host_icon'}, {:class=>'icon guest_icon'}
+      host_team_icon, guest_team_icon = team_image_links_of_match bc.match_review.match, {:class=>'icon host_icon'}, {:class=>'icon guest_icon'}
       l_icon = user_image_link bc.user, :class=>"icon l_icon", :thumb => :small
       r_icon = %(<div class="match_icons r_icon">
         #{host_team_icon}
@@ -71,7 +71,7 @@ module BroadcastsHelper
       dtal = %(#{bc.activity.start_time.strftime("%m月%d日 %H:%M")} - #{bc.activity.end_time.strftime("%H:%M")}, #{h(bc.activity.location)})
 
     when MatchReviewCreationBroadcast
-      host_team_icon, guest_team_icon = team_image_tags_of_match bc.match_review.match, {:class=>'icon host_icon'}, {:class=>'icon guest_icon'}
+      host_team_icon, guest_team_icon = team_image_links_of_match bc.match_review.match, {:class=>'icon host_icon'}, {:class=>'icon guest_icon'}
       l_icon = user_image_link bc.user, :class=>"icon l_icon", :thumb => :small
       r_icon = %(<div class="match_icons r_icon">
         #{host_team_icon}

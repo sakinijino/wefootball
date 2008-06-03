@@ -15,67 +15,6 @@ class ApplicationController < ActionController::Base
   # in iteration 5.
   # protect_from_forgery
   # :secret => 'dd92c128b5358a710545b5e755694d57'
-  
-  
-  def index
-    @users = User.find(:all, :conditions=>"activated_at is not null", :limit => 9, :order => 'id desc')
-    @teams = Team.find(:all, :limit => 9, :order => 'id desc')
-    
-    tmp = []
-    tmp += Training.find(:all, :limit => 1, :conditions => ['end_time > ?', Time.now], :order=>'start_time')
-    tmp += Match.find(:all, :limit => 1, :conditions => ['end_time > ?', Time.now], :order=>'start_time')
-    tmp += SidedMatch.find(:all, :limit => 1, :conditions => ['end_time > ?', Time.now], :order=>'start_time')
-    tmp += Play.find(:all, :limit => 1, :conditions => ['end_time > ?', Time.now], :order=>'start_time')
-    tmp += Watch.find(:all, :limit => 1, :conditions => ['end_time > ?', Time.now], :order=>'start_time')
-    tmp = tmp.sort_by{|act| act.start_time}
-    if (tmp.length >0)
-      @start_time = tmp[0].start_time.yesterday
-      @end_time = tmp[-1].end_time.tomorrow
-      @activities = tmp.group_by{|t| t.start_time.strftime("%Y-%m-%d")}
-    else
-      @activities = {}
-    end
-    
-    @bcs = Broadcast.find(:all, :limit => 5*2, :order => 'id desc')
-    @bcs = @bcs.reject do |item| 
-      (((item.class == FriendCreationBroadcast) && (item.user_id < item.friend_id)) ||
-      ((item.class == MatchCreationBroadcast) && (item.team_id == item.match.guest_team_id)))
-    end
-    @bcs = @bcs.slice(0,5)
-    
-    @official_matches = OfficialMatch.find :all, 
-      :conditions => ['end_time > ? and start_time < ?', Time.now, OfficialMatchesController::RECENT_DAYS.days.since],
-      :order=>'watch_join_count DESC, start_time',
-      :limit => 3
-    
-    @history_official_matches = OfficialMatch.find :all, 
-      :conditions => ['end_time > ? and end_time < ?', OfficialMatchesController::HISTORY_DAYS.days.ago, Time.now],
-      :order=>'watch_join_count desc, start_time',
-      :limit => 5
-    
-    @reviews = MatchReview.find( :all,
-      :conditions => ['created_at > ?', 3.days.ago], 
-      :limit=>5,
-      :order => 'like_count-dislike_count desc, like_count desc, created_at desc')
-    
-    @title = "WeFootball - 没事儿踢踢球才是正经事~"
-    render :template => 'shared/index', :layout =>default_layout
-  end
-  
-  def about
-    @title = "关于WeFootball"  
-    render :template => 'shared/about', :layout =>default_layout
-  end
-  
-  def faq
-    @title = "WeFootball常见问题"  
-    render :template => 'shared/faq', :layout =>default_layout
-  end
-  
-  def privacy
-    @title = "WeFootball隐私原则"
-    render :template => 'shared/privacy', :layout =>default_layout
-  end
     
   class FakeParametersError < StandardError
   end
@@ -89,17 +28,7 @@ protected
     session[:return_to] = nil
   end
   
-  def default_layout
-    if logged_in?
-      @user = current_user
-      "user_layout"
-    else
-      "unlogin_layout"
-    end
-  end
-  
   def fake_params_redirect
-    #redirect_to '/'
     head 403
   end
   

@@ -217,84 +217,9 @@ class Match < ActiveRecord::Base
     end
   end
   
-  ICON = "match_icon.gif"
-  IMG_TITLE = "比赛"
-  TIME_STATUS_TEXTS = {
-    :before => nil,
-    :in => '比赛正在进行',
-    :after => '比赛已结束'
-  }
+  include ActivityTenseHelper
+  include MatchTenseHelper
   
-  JOIN_STATUS_TEXTS = {
-    :before =>{
-      :joined => '我打算去',
-      :undetermined => '要去吗?',
-      :unjoined => '我不打算去',
-    },
-    :in => {
-      :joined => '我正在比赛',
-      :undetermined => '要去吗?',
-    },
-    :after => {
-      :joined => '我去了',
-      :undetermined => '参加了吗?',
-      :unjoined => '我没去',
-    }
-  }
-  
-  JOIN_LINKS_TEXTS = {
-    :before =>{
-      :joined => ['---', '不去了'],
-      :undetermined => ['要去', '不去'],
-      :unjoined => ['打算去', '---']
-    },
-    :in =>{
-      :joined => ['---', '没去'],
-      :undetermined => ['现在去', '不去'],
-      :unjoined => ['现在去', '---']
-    },
-    :after =>{
-      :joined => ['---', '没去'],
-      :undetermined => ['我去了', '我没去'],
-      :unjoined => ['去了', '---']
-    }
-  }
-  
-  SIDED_JOIN_STATUS_TEXTS = {
-    :before =>{
-      :joined => "我要代表%s参赛",
-      :undetermined => "代表%s参赛?",
-      :unjoined => "我不打算代表%s参赛",
-    },
-    :in => {
-      :joined => "我正代表%s参赛",
-      :undetermined => "我没说是否代表%s参赛",
-      :unjoined => "我没代表%s参赛",
-    },
-    :after => {
-      :joined => "我代表%s参赛了",
-      :undetermined => "我没说是否代表%s参赛",
-      :unjoined => "我没代表%s参赛",
-    }
-  }
-  
-  include ActivityHelper
-  
-  def sided_join_status_text(user, team, team_name)
-    SIDED_JOIN_STATUS_TEXTS[time_key][join_key(user, team)] % (team_name ? team_name : team.shortname)
-  end
-  
-  protected
-  def join_key(user, team)
-    if has_joined_team_member?(user, team)
-      :joined
-    elsif has_team_member?(user, team)
-      :undetermined
-    else
-      :unjoined
-    end
-  end
-
   protected  
   def can_be_edited_by?(user, team)
     self.belongs_to?(team) && user.is_team_admin_of?(team)

@@ -1,6 +1,6 @@
 <% for mr in match_review_list_by_user %>
   <div class="mreview">
-    <%host_team_icon, guest_team_icon = team_image_tags_of_match mr.match, {:class=>'icon host_icon'}, {:class=>'icon guest_icon'}%>
+    <%host_team_icon, guest_team_icon = team_image_links_of_match mr.match, {:class=>'icon host_icon'}, {:class=>'icon guest_icon'}%>
     <div class="match_icons">
       <%=host_team_icon%>
       <%=guest_team_icon%>
