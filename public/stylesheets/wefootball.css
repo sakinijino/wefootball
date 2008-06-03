@@ -19,6 +19,10 @@ h2 a{
   font-size:12px;
 }
 
+p {
+  margin: 12px 0;
+}
+
 form {
   border:0;
   margin:0;
@@ -823,7 +827,7 @@ div.mreview div.match_icons img.guest_icon {
 
 div.mreview div.content{
   float: left;
-  width: 430px;
+  width: 450px;
   overflow: hidden;
 }
 
@@ -849,7 +853,7 @@ div.mreview span.match_link{
 
 div.recomm {
   float:right;
-  margin:0 20px 10px 0;
+  margin:0 20px 8px 0;
   color: #666;
 }
 
