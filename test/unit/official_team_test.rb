@@ -15,6 +15,7 @@ class OfficialTeamTest < ActiveSupport::TestCase
         :description => 'summary'*1000 })
     assert official_teams(:inter).valid?
     assert_equal 3000, official_teams(:inter).description.length
+    assert_equal 7, official_teams(:inter).category
   end
   
   def test_user_destroy_dependency_nullify

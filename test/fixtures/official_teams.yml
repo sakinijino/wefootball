@@ -3,9 +3,11 @@ inter:
   name: Inter Milan
   description: Italy Inter Milan
   user_id: 3
+  category: 7
 
 milan:
   id: 2
   name: AC Milan
   description: Italy AC Milan
   user_id: 3
+  category: 7

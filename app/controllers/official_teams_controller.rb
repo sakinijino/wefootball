@@ -8,7 +8,7 @@ class OfficialTeamsController < ApplicationController
     
     @official_teams = OfficialTeam.paginate(:page => params[:page],
                                             :order => 'category',  
-                                            :per_page => 10)
+                                            :per_page => 100)
     @got = @official_teams.group_by{|item| item.category}
     render :layout => "user_layout"
   end

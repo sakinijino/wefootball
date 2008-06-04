@@ -1,6 +1,4 @@
 <div id="wide_left_content" class="sect">
-  <h2><%=h @title%></h2>
-  <div class="cb"></div>
   <%for index in OfficialTeamModule::CATEGORY_LIST%>
     <%if @got.has_key?(index)%>
       <div class='sect'>

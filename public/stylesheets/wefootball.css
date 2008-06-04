@@ -1222,7 +1222,7 @@ form.button-to div,div.fieldWithErrors,div.fieldWithErrorsWhenFocus,.monthCalend
   display:inline;
 }
 
-#qmd a,.monthAndYearDiv a,.bigMonthDaySpan a {
+#qmd a,.bigMonthDaySpan a {
   color:#000;
   background:transparent;
 }

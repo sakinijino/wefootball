@@ -45,7 +45,7 @@ class CalendarController < ApplicationController
       render :layout => 'team_layout'
     elsif (params[:official_team_id])
       @official_team = OfficialTeam.find(params[:official_team_id])
-      date = DateTime.now.at_midnight
+      date = @date
       start_time = date.at_beginning_of_month
       end_time = start_time.next_month
       start_time = start_time.monday.yesterday if start_time.wday>0

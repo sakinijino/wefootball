@@ -16,6 +16,7 @@ class OfficialTeam < ActiveRecord::Base
   attr_protected :user_id
   
   def before_validation
+    self.category = 7 if category.nil?
     attribute_slice(:description, 3000)
   end
   
