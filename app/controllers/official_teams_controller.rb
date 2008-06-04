@@ -48,6 +48,7 @@ class OfficialTeamsController < ApplicationController
   def new
     @title = "创建新球队"
     @official_team = OfficialTeam.new
+    @official_team.category = 7
     render :layout => "user_layout"
   end
 
