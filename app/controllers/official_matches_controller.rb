@@ -18,7 +18,7 @@ class OfficialMatchesController < ApplicationController
       :limit=>15
     @title = "未来#{RECENT_DAYS}天内最受关注的比赛"
     
-    @is_editor = OfficialMatchEditor.is_a_editor?(current_user)
+    @is_editor = logged_in? && OfficialMatchEditor.is_a_editor?(current_user)
     render :layout => "user_layout"
   end
   
@@ -34,7 +34,7 @@ class OfficialMatchesController < ApplicationController
       :limit=>10
     
     @title = "过去#{HISTORY_DAYS}天内最受关注的比赛"
-    @is_editor = OfficialMatchEditor.is_a_editor?(current_user)
+    @is_editor = logged_in? && OfficialMatchEditor.is_a_editor?(current_user)
     render :layout => "user_layout"
   end
   
@@ -45,7 +45,7 @@ class OfficialMatchesController < ApplicationController
       :order=>'like_count-dislike_count desc, like_count desc, created_at desc')
     @watches = @official_match.watches.find :all, :order=>'watch_join_count desc', :limit=>10
     
-    @is_editor = OfficialMatchEditor.is_a_editor?(current_user)
+    @is_editor = logged_in? && OfficialMatchEditor.is_a_editor?(current_user)
     @title = "#{@official_match.host_team.name} V.S. #{@official_match.guest_team.name}"
     @match = @official_match
     render :layout => 'match_layout'

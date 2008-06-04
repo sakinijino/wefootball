@@ -4,7 +4,7 @@ class OfficialTeamsController < ApplicationController
   
   def index
     @title = "球队列表"
-    @is_editor = OfficialTeamEditor.is_a_editor?(current_user)
+    @is_editor = logged_in? && OfficialTeamEditor.is_a_editor?(current_user)
     
     @official_teams = OfficialTeam.paginate :page => params[:page], :per_page => 50
     render :layout => "user_layout"
@@ -38,7 +38,7 @@ class OfficialTeamsController < ApplicationController
       :order=>'watch_join_count desc', 
       :limit=>10
     
-    @is_editor = OfficialTeamEditor.is_a_editor?(current_user)
+    @is_editor = logged_in? && OfficialTeamEditor.is_a_editor?(current_user)
     render :layout => "official_team_layout"
   end
   
