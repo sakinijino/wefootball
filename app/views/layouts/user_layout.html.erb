@@ -18,13 +18,17 @@
 <div id="main_content">
   <div id="header">
     <a id="site_link" href="/"></a>
-    <%if logged_in?%>
+    <%if @user%>
+      <%= link_to user_image_tag(@user), user_view_path(@user), :id=>"header_icon" %>
+    <%elsif logged_in?%>
       <%= link_to user_image_tag(current_user), user_view_path(current_user), :id=>"header_icon" %>
     <%else%>
       <%= link_to image_tag("footballboy3.jpg", :title=>"WeFootball"), "/", :id=>"header_icon" %>
     <%end%>
     
-    <%if logged_in?%>
+    <%if @user%>
+      <%= link_to h(@user.nickname), user_view_path(@user), :id=>"header_name"%>
+    <%elsif logged_in?%>
       <%= link_to h(current_user.nickname), user_view_path(current_user), :id=>"header_name"%>
     <%end%>
 
