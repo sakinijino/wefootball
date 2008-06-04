@@ -63,4 +63,14 @@ class OfficialMatch < ActiveRecord::Base
       "V.S."
     end
   end
+  
+  ICON = "match_icon.gif"
+  IMG_TITLE = "比赛"
+  def icon
+    self.class::ICON
+  end
+  
+  def img_title
+    self.class::IMG_TITLE
+  end
 end

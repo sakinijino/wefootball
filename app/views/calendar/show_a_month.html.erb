@@ -1,16 +1,17 @@
 <div id="wide_left_content" class="sect">
-    <%= render(:partial => 'calendar', 
-        :locals => {:year => @date.year, :month => @date.month,
-        :activities => @calendar_activities_hash})%>
+  <h2><%=h @title%></h2>
+  <%= render(:partial => 'calendar', 
+      :locals => {:year => @date.year, :month => @date.month,
+      :activities => @calendar_activities_hash})%>
 </div>
 
 <div id="narrow_right_content" class="sect">
-  <h2>查看其它活动</h2>
+  <h2>查看其它月份</h2>
   <ul class="sidebar_menu">
     <% tmp = 6.months.ago%>
     <%(1..12).each do%>
       <li>
-        > <%= month_calendar_link "#{tmp.strftime('%Y年%m月')}", tmp, @user || @team%>
+        > <%= month_calendar_link "#{tmp.strftime('%Y年%m月')}", tmp, @user || @team || @official_team%>
         <% tmp = tmp.next_month %>
       </li>
     <%end%>
@@ -19,6 +20,7 @@
     <li>
       > <%= smart_return_user_view_menu_item(@user) if @user%>
       <%= link_to "返回球队首页", team_view_path(@team) if @team%>
+      <%= link_to "返回球队首页", @official_team if @official_team%>
     </li>
   </ul>
 </div>

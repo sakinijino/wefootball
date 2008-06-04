@@ -40,8 +40,8 @@ module BroadcastsHelper
     when WatchJoinBroadcast
       l_icon = user_image_link bc.user, :class=>"icon l_icon", :thumb => :small
       r_icon = %(<div class="match_icons r_icon">
-        #{official_team_image_tag(bc.watch.official_match.host_team, :class=>'icon host_icon')}
-        #{official_team_image_tag(bc.watch.official_match.guest_team, :class=>'icon guest_icon')}
+        #{official_team_image_link(bc.watch.official_match.host_team, :thumb=>:small, :class=>'icon host_icon')}
+        #{official_team_image_link(bc.watch.official_match.guest_team, :thumb=>:small, :class=>'icon guest_icon')}
       </div>
       )
       qut = %(#{link_to(h(bc.user.nickname), user_view_path(bc.user_id))}要#{

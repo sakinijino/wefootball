@@ -1,0 +1,50 @@
+<div id="narrow_right_content">
+  <ul class="sidebar_menu">
+    <li>
+      > <%= link_to '查看所有球队', official_teams_path %>
+    </li>
+    <%if @is_editor%>
+      <li>
+        > <%= link_to '编辑球队', edit_official_team_path(@official_team) %>
+      </li>
+    <%end%>
+  </ul>
+  <%if @watches.length > 0%>
+  <div class="sect">
+    <h2><%=h @official_team.name%>近期比赛的看球活动</h2>
+    <%@watches.each do |w|%>
+      <div class="simple_watch_activity">
+        <%= w.start_time.strftime('%m月%d日 %H:%M')%> - <%= w.end_time.strftime('%H:%M')%>
+        <br/>
+        <%= h w.location %>,
+        <%= link_to "#{h w.watch_join_count}人", users_watch_path(w) %>参加&nbsp;&nbsp;&nbsp;
+        <div class="control"><%= link_to('> 详情', w)%></div>
+      </div>
+    <%end%>
+  </div>
+  <%end%>
+</div>
+
+<div id="wide_left_content">
+  <%if @rom != nil%>
+    <div class="sect">
+      <h2><%=h @official_team.name%>最近一场比赛</h2>
+      <%= render(:partial => 'official_matches/match_info', :object => @rom)%>
+    </div>
+  <%end%>
+
+  <div class="sect">
+    <h2><%=h @official_team.name%>近期的比赛</h2>
+    <%= render(:partial => 'shared/highlight_calendar', 
+      :locals => {:date => @start_time, :days=> OfficialTeamsController::DISPLAY_DAYS, :activities => @om_hash})%>
+    <div class="cb"></div>
+  </div>
+  
+  <%if @reviews.length > 0%>
+  <div class="sect">
+    <h2><%=h @official_team.name%>近期比赛的球评</h2>
+    <%=render :partial=>'match_reviews/match_review_list_by_user', :object=>@reviews%>
+  </div>
+  <%end%>
+</div>
+<div class="cb"></div>

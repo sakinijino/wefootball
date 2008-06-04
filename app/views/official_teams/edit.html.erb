@@ -13,7 +13,7 @@
 
   <% form_for(:official_team, :url => update_image_official_team_path(@official_team),:html => { :method=>:put, :multipart => true, :class=>"tab" }) do |f| %>
     <%= hidden_field_tag :tab_index, 1%>
-    <%= official_team_image_tag @official_team, {:style=>"margin:20px 0 0 0"} %>
+    <%= official_team_image_tag @official_team, {:thumb=>:small, :style=>"margin:20px 0 0 0"} %>
     <p>
       <label>更改队标</label><br/>
       <%= f.file_field  :uploaded_data %>

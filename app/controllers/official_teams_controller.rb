@@ -1,11 +1,45 @@
 class OfficialTeamsController < ApplicationController
-  before_filter :login_required
-  before_filter :require_editor
+  before_filter :login_required, :except => [:index, :show]
+  before_filter :require_editor, :except => [:index, :show]
   
   def index
     @title = "球队列表"
+    @is_editor = OfficialTeamEditor.is_a_editor?(current_user)
+    
     @official_teams = OfficialTeam.paginate :page => params[:page], :per_page => 50
     render :layout => "user_layout"
+  end
+  
+  DISPLAY_DAYS = 14
+  REVIEW_LIST_LENGTH = 5
+  def show
+    @official_team = OfficialTeam.find(params[:id])
+    @title = @official_team.name
+    
+    @rom = OfficialMatch.find :first, :conditions => 
+      ['end_time > ? and (host_official_team_id = ? or guest_official_team_id = ?)', 
+        Time.now, @official_team.id, @official_team.id],
+      :order=>'start_time'
+    
+    @start_time = 3.days.ago.at_midnight
+    et = @start_time.since(3600*24*DISPLAY_DAYS)
+    @oms = OfficialMatch.find :all, :conditions =>
+      ['(end_time > ? and start_time < ?) and (host_official_team_id = ? or guest_official_team_id = ?)', 
+        @start_time, et, @official_team.id, @official_team.id], 
+      :order=>'start_time'
+    @om_hash = @oms.group_by {|t| t.start_time.strftime("%Y-%m-%d")}
+    
+    @reviews = OfficialMatchReview.find(:all, 
+      :conditions => ['match_id in (?)', @oms.map {|om| om.id}],
+      :limit=>REVIEW_LIST_LENGTH, 
+      :order=>'like_count-dislike_count desc, like_count desc, created_at desc')
+    @watches = Watch.find :all, 
+      :conditions => ['official_match_id in (?)', @oms.map {|om| om.id}],
+      :order=>'watch_join_count desc', 
+      :limit=>10
+    
+    @is_editor = OfficialTeamEditor.is_a_editor?(current_user)
+    render :layout => "official_team_layout"
   end
   
   def new
@@ -17,7 +51,7 @@ class OfficialTeamsController < ApplicationController
   def edit
     @title = "修改球队信息"
     @official_team = OfficialTeam.find(params[:id])
-    render :layout => "user_layout"
+    render :layout => "official_team_layout"
   end
 
   def create
@@ -39,7 +73,7 @@ class OfficialTeamsController < ApplicationController
       redirect_to(edit_official_team_path(@official_team))
     else
       @title = "修改球队信息"
-      render :action => "edit", :layout => "user_layout"
+      render :action => "edit", :layout => "official_team_layout"
     end
   end
   
@@ -53,7 +87,7 @@ class OfficialTeamsController < ApplicationController
     else
       @title = "修改球队信息"
       @official_team.errors.add_to_base('上传图片只支持是jpg/gif/png格式, 并且图片大小不能超过2M') if !team_image.errors.empty?
-      render :action => "edit", :layout => "user_layout"
+      render :action => "edit", :layout => "official_team_layout"
     end
   end
   

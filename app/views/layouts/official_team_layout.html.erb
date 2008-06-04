@@ -1,0 +1,39 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+  <title><%=h @title ? @title : "#{h(@official_team.name)}"%></title>
+  <%= stylesheet_link_tag 'wefootball' %>
+  <%= yield :stylesheet%>
+  <%= javascript_include_tag "jquery-1.2.3/jquery-1.2.3.min.js" %>
+  <%= javascript_include_tag "jquery-1.2.3/jquery.dimensions.js" %>
+  <%= javascript_include_tag "application" %>
+  <%= yield :javascript%>
+</head>
+<body>
+<%= render(:partial => 'layouts/qmd')%>
+<div id="main_content">
+  <div id="header">
+    <a id="site_link" href="/"></a>
+    <%= link_to official_team_image_tag(@official_team), @official_team, :id=>"header_icon" %>
+    <%= link_to h(@official_team.name), @official_team, :id=>"header_name"%>
+
+    <%= render(:partial => 'layouts/header_setting')%>
+    <%= render(:partial => 'layouts/user_menu')%>
+
+    <%= render(:partial => 'layouts/search_panel', :locals => {:default => :user})%>
+  </div>
+
+  <div id="content">
+    <%if flash[:notice]%>
+      <div class="flash"><%= flash[:notice] %></div>
+    <%end%>
+    <%= yield  %>
+  </div>
+</div>
+<%= render(:partial => 'layouts/footer')%>
+</body>
+</html>

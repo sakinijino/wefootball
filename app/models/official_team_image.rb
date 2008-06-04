@@ -1,11 +1,14 @@
 class OfficialTeamImage < ActiveRecord::Base
-  WIDTH = 48
-  HEIGHT = 48
+  WIDTH = 76
+  HEIGHT = 76
+  SMALL_WIDTH = 48
+  SMALL_HEIGHT = 48
   
   belongs_to :official_team
   has_attachment  :storage => :file_system, 
                   :content_type => :image, 
-                  :resize_to => '48x48!',
+                  :resize_to => '76x76!',
+                  :thumbnails => { :small => "48x48!"},
                   :path_prefix => 'public/images/official_teams',
                   :max_size => 2.megabytes,
                   :processor => :MiniMagick # attachment_fu looks in this order: ImageScience, Rmagick, MiniMagick

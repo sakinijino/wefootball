@@ -43,7 +43,7 @@
     </div>
     <%if i==0%>
       <div class="normalDateDiv monthAndYearDiv">
-        <%= month_calendar_link(date.strftime("%Y-%m"), date, @user || @team)%><br/>
+        <%= month_calendar_link(date.strftime("%Y-%m"), date, @user || @team || @official_team)%><br/>
         <%= icalendar_path "#{image_tag('ical.gif')}",  @user || @team, :class=>"icalendar", :title=>"iCalendar"%>
       </div>
     <%end%>

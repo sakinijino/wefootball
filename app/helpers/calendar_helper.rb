@@ -14,6 +14,8 @@ module CalendarHelper
       link_to link_text, user_month_calendar_url(entity.id, date.year, date.month), options
     when Team
       link_to link_text, team_month_calendar_url(entity.id, date.year, date.month), options
+    when OfficialTeam
+      link_to link_text, official_team_month_calendar_url(entity.id, date.year, date.month), options
     else
       link_text
     end

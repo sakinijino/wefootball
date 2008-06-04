@@ -1,10 +1,7 @@
 <div id="wide_left_content" class="sect">
   <h2><%=h @title%></h2>
   <%@official_teams.each do |official_team|%>
-    <div class="icon ot_icon">
-      <%= link_to official_team_image_tag(official_team), edit_official_team_path(official_team.id)%>
-      <span><%=link_to h(official_team.name), edit_official_team_path(official_team.id)%></span>
-    </div>
+    <%=official_team_icon official_team%>
   <%end%>
   <div class="cb"></div>
   <%= will_paginate @official_teams %>
@@ -13,9 +10,11 @@
 <div id="narrow_right_content" class="sect">
   <h2></h2>
   <ul class="sidebar_menu">
+    <%if @is_editor%>
     <li>
       > <%= link_to '新建球队', new_official_team_path %>
     </li>
+    <%end%>
   </ul>
 </div>
 <div class="cb"></div>

@@ -137,6 +137,8 @@ ActionController::Routing::Routes.draw do |map|
       :requirements => {:year => /(19|20)\d\d/, :month => /[01]?\d/}
   map.team_day_calendar "teams/:team_id/calendar/:year/:month/:day", :controller=>"calendar", :action => "show_a_day",
       :requirements => {:year => /(19|20)\d\d/, :month => /[01]?\d/, :day => /[0-3]?\d/}
+  map.official_team_month_calendar "official_teams/:official_team_id/calendar/:year/:month", :controller=>"calendar", :action => "show_a_month",
+      :requirements => {:year => /(19|20)\d\d/, :month => /[01]?\d/}
     
   map.user_icalendar "users/:id/icalendar.ics", :controller=>"i_calendar", :action => "user"
   map.team_icalendar "teams/:id/icalendar.ics", :controller=>"i_calendar", :action => "team"

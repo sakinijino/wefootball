@@ -1,9 +1,9 @@
 <%start_date = Date.new(year, month)%>
 <div class="monthCalendar">
 <div class="monthAndYear">
-  <%= month_calendar_link image_tag('prev.jpg'), start_date.last_month, @user || @team%>
+  <%= month_calendar_link image_tag('prev.jpg'), start_date.last_month, @user || @team || @official_team%>
   <span><%= start_date.strftime("%Y-%m")%></span>
-  <%= month_calendar_link image_tag('next.jpg'), start_date.next_month, @user || @team%>
+  <%= month_calendar_link image_tag('next.jpg'), start_date.next_month, @user || @team || @official_team%>
 </div>
 <div class="cb"></div>
 <div>

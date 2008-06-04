@@ -43,6 +43,19 @@ class CalendarController < ApplicationController
           @team.match_calendar_proxy.in_an_extended_month(@date)).group_by{|m| m.start_time.strftime("%Y-%m-%d")}      
       @title = "#{@team.shortname}, #{@date.month}月的活动"
       render :layout => 'team_layout'
+    elsif (params[:official_team_id])
+      @official_team = OfficialTeam.find(params[:official_team_id])
+      date = DateTime.now.at_midnight
+      start_time = date.at_beginning_of_month
+      end_time = start_time.next_month
+      start_time = start_time.monday.yesterday if start_time.wday>0
+      end_time = end_time.monday.next_week.yesterday.yesterday if end_time.wday<6
+      @calendar_activities_hash = OfficialMatch.find(:all, 
+        :conditions =>
+          ['(end_time > ? and start_time < ?) and (host_official_team_id = ? or guest_official_team_id = ?)', 
+          start_time, end_time, @official_team.id, @official_team.id]).group_by{|m| m.start_time.strftime("%Y-%m-%d")}      
+      @title = "#{@official_team.name}, #{@date.month}月的比赛"
+      render :layout => 'official_team_layout'
     end
   end
 end

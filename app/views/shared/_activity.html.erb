@@ -107,9 +107,9 @@
     <%= links_with_sticks links%>
   </div>
   <div class="activity_icon">
-    <%= official_team_image_tag activity.official_match.host_team, :class=>"host_icon" %>
+    <%= official_team_image_link activity.official_match.host_team, :thumb=>:small, :class=>"host_icon" %>
     <div class="vs" title="V.S."></div>
-    <%= official_team_image_tag activity.official_match.guest_team, :class=>"guest_icon" %>
+    <%= official_team_image_link activity.official_match.guest_team, :thumb=>:small, :class=>"guest_icon" %>
   </div>
 </div>
 <%elsif activity.class == Match %>
