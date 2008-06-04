@@ -1,9 +1,15 @@
 <div id="wide_left_content" class="sect">
   <h2><%=h @title%></h2>
-  <%@official_teams.each do |official_team|%>
-    <%=official_team_icon official_team%>
-  <%end%>
   <div class="cb"></div>
+  <%for index in OfficialTeamModule::CATEGORY_LIST%>
+    <%if @got.has_key?(index)%>
+      <div class='sect'>
+        <h2><%=h OfficialTeamModule::CATEGORY[index]%></h2>
+        <%=official_team_icon @got[index]%>
+      </div>
+      <div class='cb'></div>
+    <%end%>
+  <%end%>
   <%= will_paginate @official_teams %>
 </div>
 

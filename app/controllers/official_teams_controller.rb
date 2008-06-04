@@ -6,7 +6,10 @@ class OfficialTeamsController < ApplicationController
     @title = "球队列表"
     @is_editor = logged_in? && OfficialTeamEditor.is_a_editor?(current_user)
     
-    @official_teams = OfficialTeam.paginate :page => params[:page], :per_page => 50
+    @official_teams = OfficialTeam.paginate(:page => params[:page],
+                                            :order => 'category',  
+                                            :per_page => 10)
+    @got = @official_teams.group_by{|item| item.category}
     render :layout => "user_layout"
   end
   
