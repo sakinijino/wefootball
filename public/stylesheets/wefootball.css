@@ -1046,6 +1046,11 @@ div.activities div.detail {
   overflow:hidden;
 }
 
+div.activity_list {
+  float:left;
+  width: 460px;
+}
+
 div.sided_match_result {
   position:absolute;
   right:20px;
@@ -1261,7 +1266,7 @@ div.help p {
   text-indent:2em;
 }
 
-#footer span.arrd,div.activities div.activity_list {
+#footer span.arrd,div.activities {
   float:left;
 }
 
