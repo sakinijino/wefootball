@@ -24,7 +24,7 @@ class UserTeam < ActiveRecord::Base
     if self.column_changed?(:is_admin)
       if self.is_admin && self.user.teams.count(:conditions => ["is_admin = ?", true]) >= MAX_ADMIN_LENGTH
         self.is_admin = false 
-      elsif !self.is_admin && UserTeam.count(:conditions=>["team_id = ? and is_admin = true",self.team_id])<=1
+      elsif !self.is_admin && UserTeam.count(:conditions=>["team_id = ? and is_admin = ?",self.team_id,true])<=1
         self.is_admin = true 
       end
     end
@@ -58,6 +58,6 @@ class UserTeam < ActiveRecord::Base
   end
 
   def is_the_only_one_admin?
-    self.is_admin && (UserTeam.count(:conditions=>["team_id = ? and is_admin = true",self.team_id])==1)
+    self.is_admin && (UserTeam.count(:conditions=>["team_id = ? and is_admin = ?",self.team_id,true])==1)
   end
 end

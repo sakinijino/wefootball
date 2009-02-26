@@ -52,7 +52,7 @@ class MatchJoin < ActiveRecord::Base
   def self.players(match_id,team_id)
     MatchJoin.find(:all,
                    :select => 'mj.*',
-                   :conditions => ["mj.match_id=? and mj.team_id=? and (mj.position is not null or mj.goal>0 or mj.yellow_card>0 or mj.red_card>0 or ut.is_player=true)",match_id,team_id],
+                   :conditions => ["mj.match_id=? and mj.team_id=? and (mj.position is not null or mj.goal>0 or mj.yellow_card>0 or mj.red_card>0 or ut.is_player=?)",match_id,team_id,true],
                    :joins => 'as mj inner join user_teams as ut on mj.team_id=ut.team_id and mj.user_id=ut.user_id',
                    :order => 'position desc'
                    )

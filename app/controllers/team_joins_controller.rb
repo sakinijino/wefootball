@@ -56,7 +56,7 @@ class TeamJoinsController < ApplicationController
     @uts = UserTeam.paginate_all_by_team_id(
       params[:team_id],
       :order => 'is_player DESC',
-      :conditions => ['users.is_playable = true'],
+      :conditions => ['users.is_playable = ?', true],
       :include=>[:user],
       :page => params[:page], 
       :per_page => 50
