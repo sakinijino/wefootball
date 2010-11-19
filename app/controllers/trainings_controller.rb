@@ -23,7 +23,7 @@ class TrainingsController < ApplicationController
   
   def joined_users
     @training = Training.find(params[:id])
-    @title = "参见#{@training.team.shortname} #{@training.start_time.strftime('%m.%d')}训练的人"
+    @title = "参加#{@training.team.shortname} #{@training.start_time.strftime('%m.%d')}训练的人"
     @users = @training.users.joined :page => params[:page], :per_page => 100
     @team = @training.team
     render :action=>'users', :layout=>'training_layout'    
