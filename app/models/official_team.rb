@@ -1,7 +1,7 @@
 class OfficialTeam < ActiveRecord::Base
   include ModelHelper
   
-  DEFAULT_IMAGE = "/images/default_team_small.gif"
+  DEFAULT_IMAGE = "/images/default_team.gif"
   
   has_one :official_team_image,
             :dependent => :destroy

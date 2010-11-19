@@ -25,18 +25,34 @@ class UserImage < ActiveRecord::Base
   end
   
   def uploaded_data=(file_data)
-    return nil if file_data.nil? || file_data.size == 0
-    self.content_type = file_data.content_type
-    ext = nil
-    file_data.original_filename.gsub(/\.\w+$/) do |s|
-      ext = s; ''
-    end
-    self.filename = "%08d#{ext}" % self.user_id if respond_to?(:filename)
+    if file_data.respond_to?(:content_type)
+      return nil if file_data.size == 0
+      self.content_type = file_data.content_type
+      # self.filename =  file_data['filename']
+      ext = nil
+      file_data.original_filename.gsub(/\.\w+$/) do |s|
+        ext = s; ''
+      end
+      self.filename = "%08d#{ext}" % self.user_id if respond_to?(:filename)
+      # -----
+    else
+      return nil if file_data.blank? || file_data['size'] == 0
+      self.content_type = file_data['content_type']
+      # self.filename =  file_data['filename']
+      ext = nil
+      file_data.original_filename.gsub(/\.\w+$/) do |s|
+        ext = s; ''
+      end
+      self.filename = "%08d#{ext}" % self.user_id if respond_to?(:filename)
+      # -----
+      file_data = file_data['tempfile']
+    end    
+
     if file_data.is_a?(StringIO)
       file_data.rewind
-      self.temp_data = file_data.read
+      set_temp_data file_data.read
     else
-      self.temp_data = file_data.read #windows fix
+      self.temp_paths.unshift file_data
     end
   end
   

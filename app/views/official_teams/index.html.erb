@@ -1,6 +1,6 @@
 <div id="wide_left_content" class="sect">
   <%for index in OfficialTeamModule::CATEGORY_LIST%>
-    <%if @got.has_key?(index)%>
+    <%if @got.keys.include?(index)%>
       <div class='sect'>
         <h2><%=h OfficialTeamModule::CATEGORY[index]%></h2>
         <%=official_team_icon @got[index]%>

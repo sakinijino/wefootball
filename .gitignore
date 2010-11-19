@@ -2,3 +2,7 @@
 /db/*.sqlite3
 /log/*.log
 /tmp
+
+/public/images/users
+/public/images/teams
+/public/images/official_teams
