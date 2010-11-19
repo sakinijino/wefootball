@@ -1,5 +1,3 @@
-require 'icalendar'
-
 class ICalendarController < ApplicationController
   DISPLAY_DAYS = 28
   
@@ -79,7 +77,7 @@ class ICalendarController < ApplicationController
       when Watch
         watch_url act
       end)
-      event.uid "www.wefootball.org-#{act.class}-#{act.id}"
+      event.uid "#{HOST.gsub(/^(http|https):\/\//,'')}-#{act.class}-#{act.id}"
       cal.add event
     end
     cal
