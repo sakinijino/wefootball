@@ -101,7 +101,7 @@ class MatchesController < ApplicationController
     filled_goal_sum = 0
     if params[:mj]
       params[:mj].map{|k,v| [k,{:goal=>v[:goal],:cards=>v[:cards]}]}.each do |i|
-        if !player_mjs_hash.has_key?(i[0].to_i)
+        if !player_mjs_hash.keys.include?(i[0].to_i)
           fake_params_redirect      
           return
         end

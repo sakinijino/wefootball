@@ -37,10 +37,12 @@ protected
   end
 end
 
-WillPaginate::ViewHelpers.pagination_options[:prev_label] = '< 前页'
-WillPaginate::ViewHelpers.pagination_options[:next_label] = '后页 >'
-WillPaginate::ViewHelpers.pagination_options[:inner_window] = 2
-WillPaginate::ViewHelpers.pagination_options[:outer_window] = 1
+if defined? WillPaginate
+  WillPaginate::ViewHelpers.pagination_options[:prev_label] = '< 前页'
+  WillPaginate::ViewHelpers.pagination_options[:next_label] = '后页 >'
+  WillPaginate::ViewHelpers.pagination_options[:inner_window] = 2
+  WillPaginate::ViewHelpers.pagination_options[:outer_window] = 1
+end
 
 class DateTime
   def self.today

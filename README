@@ -1,11 +1,9 @@
 Setup:
- * install ruby 1.8.6
- * gem install rails -v 2.0.2 or rake rails:freeze:edge TAG=rel_2_0_2
- * gem install sqlite3-ruby-1.2.3 (for test with sqlite3)
+ * gem install rails -v 2.1 or rake rails:freeze:edge TAG=rel_2_1
+ * gem install sqlite3-ruby (for test with sqlite3, if necessary)
  * install ImageMagick
- * gem install mini_magick -v 1.2.3
- * gem install mislav-will_paginate -v 2.3.11
  * git clone wefootball.git
+ * rake gems:build 
 
 Run Tests:
  * rake db:migrate
