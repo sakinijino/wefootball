@@ -6,6 +6,10 @@ module FootballGroundsHelper
   end
   
   def location_link(location, fgid)
-    link_to_if !fgid.nil?, h(location), football_ground_path(fgid)
+    if !fgid.nil?
+      link_to h(location), football_ground_path(fgid)
+    else
+      h(location)
+    end
   end
 end

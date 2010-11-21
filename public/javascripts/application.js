@@ -222,10 +222,10 @@ j(function(){
             })
             if (football_ground_select.value != '') {
               location_input.value = ''
-              lti.hide();
+              lti.hide()
             }
-            else if (location_input.value == '') lti.hide();
-            else fgi.hide();
+            //else if (location_input.value == '') lti.hide();
+            else fgi.hide()
         })
         
         j('div.result_input').each(function(i, div){

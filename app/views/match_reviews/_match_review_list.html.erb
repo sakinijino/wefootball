@@ -7,7 +7,7 @@
       <span>来自<%=link_to h(mr.user.nickname), user_view_path(mr.user)%></span>
       <span class="time"><%= mr.created_at.strftime('%Y-%m-%d %H:%M') %></span>
       <p>
-        <%=auto_link(h(truncate(mr.content, MatchReviewsController::SUMMARY_LENGTH)), :urls) %>
+        <%=auto_link(h(truncate(mr.content, :length => MatchReviewsController::SUMMARY_LENGTH)), :urls) %>
         <%= link_to "(#{mr.match_review_replies.size}回应)", match_review_path(mr) %>
       </p>
       <div class="recomm">

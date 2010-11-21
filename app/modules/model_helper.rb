@@ -1,6 +1,6 @@
 module ModelHelper
   def attribute_slice(attr, length)
-    self[attr] = (self[attr].chars[0...length]).to_s if !self[attr].nil? && self[attr].chars.length > length
+    self[attr] = (self[attr].mb_chars[0...length]).to_s if !self[attr].nil? && self[attr].mb_chars.length > length
   end
   
   def city_text

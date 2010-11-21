@@ -1,0 +1,94 @@
+This is a UI Test Script for Wefootball. They are MANUAL currently.
+(A UI testing framework, such as Selenium, can make these tests automatically.)
+
+* User
+ * signup
+ * activate
+ * login
+ * edit
+ * upload avatar
+ * invite friend
+ * signup with invitation
+ * break up friendship
+ * friend invitation
+ * reject friend invitation
+ * accept friend invitation
+ * send message
+ * delete message
+ * search
+
+* Team
+ * new
+ * edit
+ * upload logo
+ * send join request
+ * accept join request
+ * reject join request
+ * send join invitation
+ * accept join invitation
+ * reject join invitation
+ * member management
+ * player management
+ * formation management
+ * show formation
+ * discuss
+ * search
+
+* Play (随便踢踢)
+ * new
+ * join
+ * quit
+ * all users quit
+
+* Training
+ * new
+ * edit
+ * join
+ * quit
+ * discuss
+ * delete
+
+* Sided Match
+ * new
+ * edit
+ * join
+ * quit
+ * formation
+ * result
+ * discuss
+ * review
+ * delete
+
+* Match
+ * send match invitation
+ * discuss invitation
+ * reject invitation
+ * accept invitation
+ * join
+ * quit
+ * formation
+ * result
+ * discuss
+ * review
+ * delete
+
+* Official Match
+ * new official team
+ * upload official team logo
+ * new official match
+ * edit official match
+ * review
+
+* Watch
+ * new 
+ * join
+ * quit
+ * discuss
+
+* Broadcast
+ * user broadcast
+ * team broadcast
+
+* Calendar
+ * download calendar(.ics)
+ * import to GCalendar

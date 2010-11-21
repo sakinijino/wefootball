@@ -1,10 +1,10 @@
 # Methods added to this helper will be available to all templates in the application.
 module ApplicationHelper
   def word_wrap_with_wbr(str, interval = 5)
-    section = str.chars.length / interval + ((str.chars.length % interval) == 0 ? 0 : 1)
+    section = str.mb_chars.length / interval + ((str.mb_chars.length % interval) == 0 ? 0 : 1)
     tmp = []
     (0...section).each do |i|
-      tmp[i] = str.chars.slice(interval*i, interval)
+      tmp[i] = str.mb_chars.slice(interval*i, interval)
     end
     return tmp.join('<wbr/>')
   end
