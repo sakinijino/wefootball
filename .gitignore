@@ -6,3 +6,5 @@
 /public/images/users
 /public/images/teams
 /public/images/official_teams
+
+/config/database.yml
