@@ -1,10 +1,11 @@
 Setup:
  * gem install rails -v 2.2.2 or rake rails:freeze:edge TAG=rel_2_2_2
- * gem install sqlite3-ruby (for test with sqlite3, if necessary)
+ * install databse adapter if necessary (gem install sqlite3-ruby or mysql)
  * install ImageMagick
  * git clone wefootball.git
+ * create and edit config/database.yml (a template in config/database.yml.template)
  * rake gems:build 
 
 Run Tests:
- * rake db:migrate
- * rake test
+ * rake db:migrate RAILS_ENV=test
+ * rake test RAILS_ENV=test
