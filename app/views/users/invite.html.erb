@@ -11,7 +11,7 @@
 
   <% form_for @register_invitation, :url=>invite_users_path do |f| -%>
 
-  <p><label for="login">朋友的Email <span class="optional">(hotmail、pku邮箱可能无法收到邀请邮件)</span></label><br/>
+  <p><label for="login">朋友的Email <span class="optional">(推荐把邀请邮件发送到好友的gmail)</span></label><br/>
   <%= f.text_field :login %></p>
 
   <p><label for="message">留言 <span class="optional">(可选)</span></label><br/>

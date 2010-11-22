@@ -1,5 +1,9 @@
 <div id="wide_left_content" class="sect notification">
-  激活帐户的邮件已发送, 请到你的邮箱激活
+  激活帐户的邮件已发送, 请到你的邮箱查看激活邮件
+  <br/><br/>
+  如果没有收到激活邮件，可以<%= link_to "重新发送",resend_activate_mail_path%>
+  <br/><br/>
+  一些邮箱可能将激活邮件误认为垃圾邮件，如果看不到激活邮件，不妨到垃圾邮件找找看
   <br/><br/>
   激活后，你就可以<%=link_to '登录WeFootball', new_session_path%>
 </div>

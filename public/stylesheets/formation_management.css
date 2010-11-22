@@ -55,6 +55,7 @@ div.icon,img.icon {
   right:0;
   top:0;
   cursor:pointer;
+  z-index: 1;
 }
 
 #field_div .pos_elem {

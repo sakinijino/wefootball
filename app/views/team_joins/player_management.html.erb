@@ -12,7 +12,7 @@
         <%= user_icon(ut.user)%>
         <div>
           <span>首选位置: <%= position_text ut.user.premier_position%></span><br/><br/>
-          <%=link_to("从队员名单去掉",team_join_path(ut, "ut[is_player]" => false, 
+          <%=link_to("从队员名单去掉",team_join_path(ut, "ut[is_player]" => 'false', 
                 :back_uri => request.request_uri),:method=>:put) if ut.is_player%>
         </div>
       </div>

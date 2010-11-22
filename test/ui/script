@@ -22,17 +22,23 @@ This is a UI Test Script for Wefootball. They are MANUAL currently.
  * edit
  * upload logo
  * send join request
- * accept join request
  * reject join request
+ * accept join request
+ * quit team
+ * new admin
  * send join invitation
  * accept join invitation
  * reject join invitation
  * member management
  * player management
  * formation management
- * show formation
+ * view formation
  * discuss
  * search
+
+* Fooball Ground
+ * new
+ * view
 
 * Play (随便踢踢)
  * new
@@ -87,8 +93,8 @@ This is a UI Test Script for Wefootball. They are MANUAL currently.
 
 * Broadcast
  * user broadcast
- * team broadcast
 
 * Calendar
+ * view
  * download calendar(.ics)
  * import to GCalendar

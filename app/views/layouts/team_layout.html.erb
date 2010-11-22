@@ -8,8 +8,8 @@
   <title><%=h @title ? @title : h(@team.shortname)%></title>
   <%= stylesheet_link_tag 'wefootball' %>
   <%= yield :stylesheet%>
-  <%= javascript_include_tag "jquery-1.2.3/jquery-1.2.3.min.js" %>
-  <%= javascript_include_tag "jquery-1.2.3/jquery.dimensions.js" %>
+  <%= javascript_include_tag "jquery/jquery.js" %>
+  <%= javascript_include_tag "jquery/jquery.dimensions.js" %>
   <%= javascript_include_tag "application" %>
   <%= yield :javascript%>
 </head>

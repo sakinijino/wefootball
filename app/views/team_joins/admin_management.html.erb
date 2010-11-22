@@ -12,7 +12,7 @@
         <%= user_icon(ut.user)%>
         <div>
           <%if !ut.is_the_only_one_admin?%>
-            <%=link_to("不再担任管理员",team_join_path(ut, "ut[is_admin]" => false, 
+            <%=link_to("不再担任管理员",team_join_path(ut, "ut[is_admin]" => 'false', 
                 :back_uri => request.request_uri),:method=>:put) if ut.can_degree_as_common_user_by?(current_user)%>
             <br/><br/>
             <%=link_to("逐出球队",team_join_path(ut, :back_uri => request.request_uri),:method=>:delete, :confirm => '真的要把这个用户逐出球队吗？') if ut.can_destroy_by?(current_user)%>

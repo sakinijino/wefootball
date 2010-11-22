@@ -48,14 +48,6 @@ j(function(){
             item.hover(function(){ul.show()}, function(){ul.hide()})
         })
         
-        if (j.browser.opera) { // fix opera absolute div in span bug
-          var dc = j("#header_setting .dropdown_container")
-          if (dc.length > 0) {
-            j("#header_setting").css('text-align', 'left')
-            dc.css('display', 'block').css('float','left').css('margin-left', '16px').css('text-align', 'center')
-          }
-        }
-        
         j("#header_search .dropdown_container div.dropdown div").click(function(){
             var item = j(this)
             j("#header_search .dropdown_container img:first").attr('src', item.find('img').attr('src'))
