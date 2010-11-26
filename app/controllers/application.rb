@@ -29,11 +29,21 @@ protected
   end
   
   def fake_params_redirect
-    head 403
+    # ugly trick
+    # think about gentle solution to fix it
+    if RAILS_ENV == 'production'
+      render_403
+    else 
+      head 403
+    end
   end
   
   def redirect_with_back_uri_or_default(uri='/')
     params[:back_uri]!=nil ? redirect_to(params[:back_uri]) : redirect_to(uri)
+  end
+
+  def render_403
+    render :file => "\#{RAILS_ROOT}/public/403.html", :status => 403
   end
 end
 
