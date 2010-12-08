@@ -2,7 +2,7 @@ require 'rubygems'
 require 'nokogiri'
 require 'open-uri'
 
-require File.dirname(__FILE__) + '/extracter/netease'
+require File.dirname(__FILE__) + '/extractor/netease'
 
 MATCH_TYPE = {
   :england => '8', #英超

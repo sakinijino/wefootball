@@ -5,6 +5,7 @@ Setup:
  * git clone wefootball.git
  * create and edit config/database.yml (a template in config/database.yml.template)
  * rake gems:build 
+ * rake gems:install // install local OS specific nokogiri
 
 Run Tests:
  * rake db:migrate RAILS_ENV=test
