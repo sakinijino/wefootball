@@ -69,4 +69,6 @@ Rails::Initializer.run do |config|
   config.gem 'mini_magick', :version => '1.2.3'
   config.gem 'will_paginate', :version => '~> 2.3.11', :source => 'http://gemcutter.org'
   config.gem 'icalendar', :version => '~> 1.1.0'
+
+  #config.time_zone = "Beijing"
 end

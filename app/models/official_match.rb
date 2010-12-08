@@ -73,4 +73,38 @@ class OfficialMatch < ActiveRecord::Base
   def img_title
     self.class::IMG_TITLE
   end
+
+  def self.import_match(m)
+    host_team = OfficialTeam.find_or_initialize_by_name m[:host_name]
+    guest_team = OfficialTeam.find_or_initialize_by_name m[:guest_name]
+    new_teams =[]
+    if host_team.new_record?
+      host_team.save!
+      new_teams << host_team
+    end
+    if guest_team.new_record?
+      guest_team.save!
+      new_teams << guest_team
+    end
+
+    new_match = []
+    update_match = []
+    match = OfficialMatch.find_or_initialize_by_host_official_team_id_and_guest_official_team_id_and_start_time(host_team.id, guest_team.id, m[:start_time])
+    if match.new_record?
+      match.host_team_goal = m[:host_goal] if m[:host_goal] != nil
+      match.guest_team_goal = m[:guest_goal] if m[:guest_goal] != nil
+      match.save!
+      new_match << match
+    elsif match.host_team_goal!=m[:host_goal] || match.guest_team_goal!=m[:guest_goal]
+      match.host_team_goal = m[:host_goal] if m[:host_goal] != nil
+      match.guest_team_goal = m[:guest_goal] if m[:guest_goal] != nil
+      match.save!
+      update_match << match
+    end
+    
+    yield new_teams, new_match, update_match if block_given?
+
+    match
+  end
+
 end

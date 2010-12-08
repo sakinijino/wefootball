@@ -40,4 +40,20 @@ class OfficialTeam < ActiveRecord::Base
       end
     end
   end
+
+  def merge(team2)
+    if self.category == 7 && team2.category !=7
+      self.category = team2.category
+    end
+    if self.description.blank? && !team2.description.blank?
+      self.description = team2.description
+    end
+    if self.image_path.nil? && !team2.image_path.nil?
+      self.image_path = team2.image_path
+    end
+    self.save!
+
+    OfficialMatch.update_all(["host_official_team_id=?", self.id], :host_official_team_id => team2.id)
+    OfficialMatch.update_all(["guest_official_team_id=?", self.id], :guest_official_team_id => team2.id)
+  end
 end

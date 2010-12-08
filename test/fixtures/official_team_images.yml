@@ -5,3 +5,15 @@ inter_image:
   content_type: image/pjpeg
   size: 79683
   official_team_id: 1
+
+juven_dup_image:
+  filename: 00000004.not_image
+  content_type: image/pjpeg
+  size: 79683
+  official_team_id: 4
+
+juven_dup2_image:
+  filename: 00000005.not_image
+  content_type: image/pjpeg
+  size: 79683
+  official_team_id: 5

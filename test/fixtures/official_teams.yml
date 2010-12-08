@@ -11,3 +11,24 @@ milan:
   description: Italy AC Milan
   user_id: 3
   category: 7
+
+juven:
+  id: 3
+  name: Juven
+  description:
+  user_id: 3
+  category: 7
+
+juven_duplicate:
+  id: 4
+  name: Juventus
+  description: Juventus Club
+  user_id: 3
+  category: 1
+
+juven_duplicate2:
+  id: 5
+  name: Juven
+  description: Juventus Football Club
+  user_id: 3
+  category: 2

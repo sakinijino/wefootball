@@ -2,6 +2,38 @@ one:
   id: 1
   host_official_team_id: 1
   guest_official_team_id: 2
-  start_time: 2000-01-01 00:00:00
-  end_time: 2000-01-01 02:00:00
+  start_time: 2000-01-01 00:00:00 +08:00
+  end_time: 2000-01-01 02:00:00 +08:00
   location: "default_location"
+
+juvd_inter:
+  id: 2
+  host_official_team_id: 4
+  guest_official_team_id: 1
+  start_time: 2000-01-01 00:00:00 +08:00
+  end_time: 2000-01-01 02:00:00 +08:00
+  location: "default_location"
+
+milan_juvd:
+  id: 3
+  host_official_team_id: 2
+  guest_official_team_id: 4
+  start_time: 2000-01-01 00:00:00 +08:00
+  end_time: 2000-01-01 02:00:00 +08:00
+  location: "default_location"
+
+inter_juvd:
+  id: 4
+  host_official_team_id: 1
+  guest_official_team_id: 4
+  start_time: 2000-01-01 00:00:00 +08:00
+  end_time: 2000-01-01 02:00:00 +08:00
+  location: "default_location"  
+
+juvd_milan:
+  id: 5
+  host_official_team_id: 4
+  guest_official_team_id: 2
+  start_time: 2000-01-01 00:00:00 +08:00
+  end_time: 2000-01-01 02:00:00 +08:00
+  location: "default_location"  
