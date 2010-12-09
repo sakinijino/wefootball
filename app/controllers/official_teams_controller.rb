@@ -84,7 +84,11 @@ class OfficialTeamsController < ApplicationController
   def update_image
     @official_team = OfficialTeam.find(params[:id])
     team_image = OfficialTeamImage.find_or_initialize_by_official_team_id(@official_team.id)
-    team_image.uploaded_data = params[:official_team][:uploaded_data]
+    if !params[:url].blank?
+      team_image.uploaded_data = UrlUpload.new(params[:url])
+    else 
+      team_image.uploaded_data = params[:official_team][:uploaded_data]
+    end
     if team_image.save
       flash[:notice] = "队标已上传, 如果队标一时没有更新, 多刷新几次页面"
       redirect_to edit_official_team_path(@official_team)

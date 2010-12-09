@@ -15,12 +15,16 @@
     <%= hidden_field_tag :tab_index, 1%>
     <%= official_team_image_tag @official_team, {:thumb=>:small, :style=>"margin:20px 0 0 0"} %>
     <p>
-      <label>更改队标</label><br/>
-      <%= f.file_field  :uploaded_data %>
+      <label for="url">从Url获取队标</label><br/>
+      <%= text_field_tag :url, "", :size=>30 %>
+    </p>
+    <p>
+      <label>或者上传队标</label><br/>
+      <%= f.file_field :uploaded_data %>
     </p>
 
     <p>
-      <%= f.submit "上传队标" %>
+      <%= f.submit "修改队标" %>
     </p>
   <% end %>
   </div>
