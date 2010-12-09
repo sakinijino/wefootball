@@ -11,6 +11,15 @@ NETEASE_MATCH_TYPE_MAPPING = {
   :all => ''
 }
 
+# OfficialTeamModule::CATEGORY
+NETEASE_LINK_OFFICIAL_TEAM_TYPE_REVERSE_MAPPING = {
+  '8' => 2,
+  '23' => 3,
+  '21' => 1,
+  '22' => 4,
+  '24' => 5
+}
+
 def netease_src_uri(date, type)
   year, month, day = date.strftime("%Y,%m,%d").split(',')
   "http://goal.sports.163.com/#{NETEASE_MATCH_TYPE_MAPPING[type]}schedule/#{year}#{month}#{day}.html"
@@ -35,7 +44,11 @@ def netease_extract_matches(date, type)
       :start_time => date
     }
     match[:host_name] = tr.css("span.c1 a").first.content
+    regmat = /\/(\d+)\/team\//.match(tr.css("span.c1 a").first.attributes['href'].value)
+    match[:host_team_type] = NETEASE_LINK_OFFICIAL_TEAM_TYPE_REVERSE_MAPPING[regmat[1]]
     match[:guest_name] = tr.css("span.c2 a").first.content
+    regmat = /\/(\d+)\/team\//.match(tr.css("span.c2 a").first.attributes['href'].value)
+    match[:guest_team_type] = NETEASE_LINK_OFFICIAL_TEAM_TYPE_REVERSE_MAPPING[regmat[1]]
 
     regmat = /(\d{2}):(\d{2})/.match(tds[1].content)
     match[:start_time] = DateTime.new(year.to_i,month.to_i,day.to_i, regmat[1].to_i, regmat[2].to_i) if regmat

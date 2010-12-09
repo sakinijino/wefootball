@@ -79,12 +79,21 @@ class OfficialMatch < ActiveRecord::Base
     guest_team = OfficialTeam.find_or_initialize_by_name m[:guest_name]
     new_teams =[]
     if host_team.new_record?
+      host_team.category = m[:host_team_type]
       host_team.save!
       new_teams << host_team
+    elsif !m[:host_team_type].nil? && host_team.category != m[:host_team_type]
+      host_team.category = m[:host_team_type]
+      host_team.save!
     end
+
     if guest_team.new_record?
+      guest_team.category = m[:guest_team_type]
       guest_team.save!
       new_teams << guest_team
+    elsif !m[:guest_team_type].nil? && guest_team.category != m[:guest_team_type]
+      guest_team.category = m[:guest_team_type]
+      guest_team.save!
     end
 
     new_match = []

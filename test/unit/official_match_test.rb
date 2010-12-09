@@ -88,6 +88,7 @@ class OfficialMatchTest < ActiveSupport::TestCase
       :guest_name => 'AC Milan',
       :host_goal => nil,
       :guest_goal => nil,
+      :guest_team_type => 7,
       :start_time => DateTime.parse("2000-01-01 00:00:00 +08:00")
     }
 
@@ -115,6 +116,48 @@ class OfficialMatchTest < ActiveSupport::TestCase
       assert_equal m[:start_time], match.start_time, "unchanged start time"
       assert_equal m[:host_goal], match.host_team_goal, "unchanged host goal"
       assert_equal m[:guest_goal], match.guest_team_goal, "unchanged guest goal"
+      assert_equal 7, match.host_team.category, "unchanged host category"
+      assert_equal 7, match.guest_team.category, "unchanged guest category"
+    end
+    end
+
+    m = {
+      :finished => false,
+      :host_name => 'Inter Milan',
+      :guest_name => 'AC Milan',
+      :host_goal => nil,
+      :guest_goal => nil,
+      :host_team_type => 2,
+      :guest_team_type => 2,
+      :start_time => DateTime.parse("2000-01-01 00:00:00 +08:00")
+    }
+
+    assert_no_difference "OfficialMatch.count" do
+    assert_no_difference "OfficialTeam.count" do
+      new_teams = [];
+      new_match = [];
+      update_match = [];
+      OfficialMatch.import_match(m) do |nt, nm, um|
+        new_teams << nt
+        new_teams.flatten!
+        new_match << nm
+        new_match.flatten!
+        update_match << um
+        update_match.flatten!
+      end
+
+      assert_equal 0, new_teams.length, "no new team"
+      assert_equal 0, new_match.length, "no new match"
+      assert_equal 0, update_match.length, "no update match"
+    
+      match = OfficialMatch.find(1)
+      assert_equal m[:host_name], match.host_team_name, "unchanged host name"
+      assert_equal m[:guest_name], match.guest_team_name, "unchanged guest name"
+      assert_equal m[:start_time], match.start_time, "unchanged start time"
+      assert_equal m[:host_goal], match.host_team_goal, "unchanged host goal"
+      assert_equal m[:guest_goal], match.guest_team_goal, "unchanged guest goal"
+      assert_equal m[:host_team_type], match.host_team.category
+      assert_equal m[:guest_team_type], match.guest_team.category
     end
     end
 
@@ -203,6 +246,7 @@ class OfficialMatchTest < ActiveSupport::TestCase
       :guest_name => 'Juv',
       :host_goal => 9,
       :guest_goal => 3,
+      :host_team_type => 2,
       :start_time => DateTime.parse("2010-01-01 00:00:00 +08:00")
     }
 
@@ -233,6 +277,8 @@ class OfficialMatchTest < ActiveSupport::TestCase
       assert_equal m[:start_time], match.start_time
       assert_equal m[:host_goal], match.host_team_goal
       assert_equal m[:guest_goal], match.guest_team_goal
+      assert_equal m[:host_team_type], match.host_team.category
+      assert_equal 7, match.guest_team.category
     end
     end
 
@@ -242,6 +288,8 @@ class OfficialMatchTest < ActiveSupport::TestCase
       :guest_name => 'Lazio',
       :host_goal => 9,
       :guest_goal => 3,
+      :host_team_type => 2,
+      :guest_team_type => 2,
       :start_time => DateTime.parse("2010-01-01 00:00:00 +08:00")
     }
 
@@ -274,6 +322,8 @@ class OfficialMatchTest < ActiveSupport::TestCase
       assert_equal m[:start_time], match.start_time
       assert_equal m[:host_goal], match.host_team_goal
       assert_equal m[:guest_goal], match.guest_team_goal
+      assert_equal m[:host_team_type], match.host_team.category
+      assert_equal m[:guest_team_type], match.guest_team.category
     end
     end
   end
