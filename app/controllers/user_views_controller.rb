@@ -7,7 +7,7 @@ class UserViewsController < ApplicationController
   DISPLAY_DAYS = 14
   POST_LIST_LENGTH = 8
   BROADCAST_LIST_LENGTH = 10
-  REVIEW_LIST_LENGTH = 5
+  REVIEW_LIST_LENGTH = 3
   
   def show
     @user = User.find(params[:id], :include=>[:positions], :conditions=>"activated_at is not null")

@@ -327,4 +327,290 @@ class OfficialMatchTest < ActiveSupport::TestCase
     end
     end
   end
+
+  def test_import_match_not_exact_time
+    m = {
+      :finished => false,
+      :host_name => 'Inter Milan',
+      :guest_name => 'AC Milan',
+      :host_goal => nil,
+      :guest_goal => nil,
+      :host_team_type => 2,
+      :guest_team_type => 2,
+      :start_time => OfficialMatch.find(1).start_time
+    }
+
+    assert_no_difference "OfficialMatch.count" do
+    assert_no_difference "OfficialTeam.count" do
+      new_teams = [];
+      new_match = [];
+      update_match = [];
+      OfficialMatch.import_match(m) do |nt, nm, um|
+        new_teams << nt
+        new_teams.flatten!
+        new_match << nm
+        new_match.flatten!
+        update_match << um
+        update_match.flatten!
+      end
+
+      assert_equal 0, new_teams.length, "no new team"
+      assert_equal 0, new_match.length, "no new match"
+      assert_equal 0, update_match.length, "no update match"
+    
+      match = OfficialMatch.find(1)
+      assert_equal m[:host_name], match.host_team_name, "unchanged host name"
+      assert_equal m[:guest_name], match.guest_team_name, "unchanged guest name"
+      assert_equal m[:start_time], match.start_time, "unchanged start time"
+      assert_equal m[:host_goal], match.host_team_goal, "unchanged host goal"
+      assert_equal m[:guest_goal], match.guest_team_goal, "unchanged guest goal"
+      assert_equal m[:host_team_type], match.host_team.category
+      assert_equal m[:guest_team_type], match.guest_team.category
+    end
+    end
+
+    m = {
+      :finished => false,
+      :host_name => 'Inter Milan',
+      :guest_name => 'AC Milan',
+      :host_goal => 2,
+      :guest_goal => 2,
+      :start_time => OfficialMatch.find(1).start_time + 2.hours 
+    }
+
+    assert_no_difference "OfficialMatch.count" do
+    assert_no_difference "OfficialTeam.count" do
+      new_teams = [];
+      new_match = [];
+      update_match = [];
+      OfficialMatch.import_match(m) do |nt, nm, um|
+        new_teams << nt
+        new_teams.flatten!
+        new_match << nm
+        new_match.flatten!
+        update_match << um
+        update_match.flatten!
+      end
+
+      assert_equal 0, new_teams.length
+      assert_equal 0, new_match.length
+      assert_equal 1, update_match.length, "update start time add 2 hours"
+
+      match = update_match[0]
+      assert_equal m[:host_name], match.host_team_name
+      assert_equal m[:guest_name], match.guest_team_name
+      assert_equal m[:start_time], match.start_time
+      assert_equal m[:host_goal], match.host_team_goal
+      assert_equal m[:guest_goal], match.guest_team_goal
+    
+      match = OfficialMatch.find(1)
+      assert_equal m[:host_name], match.host_team_name
+      assert_equal m[:guest_name], match.guest_team_name
+      assert_equal m[:start_time], match.start_time
+      assert_equal m[:host_goal], match.host_team_goal
+      assert_equal m[:guest_goal], match.guest_team_goal
+    end
+    end
+
+    m = {
+      :finished => false,
+      :host_name => 'Inter Milan',
+      :guest_name => 'AC Milan',
+      :host_goal => 7,
+      :guest_goal => 3,
+      :start_time => OfficialMatch.find(1).start_time
+    }
+
+    assert_no_difference "OfficialMatch.count" do
+    assert_no_difference "OfficialTeam.count" do
+      new_teams = [];
+      new_match = [];
+      update_match = [];
+      OfficialMatch.import_match(m) do |nt, nm, um|
+        new_teams << nt
+        new_teams.flatten!
+        new_match << nm
+        new_match.flatten!
+        update_match << um
+        update_match.flatten!
+      end
+
+      assert_equal 0, new_teams.length
+      assert_equal 0, new_match.length
+      assert_equal 1, update_match.length, "update result"
+
+      match = update_match[0]
+      assert_equal m[:host_name], match.host_team_name
+      assert_equal m[:guest_name], match.guest_team_name
+      assert_equal m[:start_time], match.start_time
+      assert_equal m[:host_goal], match.host_team_goal
+      assert_equal m[:guest_goal], match.guest_team_goal
+    
+      match = OfficialMatch.find(1)
+      assert_equal m[:host_name], match.host_team_name
+      assert_equal m[:guest_name], match.guest_team_name
+      assert_equal m[:start_time], match.start_time
+      assert_equal m[:host_goal], match.host_team_goal
+      assert_equal m[:guest_goal], match.guest_team_goal
+    end
+    end
+
+    m = {
+      :finished => false,
+      :host_name => 'Inter Milan',
+      :guest_name => 'AC Milan',
+      :host_goal => 7,
+      :guest_goal => 3,
+      :start_time => OfficialMatch.find(1).start_time + 36.hours - 1.minutes
+    }
+
+    assert_no_difference "OfficialMatch.count" do
+    assert_no_difference "OfficialTeam.count" do
+      new_teams = [];
+      new_match = [];
+      update_match = [];
+      OfficialMatch.import_match(m) do |nt, nm, um|
+        new_teams << nt
+        new_teams.flatten!
+        new_match << nm
+        new_match.flatten!
+        update_match << um
+        update_match.flatten!
+      end
+
+      assert_equal 0, new_teams.length
+      assert_equal 0, new_match.length
+      assert_equal 1, update_match.length, "update start time add 14:59"
+
+      match = update_match[0]
+      assert_equal m[:host_name], match.host_team_name
+      assert_equal m[:guest_name], match.guest_team_name
+      assert_equal m[:start_time], match.start_time
+      assert_equal m[:host_goal], match.host_team_goal
+      assert_equal m[:guest_goal], match.guest_team_goal
+    
+      match = OfficialMatch.find(1)
+      assert_equal m[:host_name], match.host_team_name
+      assert_equal m[:guest_name], match.guest_team_name
+      assert_equal m[:start_time], match.start_time
+      assert_equal m[:host_goal], match.host_team_goal
+      assert_equal m[:guest_goal], match.guest_team_goal
+    end
+    end
+
+    m = {
+      :finished => false,
+      :host_name => 'Inter Milan',
+      :guest_name => 'AC Milan',
+      :host_goal => 7,
+      :guest_goal => 3,
+      :start_time => OfficialMatch.find(1).start_time - 36.hours + 1.minutes
+    }
+
+    assert_no_difference "OfficialMatch.count" do
+    assert_no_difference "OfficialTeam.count" do
+      new_teams = [];
+      new_match = [];
+      update_match = [];
+      OfficialMatch.import_match(m) do |nt, nm, um|
+        new_teams << nt
+        new_teams.flatten!
+        new_match << nm
+        new_match.flatten!
+        update_match << um
+        update_match.flatten!
+      end
+
+      assert_equal 0, new_teams.length
+      assert_equal 0, new_match.length
+      assert_equal 1, update_match.length, "update start time minus 14:59:59"
+
+      match = update_match[0]
+      assert_equal m[:host_name], match.host_team_name
+      assert_equal m[:guest_name], match.guest_team_name
+      assert_equal m[:start_time], match.start_time
+      assert_equal m[:host_goal], match.host_team_goal
+      assert_equal m[:guest_goal], match.guest_team_goal
+    
+      match = OfficialMatch.find(1)
+      assert_equal m[:host_name], match.host_team_name
+      assert_equal m[:guest_name], match.guest_team_name
+      assert_equal m[:start_time], match.start_time
+      assert_equal m[:host_goal], match.host_team_goal
+      assert_equal m[:guest_goal], match.guest_team_goal
+    end
+    end
+
+    m = {
+      :finished => false,
+      :host_name => 'Inter Milan',
+      :guest_name => 'AC Milan',
+      :host_goal => 7,
+      :guest_goal => 3,
+      :start_time => OfficialMatch.find(1).start_time + 36.hours
+    }
+
+    assert_difference "OfficialMatch.count", 1 do
+    assert_no_difference "OfficialTeam.count" do
+      new_teams = [];
+      new_match = [];
+      update_match = [];
+      OfficialMatch.import_match(m) do |nt, nm, um|
+        new_teams << nt
+        new_teams.flatten!
+        new_match << nm
+        new_match.flatten!
+        update_match << um
+        update_match.flatten!
+      end
+
+      assert_equal 0, new_teams.length
+      assert_equal 1, new_match.length, "new match start time add 36 hours"
+      assert_equal 0, update_match.length
+
+      match = new_match[0]
+      assert_equal m[:host_name], match.host_team_name
+      assert_equal m[:guest_name], match.guest_team_name
+      assert_equal m[:start_time], match.start_time
+      assert_equal m[:host_goal], match.host_team_goal
+      assert_equal m[:guest_goal], match.guest_team_goal
+    end
+    end
+
+    m = {
+      :finished => false,
+      :host_name => 'Inter Milan',
+      :guest_name => 'AC Milan',
+      :host_goal => 7,
+      :guest_goal => 3,
+      :start_time => OfficialMatch.find(1).start_time - 36.hours
+    }
+
+    assert_difference "OfficialMatch.count", 1 do
+    assert_no_difference "OfficialTeam.count" do
+      new_teams = [];
+      new_match = [];
+      update_match = [];
+      OfficialMatch.import_match(m) do |nt, nm, um|
+        new_teams << nt
+        new_teams.flatten!
+        new_match << nm
+        new_match.flatten!
+        update_match << um
+        update_match.flatten!
+      end
+
+      assert_equal 0, new_teams.length
+      assert_equal 1, new_match.length, "new match start time minus 36 hours"
+      assert_equal 0, update_match.length
+
+      match = new_match[0]
+      assert_equal m[:host_name], match.host_team_name
+      assert_equal m[:guest_name], match.guest_team_name
+      assert_equal m[:start_time], match.start_time
+      assert_equal m[:host_goal], match.host_team_goal
+      assert_equal m[:guest_goal], match.guest_team_goal
+    end
+    end
+  end
 end

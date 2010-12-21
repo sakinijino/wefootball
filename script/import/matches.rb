@@ -27,7 +27,7 @@ begin
     type = :all
   end
 rescue
-  puts "Usage: ruby script\/runner -e ENV script\import\matches.rb [DateTime] [MatchType]"
+  puts "Usage: ruby script\/runner -e ENV script/import/matches.rb [DateTime] [MatchType]"
   exit
 end
 
@@ -48,7 +48,7 @@ begin
   end
 rescue
   puts "* Remote Extract Error!"
-  puts
+  exit
 end
 
 puts "-----------------------"
@@ -61,8 +61,13 @@ new_teams = []
 new_matches = []
 update_matches = []
 
-if matches.length > 0
-  begin 
+if matches.length <= 0
+  puts "* Import Nothing."
+  exit
+end 
+
+begin 
+  OfficialMatch.transaction do
     matches.each do |m|
       OfficialMatch.import_match m do |nt, nm, um|
         new_teams<< nt
@@ -73,35 +78,33 @@ if matches.length > 0
         update_matches.flatten!
       end
     end
-  rescue
-    puts "* Import Error!"
-    puts
   end
+rescue
+  puts "* Import Error!"
+  exit
+end
 
-  puts "* New Teams:"
-  new_teams.each do |t|
-    puts "  #{t.name}"
-  end
-  puts
+puts "* New Teams:"
+new_teams.each do |t|
+  puts "  #{t.name}"
+end
+puts
 
-  puts "* New Matches:"
-  new_matches.each do |m|
-    if m.host_team_goal.nil? || m.guest_team_goal.nil?
-      puts "  #{m.host_team_name} V.S. #{m.guest_team_name} at #{m.start_time.strftime("%Y-%m-%d %H:%M")}"
-    else
-      puts "  #{m.host_team_name} #{m.host_team_goal} : #{m.guest_team_goal} #{m.guest_team_name} at #{m.start_time.strftime("%Y-%m-%d %H:%M")}"
-    end
+puts "* New Matches:"
+new_matches.each do |m|
+  if m.host_team_goal.nil? || m.guest_team_goal.nil?
+    puts "  #{m.host_team_name} V.S. #{m.guest_team_name} at #{m.start_time.strftime("%Y-%m-%d %H:%M")}"
+  else
+    puts "  #{m.host_team_name} #{m.host_team_goal} : #{m.guest_team_goal} #{m.guest_team_name} at #{m.start_time.strftime("%Y-%m-%d %H:%M")}"
   end
-  puts
+end
+puts
 
-  puts "* Update Matches:"
-  update_matches.each do |m|
-    if m.host_team_goal.nil? || m.guest_team_goal.nil?
-      puts "  #{m.host_team_name} V.S. #{m.guest_team_name} at #{m.start_time.strftime("%Y-%m-%d %H:%M")}"
-    else
-      puts "  #{m.host_team_name} #{m.host_team_goal} : #{m.guest_team_goal} #{m.guest_team_name} at #{m.start_time.strftime("%Y-%m-%d %H:%M")}"
-    end
+puts "* Update Matches:"
+update_matches.each do |m|
+  if m.host_team_goal.nil? || m.guest_team_goal.nil?
+    puts "  #{m.host_team_name} V.S. #{m.guest_team_name} at #{m.start_time.strftime("%Y-%m-%d %H:%M")}"
+  else
+    puts "  #{m.host_team_name} #{m.host_team_goal} : #{m.guest_team_goal} #{m.guest_team_name} at #{m.start_time.strftime("%Y-%m-%d %H:%M")}"
   end
-else
-  puts "* Import Nothing."
 end

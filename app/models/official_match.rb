@@ -98,15 +98,23 @@ class OfficialMatch < ActiveRecord::Base
 
     new_match = []
     update_match = []
-    match = OfficialMatch.find_or_initialize_by_host_official_team_id_and_guest_official_team_id_and_start_time(host_team.id, guest_team.id, m[:start_time])
+    match = OfficialMatch.find(:first, :conditions => ["host_official_team_id = ? and guest_official_team_id = ? and (start_time > ? and start_time < ?)", host_team.id, guest_team.id, m[:start_time] - 36.hours, m[:start_time] + 36.hours])
+    match = OfficialMatch.new({
+      :host_official_team_id => host_team.id,
+      :guest_official_team_id => guest_team.id,
+      :start_time => m[:start_time],
+    }) if match == nil
     if match.new_record?
       match.host_team_goal = m[:host_goal] if m[:host_goal] != nil
       match.guest_team_goal = m[:guest_goal] if m[:guest_goal] != nil
       match.save!
       new_match << match
-    elsif match.host_team_goal!=m[:host_goal] || match.guest_team_goal!=m[:guest_goal]
+    elsif match.host_team_goal!=m[:host_goal] || 
+          match.guest_team_goal!=m[:guest_goal] || 
+          match.start_time.strftime("%Y-%m-%d %H:%M") != m[:start_time].strftime("%Y-%m-%d %H:%M") # i hate time zone
       match.host_team_goal = m[:host_goal] if m[:host_goal] != nil
       match.guest_team_goal = m[:guest_goal] if m[:guest_goal] != nil
+      match.start_time = m[:start_time];
       match.save!
       update_match << match
     end
