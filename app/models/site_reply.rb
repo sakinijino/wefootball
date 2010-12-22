@@ -19,6 +19,10 @@ class SiteReply < ActiveRecord::Base
     self.user_id == get_user_id(user) || SitePostAdmin.is_an_admin?(user)
   end
 
+  def after_save
+    SitePost.update_all(["updated_at = ?", Time.now], :id => [self.site_post_id]) if !self.site_post_id.blank?
+  end
+
 private
   def get_user_id(user)
     case user

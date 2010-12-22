@@ -1,7 +1,7 @@
 class SitePostsController < ApplicationController
 
   def index
-    @site_posts = SitePost.paginate(:page => params[:page], :per_page => 30)
+    @site_posts = SitePost.paginate(:order => "updated_at desc", :page => params[:page], :per_page => 30)
     @title = "站务论坛"
     render :layout => "user_layout"
   end
@@ -28,7 +28,6 @@ class SitePostsController < ApplicationController
       render :action => "new", :layout => "user_layout"
     end
   end
-
 
   def destroy
     @site_post = SitePost.find(params[:id])

@@ -11,13 +11,13 @@
     <h2><%=h @title%></h2>
   <%if @host_teams.empty?%>
     <div class="notification">
-      你暂时没有其他管理的球队, 因此无法邀请<%=link_to h(@guest_team.shortname), team_view_path(@guest_team)%>进行比赛<br/><br/>
-      <%= link_to "你可以点击这里创建自己的球队", new_team_path(:back_uri=>new_match_invitation_path(:guest_team_id=>@guest_team.id))%>
+      你没有管理其他球队, 无法约战<%=link_to h(@guest_team.shortname), team_view_path(@guest_team)%><br/><br/>
+      <%= link_to "创建你的球队", new_team_path(:back_uri=>new_match_invitation_path(:guest_team_id=>@guest_team.id))%>
     </div>
   <%else%>
     
     <div class="notification">
-       选定球队后, 你会以该队管理员的身份向<%=link_to h(@guest_team.shortname), team_view_path(@guest_team)%>提出约战
+       选择球队约战<%=link_to h(@guest_team.shortname), team_view_path(@guest_team)%>
     </div>
     <%for t in @host_teams%>
       <div class="icon">

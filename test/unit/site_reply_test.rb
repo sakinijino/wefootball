@@ -24,4 +24,27 @@ class SiteReplyTest < ActiveSupport::TestCase
     end
     end
   end
+
+  def test_updated
+    site_posts(:saki_1).updated_at = Time.now
+    site_posts(:saki_1).save
+
+    r = SiteReply.new(:content => "Test Reply")
+    r.user = users(:saki)
+    r.save
+
+    r.site_post = site_posts(:saki_1)
+    c_time = Time.now
+    sleep(1)
+    r.save 
+    assert site_posts(:saki_1).reload.updated_at > c_time, "Reply save"
+
+    r = SiteReply.new(:content => "Test Reply")
+    r.user = users(:saki)
+    c_time = Time.now
+    sleep(1)
+    site_posts(:saki_1).site_replies << r
+    site_posts(:saki_1).save!
+    assert site_posts(:saki_1).reload.updated_at > c_time, "Post << op save"
+  end
 end

@@ -10,6 +10,10 @@ class Reply < ActiveRecord::Base
     self.user_id == get_user_id(user) || self.post.admin?(user)
   end
 
+  def after_save
+    Post.update_all(["updated_at = ?", Time.now], :id => [self.post_id]) if !self.post_id.blank?
+  end
+
 private
   def get_user_id(user)
     case user
