@@ -21,10 +21,10 @@ begin
     type = ARGV[-1].downcase.to_sym
   elsif ARGV.length == 3
     dates = [DateTime.parse(ARGV[-1])]
-    type = :all
+    type = IMPORT_CONFIG['type'].to_sym
   else
-    dates = [DateTime.yesterday, DateTime.now, DateTime.now + 7.days]
-    type = :all
+    dates = IMPORT_CONFIG['days'].split(',').map {|t| DateTime.now + t.to_i.days}
+    type = IMPORT_CONFIG['type'].to_sym
   end
 rescue
   puts "Usage: ruby script\/runner -e ENV script/import/matches.rb [DateTime] [MatchType]"

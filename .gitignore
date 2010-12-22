@@ -8,3 +8,5 @@
 /public/images/official_teams
 
 /config/database.yml
+/config/import.yml
+/config/ganalytics.yml

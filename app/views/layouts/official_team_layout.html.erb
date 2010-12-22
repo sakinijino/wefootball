@@ -12,6 +12,7 @@
   <%= javascript_include_tag "jquery/jquery.dimensions.js" %>
   <%= javascript_include_tag "application" %>
   <%= yield :javascript%>
+  <%= google_analytics_js %>
 </head>
 <body>
 <%= render(:partial => 'layouts/qmd')%>

@@ -1,0 +1,11 @@
+development:
+  days: "-1,0,14"
+  type: all
+
+test:
+  days: "0"
+  type: all
+
+production:
+  days: "-1,0,14"
+  type: all
