@@ -10,3 +10,6 @@ Setup:
 Run Tests:
  * rake db:migrate RAILS_ENV=test
  * rake test RAILS_ENV=test
+
+Screen Casts:
+ * Screen casts in ./screencasts/
