@@ -11,6 +11,7 @@ Installation
 6. create and edit `config/ganalytics.yml` (a template in `config/ganalytics.yml.template`)
 7. `rake gems:build` 
 8. `rake gems:install` (install local OS specific nokogiri)
+9. `rake secret` and replace session secret in `config/environment.rb`
 
 Run Tests
 ---------
