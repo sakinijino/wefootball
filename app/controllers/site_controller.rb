@@ -32,7 +32,7 @@ class SiteController < ApplicationController
     
     @history_official_matches = OfficialMatch.find :all, 
       :conditions => ['end_time > ? and end_time < ?', OfficialMatchesController::HISTORY_DAYS.days.ago, Time.now],
-      :order=>'watch_join_count desc, start_time',
+      :order=>'watch_join_count desc, start_time desc',
       :limit => 5
     
     @reviews = MatchReview.find( :all,

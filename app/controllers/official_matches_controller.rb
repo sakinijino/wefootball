@@ -24,7 +24,7 @@ class OfficialMatchesController < ApplicationController
   
   def history
     @official_matches = OfficialMatch.paginate :conditions => ['end_time > ? and end_time < ?', HISTORY_DAYS.days.ago, Time.now],
-      :order=>'watch_join_count desc, start_time',
+      :order=>'watch_join_count desc, start_time desc',
       :page => params[:page],
       :per_page => 15
     
